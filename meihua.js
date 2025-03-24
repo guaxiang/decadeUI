@@ -84,14 +84,10 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 		const event = get.event();
 		if (!event?.isMine) return;
 		const needMultiSelect = event.selectCard?.[1] > 1;
-		// 创建或移除全选按钮
 		if (needMultiSelect && !ui.Selectall) {
 			ui.Selectall = ui.create.control("全选", () => {
-				// 选择所有手牌
 				ai.basic.chooseCard(card => (get.position(card) === "h" ? 114514 : 0));
-				// 执行自定义添加卡牌函数
 				event.custom?.add?.card?.();
-				// 更新选中卡牌显示
 				ui.selected.cards?.forEach(card => card.updateTransform(true));
 			});
 		} else if (!needMultiSelect) {
