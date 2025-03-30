@@ -1348,6 +1348,14 @@ if (decadeModule)
 				{ name: "effect_taoyuanjieyi" },
 				{ name: "effect_shandian" },
 				{ name: "effect_wanjianqifa_full" },
+				{ name: "RWJGD_xiao" },
+				{ name: "XRJXN_xiao" },
+				{ name: "XTBGZ_xiao" },
+				{ name: "ZYSZK_xiao" },
+				{ name: "TYBLJ" },
+				{ name: "SSHW_TX_chongyingshenfu" },
+				{ name: "SSHW_TX_lingbaoxianhu" },
+				{ name: "SSHW_TX_taijifuchen" },
 				{ name: "effect_xianding", fileType: "json" },
 				{ name: "effect_caochuanjiejian", follow: true },
 				{ name: "effect_guohechaiqiao", follow: true },
@@ -1398,6 +1406,46 @@ if (decadeModule)
 			var skillAnimation = (function () {
 				var defines = {
 					skill: {
+						rw_bagua_skill: {
+							skill: "rw_bagua_skill",
+								name: "XTBGZ_xiao",
+									scale: 0.7,
+						},
+						rw_renwang_skill: {
+							skill: "rw_renwang_skill",
+								name: "RWJGD_xiao",
+									scale: 0.7,
+						},
+						rw_baiyin_skill: {
+							skill: "rw_baiyin_skill",
+								name: "ZYSZK_xiao",
+									scale: 0.7,
+						},
+						rw_zhuge_skill: {
+							skill: "rw_zhuge_skill",
+								name: "XRJXN_xiao",
+									scale: 0.7,
+						},
+						rw_tengjia2: {
+							skill: "rw_tengjia2",
+								name: "TYBLJ",
+									scale: 0.7,
+						},
+						gx_lingbaoxianhu: {
+							skill: "gx_lingbaoxianhu",
+								name: "SSHW_TX_lingbaoxianhu",
+									scale: 0.5,
+						},
+						gx_taijifuchen: {
+							skill: "gx_taijifuchen",
+								name: "SSHW_TX_taijifuchen",
+									scale: 0.5,
+						},
+						gx_chongyingshenfu: {
+							skill: "gx_chongyingshenfu",
+								name: "SSHW_TX_chongyingshenfu",
+									scale: 0.5,
+						},
 						bagua_skill: {
 							skill: "bagua_skill",
 							name: "effect_baguazhen",
@@ -2136,7 +2184,7 @@ if (decadeModule)
 					},
 				},
 			};
- 
+
 			animation.stop = animation.stopSpineAll;
 			animation.play = function (name, skin) {
 				var definedAssets = this.definedAssets;

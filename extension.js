@@ -11693,13 +11693,14 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`魔改十周年UI ${pack.version}`,
-					"最低适配：v1.10.18 暂定",
+					"最低适配：v1.10.17.1",
+					"删除小乔涩涩图片，H哇哒咩！",
 					"添加全选按钮 by咪咪狗奇妙工具",
 					"修复手杀UI自动整理，UI显示问题",
 					"新增OLUI&欢杀UI，感谢群友提供的素材",
-					"整合U、凌梦、@19950219、小爱莉的UI细节调整",
 					"整合小爱莉、U等提供的武将详情界面",
-					"整合活动群群主lp提供的$throw函数优化",
+					"整合U、凌梦、@19950219、小爱莉的UI细节调整",
+					"整合活动群lonely patients、随性似风提供的$throw函数跟进",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);
