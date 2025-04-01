@@ -11711,6 +11711,7 @@ export default async function () {
 					"删除小乔涩涩图片，优化动皮露头显示",
 					"添加全选按钮，修复手杀样式自动整理",
 					"choosetocomparemultiple函数适配",
+					"整合柳下跖的OL样式露头随机框",
 					"整合小爱莉、U等提供的武将详情界面",
 					"整合U、凌梦、@19950219、小爱莉的UI细节调整",
 					"整合lonely patients、萌新转型中提供的$throw函数适配",
