@@ -1,5 +1,5 @@
 "use strict";
-decadeModule.import(function(lib, game, ui, get, ai, _status) {
+decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	decadeUI.effect = {
 		dialog: {
 			create(titleText) {
@@ -8,27 +8,19 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 			compare(source, target) {
 				var dialog = this.create();
 
-				dialog.characters = [decadeUI.dialog.create("player1 character", dialog), decadeUI.dialog
-					.create("player2 character", dialog)
-				];
+				dialog.characters = [decadeUI.dialog.create("player1 character", dialog), decadeUI.dialog.create("player2 character", dialog)];
 
-				decadeUI.dialog.create("back", dialog.characters[0]), decadeUI.dialog.create("back", dialog
-					.characters[1]), (dialog.content = decadeUI.dialog.create("content", dialog)), (
-					dialog.buttons = decadeUI.dialog.create("buttons", dialog.content));
+				decadeUI.dialog.create("back", dialog.characters[0]), decadeUI.dialog.create("back", dialog.characters[1]), (dialog.content = decadeUI.dialog.create("content", dialog)), (dialog.buttons = decadeUI.dialog.create("buttons", dialog.content));
 
-				dialog.cards = [decadeUI.dialog.create("player1 card", dialog.buttons), decadeUI.dialog
-					.create("player2 card", dialog.buttons)
-				];
+				dialog.cards = [decadeUI.dialog.create("player1 card", dialog.buttons), decadeUI.dialog.create("player2 card", dialog.buttons)];
 
-				dialog.names = [decadeUI.dialog.create("player1 name", dialog.buttons), decadeUI.dialog
-					.create("player2 name", dialog.buttons)
-				];
+				dialog.names = [decadeUI.dialog.create("player1 name", dialog.buttons), decadeUI.dialog.create("player2 name", dialog.buttons)];
 
 				dialog.buttons.vs = decadeUI.dialog.create("vs", dialog.buttons);
 				dialog.names[0].innerHTML = get.translation(source) + "发起";
 				dialog.names[1].innerHTML = get.translation(target);
 
-				(dialog.set = function(attr, value) {
+				(dialog.set = function (attr, value) {
 					switch (attr) {
 						case "player1":
 						case "source":
@@ -39,8 +31,7 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 							}
 
 							var avatar = value.isUnseen(0) ? value.node.avatar2 : value.node.avatar;
-							dialog.characters[0].firstChild.style.backgroundImage = avatar.style
-								.backgroundImage;
+							dialog.characters[0].firstChild.style.backgroundImage = avatar.style.backgroundImage;
 							dialog.names[0].innerHTML = get.translation(value) + "发起";
 							break;
 
@@ -53,22 +44,19 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 							}
 
 							var avatar = value.isUnseen(0) ? value.node.avatar2 : value.node.avatar;
-							dialog.characters[1].firstChild.style.backgroundImage = avatar.style
-								.backgroundImage;
+							dialog.characters[1].firstChild.style.backgroundImage = avatar.style.backgroundImage;
 							dialog.names[1].innerHTML = get.translation(value);
 							break;
 
 						case "card1":
 						case "sourceCard":
-							if (dialog.cards[0].firstChild) dialog.cards[0].removeChild(dialog.cards[0]
-								.firstChild);
+							if (dialog.cards[0].firstChild) dialog.cards[0].removeChild(dialog.cards[0].firstChild);
 							dialog.cards[0].appendChild(value);
 							break;
 
 						case "card2":
 						case "targetCard":
-							if (dialog.cards[1].firstChild) dialog.cards[1].removeChild(dialog.cards[1]
-								.firstChild);
+							if (dialog.cards[1].firstChild) dialog.cards[1].removeChild(dialog.cards[1].firstChild);
 							dialog.cards[1].appendChild(value);
 							break;
 
@@ -78,14 +66,14 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 
 					return true;
 				}),
-				dialog.set("source", source);
+					dialog.set("source", source);
 				dialog.set("target", target);
 				return dialog;
 			},
 		},
 		line(dots) {
 			decadeUI.animate.add(
-				function(source, target, e) {
+				function (source, target, e) {
 					var ctx = e.context;
 					ctx.shadowColor = "yellow";
 					ctx.shadowBlur = 1;
@@ -112,12 +100,14 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 						return true;
 					}
 				},
-				true, {
+				true,
+				{
 					x: dots[0],
-					y: dots[1]
-				}, {
+					y: dots[1],
+				},
+				{
 					x: dots[2],
-					y: dots[3]
+					y: dots[3],
 				}
 			);
 		},
@@ -169,10 +159,9 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 					scale = decadeUI.getRandom(1, 10) / 10;
 
 					setTimeout(
-						function(mx, my, mscale, meffect) {
+						function (mx, my, mscale, meffect) {
 							var light = decadeUI.dialog.create("li", meffect);
-							light.style.transform = "translate(" + mx + ", " + my + ")" + "scale(" +
-								mscale + ")";
+							light.style.transform = "translate(" + mx + ", " + my + ")" + "scale(" + mscale + ")";
 						},
 						decadeUI.getRandom(50, 300),
 						x,
@@ -185,7 +174,7 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 				var sz = bounds.size;
 				var scale = (anim.canvas.width / sz.x) * 1.2;
 				anim.playSpine("effect_jisha1", {
-					scale: scale
+					scale: scale,
 				});
 				ui.window.appendChild(effect);
 				ui.refresh(effect);
@@ -219,8 +208,8 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 			var image = new Image();
 			var bgImage = new Image();
 
-			image.onload = function() {
-				bgImage.onload = function() {
+			image.onload = function () {
+				bgImage.onload = function () {
 					var animation = decadeUI.animation;
 					var sprite = animation.playSpine("effect_xianding");
 					var skeleton = sprite.skeleton;
@@ -256,19 +245,39 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 					attachment.updateOffset();
 
 					var size = skeleton.bounds.size;
-					sprite.scale = Math.max(animation.canvas.width / size.x, animation.canvas
-						.height / size.y);
+					sprite.scale = Math.max(animation.canvas.width / size.x, animation.canvas.height / size.y);
 
-					var effect = decadeUI.element.create(
-					"skill-name"); // 限定/觉醒特效技能文本显示，如需取消，将 'skill-name' 改为 null
+					var effect = decadeUI.element.create("skill-name"); // 限定/觉醒特效技能文本显示，如需取消，将 'skill-name' 改为 null
 					effect.innerHTML = skillName;
 					effect.style.top = "calc(50% + " + 165 * sprite.scale + "px)";
 
+					var effect = decadeUI.element.create("skill-name");
+					effect.innerHTML = skillName;
+					effect.style.top = "calc(50% + " + 165 * sprite.scale + "px)";
+					var nameEffect = decadeUI.element.create("general-name");
+					nameEffect.innerHTML = playerName;
+					nameEffect.style.cssText = `
+					position: absolute;
+					right: calc(50% - ${200 * sprite.scale}px);
+					top: calc(50% - ${160 * sprite.scale}px);
+					writing-mode: vertical-lr;
+					text-orientation: upright;
+					font-family: xingkai;
+					color: rgb(215, 234, 67);
+					font-size: 25px;
+					text-shadow: 0 0 5px black, 0 0 10px black;
+					pointer-events: none;
+					letter-spacing: 5px;
+					z-index: 17;
+					`;
+
 					ui.arena.appendChild(effect);
+					ui.arena.appendChild(nameEffect);
 					effect.removeSelf(2180);
+					nameEffect.removeSelf(2180);
 				};
 
-				bgImage.onerror = function() {
+				bgImage.onerror = function () {
 					bgImage.onerror = void 0;
 					bgImage.src = decadeUIPath + "assets/image/bg_xianding_qun.png";
 				};
@@ -276,16 +285,24 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 				bgImage.src = decadeUIPath + "assets/image/bg_xianding_" + camp + ".png";
 			};
 
-			image.onerror = function() {
+			image.onerror = function () {
 				image.onerror = void 0;
-				image.src = lib.assetURL + "imagearacter/default_silhouette_" + (player.sex ==
-					"female" ? "female" : "male") + ".jpg";
+				if (image.src.includes("image/lihui")) {
+					if (url.indexOf('url("') == 0) {
+						image.src = url.slice(5, url.indexOf('")'));
+					} else if (url.indexOf("url('") == 0) {
+						image.src = url.slice(5, url.indexOf("')"));
+					}
+				} else {
+					image.src = lib.assetURL + "image/character/default_silhouette_" + (player.sex == "female" ? "female" : "male") + ".jpg";
+				}
 			};
-
 			if (url.indexOf('url("') == 0) {
-				image.src = url.slice(5, url.indexOf('")'));
+				let originalPath = url.slice(5, url.indexOf('")'));
+				image.src = originalPath.replace(/image\/character/, "image/lihui");
 			} else if (url.indexOf("url('") == 0) {
-				image.src = url.slice(5, url.indexOf("')"));
+				let originalPath = url.slice(5, url.indexOf("')"));
+				image.src = originalPath.replace(/image\/character/, "image/lihui");
 			}
 		},
 	};

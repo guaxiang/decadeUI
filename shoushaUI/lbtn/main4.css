@@ -85,7 +85,7 @@
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom: 13%;
+	bottom: 12%;
 	left: 0%;
 	background-image: url("./images/uibutton/jiaoliuOL.png");
 	background-size: 100% 100%;
@@ -100,7 +100,7 @@
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom: 23%;
+	bottom: 22%;
 	left: 0%;
 	background-image: url("./images/uibutton/meiguiOL.png");
 	background-size: 100% 100%;
@@ -215,7 +215,8 @@
 
 /*手牌数参数*/
 .handcardNumber>.cardNumber {
-    display: none !important;  /* 完全隐藏元素 */
+	display: none !important;
+	/* 完全隐藏元素 */
 }
 
 .cardRoundNumber {
@@ -298,6 +299,7 @@
 	-webkit-text-fill-color: transparent;
 	text-shadow: none !important;
 }
+
 /*左手模式*/
 /*换肤*/
 .huanfuButton_new1 {

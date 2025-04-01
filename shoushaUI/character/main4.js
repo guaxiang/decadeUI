@@ -147,7 +147,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                                 //将灯
                                 let jddialog=ui.create.div(".jddialog",bigdialog);
                                 //所有将灯
-                                const jiangdengClasses = ['biao', 'cui', 'guo', 'jiang', 'jiangjie','jie','mou','qi','shan','shen','sp','wenwu','xian','zu']; 
+                                const jiangdengClasses=['biao','jiang','jie','wenwu','guo','jiangjie','zu','shan','cui','sp','shen','mou','qi','xian']
                                 //随机获取将灯亮灭
                                 let jiangdengsuiji=jiangdengClasses.randomGets(guanjiejibie>8?guanjiejibie+1:([guanjiejibie-1,guanjiejibie].randomGet()));
                                 let jiangdengLiang=[];
@@ -192,20 +192,50 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                                     // 武将图片
                                     let charPic = ui.create.div(`.shanchang`, shanchangdialog);
                                     charPic.setBackground(charName, 'character');
-                                    let huanfu=ui.create.div(`.huanfu`, charPic);
-                                    huanfu.onclick = function() {
-                                        window.zyile_charactercard ? window.zyile_charactercard(charName, charPic, false) : ui.click.charactercard(charName, charPic, lib.config.mode == "guozhan" ? "guozhan" : true);
+                                    //换肤按钮
+                                    let huanfu = ui.create.div(`.huanfu`, charPic);
+                                    huanfu.onclick = function () {
+                                        window.zyile_charactercard? window.zyile_charactercard(charName, charPic, false) : ui.click.charactercard(charName, charPic, lib.config.mode === "guozhan"? "guozhan" : true);
                                     };
-                                    let groupname=['wei','shu','wu','qun','jin','shen'].includes(group)?group:'shen';
-                                    // 边框
+                                    //势力边框
                                     let kuang = ui.create.div(`.kuang`, charPic);
-                                    kuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ol_${groupname}.png`);
-                                    //武将名
-                                    let name=ui.create.div('.charName',get.translation(charName),kuang);
-                                    // 势力图标
+                                    let xingxing = ui.create.div(`.xing`, kuang);
+                                    let name = ui.create.div('.charName', get.translation(charName), kuang);
                                     let shili = ui.create.div(`.shili`, kuang);
-                                    shili.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${groupname}.png`);
-                                };
+                                    shili.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${group}.png`);
+                                    // 创建临时元素来获取对应势力的背景样式
+                                    const tempPlayer = document.createElement('div');
+                                    tempPlayer.classList.add('player');
+                                    const tempCampWrap = document.createElement('div');
+                                    tempCampWrap.classList.add('camp-wrap');
+                                    tempCampWrap.setAttribute('data-camp', group);
+                                    tempPlayer.appendChild(tempCampWrap);
+                                    const tempCampBack = document.createElement('div');
+                                    tempCampBack.classList.add('camp-back');
+                                    tempCampWrap.appendChild(tempCampBack);
+                                    // 将临时元素添加到文档中以计算样式
+                                    document.body.appendChild(tempPlayer);
+                                    // 获取计算后的样式
+                                    const computedStyle = window.getComputedStyle(tempCampBack);
+                                    // 先尝试获取 background 样式
+                                    let backgroundStyle = computedStyle.background;
+                                    // 如果 background 为空，尝试获取 background-color
+                                    if (!backgroundStyle || backgroundStyle === 'none') {
+                                        backgroundStyle = computedStyle.backgroundColor;
+                                    }
+                                    // 移除临时元素
+                                    document.body.removeChild(tempPlayer);
+                                    // 尝试提取背景图片的 URL
+                                    const backgroundImageMatch = backgroundStyle.match(/url$$['"]?([^'"]+)['"]?$$/);
+                                    if (backgroundImageMatch) {
+                                        let backgroundImageUrl = backgroundImageMatch[1];
+                                        // 将相对路径转换为绝对路径
+                                        backgroundImageUrl = new URL(backgroundImageUrl, window.location.href).href;
+                                        kuang.style.backgroundImage = `url(${backgroundImageUrl})`;
+                                    } else {
+                                        kuang.style.background = backgroundStyle;
+                                    }
+                                }
                             };
                             popuperContainer.style.display = 'block';
                             popuperContainerBool = false;
@@ -213,13 +243,43 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     };
                     createButton(name, leftPane.firstChild);
                     createButton(name2, leftPane.firstChild);
-                    let groupname=['wei','shu','wu','qun','jin','shen'].includes(player.group)?player.group:'shen';
                     //武将边框
                     var biankuang3 = ui.create.div(".biankuang3", blackBg1);
-                    biankuang3.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/olst_${groupname}.png`);
+                    // 创建临时元素来获取对应势力的背景样式
+                    const tempPlayer = document.createElement('div');
+                    tempPlayer.classList.add('player');
+                    const tempCampWrap = document.createElement('div');
+                    tempCampWrap.classList.add('camp-wrap');
+                    tempCampWrap.setAttribute('data-camp', player.group);
+                    tempPlayer.appendChild(tempCampWrap);
+                    const tempCampBack = document.createElement('div');
+                    tempCampBack.classList.add('camp-back');
+                    tempCampWrap.appendChild(tempCampBack);
+                    // 将临时元素添加到文档中以计算样式
+                    document.body.appendChild(tempPlayer);
+                    // 获取计算后的样式
+                    const computedStyle = window.getComputedStyle(tempCampBack);
+                    // 先尝试获取 background 样式
+                    let backgroundStyle = computedStyle.background;
+                    // 如果 background 为空，尝试获取 background-color
+                    if (!backgroundStyle || backgroundStyle === 'none') {
+                        backgroundStyle = computedStyle.backgroundColor;
+                    }
+                    // 移除临时元素
+                    document.body.removeChild(tempPlayer);
+                    // 尝试提取背景图片的 URL
+                    const backgroundImageMatch = backgroundStyle.match(/url$$['"]?([^'"]+)['"]?$$/);
+                    if (backgroundImageMatch) {
+                        let backgroundImageUrl = backgroundImageMatch[1];
+                        // 将相对路径转换为绝对路径
+                        backgroundImageUrl = new URL(backgroundImageUrl, window.location.href).href;
+                        biankuang3.style.backgroundImage = `url(${backgroundImageUrl})`;
+                    } else {
+                        biankuang3.style.background = backgroundStyle;
+                    }
                     //势力图标
                     var biankuang4=ui.create.div(".biankuang4", blackBg1);
-                    biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${groupname}.png`)
+                    biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${player.group}.png`)
                     //武将名	
                     var nametext = '';
                     if (name && name2) {
@@ -278,7 +338,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     var judges = player.getVCards("j");
                     //明置牌区===================================================================================
                     if (shownHs.length) {
-                        ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区域", rightPane.firstChild);
+                        ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区", rightPane.firstChild);
                         shownHs.forEach(function(item) {
                             var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
                             card.style.zoom = "0.6";
@@ -299,15 +359,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     } else if (allShown) {
                         var hs = player.getCards("h");
                         if (hs.length) {
-                            const title = ui.create.div(".xcaption", "手牌区域", rightPane.firstChild);
-                            // 直接添加背景样式(需确保图片路径正确)
-                            title.style.cssText = `
-                            /* 背景设置 */
-                            background: url('extension/十周年UI/shoushaUI/character/images/OL_line/quyu4.png') center/contain no-repeat;background-size: 260px 30px;background-origin: content-box;
-                            /* 文本设置 */
-                            text-align: content;line-height: 1.8;
-                            /* 基础样式 */
-                            color: #bb9870;display: inline-block;position: relative;min-width: 250px;`;
+                            const title = ui.create.div(".xcaption", "手牌区", rightPane.firstChild);
                             hs.forEach(function(item) {
                                 var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
                                 card.style.zoom = "0.6";
@@ -316,22 +368,12 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                         }
                     }
                     //技能区===================================================================================
+                    let hasSkills=[];
                     if (oSkills.length) {
                         // 创建技能标题
                         const title = ui.create.div(".xcaption", "武将技能", rightPane.firstChild);
-                        // 提取标题样式，便于修改和查看
-                        title.style.cssText = `
-                            background: url('extension/十周年UI/shoushaUI/character/images/OL_line/quyu4.png') center/contain no-repeat;
-                            background-size: 260px 30px;
-                            background-origin: content-box;
-                            text-align: center;
-                            line-height: 1.8;
-                            color: #bb9870;
-                            display: inline-block;
-                            position: relative;
-                            min-width: 250px;
-                        `;
                         for(let name of oSkills){
+                            if(hasSkills.includes(name))continue;
                             let info = get.info(name);
                             let typeText;
                             // 判断技能类型
@@ -340,7 +382,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                             } else {
                                 typeText = info.trigger?'被动':'主动';
                             };
-                            const skillTypeHTML =`<span class="skill-type-tag">（${typeText}）</span>`;
+                            const skillTypeHTML =`<span class="skill-type-tag">(${typeText})</span>`;
                             const generateSkillHTML = (nameContent, descContent) => {
                                 return `<div data-color>${nameContent}</div>${skillTypeHTML}<div>${descContent}</div>`;
                             };
@@ -389,10 +431,20 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                                 ui.create.div(".xskill",generateSkillHTML(lib.translate[name],get.skillInfoTranslation(name, player)),rightPane.firstChild);
                             }
                             function createYanshengSkill(skill){//衍生技处理
+                                hasSkills.push(skill);
                                 const ysskillname = get.skillTranslation(skill);
-                                const has=player.hasSkill(skill) ? '已生效' : '未生效';
+                                let info=get.info(skill);
+                                let has;
+                                if (info.juexingji || info.limited) {
+                                    if(!player.hasSkill(skill)){
+                                        if(player.awakenedSkills.includes(skill))has='已发动';
+                                        else has='未生效'
+                                    }else has='未发动';
+                                } else {
+                                    has=player.hasSkill(skill) ? '已生效' : '未生效';
+                                };
                                 const ysskillmiaoshu = get.translation(skill + '_info');
-                                const ysSkillNameTypeHTML = player.hasSkill(skill)? `<span class="yanshengji">${ysskillname}(${has})</span>`:`<span style="color: #978a81;" class="yanshengji">${ysskillname}(${has})</span>`;
+                                const ysSkillNameTypeHTML = has!='未生效'? `<span class="yanshengji">${ysskillname}(${has})</span>`:`<span style="color: #978a81;" class="yanshengji">${ysskillname}(${has})</span>`;
                                 const ysSkillDescHTML = `<span class="yanshengjiinfo">${ysskillmiaoshu}</span>`;
                                 const ysSkillHTML = ysSkillNameTypeHTML+ysSkillDescHTML;
                                 ui.create.div(".xskill", ysSkillHTML, rightPane.firstChild);
@@ -411,51 +463,34 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 
                     //装备区===================================================================================
                     if (eSkills.length) {
-                        // 创建标题元素(保持原样)
-                        const title = ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
-                        title.style.cssText = `
-                        background: url('extension/十周年UI/shoushaUI/character/images/OL_line/quyu4.png') center/contain no-repeat;background-size: 260px 30px;background-origin: content-box;text-align: content;line-height: 1.8;color: #bb9870;display: inline-block;position: relative;  min-width: 250px;`;
-                        eSkills.forEach(function(card) {
-                            // 花色配置
-                            const suitConfig = {
-                                'spade':{symbol: '♠',color: '#2e2e2e'},
-                                'heart': {symbol: '♥',color: '#e03c3c'},
-                                'club': {symbol: '♣',color: '#2e2e2e'},
-                                'diamond': {symbol: '♦',color: '#e03c3c'}
-                            } [card.suit] || {
-                                symbol: '',
-                                color: '#FFFFFF'
-                            };
-                            // 获取装备类型图标
-                            const equipType = lib.card[card.name]?.equipType;
-                            const typeIcon = {
-                                'equip1': 'equip1.png',
-                                'equip2': 'equip2.png',
-                                'equip3': 'equip3.png',
-                                'equip4': 'equip4.png',
-                                'equip5': 'equip5.png',
-                            } [get.subtype(card)] || 'default.png';
-                            const dianshu={
-                                1:'A',
-                                11:'J',
-                                12:'Q',
-                                13:'K',
-                            }[card.number]||card.number;
-                            // 第一行布局结构
-                            const firstLine = `<div style="display: flex;align-items: center;gap: 8px;position: relative;">
-                            <!-- 装备名称 -->
-                            <span style="color: #f7d229;font-weight: bold;">${get.translation(card.name).replace(/[【】]/g, '')}</span>
-                            <!-- 类别图标 -->
-                            <img src="extension/十周年UI/shoushaUI/character/images/OL_line/${typeIcon}" style="width:14px; height:20px; vertical-align:middle">
-                            <!-- 花色数字组 -->
-                            <div style="margin-left: 0;display: flex;align-items: center;gap: 2px;">
-                            <!-- 花色符号 -->
-                            <span style="color: ${suitConfig.color};text-shadow: 0 0 1px white,0 0 1px white;position: relative;">${suitConfig.symbol}</span>                             
-                            <!-- 点数 -->
-<span style="margin-left:8px;margin-top:5px;font-size:18px;color: ${suitConfig.symbol === '♠' || suitConfig.symbol === '♣' ? '#ffffff' : suitConfig.color};font-family: shousha;">${dianshu||''}</span>
-</div>
-</div>`;
-                            // 保持原有描述处理
+                        const title = ui.create.div(".xcaption", "装备区", rightPane.firstChild);
+                        const suitConfigMap = {
+                            'spade': { symbol: '♠', color: '#2e2e2e', image: 'spade.png' },
+                            'heart': { symbol: '♥', color: '#e03c3c', image: 'heart.png' },
+                            'club': { symbol: '♣', color: '#2e2e2e', image: 'club.png' },
+                            'diamond': { symbol: '♦', color: '#e03c3c', image: 'diamond.png' }
+                        };
+                        const typeIconMap = {
+                            'equip1': 'equip1.png',
+                            'equip2': 'equip2.png',
+                            'equip3': 'equip3.png',
+                            'equip4': 'equip4.png',
+                            'equip5': 'equip5.png'
+                        };
+                        const dianshuMap = { 1: 'A', 11: 'J', 12: 'Q', 13: 'K' };
+                        eSkills.forEach(function (card) {
+                            const suitConfig = suitConfigMap[card.suit] || { symbol: '', color: '#FFFFFF' };
+                            const typeIcon = typeIconMap[get.subtype(card)] || 'default.png';
+                            const dianshu = dianshuMap[card.number] || card.number;
+                            const firstLine = `
+                                <div style="display: flex; align-items: center; gap: 8px; position: relative;"><span style="color: #f7d229; font-weight: bold;">${get.translation(card.name).replace(/[【】]/g, '')}</span>
+                                <img src="extension/十周年UI/shoushaUI/character/images/OL_line/${typeIcon}" style="width:14px; height:20px; vertical-align:middle">
+                                <div style="margin-left: 0; display: flex; align-items: center; gap: 2px;">${suitConfig.image?
+                                `<img src="extension/十周年UI/shoushaUI/character/images/OL_line/${suitConfig.image}" style="width: 16px;height: 16px;margin-left: -2px;margin-top: 3px;filter: drop-shadow(0 0 1px white);">` :
+                                 `<span style="color: ${suitConfig.color};margin- left:- 2px;margin- top: 3px;text- shadow: 0 0 1px white;position: relative;">${suitConfig.symbol}</span>`}
+                                 <span style="margin-left: 3px;margin-top: 3px;font-size: 18px;color: ${suitConfig.color === '#e03c3c' ? suitConfig.color : '#efdbb6'};font-family: shousha;">${dianshu || ''}</span>
+                                    </div>
+                                </div>`;
                             let desc = '';
                             if (get.subtype(card) == "equip1") {
                                 var num = 1;
@@ -466,30 +501,17 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                                 if (num < 1) {
                                     num = 1;
                                 }
-                                desc += '攻击范围:' + num + '<br>';
-                            };
+                                desc += '攻击范围 :   ' + num + '<br>';
+                            }
                             desc += get.translation(card.name + "_info").replace(/[【】]/g, '');
                             const special = card.cards?.find(item => item.name == card.name && lib.card[item.name]?.cardPrompt);
                             if (special) desc = lib.card[special.name].cardPrompt(special, player);
-
-                            // 创建装备项容器
-                            ui.create.div(".xskillx",
-                                firstLine + `<div style="margin-top:4px">${desc}</div>`,
-                                rightPane.firstChild
-                            );
+                            ui.create.div(".xskillx", firstLine + `<div style="margin-top:4px;white-space: pre-wrap;">${desc}</div>`, rightPane.firstChild);
                         });
                     }
                     //判定区===================================================================================
                     if (judges.length) {
-                        const title = ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
-                        // 直接添加背景样式(需确保图片路径正确)
-                        title.style.cssText = `
-                        /* 背景设置 */
-                        background: url('extension/十周年UI/shoushaUI/character/images/OL_line/quyu4.png') center/contain no-repeat;background-size: 260px 30px;background-origin: content-box;
-                        /* 文本设置 */
-                        text-align: content;line-height: 1.8;
-                        /* 基础样式 */
-                        color: #bb9870;display: inline-block;position: relative;min-width: 250px;`;
+                        const title = ui.create.div(".xcaption", "判定区", rightPane.firstChild);
                         judges.forEach(function(card) {
                             const cards = card.cards;
                             let str = get.translation(card);

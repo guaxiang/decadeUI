@@ -287,7 +287,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 		//左手整理手牌按钮位置
 		if (lib.config["extension_十周年UI_rightLayout"] == "on") {
 			head.style.cssText =
-				"display: block;--w: 92px;--h: calc(var(--w) * 98/138);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 80px);left: 32px;right:auto;background-color: transparent;z-index:2";
+				"display: block;--w: 92px;--h: calc(var(--w) * 98/138);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 70px);left: 32px;right:auto;background-color: transparent;z-index:2";
 		} else {
 			head.style.cssText =
 				"display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:2;";

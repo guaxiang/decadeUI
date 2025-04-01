@@ -41,68 +41,151 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		},
 		//龙头
 		mx_longLevel: {
-			trigger: {
-				global: "gameStart",
-			},
-			silent: true,
-			forced: true,
-			filter(event, player) {
-				return lib.config.extension_十周年UI_longLevel == "sex" || lib.config.extension_十周年UI_longLevel == "seven";
-			},
-			content() {
-				game.removeGlobalSkill("mx_longLevel");
-				game.players.forEach(target => {
-					if (lib.config.extension_十周年UI_longLevel == "seven") {
-						var rarity = ["silver", "gold", "yu", "bing", "yan"];
+				trigger: {
+					global: "gameStart"
+				},
+				silent: true,
+				forced: true,
+				filter: function (event, player) {
+					return (lib.config.extension_十周年UI_longLevel == 'ten' ) || (lib.config.extension_十周年UI_longLevel == 'eleven');
+				},
+				content: function () {
+					if (lib.config.extension_十周年UI_longLevel == 'ten') {
+						var rarity = ['silver', 'gold', 'yu', 'bing', 'yan'];
 						switch (game.getRarity(player.name)) {
-							case "junk":
-								rarity = rarity[0];
-								break;
-							case "common":
-								rarity = rarity[1];
-								break;
-							case "rare":
-								rarity = rarity[2];
-								break;
-							case "epic":
-								rarity = rarity[3];
-								break;
-							case "legend":
-								rarity = rarity[4];
-								break;
-							default:
-								break;
-						}
+							case 'junk': rarity = rarity[0]; break;
+							case 'common': rarity = rarity[1]; break;
+							case 'rare': rarity = rarity[2]; break;
+							case 'epic': rarity = rarity[3]; break;
+							case 'legend': rarity = rarity[4]; break;
+							default: break;
+						};
 					}
-					if (lib.config.extension_十周年UI_longLevel == "sex") {
-						var rarity = ["silver", "gold", "yu", "bing", "yan"].randomGet();
-					}
+					if (lib.config.extension_十周年UI_longLevel == 'eleven') {
+						var rarity = ['silver', 'gold', 'yu', 'bing', 'yan'].randomGet();
+					};					
+					if (rarity === 'yan') {
 					var longtou = document.createElement("img");
-					longtou.src = decadeUIPath + "/assets/image/long_" + rarity + "1.png";
+					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k2.png";
 					longtou.style.cssText = "pointer-events:none";
 					longtou.style.position = "absolute";
 					longtou.style.display = "block";
-					longtou.style.top = "-24px";
-					longtou.style.right = "-18px";
-					longtou.style.height = "110";
-					longtou.style.width = "60px";
-					longtou.style.zIndex = "63";
-					target.appendChild(longtou);
-
+					longtou.style.top = "-20.5px";
+					longtou.style.right = "-5px";
+					longtou.style.height = "115%";
+					longtou.style.width = "139.5%";
+					longtou.style.zIndex = "60";
+					player.appendChild(longtou)					
 					var longwei = document.createElement("img");
-					longwei.src = decadeUIPath + "/assets/image/long_" + rarity + "2.png";
+					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL5.png";
 					longwei.style.cssText = "pointer-events:none";
 					longwei.style.position = "absolute";
 					longwei.style.display = "block";
-					longwei.style.bottom = "-10px";
-					longwei.style.right = "-9px";
-					longwei.style.height = "40";
-					longwei.style.width = "80px";
-					longwei.style.zIndex = "99";
-					target.appendChild(longwei);
-				});
+					longwei.style.top = "-20.5px";
+					longwei.style.right = "-5px";
+					longwei.style.height = "115%";
+					longwei.style.width = "139.5%";
+					longwei.style.zIndex = "72";
+					player.appendChild(longwei)					
+					};					
+					if ( rarity === 'bing') {
+					var longtou = document.createElement("img");
+					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k8.png";
+					longtou.style.cssText = "pointer-events:none";
+					longtou.style.position = "absolute";
+					longtou.style.display = "block";
+					longtou.style.top = "-6px";
+					longtou.style.right = "-5.5px";
+					longtou.style.height = "109%";
+					longtou.style.width = "131.5%";
+					longtou.style.zIndex = "60";
+					player.appendChild(longtou)					
+					var longwei = document.createElement("img");
+					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL4.png";
+					longwei.style.cssText = "pointer-events:none";
+					longwei.style.position = "absolute";
+					longwei.style.display = "block";
+					longwei.style.top = "-6px";
+					longwei.style.right = "-5.5px";
+					longwei.style.height = "107%";
+					longwei.style.width = "131.5%";
+					longwei.style.zIndex = "72";
+					player.appendChild(longwei)
+					};					
+					if ( rarity === 'yu') {
+					var longtou = document.createElement("img");
+					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k6.png";
+					longtou.style.cssText = "pointer-events:none";
+					longtou.style.position = "absolute";
+					longtou.style.display = "block";
+					longtou.style.top = "-3px";
+					longtou.style.right = "-3px";
+					longtou.style.height = "107.5%";
+					longtou.style.width = "123.5%";
+					longtou.style.zIndex = "60";
+					player.appendChild(longtou)					
+					var longwei = document.createElement("img");
+					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL3.png";
+					longwei.style.cssText = "pointer-events:none";
+					longwei.style.position = "absolute";
+					longwei.style.display = "block";
+					longwei.style.top = "-3px";
+					longwei.style.right = "-3px";
+					longwei.style.height = "105.5%";
+					longwei.style.width = "123.5%";
+					longwei.style.zIndex = "72";
+					player.appendChild(longwei)
+					};					
+					if ( rarity === 'gold') {
+					var longtou = document.createElement("img");
+					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k4.png";
+					longtou.style.cssText = "pointer-events:none";
+					longtou.style.position = "absolute";
+					longtou.style.display = "block";
+					longtou.style.top = "-5px";
+					longtou.style.right = "-3px";
+					longtou.style.height = "107.5%";
+					longtou.style.width = "123.5%";
+					longtou.style.zIndex = "60";
+					player.appendChild(longtou)					
+					var longwei = document.createElement("img");
+					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL2.png";
+					longwei.style.cssText = "pointer-events:none";
+					longwei.style.position = "absolute";
+					longwei.style.display = "block";
+					longwei.style.top = "-5px";
+					longwei.style.right = "-3px";
+					longwei.style.height = "107.5%";
+					longwei.style.width = "123.5%";
+					longwei.style.zIndex = "72";
+					player.appendChild(longwei)
+					};					
+					if ( rarity === 'silver') {
+					var longtou = document.createElement("img");
+					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k2.png";
+					longtou.style.cssText = "pointer-events:none";
+					longtou.style.position = "absolute";
+					longtou.style.display = "block";
+					longtou.style.top = "-20.5px";
+					longtou.style.right = "-5px";
+					longtou.style.height = "115%";
+					longtou.style.width = "139.5%";
+					longtou.style.zIndex = "60";
+					player.appendChild(longtou)					
+					var longwei = document.createElement("img");
+					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL5.png";
+					longwei.style.cssText = "pointer-events:none";
+					longwei.style.position = "absolute";
+					longwei.style.display = "block";
+					longwei.style.top = "-20.5px";
+					longwei.style.right = "-5px";
+					longwei.style.height = "115%";
+					longwei.style.width = "139.5%";
+					longwei.style.zIndex = "72";
+					player.appendChild(longwei)
+					};					
+				}
 			},
-		},
 		//属性赋予
 		decadeUI_usecardBegin: {
 			trigger: {

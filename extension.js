@@ -1498,11 +1498,9 @@ export default async function () {
 									this.queueCssAnimation("player-hurt 0.3s");
 								},
 								$throw(card, time, init, nosource, cardsetion) {
-									if (!cardsetion && cardsetion !== false && lib.config
-										.card_animation_info) {
+									if (!cardsetion && cardsetion !== false && lib.config.card_animation_info) {
 										let source = this;
-										if (["useCard", "respond"].includes(get.event().name)) source = get
-											.player();
+										if (["useCard", "respond"].includes(get.event().name)) source = get.player();
 										cardsetion = get.cardsetion(source);
 									}
 									if (typeof card == "number") {
@@ -1529,10 +1527,8 @@ export default async function () {
 									if (init !== false) {
 										if (init !== "nobroadcast") {
 											game.broadcast(
-												function(player, card, time, init, nosource,
-												cardsetion) {
-													player.$throw(card, time, init, nosource,
-														cardsetion);
+												function (player, card, time, init, nosource, cardsetion) {
+													player.$throw(card, time, init, nosource, cardsetion);
 												},
 												this,
 												card,
@@ -1551,12 +1547,34 @@ export default async function () {
 										}
 										game.addVideo("throw", this, [get.cardsInfo(card), time, nosource]);
 									}
-									for (var i = card.length - 1; i >= 0; i--)
-										this.$throwordered2(card[i].copy('thrown'), nosource);
+									// for (var i = card.length - 1; i >= 0; i--)
+									// 	this.$throwordered2(card[i].copy('thrown'), nosource);
+									// if (game.chess) {
+									// 	this.chessFocus();
+									// }
+									// return card[card.length - 1];
 									if (game.chess) {
 										this.chessFocus();
 									}
-									return card[card.length - 1];
+									if (get.itemtype(card) == "cards") {
+										var node;
+										for (var i = 0; i < card.length; i++) {
+											node = this.$throw(card[i], time, false, nosource, cardsetion);
+										}
+										return node;
+									} else {
+										var node;
+										if (card == undefined || card.length == 0) return;
+										node = this.$throwordered(card.copy("thrown"), nosource, cardsetion);
+										if (time != undefined) {
+											node.fixed = true;
+											setTimeout(function () {
+												node.delete();
+											}, time);
+										}
+										lib.listenEnd(node);
+										return node;
+									}
 								},
 								$throwordered2(card, nosource) {
 									if (_status.connectMode) ui.todiscard = [];
@@ -1596,7 +1614,6 @@ export default async function () {
 											break;
 										}
 									}
-
 									//牌面信息添加
 									if (1) {
 										let node = card;
@@ -4496,21 +4513,14 @@ export default async function () {
 
 					lib.element.content.chooseToCompareMultiple = function () {
 						"step 0";
-						event.forceDie = true;
-						if (player.countCards("h") == 0) {
-							event.result = {
-								cancelled: true,
-								bool: false,
-							};
+						if ((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards("h") == 0) {
+							event.result = { cancelled: true, bool: false };
 							event.finish();
 							return;
 						}
 						for (var i = 0; i < targets.length; i++) {
-							if (targets[i].countCards("h") == 0) {
-								event.result = {
-									cancelled: true,
-									bool: false,
-								};
+							if ((!event.fixedResult || !event.fixedResult[targets[i].playerid]) && targets[i].countCards("h") == 0) {
+								event.result = { cancelled: true, bool: false };
 								event.finish();
 								return;
 							}
@@ -11405,6 +11415,8 @@ export default async function () {
 					sex: "随机",
 					seven: "评级",
 					eight: "关闭",
+					ten: "OL等阶露头框·评级",
+					eleven: "OL等阶露头框·随机",
 				},
 				update() {
 					if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
@@ -11694,13 +11706,14 @@ export default async function () {
 				let log = [
 					`魔改十周年UI ${pack.version}`,
 					"最低适配：v1.10.17.1",
-					"删除小乔涩涩图片，H哇哒咩！",
-					"添加全选按钮 by咪咪狗奇妙工具",
-					"修复手杀UI自动整理，UI显示问题",
-					"新增OLUI&欢杀UI，感谢群友提供的素材",
+					"新增样式Online&欢乐三国杀",
+					"手杀一将十周年后的样式左手布局不再更新",
+					"删除小乔涩涩图片，优化动皮露头显示",
+					"添加全选按钮，修复手杀样式自动整理",
+					"choosetocomparemultiple函数适配",
 					"整合小爱莉、U等提供的武将详情界面",
 					"整合U、凌梦、@19950219、小爱莉的UI细节调整",
-					"整合活动群lonely patients、随性似风提供的$throw函数跟进",
+					"整合lonely patients、萌新转型中提供的$throw函数适配",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);
