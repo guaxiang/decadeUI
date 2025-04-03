@@ -1547,34 +1547,34 @@ export default async function () {
 										}
 										game.addVideo("throw", this, [get.cardsInfo(card), time, nosource]);
 									}
-									// for (var i = card.length - 1; i >= 0; i--)
-									// 	this.$throwordered2(card[i].copy('thrown'), nosource);
-									// if (game.chess) {
-									// 	this.chessFocus();
-									// }
-									// return card[card.length - 1];
+									for (var i = card.length - 1; i >= 0; i--)
+										this.$throwordered2(card[i].copy('thrown'), nosource);
 									if (game.chess) {
 										this.chessFocus();
 									}
-									if (get.itemtype(card) == "cards") {
-										var node;
-										for (var i = 0; i < card.length; i++) {
-											node = this.$throw(card[i], time, false, nosource, cardsetion);
-										}
-										return node;
-									} else {
-										var node;
-										if (card == undefined || card.length == 0) return;
-										node = this.$throwordered(card.copy("thrown"), nosource, cardsetion);
-										if (time != undefined) {
-											node.fixed = true;
-											setTimeout(function () {
-												node.delete();
-											}, time);
-										}
-										lib.listenEnd(node);
-										return node;
-									}
+									return card[card.length - 1];
+									// if (game.chess) {
+									// 	this.chessFocus();
+									// }
+									// if (get.itemtype(card) == "cards") {
+									// 	var node;
+									// 	for (var i = 0; i < card.length; i++) {
+									// 		node = this.$throw(card[i], time, false, nosource, cardsetion);
+									// 	}
+									// 	return node;
+									// } else {
+									// 	var node;
+									// 	if (card == undefined || card.length == 0) return;
+									// 	node = this.$throwordered(card.copy("thrown"), nosource, cardsetion);
+									// 	if (time != undefined) {
+									// 		node.fixed = true;
+									// 		setTimeout(function () {
+									// 			node.delete();
+									// 		}, time);
+									// 	}
+									// 	lib.listenEnd(node);
+									// 	return node;
+									// }
 								},
 								$throwordered2(card, nosource) {
 									if (_status.connectMode) ui.todiscard = [];
