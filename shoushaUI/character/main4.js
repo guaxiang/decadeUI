@@ -53,12 +53,8 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                 var blackBg2 = ui.create.div(".blackBg.two", dialog);
                 var basicInfo = ui.create.div(".basicInfo", blackBg1);
                 var rightPane = ui.create.div(".right", blackBg2);
-                var createButton = function(name, parent) {
-                    if (!name) return;
-                    if (!lib.character[name]) return;
-                    var button = ui.create.button(name, "character", parent, true);
-                };
-                container.show = function(player) {
+                container.show = function(player,nametype,bool) {
+                if(bool){
                     game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3');
                     var name = player.name1 || player.name;
                     var name2 = player.name2;
@@ -71,9 +67,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     //武将图
                     var biankuang = ui.create.div(".biankuang2", blackBg1);
                     var leftPane = ui.create.div(".left2", biankuang);
-                    leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
-                    var leftPane = ui.create.div(".left2", biankuang);
-                    leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
+                    leftPane.setBackground(name, 'character');
                     let popuperContainer = null;
                     let popuperContainerBool = true;
                     //先确定名字，方便后面调用
@@ -96,6 +90,40 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     const VipLv=Math.min(guanjiejibie+1,10);
                     //mvp次数
                     const mvpnum=(Math.floor(Math.random()*(60-20+1))+20);
+                    function createBiankuangColor(kuang,group){//提取边框的函数
+                        // 创建临时元素来获取对应势力的背景样式
+                        const tempPlayer = document.createElement('div');
+                        tempPlayer.classList.add('player');
+                        const tempCampWrap = document.createElement('div');
+                        tempCampWrap.classList.add('camp-wrap');
+                        tempCampWrap.setAttribute('data-camp', group);
+                        tempPlayer.appendChild(tempCampWrap);
+                        const tempCampBack = document.createElement('div');
+                        tempCampBack.classList.add('camp-back');
+                        tempCampWrap.appendChild(tempCampBack);
+                        // 将临时元素添加到文档中以计算样式
+                        document.body.appendChild(tempPlayer);
+                        // 获取计算后的样式
+                        const computedStyle = window.getComputedStyle(tempCampBack);
+                        // 先尝试获取 background 样式
+                        let backgroundStyle = computedStyle.background;
+                        // 如果 background 为空，尝试获取 background-color
+                        if (!backgroundStyle || backgroundStyle === 'none') {
+                            backgroundStyle = computedStyle.backgroundColor;
+                        }
+                        // 移除临时元素
+                        document.body.removeChild(tempPlayer);
+                        // 尝试提取背景图片的 URL
+                        const backgroundImageMatch = backgroundStyle.match(/url$$['"]?([^'"]+)['"]?$$/);
+                        if (backgroundImageMatch) {
+                            let backgroundImageUrl = backgroundImageMatch[1];
+                            // 将相对路径转换为绝对路径
+                            backgroundImageUrl = new URL(backgroundImageUrl, window.location.href).href;
+                            kuang.style.backgroundImage = `url(${backgroundImageUrl})`;
+                        } else {
+                            kuang.style.background = backgroundStyle;
+                        }
+                    }
                     //资料页============================================================================
                     leftPane.onclick = function() {
                         game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3');
@@ -200,102 +228,73 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                                     //势力边框
                                     let kuang = ui.create.div(`.kuang`, charPic);
                                     let xingxing = ui.create.div(`.xing`, kuang);
-                                    let name = ui.create.div('.charName', get.translation(charName), kuang);
+                                    let prefixName=lib.translate[charName+'_prefix']?`${get.prefixSpan(get.translation(charName + '_prefix'), charName)}${get.rawName(charName)}`:get.translation(charName);
+                                    let name = ui.create.div('.charName',prefixName, kuang);
                                     let shili = ui.create.div(`.shili`, kuang);
                                     shili.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${group}.png`);
-                                    // 创建临时元素来获取对应势力的背景样式
-                                    const tempPlayer = document.createElement('div');
-                                    tempPlayer.classList.add('player');
-                                    const tempCampWrap = document.createElement('div');
-                                    tempCampWrap.classList.add('camp-wrap');
-                                    tempCampWrap.setAttribute('data-camp', group);
-                                    tempPlayer.appendChild(tempCampWrap);
-                                    const tempCampBack = document.createElement('div');
-                                    tempCampBack.classList.add('camp-back');
-                                    tempCampWrap.appendChild(tempCampBack);
-                                    // 将临时元素添加到文档中以计算样式
-                                    document.body.appendChild(tempPlayer);
-                                    // 获取计算后的样式
-                                    const computedStyle = window.getComputedStyle(tempCampBack);
-                                    // 先尝试获取 background 样式
-                                    let backgroundStyle = computedStyle.background;
-                                    // 如果 background 为空，尝试获取 background-color
-                                    if (!backgroundStyle || backgroundStyle === 'none') {
-                                        backgroundStyle = computedStyle.backgroundColor;
-                                    }
-                                    // 移除临时元素
-                                    document.body.removeChild(tempPlayer);
-                                    // 尝试提取背景图片的 URL
-                                    const backgroundImageMatch = backgroundStyle.match(/url$$['"]?([^'"]+)['"]?$$/);
-                                    if (backgroundImageMatch) {
-                                        let backgroundImageUrl = backgroundImageMatch[1];
-                                        // 将相对路径转换为绝对路径
-                                        backgroundImageUrl = new URL(backgroundImageUrl, window.location.href).href;
-                                        kuang.style.backgroundImage = `url(${backgroundImageUrl})`;
-                                    } else {
-                                        kuang.style.background = backgroundStyle;
-                                    }
+                                    createBiankuangColor(kuang,group);
                                 }
                             };
                             popuperContainer.style.display = 'block';
                             popuperContainerBool = false;
                         }
                     };
-                    createButton(name, leftPane.firstChild);
-                    createButton(name2, leftPane.firstChild);
                     //武将边框
                     var biankuang3 = ui.create.div(".biankuang3", blackBg1);
-                    // 创建临时元素来获取对应势力的背景样式
-                    const tempPlayer = document.createElement('div');
-                    tempPlayer.classList.add('player');
-                    const tempCampWrap = document.createElement('div');
-                    tempCampWrap.classList.add('camp-wrap');
-                    tempCampWrap.setAttribute('data-camp', player.group);
-                    tempPlayer.appendChild(tempCampWrap);
-                    const tempCampBack = document.createElement('div');
-                    tempCampBack.classList.add('camp-back');
-                    tempCampWrap.appendChild(tempCampBack);
-                    // 将临时元素添加到文档中以计算样式
-                    document.body.appendChild(tempPlayer);
-                    // 获取计算后的样式
-                    const computedStyle = window.getComputedStyle(tempCampBack);
-                    // 先尝试获取 background 样式
-                    let backgroundStyle = computedStyle.background;
-                    // 如果 background 为空，尝试获取 background-color
-                    if (!backgroundStyle || backgroundStyle === 'none') {
-                        backgroundStyle = computedStyle.backgroundColor;
-                    }
-                    // 移除临时元素
-                    document.body.removeChild(tempPlayer);
-                    // 尝试提取背景图片的 URL
-                    const backgroundImageMatch = backgroundStyle.match(/url$$['"]?([^'"]+)['"]?$$/);
-                    if (backgroundImageMatch) {
-                        let backgroundImageUrl = backgroundImageMatch[1];
-                        // 将相对路径转换为绝对路径
-                        backgroundImageUrl = new URL(backgroundImageUrl, window.location.href).href;
-                        biankuang3.style.backgroundImage = `url(${backgroundImageUrl})`;
-                    } else {
-                        biankuang3.style.background = backgroundStyle;
-                    }
+                    createBiankuangColor(biankuang3,name=='unknown'?player.group:lib.character[name][1]);
                     //势力图标
                     var biankuang4=ui.create.div(".biankuang4", blackBg1);
-                    biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${player.group}.png`)
-                    //武将名	
-                    var nametext = '';
-                    if (name && name2) {
-                        if (name == 'unknown') nametext += '未知';
-                        else if (lib.translate[name + '_ab']) nametext += lib.translate[name + '_ab'];
-                        else nametext += get.translation(name);
-                        nametext += ' / ';
-                        if (name2 == 'unknown') nametext += '未知';
-                        else if (lib.translate[name2 + '_ab']) nametext += lib.translate[name2 + '_ab'];
-                        else nametext += get.translation(name2);
-                    } else {
-                        if (name == 'unknown') nametext += '未知';
-                        else if (lib.translate[name + '_ab']) nametext += lib.translate[name + '_ab'];
-                        else nametext += get.translation(name);
+                    biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${name=='unknown'?player.group:lib.character[name][1]}.png`);
+                    //武将名
+                    let nametext='';
+                    let nametext2='';
+                    if (name == 'unknown') nametext += '未知';
+                    else nametext=lib.translate[name+'_prefix']?`${get.prefixSpan(get.translation(name + '_prefix'), name)}${get.rawName(name)}`:get.translation(name);
+                    if(name2){
+                        if (name2 == 'unknown') nametext2 += '未知';
+                        else nametext2=lib.translate[name2+'_prefix']?`${get.prefixSpan(get.translation(name2 + '_prefix'), name)}${get.rawName(name2)}`:get.translation(name2);
                     };
                     var namestyle = ui.create.div('.name', nametext, dialog);
+                    let playerx=player;
+                    let sjright = null;
+                    let sjleft = null;
+                    if (name2) {
+                        sjright = ui.create.div('.sjright', leftPane);
+                        sjright.onclick = function (event) {
+                            event.stopPropagation();
+                            sjright.style.display = 'none';
+                            if (rightPane.firstChild) {
+                                while (rightPane.firstChild.firstChild) {
+                                    rightPane.firstChild.removeChild(rightPane.firstChild.firstChild);
+                                }
+                            }
+                            namestyle.innerHTML = nametext2;
+                            container.show(playerx, 'name2', false);
+                            leftPane.setBackground(name2, 'character');
+                            createBiankuangColor(biankuang3,name2=='unknown'?playerx.group:lib.character[name2][1]);
+                            biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${name2=='unknown'?playerx.group:lib.character[name2][1]}.png`)
+                            if (!sjleft) {
+                                sjleft = ui.create.div('.sjleft', leftPane);
+                                sjleft.onclick = function (event) {
+                                    event.stopPropagation();
+                                    sjleft.style.display = 'none';
+                                    sjright.style.display = 'block';
+                                    if (rightPane.firstChild) {
+                                        while (rightPane.firstChild.firstChild) {
+                                            rightPane.firstChild.removeChild(rightPane.firstChild.firstChild);
+                                        }
+                                    }
+                                    namestyle.innerHTML = nametext;
+                                    container.show(playerx, 'name1', false);
+                                    leftPane.setBackground(name, 'character');
+                                    createBiankuangColor(biankuang3,name=='unknown'?playerx.group:lib.character[name][1]);
+                                    biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/OL_line/ols_${name=='unknown'?playerx.group:lib.character[name][1]}.png`)
+                                };
+                            } else {
+                                sjleft.style.display = 'block';
+                            }
+                        };
+                    }
                     namestyle.dataset.camp = player.group;
                     if (name && name2) {
                         namestyle.style.fontSize = '20px';
@@ -322,6 +321,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                         container.hide();
                         game.resume2();
                     });
+                    }
                     //以下是右侧文本栏==================================================================================
                     dialog.classList.add("single");
                     rightPane.innerHTML = "<div></div>";
@@ -336,37 +336,6 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     var shownHs = player.getShownCards();
                     var eSkills = player.getVCards("e");
                     var judges = player.getVCards("j");
-                    //明置牌区===================================================================================
-                    if (shownHs.length) {
-                        ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区", rightPane.firstChild);
-                        shownHs.forEach(function(item) {
-                            var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
-                            card.style.zoom = "0.6";
-                            rightPane.firstChild.appendChild(card);
-                        });
-                        if (allShown) {
-                            var hs = player.getCards("h");
-                            hs.removeArray(shownHs);
-                            if (hs.length) {
-                                ui.create.div(".xcaption", "其他手牌", rightPane.firstChild);
-                                hs.forEach(function(item) {
-                                    var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
-                                    card.style.zoom = "0.6";
-                                    rightPane.firstChild.appendChild(card);
-                                });
-                            }
-                        }
-                    } else if (allShown) {
-                        var hs = player.getCards("h");
-                        if (hs.length) {
-                            const title = ui.create.div(".xcaption", "手牌区", rightPane.firstChild);
-                            hs.forEach(function(item) {
-                                var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
-                                card.style.zoom = "0.6";
-                                rightPane.firstChild.appendChild(card);
-                            });
-                        }
-                    }
                     //技能区===================================================================================
                     let hasSkills=[];
                     if (oSkills.length) {
@@ -374,6 +343,10 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                         const title = ui.create.div(".xcaption", "武将技能", rightPane.firstChild);
                         for(let name of oSkills){
                             if(hasSkills.includes(name))continue;
+                            if(player.name2&&nametype){
+                                if(nametype=='name1'&&lib.character[player.name2][3].includes(name))continue;
+                                if(nametype=='name2'&&lib.character[player.name1][3].includes(name))continue;
+                            };
                             let info = get.info(name);
                             let typeText;
                             // 判断技能类型
@@ -444,7 +417,9 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                                     has=player.hasSkill(skill) ? '已生效' : '未生效';
                                 };
                                 const ysskillmiaoshu = get.translation(skill + '_info');
-                                const ysSkillNameTypeHTML = has!='未生效'? `<span class="yanshengji">${ysskillname}(${has})</span>`:`<span style="color: #978a81;" class="yanshengji">${ysskillname}(${has})</span>`;
+                                let ysSkillNameTypeHTML;
+                                if(!info.enable&&!info.trigger)ysSkillNameTypeHTML=`<span class="yanshengji">${ysskillname}</span>`
+                                else ysSkillNameTypeHTML= has!='未生效'? `<span class="yanshengji">${ysskillname}(${has})</span>`:`<span style="color: #978a81;" class="yanshengji">${ysskillname}(${has})</span>`;
                                 const ysSkillDescHTML = `<span class="yanshengjiinfo">${ysskillmiaoshu}</span>`;
                                 const ysSkillHTML = ysSkillNameTypeHTML+ysSkillDescHTML;
                                 ui.create.div(".xskill", ysSkillHTML, rightPane.firstChild);
@@ -460,7 +435,37 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                             }
                         };
                     }
-
+                    //明置牌区===================================================================================
+                    if (shownHs.length) {
+                        ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区", rightPane.firstChild);
+                        shownHs.forEach(function(item) {
+                            var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
+                            card.style.zoom = "0.6";
+                            rightPane.firstChild.appendChild(card);
+                        });
+                        if (allShown) {
+                            var hs = player.getCards("h");
+                            hs.removeArray(shownHs);
+                            if (hs.length) {
+                                ui.create.div(".xcaption", "其他手牌", rightPane.firstChild);
+                                hs.forEach(function(item) {
+                                    var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
+                                    card.style.zoom = "0.6";
+                                    rightPane.firstChild.appendChild(card);
+                                });
+                            }
+                        }
+                    } else if (allShown) {
+                        var hs = player.getCards("h");
+                        if (hs.length) {
+                            const title = ui.create.div(".xcaption", "手牌区", rightPane.firstChild);
+                            hs.forEach(function(item) {
+                                var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
+                                card.style.zoom = "0.6";
+                                rightPane.firstChild.appendChild(card);
+                            });
+                        }
+                    }
                     //装备区===================================================================================
                     if (eSkills.length) {
                         const title = ui.create.div(".xcaption", "装备区", rightPane.firstChild);
@@ -525,7 +530,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     game.pause2();
                 };
                 plugin.characterDialog = container;
-                container.show(this);
+                container.show(this,'name1',true);
             },
         },
     };
