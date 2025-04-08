@@ -1411,7 +1411,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							if (eff < -7) return (Math.random() + Math.pow(-(eff + 7) / 8, 2)) / Math.sqrt(evt.betrayers.length + 1) + (player.hp - 3) * 0.05 + Math.max(0, 4 - evt.player.hp) * 0.05 - (player.hp == 1 && !get.tag(card, "damage") ? 0.2 : 0);
 							return Math.pow((get.value(card, evt.player, "raw") - 4) / (eff == 0 ? 3.1 : 10), 2) / Math.sqrt(evt.betrayers.length || 1) + (player.hp - 3) * 0.05 + Math.max(0, 4 - evt.player.hp) * 0.05;
 						}
-						if (evt.player.getStorage("old_guhuo_cheated").contains(card.name + card.nature)) return Math.random() + 0.3;
+						if (evt.player.getStorage("old_guhuo_cheated").includes(card.name + card.nature)) return Math.random() + 0.3;
 					}
 					return Math.random();
 				});

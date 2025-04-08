@@ -235,7 +235,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 					var getPack = function(name) {
 						for (const pak in lib.characterSort) {
 							for (const package in lib.characterSort[pak]) {
-								if (lib.characterSort[pak][package].contains(name)) {
+								if (lib.characterSort[pak][package].includes(name)) {
 									if (pak == 'standard' || package == 'sp_waitforsort' ||
 										package == 'sp_qifu' || package == 'sp_others' ||
 										package == 'sp_guozhan2' ||
@@ -297,8 +297,8 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 							var translation = lib.translate[name];
 							if (translation && lib.translate[name + '_info'] &&
 								translation != '' && lib.translate[name + '_info'] != '') {
-								if (!player.getSkills().contains(name) || player
-									.awakenedSkills.contains(name)) ui.create.div('.xskill',
+								if (!player.getSkills().includes(name) || player
+									.awakenedSkills.includes(name)) ui.create.div('.xskill',
 									'<div data-color>' + '<span style="opacity:0.5">' +
 									translation + '： ' + '</span>' +
 									'</div>' + '<div>' +
@@ -320,20 +320,20 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 									var underlinenode = rightPane.firstChild.querySelector(
 										'.underlinenode');
 									if (lib.skill[name].frequent) {
-										if (lib.config.autoskilllist.contains(name)) {
+										if (lib.config.autoskilllist.includes(name)) {
 											underlinenode.classList.remove('on');
 										}
 									}
 									if (lib.skill[name].subfrequent) {
 										for (var j = 0; j < lib.skill[name].subfrequent
 											.length; j++) {
-											if (lib.config.autoskilllist.contains(name +
+											if (lib.config.autoskilllist.includes(name +
 													'_' + lib.skill[name].subfrequent[j])) {
 												underlinenode.classList.remove('on');
 											}
 										}
 									}
-									if (lib.config.autoskilllist.contains(name)) {
+									if (lib.config.autoskilllist.includes(name)) {
 										underlinenode.classList.remove('on');
 									}
 									underlinenode.link = name;
