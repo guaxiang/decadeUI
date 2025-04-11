@@ -2,7 +2,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 	var plugin = {
 		name: "character",
 		filter: function() {
-			return !["chess", "tafang", "stone", "connect"].contains(get.mode());
+			return !["chess", "tafang", "stone", "connect"].includes(get.mode());
 		},
 		content: function(next) {
 			app.waitAllFunction(

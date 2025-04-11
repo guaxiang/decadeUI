@@ -11715,6 +11715,7 @@ export default async function () {
 					"整合小爱莉、U等提供的武将详情界面",
 					"整合U、凌梦、@19950219、小爱莉的UI细节调整",
 					"整合lonely patients、萌新转型中提供的$throw函数适配",
+					"武将信息和技能特效优先读取立绘，路径为本体image/lihui",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);
