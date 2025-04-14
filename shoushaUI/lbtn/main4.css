@@ -1,113 +1,153 @@
-.lbtn-controls {
-	/*牌序，记录按钮*/
-	--width: 80px;
-	/*按钮宽度*/
-	--height: 58.6px;
-	/*按钮高度*/
-	left: 0;
-	/*左边距，越大越靠右*/
-	bottom: 15%;
-	/*整体上移*/
-	z-index: 3;
+.identityShow {/* 身份任务 */
+    top: 5px;
+    left: 80px;
+    z-index: 4;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    padding: 0px 10px;
+    width: 120px;
+    position: relative;
 }
-
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
-	left: 40px !important;
+.jiluButton {/* 记录按钮 */
+    display: block;
+    --w: 105px;
+    --h: 45px;
+    width: var(--w);
+    height: var(--h);
+    position: absolute;
+    bottom: calc(-1 * var(--h)-5px);
+    background-image: url("./images/OL_line/uibutton/jiluShow.png");
+    background-size: 100% 100%;
+    z-index: 5;
+    left: -5px;
 }
-
-.lbtn-controls~#me #handcards1 {
-	--lessw: 40px;
+.bgdialog {/*切换背景的背景图*/
+    position: absolute;
+    background: url("./images/OL_line/bg/bgdialog.png");
+    background-size: 100% 100%;
+    width: 70%;
+    height: 90%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
-
-.lbtn-controls>div {
-	display: block;
-	position: relative;
+.backgroundsbg{/*背景背景*/
+    width:100%;
+    height:82%;
+    top:11.5%;
+    overflow-x: hidden; 
+    overflow-y: auto;
 }
-
-.buttonyjcm {
-	--w: 56px;
-	--h: calc(var(--w) * 275 / 71);
-	width: var(--w);
-	height: var(--h);
-	overflow-y: scroll;
-	/*  display: flex;*/
-	flex-direction: column;
-	align-items: flex-start;
-	white-space: normal;
-	position: fixed;
-	bottom: calc(100% - 280px);
-	left: calc(100% - 112.5px);
-	background-color: rgba(0, 0, 0, 0.5);
+.backgrounds {/*每一个背景图*/
+    background-size: 100% 100%;
+    left:3.55%;
+    width: 29%; 
+    height: 34%; 
+    position: relative; 
+    border: 2px solid #d2b48c; 
+    min-width: 200px; 
+    object-fit: cover; 
+    margin-left:1%;
+    margin-bottom:1%;
+    border-radius:6px;
 }
-
-.buttonyjcm>.controls {
-	--w: 56px;
-	--h: calc(var(--w) * 55 / 71);
-	width: var(--w);
-	height: var(--h);
-	background-size: 100% 100%;
-	z-index: 99;
-	position: relative;
-	margin-top: 10px;
-	font-size: 14.5px;
-	font-weight: 1000;
-	font-family: yuanli;
-	color: #ae8e7d;
-	display: flex;
-	align-items: flex-end;
-	justify-content: center;
-	/* border: 1px solid #624f42; /* 添加边框 */
-	/* box-shadow: 8px 8px 8px #624f42; /* 添加阴影，值可以根据需要调整 */
+.backgrounds:hover {
+    filter: brightness(1.2); 
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); 
 }
-
-/*---------新版小配件--------*/
-.jiluButton_new {
-	display: block;
-	--w: 105px;
-	--h: 35px;
-	width: var(--w);
-	height: var(--h);
-	position: absolute;
-	bottom: 83.5%;
-	left: 0.6%;
-	background-image: url("./images/uibutton/jiluOL.png");
-	background-size: 100% 100%;
-	border-radius: 1px;
-	z-index: 3;
-	margin-left: 10px;
+.buttontext {/* 每一个背景图的文字 */
+    position: absolute;
+    bottom: 0;
+    height: 20%;
+    background-color: #2e1e10;
+    width: 100%;
+    text-align: center; 
+    font-weight: 500;
+    font-family: 'shousha';
+    color:  #efdbb6;
+    text-shadow: none;
+    font-size:25px;
 }
-
-.xiaolianButton_new {
-	display: block;
-	--w: 90px;
-	--h: 60px;
-	width: var(--w);
-	height: var(--h);
-	position: absolute;
-	bottom: 12%;
-	left: 0%;
-	background-image: url("./images/uibutton/jiaoliuOL.png");
-	background-size: 100% 100%;
-	z-index: 3;
-	margin-left: 10px;
+.bgback{/*背景返回按钮*/
+    width: 80px;
+    height: 40px;
+    top:5%;
+    right:8%;
+    background-image: url("./images/OL_line/uibutton/back.png");
+    background-size: 100% 100%;
+    z-index: 100;
+    position: absolute;
 }
-
-.huanfuButton_new {
-	display: block;
-	--w: 90px;
-	--h: 60px;
-	width: var(--w);
-	height: var(--h);
-	position: absolute;
-	bottom: 22%;
-	left: 0%;
-	background-image: url("./images/uibutton/meiguiOL.png");
-	background-size: 100% 100%;
-	z-index: 3;
-	margin-left: 10px;
+.handcardyinying {/*手牌阴影*/
+    background-image: url("./images/uibutton/yinying.png");
+    background-size: 100% 100%;
+    display: block;
+    width: 100%;
+    height: 30%;
+    position: absolute;
+    bottom: 0px;
+    background-color: transparent;
+    z-index: -1;
 }
-
+/*左侧的三个按钮*/
+.leftbuttons, .rightbuttons {
+    width: 85px;
+    height: 170px;
+    bottom: 5px;
+}
+.leftbuttons {/*右手布局*/
+    left: 75px;
+}
+.rightbuttons {/*左手布局*/
+    right: 80px;
+}
+.anniubutton {/*单独按钮*/
+    width: 100%;
+    height: 35%;
+    background-size: 100% 100%;
+    margin-top:-9%;
+    position: relative;
+}
+.caidanbutton {/*菜单按钮*/
+    background-image: url("./images/OL_line/uibutton/caidan.png");
+    background-size: 100% 100%;
+    display: block;
+    width: 50px;
+    height: 45px;
+    position: absolute;
+    top:13px;
+    right:70px;
+    background-color: transparent;
+    z-index: 1;
+}
+.caidanopen{/*菜单展开底框*/
+    width: 47px;
+    height: 238.34px;
+    flex-direction: column;
+    align-items: flex-start;
+    white-space: normal;
+    position: fixed;
+    top:12px;
+    right:71px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 4px;
+}
+.controls {/*菜单的每个操作按钮*/
+    width: 95%;
+    height: 40.10px; 
+    background-size: 100% 100%;
+    z-index: 99;
+    left:2px;
+    position: relative;
+    margin-top: 6px;
+    font-size: 14.5px;
+    font-weight: 1000;
+    font-family: yuanli;
+    color: #ae8e7d;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
 /*-----------------------------*/
 
 .lbtn-confirm:not(.closing).removing {
@@ -124,7 +164,7 @@
 }
 
 .control>div {
-	background-image: url("./images/uibutton/new_btnnOL.png");
+	background-image: url("./images/OL_line/uibutton/new_btnnOL.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
 	padding: 2.6px 23px !important;
@@ -164,7 +204,7 @@
 	margin-top: 0px !important;
 	margin-bottom: -15px !important;
 	background-size: 100% 100%;
-	background-image: url("./images/uibutton/new_btnnOL.png");
+	background-image: url("./images/OL_line/uibutton/new_btnnOL.png");
 	overflow: visible;
 	transition: none;
 }
@@ -185,7 +225,7 @@
 	margin-top: 0px !important;
 	margin-bottom: -15px !important;
 	background-size: 100% 100%;
-	background-image: url("./images/uibutton/new_btnnOL.png");
+	background-image: url("./images/OL_line/uibutton/new_btnnOL.png");
 }
 
 .control>div.disabled:not([data-type="endButton"]) {
@@ -229,13 +269,13 @@
 }
 
 .cardRoundNumber>.cardPileNumber {
-	left: 15px;
+	left: 10px;
 	top: -15px;
-	--w: 100px;
+	--w: 90px;
 	--h: calc(var(--w) * 148 / 157);
 	width: var(--w);
 	height: var(--h);
-	background-image: url("./images/uibutton/cardbackOL.png");
+	background-image: url("./images/OL_line/uibutton/cardbackOL.png");
 	background-size: 100% 100%;
 	background-color: transparent;
 	position: relative;
@@ -243,39 +283,39 @@
 }
 
 .cardRoundNumber>.cardPileNumber>span {
-	left: 5px;
+	left: 8px;
 	/*牌堆数右移，越大越靠右*/
-	top: 40px;
+	top: 35px;
 	width: 100%;
 	display: block;
 	position: absolute;
 	line-height: 20px;
 	text-align: center;
-	color: #cda448;
-	font-size: 18px;
+	color: #dec499;
+	font-size: 15px;
 }
 
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	left: 45px;
+	left: 26px;
 	/*牌堆数/时间右移，越大越靠右*/
-	top: 0px;
+	top: -4.5px;
 	height: 20px;
-	line-height: 16px;
+	line-height: 13px;
 	/*游戏轮数/时间间隔*/
 	white-space: nowrap;
-	color: #fae2bc;
+	color: #dec499;
 	z-index: 3;
 }
 
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	top: 55px;
+	top: 50px;
 	/*高度*/
-	left: 45px;
-	font-size: 17px;
-	color: #e0c192;
+	left: 40px;
+	font-size: 14px;
+	color: #dec499;
 }
 
 /*托管中图片（）*/
@@ -298,89 +338,4 @@
 	background-size: 100% 100%;
 	-webkit-text-fill-color: transparent;
 	text-shadow: none !important;
-}
-
-/*左手模式*/
-/*换肤*/
-.huanfuButton_new1 {
-	display: block;
-	--w: 47px;
-	--h: 47px;
-	width: var(--w);
-	height: var(--h);
-	bottom: 24%;
-	position: absolute;
-	right: 0;
-	background-image: url("./images/uibutton/new_huanfu_new.png");
-	background-size: 100% 100%;
-	border-radius: 1px;
-	z-index: 3;
-}
-
-.jiluButton_new1 {
-	display: block;
-	--w: 47px;
-	--h: 47px;
-	width: var(--w);
-	height: var(--h);
-	position: absolute;
-	bottom: 4%;
-	right: 0;
-	background-image: url("./images/uibutton/new_jilu_new.png");
-	background-size: 100% 100%;
-	border-radius: 1px;
-	z-index: 4;
-}
-
-.xiaolianButton_new1 {
-	display: block;
-	--w: 47px;
-	--h: 47px;
-	width: var(--w);
-	height: var(--h);
-	position: absolute;
-	bottom: 14%;
-	right: 0;
-	background-image: url("./images/uibutton/new_xiaolian_new.png");
-	background-size: 100% 100%;
-	z-index: 3;
-}
-
-/*------左手手牌显示---------------*/
-.handcardNumber1 {
-	bottom: 0px;
-	left: 0px;
-	font-family: "yuanli";
-	text-shadow: #f5d78e 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
-	color: #f5d78e;
-	z-index: 1;
-}
-
-.handcardNumber1>.cardPicture {
-	left: 130px;
-	bottom: -6px;
-	--w: 130px;
-	--h: calc(var(--w) * 92 / 400);
-	/*宽和长*/
-	width: var(--w);
-	height: var(--h);
-	background-image: url("./images/uibutton/new_count1.png");
-	background-size: 100% 100%;
-	position: relative;
-	transform: scaleX(-1);
-	z-index: -1;
-}
-
-/*手牌数参数*/
-.handcardNumber1>.cardNumber {
-	left: 160px;
-	bottom: 18px;
-	height: 8px;
-	line-height: 25px;
-	text-align: center;
-	color: #fffcf5;
-	font-size: 20px;
-	white-space: nowrap;
-	letter-spacing: 0.35px;
-	/*字体间距*/
 }

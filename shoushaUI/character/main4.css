@@ -102,6 +102,14 @@
   z-index: 60;
   position: absolute;
 }
+.xinxi{/*资料页启动按钮*/
+    background: url("./images/OL_line/xinxi.png");
+    background-size: 100% 100%;
+    bottom:-240px;
+    right:-20%;
+    height:65px;
+    width:80px;
+}
 /*武将名字*/
 .character-dialog > .name {
   position: absolute;

@@ -1,13 +1,8 @@
 @import "animation.css";
-
 /*角色基本外观*/
 .player {
 	height: 180px;
 	width: 120px;
-	/*border-radius: 8px;
-	box-shadow: 0px -1px 3px black, 0px 3px 8px black;
-	background-image: linear-gradient(rgb(53, 38, 32), rgb(53, 38, 32));
-	transition-property: transform, opacity, left, top, right, bottom;*/
 	box-shadow:
 		inset 0 0 10px rgba(0, 0, 0, 0.8),
 		/* 内部发光 */
@@ -47,10 +42,10 @@
 }
 
 .player::before {
-	left: -30px;
-	top: -13px;
-	width: 145%;
-	height: 205px;
+	left: -20px;
+	top: -7px;
+	width: 129%;
+	height: 190px;
 	background-size: 93% 100%;
 	opacity: 0;
 	background-image: url('assets/image/select_green.png');
@@ -102,7 +97,7 @@
 	top: 0;
 	width: 100%;
 	height: 100%;
-	border-radius: inherit;
+	border-radius: 0 6px 6px 0;
 	background: rgba(0, 0, 0, 0.65);
 	opacity: 0;
 	transition: opacity 0.3s ease-in-out;
@@ -144,7 +139,7 @@
 #arena>.player[data-position="0"]:not(.minskin),
 #arena:not(*[data-player_height=""])>.player[data-position="0"],
 #arena:not(*[data-player_height=""])>.player[data-position="0"]:not(.miniskin) {
-	left: 25px;
+	left: 70px;
 	top: auto;
 	right: auto;
 	bottom: 1%;
@@ -153,16 +148,16 @@
 #arena[data-right-layout="on"]>.player[data-position="0"],
 #arena[data-right-layout="on"]>.player[data-position="0"]:not(.miniskin) {
 	left: auto;
-	right: 25px;
+	right: 60px;
 }
 
 /*玩家姓名阵营*/
 .player>.camp-wrap {
 	display: block;
-	left: -35px;
-	top: -60px;
-	width: 50px;
-	height: 245px;
+	left: -26px;
+	top: -58px;
+	width: 45px;
+	height: 242px;
 	transition: none;
 	z-index: 67;
 	pointer-events: none;
@@ -187,11 +182,9 @@
 	background: rgb(154, 148, 122);
 	box-shadow:
 		inset 0 0 10px rgba(0, 0, 0, 0.8),
-		/* 内部发光 */
 		0 0 15px rgba(0, 0, 0, 0.6);
-	/* 外部阴影 */
 	background-size: 100% 100%;
-	border-radius: 10px 0 0 10px visibility: visible;
+	border-radius: 6px 0 0 6px;
 }
 
 .player>.camp-wrap>.camp-back::before {
@@ -203,84 +196,53 @@
 	height: 100%;
 	background-image: url('image/decoration/border_diwen.png');
 	background-size: 100% 100%;
+	filter: saturate(100%);
 	opacity: 0.3;
 	/* 调整背景图片的透明度 */
 	z-index: 1;
 	/* 确保图片在背景颜色上方 */
 }
-
 .player>.camp-wrap[data-camp="wei"]>.camp-back {
 	background: rgb(33, 79, 117);
-	/* 只使用第一个颜色值 */
-	
 }
-
 .player>.camp-wrap[data-camp="shu"]>.camp-back {
 	background: rgb(124, 21, 28);
-	/* 只使用第一个颜色值 */
-	
 }
 
 .player>.camp-wrap[data-camp="wu"]>.camp-back {
 	background: rgb(24, 94, 24);
-	/* 只使用第一个颜色值 */
-	
 }
 
 .player>.camp-wrap[data-camp="qun"]>.camp-back {
 	background: rgb(129, 124, 102);
-	/* 只使用第一个颜色值 */
-	
 }
-
 .player>.camp-wrap[data-camp="shen"]>.camp-back {
 	background: rgb(97, 87, 15);
-	/* 只使用第一个颜色值 */
-	
 }
 
 .player>.camp-wrap[data-camp="shen2"]>.camp-back {
 	background: rgb(112, 52, 126);
-	/* 只使用第一个颜色值 */
-	
 }
-
 .player>.camp-wrap[data-camp="ye"]>.camp-back {
 	background: rgb(112, 52, 126);
-	/* 只使用第一个颜色值 */
-	
 }
-
 .player>.camp-wrap[data-camp="key"]>.camp-back {
 	background: rgb(147, 132, 183);
-	/* 只使用第一个颜色值 */
-	
 }
-
 .player>.camp-wrap[data-camp="western"]>.camp-back {
 	background: rgb(93, 44, 105);
-	/* 只使用第一个颜色值 */
-	
 }
-
 .player>.camp-wrap[data-camp="jin"]>.camp-back {
 	background: rgb(112, 52, 126);
-	/* 只使用第一个颜色值 */
-	
 }
-
 .player>.camp-wrap[data-camp="daqin"]>.camp-back {
 	background: rgb(100, 100, 100);
-	/* 只使用第一个颜色值 */
-	
 }
-
-
 .player>.camp-wrap>.camp-border {
 	display: block;
-	left: -3.5px;
+	left: -4px;
 	top: 40px;
-	width: 327%;
+	width: 342%;
 	height: 85%;
 	position: absolute;
 	background-image: url("image/decoration/border_campOL5.png");
@@ -294,9 +256,9 @@
 
 #arena.decadeUI[data-border-level="two"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: 15px;
+	left: 9px;
 	top: 55px;
-	width: 290%;
+	width: 310%;
 	height: 79%;
 	position: absolute;
 	background-image: url("image/decoration/border_campOL2.png");
@@ -306,9 +268,9 @@
 
 #arena.decadeUI[data-border-level="three"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: 15px;
+	left: 9px;
 	top: 55px;
-	width: 290%;
+	width: 310%;
 	height: 79%;
 	position: absolute;
 	background-image: url("image/decoration/border_campOL3.png");
@@ -320,7 +282,7 @@
 	display: block;
 	left: 5px;
 	top: 52px;
-	width: 310%;
+	width: 320%;
 	height: 80%;
 	position: absolute;
 	background-image: url("image/decoration/border_campOL4.png");
@@ -336,12 +298,12 @@
 	align-items: center;
 	align-content: center;
 	justify-content: center;
-	left: 33% !important;
+	left: 29.5% !important;
 	right: auto;
-	top: 190px;
+	top: 250px;
 	width: 18px;
 	height: 96px;
-	font-size: 14px;
+	font-size: 12px;
 	line-height: 15px;
 	/*字体间距*/
 	text-shadow: none;
@@ -393,8 +355,8 @@
 	font-size: 26px;
 	width: 45%;
 	height: 32%;
-	left: 15px;
-	top: 35px;
+	left: 12px;
+	top: 30px;
 	display: flex;
 	text-align: center;
 	align-items: center;
@@ -471,7 +433,7 @@
 
 /* 为主玩家位置特别设置 */
 .player[data-position='0']>.hp-wrap {
-	right: 123px;
+	right: 117px;
 	/* 左右位置 */
 	bottom: 10px;
 	/* 上下位置，从5px改为15px */
@@ -480,7 +442,7 @@
 /*玩家血量显示*/
 .player>.hp-wrap {
 	display: block;
-	right: 123px;
+	right: 117px;
 	bottom: 5px;
 	width: 12px;
 	height: 50px;
@@ -596,14 +558,14 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: top;
-	border-radius: 8px;
+	border-radius: 0 6px 6px 0;
 	transition-property: opacity, transform;
 	z-index: 61;
 }
 
 .player.fullskin2>.primary-avatar {
 	width: 50%;
-	border-radius: 8px 0 0 8px;
+	border-radius: 6px 0 0 6px;
 }
 
 .player.bossplayer>.primary-avatar:not(.hp):not(.identity):not(.avatar):not(.framebg) {
@@ -675,7 +637,7 @@
 	bottom: 0;
 	width: 100%;
 	height: 100%;
-	border-radius: 8px;
+	border-radius: 0 6px 6px 0;
 	background-size: cover;
 	background-repeat: no-repeat;
 	pointer-events: none;
@@ -690,10 +652,7 @@
 	bottom: 0;
 	width: 100%;
 	height: 100%;
-	border-top-left-radius: 100px 40px;
-	border-top-right-radius: 100px 40px;
-	border-bottom-right-radius: 8px;
-	border-bottom-left-radius: 8px;
+	border-radius:0 4px 4px 0;
 	background-size: cover;
 	background-repeat: no-repeat;
 	pointer-events: none;
@@ -707,7 +666,7 @@
 	bottom: 0;
 	width: 100%;
 	height: 100%;
-	border-radius: inherit;
+	border-radius: 0 6px 6px 0;
 	pointer-events: none;
 	clip-path: inset(0 0 0 0 round 8px);
 	/*新增*/
@@ -732,7 +691,7 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: top;
-	border-radius: 8px 0 0 8px;
+	border-radius: 6px 0 0 6px;
 	transition-property: opacity, transform;
 }
 
@@ -751,7 +710,7 @@
 }
 
 #window:not(*[data-radius_size=""]).player {
-	border-radius: 8px;
+	border-radius: 4px;
 }
 
 /*行动*/
@@ -884,28 +843,26 @@
 /*玩家标记显示-新样式*/
 #arena[data-player-mark-style="decade"]>.player>.dui-marks {
 	left: auto;
-	top: 34px;
+	top: 32px;
 	/*下移*/
-	right: 80px;
-	/*左移*/
+	left: 7px;
+	/*右移*/
 	width: auto;
 	max-width: 80px;
 	/*最大宽度*/
 }
 
 #arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark {
-	display: flex;
-	width: 40px;
-	/*宽度*/
-	height: 18px;
-	/*高度*/
-	white-space: nowrap;
-	background-image: url("assets/image/player_markOL.png");
-	animation: fade-in 0.5s;
-	margin-bottom: 1px;
-	/*标记纵向间隔*/
+    display: flex;
+    width: 40px; /* 宽度 */
+    height: 20px; /* 高度 */
+    white-space: nowrap;
+    background:rgba(30,30,30,0.7);
+    animation: fade-in 0.5s;
+    margin-bottom: 1px; /* 标记纵向间隔 */
+    border-radius: 2px; /* 添加圆角 */
+    border: 1px solid rgba(255,255,255,0.8);
 }
-
 /*文字文本显示*/
 #arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-text {
 	display: inline;
@@ -913,9 +870,9 @@
 	border-radius: 0;
 	width: auto;
 	height: auto;
-	line-height: 18px;
+	line-height: 17px;
 	/*换行高度*/
-	font-size: 11px;
+	font-size: 16px;
 	/*字体大小*/
 	color: white;
 	/*字体颜色*/
@@ -936,9 +893,9 @@
 	padding-bottom: 3px;
 	width: auto;
 	height: auto;
-	line-height: 18px;
+	line-height: 17px;
 	border-radius: 0;
-	font-size: 11px;
+	font-size: 16px;
 	/*字体大小*/
 	font-weight: inherit;
 	color: white;
@@ -1124,7 +1081,7 @@
 	position: absolute;
 	top: auto;
 	right: auto;
-	left: -20px;
+	left: -15px;
 	bottom: -3px;
 	line-height: 24px;
 	height: 22px;

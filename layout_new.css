@@ -264,7 +264,45 @@ body>.background {
 	width: 100%;
 	height: 10%;
 }
+/*ol样式*/
+#arena>.hand-wrap,
+#arena[data-new-decade-style="onlineUI"]>.hand-back {
+	/*手牌区*/
+	/*左手布局+单独装备栏*/
+	left: 360px;
+	right: 320px;
+	/*数值越大手牌右边界区域越往左*/
+	width: auto;
+	height: 150px;
+	bottom: 0%;
+	transition: none;
+	z-index: 3;
+	/* border: 3px solid rgb(3,4,5); /*调试用*/
+}
 
+#arena[data-new-decade-style="onlineUI"][data-right-layout="on"]>.hand-wrap,
+#arena[data-right-layout="on"]>.hand-back {
+	/*右手布局+单独装备栏*/
+	left: 265px;
+	right: 410px;
+	bottom: 0%;
+}
+
+#arena[data-new-decade-style="onlineUI"][data-alone-equip="off"][data-right-layout="off"]>.hand-wrap,
+#arena[data-alone-equip="off"][data-right-layout="off"]>.hand-back {
+	/*左手布局+非单独装备栏*/
+	left: 360px;
+	right: 160px;
+	bottom: 0%;
+}
+
+#arena[data-new-decade-style="onlineUI"][data-alone-equip="off"][data-right-layout="on"]>.hand-wrap,
+#arena[data-alone-equip="off"][data-right-layout="on"]>.hand-back {
+	/*右手布局+非单独装备栏*/
+	left: 140px;
+	right: 405px;
+	bottom: 0%;
+}
 /*挑战模式小头像*/
 .hand-wrap>.fakeme.avatar {
 	left: -270px;

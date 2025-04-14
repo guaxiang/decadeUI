@@ -1,8 +1,15 @@
-.skill-control {
+#arena[data-right-layout="on"]>.skill-control {
 	/*技能按钮*/
 	max-width: 200px;
 	bottom: 0px;
-	right: 170px;
+	right: 200px;
+	z-index: 0;
+}
+#arena[data-right-layout="off"]>.skill-control {
+	/*技能按钮左手布局*/
+	max-width: 200px;
+	bottom: 0px;
+	left:190px;
 	z-index: 0;
 }
 
@@ -28,9 +35,9 @@
 	display: block;
 	clear: both;
 }
-
-.skill-control .trigger,
-.skill-control .enable {
+/*右手布局*/
+#arena[data-right-layout="on"]>.skill-control .trigger,
+#arena[data-right-layout="on"]>.skill-control .enable {
 	height: auto;
 	width: auto;
 	display: flex;
@@ -40,7 +47,18 @@
 	margin-left: 5px;
 	/* 技能间距 */
 }
-
+/*左手布局*/
+#arena[data-right-layout="off"]>.skill-control .trigger,
+#arena[data-right-layout="ff"]>.skill-control .enable {
+	height: auto;
+	width: auto;
+	display: flex;
+	flex-direction: row;
+	/* 从右往左排列 */
+	align-items: flex-start;
+	margin-left: 5px;
+	/* 技能间距 */
+}
 .skill-control>.trigger>.skillitem {
 	margin: 3px 4px;
 	width: 85px;
@@ -234,95 +252,3 @@
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 }
-
-/*左手模式*/
-/*技能区*/
-.skill-control {
-	/*技能按钮*/
-	max-width: 200px;
-	bottom: 0px;
-	right: 170px;
-	z-index: 0;
-}
-
-.skill-control div {
-	position: relative;
-}
-
-.skill-control .skillitem {
-	float: right;
-	white-space: nowrap;
-	color: #f5d78e;
-	font-size: 18px;
-}
-
-.skill-control>div {
-	display: flex;
-	flex-wrap: wrap-reverse;
-	flex-direction: row-reverse;
-}
-
-.skill-control>div::after {
-	content: "";
-	display: block;
-	clear: both;
-}
-
-.skill-control .trigger,
-.skill-control .enable {
-	height: auto;
-	width: auto;
-	display: flex;
-	flex-direction: row-reverse;
-	/* 从右往左排列 */
-	align-items: flex-start;
-	margin-left: 5px;
-	/* 技能间距 */
-}
-
-.skill-control>.trigger>.skillitem {
-	margin: 3px 4px;
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
-	text-align: center;
-	font-family: "yuanli";
-	font-weight: 500;
-	font-size: 20px;
-	color: #f7f5e7;
-	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
-		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
-	background-image: url("./images/btnnOL3.png");
-	background-size: 100% 100%;
-}
-
-.skill-control>.enable>.skillitem {
-	margin: 3px 4px;
-	/* 增加宽度 */
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
-	text-align: center;
-	font-family: "yuanli";
-	font-weight: 500;
-	font-size: 22px;
-	color: #f7f5e7;
-	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
-		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
-	background-image: url("./images/btnnOL1.png");
-	background-size: 100% 100%;
-	/*border: 1px solid rgb(3,4,5);/*调试用*/
-}
-
-.skill-control>.enable>.xiandingji {
-	/*限定技按钮*/
-	margin: 3px 4px;
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
-	text-align: center;
-	font-family: "yuanli";
-	font-weight: 500;
-	/*å­—ç²—ç»†*/
-	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
-		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0

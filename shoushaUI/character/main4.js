@@ -125,7 +125,8 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                         }
                     }
                     //资料页============================================================================
-                    leftPane.onclick = function() {
+                    let xinxi=ui.create.div('.xinxi',blackBg1);
+                    xinxi.onclick = function() {
                         game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3');
                         if (!popuperContainerBool) {
                             if (popuperContainer) {
