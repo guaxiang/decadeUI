@@ -70,10 +70,6 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     leftPane.setBackground(name, 'character');
                     let popuperContainer = null;
                     let popuperContainerBool = true;
-                    //先确定名字，方便后面调用
-                    var namex=player === game.me ? lib.config.connect_nickname:[
-                        "缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "爱莉爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "k9", "扶苏", "皇叔"
-                    ].randomGet();
                     //胜率同理
                     const intPart = get.SL?get.SL(player):(Math.floor(Math.random()*(95-50+1))+50)+"%";
                     //官阶同理
@@ -148,7 +144,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                                 var bigdialog = ui.create.div(".bigdialog", popuperContainer);
                                 //三国秀及名称
                                 var minixingxiang = ui.create.div(".minixingxiang", bigdialog);
-                                var nameX=ui.create.div(".nameX",namex,minixingxiang);
+                                var nameX=ui.create.div(".nameX",player.nickname,minixingxiang);
                                 var dengjiX=ui.create.div(".dengjiX",dengji+'级',minixingxiang);
                                 var huiyuanX=ui.create.div(".huiyuanX",'会员'+VipLv,minixingxiang);
                                 minixingxiang.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/xingxiang"+Math.floor(Math.random()*6)+".png");
@@ -306,7 +302,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
                     var peijianto = ['p1', 'p2', ];
                     peijian.setBackgroundImage('extension/十周年UI/shoushaUI/character/images/OL_line/' + peijianto.randomGet() + '.png');
                     // 玩家名放置
-                    var wanjia = ui.create.div('.wanjia', biankuang, namex+'Lv.'+dengji);
+                    var wanjia = ui.create.div('.wanjia', biankuang, player.nickname+'Lv.'+dengji);
                     //胜率 逃跑率 人气值
                     var shenglv = ui.create.div(".shenglv", biankuang);
                     shenglv.innerHTML = `${intPart}`;

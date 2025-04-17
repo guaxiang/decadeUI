@@ -2,11 +2,9 @@
     top: 5px;
     left: 80px;
     z-index: 4;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     border-radius: 3px;
-    padding: 0px 10px;
     width: 120px;
-    position: relative;
 }
 .jiluButton {/* 记录按钮 */
     display: block;
@@ -35,6 +33,7 @@
     width:100%;
     height:82%;
     top:11.5%;
+    left:0.5%;
     overflow-x: hidden; 
     overflow-y: auto;
 }
@@ -50,10 +49,6 @@
     margin-left:1%;
     margin-bottom:1%;
     border-radius:6px;
-}
-.backgrounds:hover {
-    filter: brightness(1.2); 
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); 
 }
 .buttontext {/* 每一个背景图的文字 */
     position: absolute;
@@ -77,6 +72,15 @@
     background-size: 100% 100%;
     z-index: 100;
     position: absolute;
+}
+.bgxuanzhong{/*背景的选中效果*/
+    background: url("./images/OL_line/bg/gou.png");
+    background-size: 100% 100%;
+    width:45%;
+    height:60%;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
 }
 .handcardyinying {/*手牌阴影*/
     background-image: url("./images/uibutton/yinying.png");
@@ -137,7 +141,7 @@
     height: 40.10px; 
     background-size: 100% 100%;
     z-index: 99;
-    left:2px;
+    left:1px;
     position: relative;
     margin-top: 6px;
     font-size: 14.5px;
@@ -148,6 +152,91 @@
     align-items: flex-end;
     justify-content: center;
 }
+.talkbg{/*聊天背景*/
+    background-image: url("./images/OL_line/talk/talkbg.png");
+    background-size: 100% 100%;
+    height:100%;
+    width:35%;
+    left:0%;
+    top:0%;
+}
+.typechanges{/*左侧聊天切换按钮*/
+    top:6%;
+    height:94%;
+    width:10%;
+    left:24%;
+}
+.typechange {/*每个按钮*/
+    background-image: url("./images/OL_line/talk/btnn1.png");
+    background-size: 100% 100%;
+    height: 33%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    writing-mode: vertical-rl; 
+    text-orientation: upright; 
+    color: #ae8e7d;
+    font-size:23px;
+    font-family:'shousha';
+}
+
+.typechangelight{/*每个按钮点亮*/
+    background-image: url("./images/OL_line/talk/btnn2.png");
+    background-size: 100% 100%;
+    height: 33%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    writing-mode: vertical-rl; 
+    text-orientation: upright; 
+    color: #efdbb6;
+    font-size:23px;
+    font-family:'shousha';
+}
+.talkrightbg{/*聊天右侧信息*/
+    /*background:rgba(0,0,0,1);*/
+    width:63%;
+    height:80%;
+    top:7%;
+    right:1.5%;
+    overflow: auto;
+}
+.talkquick{/*快捷信息*/
+    color: #efdbb6;
+    font-size: 20px;
+    font-family: 'shousha';
+    position: relative;
+    margin-top:20px;
+    font-weight:900;
+}
+.talkhistory{/*消息记录*/
+    color: #efdbb6;
+    font-family: 'shousha';
+    position: relative;
+    margin-top:20px;
+    font-size:18px;
+    background:rgba(0,0,0,0.3);
+}
+.dazi {/*打字按键*/
+    background-image: url("./images/OL_line/talk/btnn2.png");
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #efdbb6;
+    font-size: 23px;
+    font-family: 'shousha';
+    bottom: 1.5%;
+    right: 15%;
+    width: 35%;
+    height: 10%;
+    position: absolute;
+}
+
 /*-----------------------------*/
 
 .lbtn-confirm:not(.closing).removing {
@@ -283,39 +372,43 @@
 }
 
 .cardRoundNumber>.cardPileNumber>span {
-	left: 8px;
+	left: 12px;
 	/*牌堆数右移，越大越靠右*/
 	top: 35px;
 	width: 100%;
 	display: block;
 	position: absolute;
+	font-family: "shousha";
 	line-height: 20px;
 	text-align: center;
-	color: #dec499;
-	font-size: 15px;
+	color: #b08463;
+	font-size: 16px;
 }
 
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	left: 26px;
+	left: 20px;
 	/*牌堆数/时间右移，越大越靠右*/
-	top: -4.5px;
+	top: 0px;
 	height: 20px;
 	line-height: 13px;
 	/*游戏轮数/时间间隔*/
 	white-space: nowrap;
-	color: #dec499;
+	font-size: 22px;
+	font-family: "shousha";
+	color: #b08463;
 	z-index: 3;
 }
 
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	top: 50px;
+	top: 45px;
 	/*高度*/
 	left: 40px;
-	font-size: 14px;
-	color: #dec499;
+	font-size: 16px;
+	font-family: "shousha";
+	color: #b08463;
 }
 
 /*托管中图片（）*/
