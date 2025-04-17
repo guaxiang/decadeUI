@@ -219,8 +219,8 @@
 /*其他玩家装备栏*/
 .player>.equips,
 #arena>.player:not(.minskin)>.equips {
-	left: 3%;
-	right: 4%;
+	left: 7%;
+	right: 5%;
 	width: auto;
 	height: 80px;
 	bottom: 3%;
