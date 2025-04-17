@@ -1,7 +1,4 @@
 #arena>.equips-wrap {
-  
-}
-#arena[data-alone-equip="on"]>.equips-wrap {
 	bottom: 1%;
 	height: 100%;
 	left: auto;
@@ -10,15 +7,15 @@
 	top: auto;
 }
 
-#arena[data-right-layout="on"][data-alone-equip="on"]>.equips-wrap {
+#arena[data-right-layout="on"]>.equips-wrap {
 	/*右手布局*/
-	left: 140px;
+	left: 108px;
 	right: auto;
 }
 
-#arena[data-right-layout="off"][data-alone-equip="on"]>.equips-wrap {
+#arena[data-alone-equip="off"]>.equips-wrap {
+	opacity: 0;
 	left: auto;
-	right:150px;
 }
 
 .equips-wrap>.equips-back {
@@ -58,35 +55,26 @@
 	width: 100%;
 }
 
-.equips-wrap > .equips-back > div {
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色底图 */
-    position: relative; /* 确保伪元素相对于该元素定位 */
+.equips-wrap > .equips-back > div[data-type="0"] {
+	background-image: url("image/decoration/equip1.png");
 }
-.equips-wrap > .equips-back > div::before {
-    content: ""; /* 伪元素必须有 content 属性 */
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 10%;
-    width: 12%;
-    height: 95%;
-    background-size: 100% 100%;
+
+.equips-wrap > .equips-back > div[data-type="1"] {
+	background-image: url("image/decoration/equip2.png");
 }
-.equips-wrap > .equips-back > div[data-type="0"]::before {
-    background-image: url("image/decoration/ol_equip1.png");
+
+.equips-wrap > .equips-back > div[data-type="2"] {
+	background-image: url("image/decoration/equip3.png");
 }
-.equips-wrap > .equips-back > div[data-type="1"]::before {
-    background-image: url("image/decoration/ol_equip2.png");
+
+.equips-wrap > .equips-back > div[data-type="3"] {
+	background-image: url("image/decoration/equip4.png");
 }
-.equips-wrap > .equips-back > div[data-type="2"]::before {
-    background-image: url("image/decoration/ol_equip3.png");
+
+.equips-wrap > .equips-back > div[data-type="4"] {
+	background-image: url("image/decoration/equip5.png");
 }
-.equips-wrap > .equips-back > div[data-type="3"]::before {
-    background-image: url("image/decoration/ol_equip4.png");
-}
-.equips-wrap > .equips-back > div[data-type="4"]::before {
-    background-image: url("image/decoration/ol_equip5.png");
-}
+
 .equips-wrap>.equips>div {
 	left: 3px;
 	right: 3px;
@@ -178,16 +166,34 @@
 	position: static;
 	width: calc(100% - 4px);
 	height: calc(100% - 4px);
+	background-color: rgb(228, 207, 166);
 	border: 1px solid rgb(90, 50, 33);
 	border-radius: 0px;
 	box-sizing: border-box;
+	font-weight: bold;
 	font-family: "shousha" !important;
 	white-space: pre-wrap;
 	pointer-events: none;
 	z-index: 1;
-	color: white;
 }
 
+/*红色装备牌颜色显示*/
+.equips-wrap>.equips>.card[data-suit="heart"]>.name2,
+.equips-wrap>.equips>.card[data-suit="diamond"]>.name2 {
+	color: #8b0000;
+}
+
+/*黑色装备牌颜色显示*/
+.equips-wrap>.equips>.card[data-suit="spade"]>.name2,
+.equips-wrap>.equips>.card[data-suit="club"]>.name2 {
+	color: #181818;
+}
+
+/*无色装备牌颜色显示*/
+.equips-wrap>.equips>.card[data-suit="none"]>.name2 {
+	background-color: black;
+	color: white;
+}
 
 .equips-wrap>.equips>.card.feichu>.name2 {
 	background-color: rgb(57, 48, 33);
@@ -213,8 +219,8 @@
 /*其他玩家装备栏*/
 .player>.equips,
 #arena>.player:not(.minskin)>.equips {
-	left: 3%;
-	right: 4%;
+	left: 7%;
+	right: 5%;
 	width: auto;
 	height: 80px;
 	bottom: 3%;
@@ -244,33 +250,61 @@
 .player>.equips>.card,
 .player.unseen>.equips>.card,
 .player.unseen2>.equips>.card {
-    background: rgba(0, 0, 0, 0.8); /* 适中的背景透明度 */
-    border-radius: 1px;
-    width: 100%;
-    height: 16px;
-    text-shadow: none;
-    position: relative;
-    left: 3px;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	background: rgba(228, 207, 166, 0.8) !important;
+	border: 1px solid rgb(95, 55, 45);
+	border-image: none !important;
+	box-sizing: border-box;
+	border-radius: 1px;
+	width: 100%;
+	height: 16px;
+	text-shadow: none;
+}
+
+#arena.decadeUI:not(.long).mobile:not(.oldlayout) .player.unseen:not([data-position="0"]) .equips:not(*:empty)>.card,
+#arena.decadeUI:not(.long):not(.mobile):not(.oldlayout) .player.unseen .equips:not(*:empty)>.card:not(.selected),
+#arena.decadeUI.long.mobile:not(.oldlayout) .player.unseen2:not([data-position="0"]) .equips:not(*:empty)>.card,
+#arena.decadeUI.long:not(.mobile):not(.oldlayout) .player.unseen2 .equips:not(*:empty)>.card:not(.selected) {
+	background: rgba(228, 207, 166, 0.8) !important;
+}
+
+.player:not(.selectable)>.equips>.card,
+.player:not(.selectable)>.equips>.card>div {
+	pointer-events: auto;
+}
+
+.player>.equips>.card>div {
+	position: static;
 }
 
 .player>.equips>.card>.name2 {
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: flex;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    line-height: 16px; /* 默认行高 */
-    color: white;
-    font-size: 13px;
-    font-weight: bold;
-    font-family: shousha, xinwei, xinkai !important;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* 轻量阴影 */
-    text-align: center;
-    margin: 0;
-    pointer-events: none;
-    letter-spacing: 0.5px; /* 适中的字母间距 */
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	line-height: 15px;
+	color: #181818;
+	font-size: 13px;
+	font-weight: bold;
+	font-family: shousha, xinwei, xinkai !important;
+	text-shadow: none;
+	text-align: center;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	pointer-events: none;
+}
+
+.player>.equips>.card[data-suit="heart"]>.name2,
+.player>.equips>.card[data-suit="diamond"]>.name2 {
+	color: #8b0000;
 }
