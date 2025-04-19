@@ -42,10 +42,10 @@
 }
 
 .player::before {
-	left: -24px;
-	top: -10px;
-	width: 138%;
-	height: 207px;
+	left: -20px;
+	top: -7px;
+	width: 129%;
+	height: 190px;
 	background-size: 93% 100%;
 	opacity: 0;
 	background-image: url('assets/image/select_green.png');
@@ -70,10 +70,10 @@
 .player::after,
 .player.selected::after,
 .player.selectable::after {
-	left: -24px;
-	top: -10px;
-	width: 138%;
-	height: 207px;
+	left: -25px;
+	top: -13px;
+	width: 140%;
+	height: 205px;
 	background-size: 93% 100%;
 	opacity: 0;
 	background-image: url('assets/image/select_orange.png');
@@ -126,6 +126,8 @@
 	background-image: url("assets/image/tie_suo.png");
 	transition-duration: 0.4s;
 	z-index: 86;
+	width:95%;
+	left:5%;
 }
 
 .player.linked2>.chain {
