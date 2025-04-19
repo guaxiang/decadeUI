@@ -287,6 +287,84 @@
     align-items: flex-end;
     justify-content: center;
 }
+.giftbg {/* 礼物选择 */
+    width: 35%;
+    height: 30%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 4px; 
+    border: 1px solid #ae8e7d; 
+}
+.giftbgtext{/*下面文字*/
+    bottom:5%;
+    font-size: 18px;
+    width:100%;
+    text-align: center;
+    color: #efdbb6;
+    font-family:'shousha';
+}
+.giftes{/*所有礼物的位置*/
+    width:100%;
+    height:70%;
+    top:10%;
+}
+.gift{/*每个礼物*/
+    width:19%;
+    height:65%;
+    background-size:100% 100%;
+    position: relative;
+    margin-left:4.55%;
+}
+.giftname{/*礼物名字*/
+    bottom: -30%;
+    font-size: 18px;
+    width:100%;
+    text-align: center;
+    color: #efdbb6;
+    font-family:'shousha';
+}
+.giftcost{/*礼物消耗*/
+    bottom:-55%;
+    font-size: 18px;
+    width:100%;
+    text-align: center;
+    color: #efdbb6;
+    font-family:'shousha';
+}
+.giftcost::before {
+    content: "";
+    background-image: url('./images/OL_line/gift/hua.png'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 20px; 
+    height: 20px; 
+    margin-right: 3px;
+    vertical-align: middle; 
+}
+.giftbg2 {/*弹药底图*/
+    width: 25%;
+    height: 25%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 4px; 
+    border: 1px solid #aa8f3a; 
+}
+.gift2{/*弹药图*/
+    width:25%;
+    height:55%;
+    background-size:100% 100%;
+    position: relative;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+}
+.giftgive {/*送礼物元素，放在玩家上面，位置跟大小在js里*/
+}
 .talkbg{/*聊天背景*/
     background-image: url("./images/OL_line/talk/talkbg.png");
     background-size: 100% 100%;
@@ -333,7 +411,6 @@
     font-family:'shousha';
 }
 .talkrightbg{/*聊天右侧信息*/
-    /*background:rgba(0,0,0,1);*/
     width:63%;
     height:80%;
     top:7%;
@@ -342,20 +419,48 @@
 }
 .talkquick{/*快捷信息*/
     color: #efdbb6;
-    font-size: 20px;
+    font-size: 22px;
     font-family: 'shousha';
     position: relative;
     margin-top:20px;
-    font-weight:900;
+    font-weight:600;
     display: block;
+    text-align: center;
+}
+.talkquick::before {/*下划线*/
+    content: "";
+    background-image: url('./images/OL_line/jilu/jianfeng.png');
+    background-size: 100% 100%;
+    width: 100%;
+    height: 5px;; 
+    position: absolute; 
+    bottom: -12px; 
+    left: 3px; 
+    z-index: 6; 
+}
+.emotionbg{/*表情背景*/
+    background-size: 100% 100%;
+    height:100%;
+    width:25%;
 }
 .talkhistory{/*消息记录*/
     color: #efdbb6;
     font-family: 'shousha';
     position: relative;
     margin-top:20px;
-    font-size:18px;
-    background:rgba(0,0,0,0.3);
+    font-size:21px;
+    display:block;
+}
+.talkhistory::before {/*上划线*/
+    content: "";
+    background-image: url('./images/OL_line/jilu/jianfeng.png');
+    background-size: 100% 100%;
+    width: 100%;
+    height: 5px;; 
+    position: absolute; 
+    top: -15px; 
+    left: 3px; 
+    z-index: 6; 
 }
 .dazi {/*打字按键*/
     background-image: url("./images/OL_line/talk/btnn2.png");
