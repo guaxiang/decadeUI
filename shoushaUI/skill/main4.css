@@ -49,7 +49,7 @@
 }
 /*左手布局*/
 #arena[data-right-layout="off"] > .skill-control .trigger,
-#arena[data-right-layout="ff"] > .skill-control .enable {
+#arena[data-right-layout="off"] > .skill-control .enable {
 	height: auto;
 	width: auto;
 	display: flex;
