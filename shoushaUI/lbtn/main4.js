@@ -338,7 +338,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			originUpdateRoundNumber.apply(this, arguments);
 			if (ui.cardRoundTime) ui.cardRoundTime.updateRoundCard();
 		};
-		var yinying = ui.create.div(".handcardyinying", ui.window); //阴影
 		var caidanbutton = ui.create.div(".caidanbutton", ui.window);
 		caidanbutton.onclick = function () {
 			//菜单按钮
@@ -590,7 +589,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						item.dataset.type = "skill2";
 						if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
 						/*
-						           confirm.insertBefore(item, confirm.firstChild);*/
+								   confirm.insertBefore(item, confirm.firstChild);*/
 					}
 				}
 
