@@ -2033,7 +2033,9 @@ export default async function () {
 										for (var j = 0; j < cardx.length; j++) {
 											if (cardx[j].gaintag && cardx[j].gaintag.length) {
 												event.gaintag_map[cardx[j].cardid] = cardx[j].gaintag.slice(0);
-												cardx[j].removeGaintag(true);
+												//仅移除非永久标记
+					                            const tags = cardx[j].gaintag.filter(tag => tag.indexOf("eternal_") !== 0);
+					                            tags.forEach(tag => cardx[j].removeGaintag(tag));
 											}
 
 											cardx[j].recheck();
@@ -11651,6 +11653,7 @@ export default async function () {
 					`魔改十周年UI ${pack.version}`,
 					"最低适配：v1.10.17.1",
 					"OL样式联机完善适配",
+					"lose函数跟进",
 					"回滚$throw,添加弃牌动画",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
