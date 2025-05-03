@@ -9,6 +9,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}, str.slice(6));
 		} else originalChat.call(this, id, str);
 	};
+	const originalSystem = ui.create.system;
+    game.system = {};
+    ui.create.system = function(str, func, right, before) {
+        var node = originalSystem(str, func, right, before); // 调用原始函数并获取返回的节点
+        game.system[str] = {
+            name: str
+        };
+        if (func) game.system[str].click = func;
+        return node; // 返回创建的节点
+    }
 	lib.ui.create.pause = function () {
 		/*覆写历史记录*/
 		if (_status.pausing) return;
@@ -293,7 +303,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					identityCounts[identity] = game.countPlayer(current => {
 						return current.identity === identity;
 					});
-					if (identityCounts[identity] > 0) str += '<font color="' + identityColors[identity] + '">' + get.translation(identity) + identityCounts[identity] + "</font>" + " ";
+					str += '<font color="' + identityColors[identity] + '">' + get.translation(identity) + identityCounts[identity] + "</font>" + " ";
 				}
 				str += "<br>";
 			} else if ((lib.config.mode == "versus" && get.config("versus_mode") == "two") || lib.config.mode == "doudizhu") {
@@ -318,7 +328,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				};
 				for (let [key, info] of Object.entries(identityInfo)) {
 					let count = game.countPlayer(current => info.aliases.includes(current.identity));
-					if (count > 0) str += `<font color="${info.color}">${get.translation(key)}</font>${count}  `;
+				    str += `<font color="${info.color}">${get.translation(key)}</font>${count}  `;
 				}
 				str += "<br>";
 			}
@@ -338,6 +348,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			originUpdateRoundNumber.apply(this, arguments);
 			if (ui.cardRoundTime) ui.cardRoundTime.updateRoundCard();
 		};
+		var yinying = ui.create.div(".handcardyinying", ui.window); //阴影
 		var caidanbutton = ui.create.div(".caidanbutton", ui.window);
 		caidanbutton.onclick = function () {
 			//菜单按钮
@@ -365,7 +376,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			var BJ = ui.create.div(".controls", HOME); //背景
 			BJ.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/beijing.png");
 			BJ.addEventListener("click", event => {
-				event.stopPropagation();
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 				var popuperContainer = ui.create.div(
 					".popup-container",
@@ -411,10 +421,22 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.click.auto();
 			});
 			var TC = ui.create.div(".controls", HOME); //离开
-			TC.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/likai.png");
+		    TC.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/likai.png");
 			TC.addEventListener("click", event => {
 				window.location.reload();
 			});
+			for(let i in game.system){
+			    if(['聊天','房间信息','房间设置','投降','重来','选项','暂停','不询问无懈','托管','♫','整理手牌','收藏','牌堆'].includes(game.system[i].name))continue;
+                let node = ui.create.div(".controls", game.system[i].name, HOME);
+               // node.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/buttons.png");
+                if(game.system[i].click) {
+                    node.addEventListener("click", (function(clickFunc) {
+                        return function(event) {
+                            clickFunc(); 
+                        };
+                    })(game.system[i].click));
+                }
+            };  
 		};
 	});
 	var plugin = {
@@ -589,7 +611,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						item.dataset.type = "skill2";
 						if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
 						/*
-								   confirm.insertBefore(item, confirm.firstChild);*/
+						           confirm.insertBefore(item, confirm.firstChild);*/
 					}
 				}
 

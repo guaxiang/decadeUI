@@ -1094,14 +1094,14 @@
 .player>.seat {
 	display: block;
 	position: absolute;
-	bottom: -16px;
+	bottom: -19px;
 	width: 100%;
 	line-height: 16px;
 	color: rgb(255, 165, 0);
 	font-family: "yuanli";
 	font-weight: bold;
 	/*字体加粗*/
-	font-size: 22px;
+	font-size: 18px;
 	text-align: center;
 	text-shadow: 0 0 2px black, 0 0 1px black;
 	white-space: nowrap;
