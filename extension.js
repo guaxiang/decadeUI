@@ -1738,7 +1738,7 @@ export default async function () {
 									dui.delay(68);
 								},
 								gain: [
-									...base.lib.element.content.gain.slice(0, 3),
+									...base.lib.element.content.gain.slice(0, -2),
 									async (event, trigger, player) => {
 										let { cards } = event;
 										var gaintag = event.gaintag;
