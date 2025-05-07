@@ -1508,10 +1508,10 @@ export default async function () {
 										itemtype = get.itemtype(cards);
 										if (itemtype == 'cards') {
 											cards = cards.concat();
-											game.playAudio('..', 'extension', '十周年UI','audio/GameShowCard');
+											game.playAudio('..', 'extension', '十周年UI', 'audio/GameShowCard');
 										} else if (itemtype == 'card') {
 											cards = [cards];
-											game.playAudio('..', 'extension', '十周年UI','audio/GameShowCard');
+											game.playAudio('..', 'extension', '十周年UI', 'audio/GameShowCard');
 										} else {
 											var evt = _status.event;
 											if (evt && evt.card && evt.cards === cards) {
@@ -1523,7 +1523,7 @@ export default async function () {
 													.display = 'none';
 												card.dataset.virtual = 1;
 												cards = [card];
-												game.playAudio('..', 'extension', '十周年UI','audio/GameShowCard');
+												game.playAudio('..', 'extension', '十周年UI', 'audio/GameShowCard');
 											}
 										}
 									}
@@ -1557,8 +1557,8 @@ export default async function () {
 									if (record !== false) {
 										if (record !== "nobroadcast") {
 											game.broadcast(
-												function (player, cards, time, record,nosource) {
-													player.$throw(cards, time, record,nosource);
+												function (player, cards, time, record, nosource) {
+													player.$throw(cards, time, record, nosource);
 												},
 												this,
 												cards,
@@ -1764,7 +1764,7 @@ export default async function () {
 										player.getStat().gain += cards.length;
 									}
 									"step 3";
-									var gaintag = event.gaintag;
+									var gaintag = event.gaintag.forEach(tag => cards[num].addGaintag(tag));
 									var handcards = player.node.handcards1;
 									var fragment = document.createDocumentFragment();
 
@@ -2034,8 +2034,8 @@ export default async function () {
 											if (cardx[j].gaintag && cardx[j].gaintag.length) {
 												event.gaintag_map[cardx[j].cardid] = cardx[j].gaintag.slice(0);
 												//仅移除非永久标记
-					                            const tags = cardx[j].gaintag.filter(tag => tag.indexOf("eternal_") !== 0);
-					                            tags.forEach(tag => cardx[j].removeGaintag(tag));
+												const tags = cardx[j].gaintag.filter(tag => tag.indexOf("eternal_") !== 0);
+												tags.forEach(tag => cardx[j].removeGaintag(tag));
 											}
 
 											cardx[j].recheck();
