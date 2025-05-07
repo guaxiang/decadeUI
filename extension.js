@@ -1753,13 +1753,13 @@ export default async function () {
 												card.addKnower("everyone");
 											}
 											card.fix();
+											card.style.transform = "";
 											if (card.parentNode == handcards) {
 												cards.splice(i--, 1);
 												continue;
 											}
 
-											if (gaintag) card.addGaintag(gaintag);
-
+											event.gaintag.forEach(tag => card.addGaintag(tag));
 											if (event.knowers) card.addKnower(event.knowers);
 
 											fragment.insertBefore(card, fragment.firstChild);
