@@ -11574,9 +11574,9 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`魔改十周年UI ${pack.version}`,
-					"最低适配：v1.10.17.1",
+					"最低适配：v1.10.18",
 					"OL样式联机完善适配",
-					"lose、gain函数跟进",
+					"新版本函数跟进",
 					"回滚$throw，添加弃牌动画",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;

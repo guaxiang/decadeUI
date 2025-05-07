@@ -347,7 +347,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					let hasSkills = [];
 					if (oSkills.length) {
 						// 创建技能标题
-						const title = ui.create.div(".xcaption", "武将技能", rightPane.firstChild);
+						ui.create.div(".xcaption", "武将技能", rightPane.firstChild);
 						for (let name of oSkills) {
 							if (hasSkills.includes(name)) continue;
 							if (player.name2 && nametype && (!lib.character[player.name1][3].includes(name) || !lib.character[player.name2][3].includes(name))) {
@@ -446,7 +446,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					//明置牌区===================================================================================
 					if (shownHs.length) {
-						ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区", rightPane.firstChild);
+						ui.create.div(".xcaption", player.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区", rightPane.firstChild);
 						shownHs.forEach(function (item) {
 							var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 							card.style.zoom = "0.6";
@@ -467,7 +467,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					} else if (allShown) {
 						var hs = player.getCards("h");
 						if (hs.length) {
-							const title = ui.create.div(".xcaption", "手牌区", rightPane.firstChild);
+							ui.create.div(".xcaption", "手牌区", rightPane.firstChild);
 							hs.forEach(function (item) {
 								var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 								card.style.zoom = "0.6";
@@ -477,7 +477,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					//装备区===================================================================================
 					if (eSkills.length) {
-						const title = ui.create.div(".xcaption", "装备区", rightPane.firstChild);
+						ui.create.div(".xcaption", "装备区", rightPane.firstChild);
 						const suitConfigMap = {
 							spade: { symbol: "♠", color: "#2e2e2e", image: "spade.png" },
 							heart: { symbol: "♥", color: "#e03c3c", image: "heart.png" },
@@ -491,11 +491,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							equip4: "equip4.png",
 							equip5: "equip5.png",
 						};
-						const dianshuMap = { 1: "A", 11: "J", 12: "Q", 13: "K" };
 						eSkills.forEach(function (card) {
 							const suitConfig = suitConfigMap[card.suit] || { symbol: "", color: "#FFFFFF" };
 							const typeIcon = typeIconMap[get.subtype(card)] || "default.png";
-							const dianshu = dianshuMap[card.number] || card.number;
+							const dianshu = get.strNumber(card.number);
 							const firstLine = `
                                 <div style="display: flex; align-items: center; gap: 8px; position: relative;"><span style="color: #f7d229; font-weight: bold;">${get.translation(card.name).replace(/[【】]/g, "")}</span>
                                 <img src="extension/十周年UI/shoushaUI/character/images/OL_line/${typeIcon}" style="width:14px; height:20px; vertical-align:middle">
@@ -504,15 +503,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
                                     </div>
                                 </div>`;
 							let desc = "";
-							if (get.subtype(card) == "equip1") {
+							if (get.subtypes(card).includes("equip1")) {
 								var num = 1;
 								var info = get.info(card);
-								if (info && info.distance && typeof info.distance.attackFrom == "number") {
-									num = 1 - info.distance.attackFrom;
-								}
-								if (num < 1) {
-									num = 1;
-								}
+								if (typeof info?.distance?.attackFrom == "number") num -= info.distance.attackFrom;
 								desc += "攻击范围 :   " + num + "<br>";
 							}
 							desc += get.translation(card.name + "_info").replace(/[【】]/g, "");
@@ -523,13 +517,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					//判定区===================================================================================
 					if (judges.length) {
-						const title = ui.create.div(".xcaption", "判定区", rightPane.firstChild);
+						ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
 						judges.forEach(function (card) {
 							const cards = card.cards;
 							let str = get.translation(card);
-							if (cards?.length && (cards?.length !== 1 || cards[0].name !== card.name)) {
-								if (!lib.card[card]?.blankCard || player.isUnderControl(true)) str += "(" + get.translation(cards) + ")";
-							}
+							if ((cards?.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) str += "（" + get.translation(cards) + "）";
 							ui.create.div(".xskill", "<div data-color>" + str + "</div><div>" + get.translation(card.name + "_info") + "</div>", rightPane.firstChild);
 						});
 					}
