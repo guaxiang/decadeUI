@@ -1764,7 +1764,11 @@ export default async function () {
 										player.getStat().gain += cards.length;
 									}
 									"step 3";
-									var gaintag = event.gaintag.forEach(tag => cards[num].addGaintag(tag));
+									if (Array.isArray(event.gaintag)) {
+										for (var i = 0; i < cards.length; i++) {
+											event.gaintag.forEach(tag => cards[i].addGaintag(tag));
+										}
+									}
 									var handcards = player.node.handcards1;
 									var fragment = document.createDocumentFragment();
 
@@ -1782,8 +1786,6 @@ export default async function () {
 											continue;
 										}
 
-										if (gaintag) card.addGaintag(gaintag);
-
 										if (event.knowers) card.addKnower(event.knowers);
 
 										fragment.insertBefore(card, fragment.firstChild);
@@ -1798,7 +1800,7 @@ export default async function () {
 										if (player == game.me) {
 											dui.layoutHandDraws(cards.reverse());
 											dui.queueNextFrameTick(dui.layoutHand, dui);
-											game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
+											game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), event.gaintag]);
 										}
 
 										var s = player.getCards("s");
@@ -1813,7 +1815,7 @@ export default async function () {
 											player,
 											cards,
 											ui.cardPile.childNodes.length,
-											gaintag
+											event.gaintag
 										);
 
 										if (nodelay !== true) {
