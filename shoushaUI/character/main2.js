@@ -228,43 +228,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 					//分包
 					var getPack = function (name) {
-						for (const pak in lib.characterSort) {
-							for (const package in lib.characterSort[pak]) {
-								if (lib.characterSort[pak][package].includes(name)) {
-									if (pak == "standard" || package == "sp_waitforsort" || package == "sp_qifu" || package == "sp_others" || package == "sp_guozhan2" || pak == "old" || pak == "diy" || pak == "collab") return lib.translate[pak + "_character_config"];
-									if (pak == "sp") {
-										if (get.translation(package).length > 6) return get.translation(package).slice(0, 2);
-									}
-									if (pak == "sp2") {
-										if (get.translation(package).length > 6) return get.translation(package).slice(3, 7);
-									}
-									if (pak == "mobile") {
-										if (get.translation(package).length > 6) return "手杀异构";
-									}
-									if (pak == "WeChatkill") return "微信三国杀";
-									if (pak == "tw") return "海外";
-									if (pak == "MiNikill") return "欢乐三国杀";
-									switch (package) {
-										case "sp_decade":
-										case "extra_decade":
-											return "限定";
-										case "extra_tw":
-											return "海外";
-										case "mobile_default":
-										case "mobile_sunben":
-											return "手杀";
-										case "offline_piracyE":
-											return "官盗E系列";
-										default:
-											return get.translation(package);
-									}
-								}
+						const pack = Object.keys(lib.characterPack).find(pack => lib.characterPack[pack][name]);
+						if (pack) {
+							if (lib.characterSort[pack]) {
+								const sort = Object.keys(lib.characterSort[pack]).find(sort => lib.characterSort[pack][sort].includes(name));
+								if (sort) return lib.translate[sort];
 							}
-						}
-						for (const pak in lib.characterPack) {
-							for (const namein in lib.characterPack[pak]) {
-								if (name == namein) return get.translation(pak + "_character_config");
-							}
+							return lib.translate[pack + "_character_config"] || lib.translate[pack];
 						}
 						return "暂无分包";
 					};
