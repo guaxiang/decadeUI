@@ -1740,8 +1740,7 @@ export default async function () {
 								gain: [
 									...base.lib.element.content.gain.slice(0, -2),
 									async (event, trigger, player) => {
-										let { cards } = event;
-										var gaintag = event.gaintag;
+										let { cards, gaintag } = event;
 										var handcards = player.node.handcards1;
 										var fragment = document.createDocumentFragment();
 
@@ -1759,7 +1758,7 @@ export default async function () {
 												continue;
 											}
 
-											event.gaintag.forEach(tag => card.addGaintag(tag));
+											gaintag.forEach(tag => card.addGaintag(tag));
 											if (event.knowers) card.addKnower(event.knowers);
 
 											fragment.insertBefore(card, fragment.firstChild);
