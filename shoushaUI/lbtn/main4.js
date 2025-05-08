@@ -10,15 +10,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		} else originalChat.call(this, id, str);
 	};
 	const originalSystem = ui.create.system;
-    game.system = {};
-    ui.create.system = function(str, func, right, before) {
-        var node = originalSystem(str, func, right, before); // 调用原始函数并获取返回的节点
-        game.system[str] = {
-            name: str
-        };
-        if (func) game.system[str].click = func;
-        return node; // 返回创建的节点
-    }
+	game.system = {};
+	ui.create.system = function (str, func, right, before) {
+		var node = originalSystem(str, func, right, before); // 调用原始函数并获取返回的节点
+		game.system[str] = {
+			name: str
+		};
+		if (func) game.system[str].click = func;
+		return node; // 返回创建的节点
+	}
 	lib.ui.create.pause = function () {
 		/*覆写历史记录*/
 		if (_status.pausing) return;
@@ -282,7 +282,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			game.countPlayer(current => {
 				//添加 确定每个玩家的名字
 				var namex = current === game.me ? lib.config.connect_nickname : ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "k9", "扶苏", "皇叔"].randomGet();
-				if (!game.hasPlayer(current => {})) if (!current.nickname) current.nickname = namex;
+				if (!game.hasPlayer(current => { })) if (!current.nickname) current.nickname = namex;
 			});
 			var identityShow = game.ui_identityShow;
 			var str = "";
@@ -328,7 +328,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				};
 				for (let [key, info] of Object.entries(identityInfo)) {
 					let count = game.countPlayer(current => info.aliases.includes(current.identity));
-				    str += `<font color="${info.color}">${get.translation(key)}</font>${count}  `;
+					str += `<font color="${info.color}">${get.translation(key)}</font>${count}  `;
 				}
 				str += "<br>";
 			}
@@ -421,22 +421,22 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.click.auto();
 			});
 			var TC = ui.create.div(".controls", HOME); //离开
-		    TC.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/likai.png");
+			TC.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/likai.png");
 			TC.addEventListener("click", event => {
 				window.location.reload();
 			});
-			for(let i in game.system){
-			    if(['聊天','房间信息','房间设置','投降','重来','选项','暂停','不询问无懈','托管','♫','整理手牌','收藏','牌堆'].includes(game.system[i].name))continue;
-                let node = ui.create.div(".controls", game.system[i].name, HOME);
-               // node.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/buttons.png");
-                if(game.system[i].click) {
-                    node.addEventListener("click", (function(clickFunc) {
-                        return function(event) {
-                            clickFunc(); 
-                        };
-                    })(game.system[i].click));
-                }
-            };  
+			for (let i in game.system) {
+				if (['聊天', '房间信息', '房间设置', '投降', '重来', '选项', '暂停', '不询问无懈', '托管', '♫', '整理手牌', '收藏', '牌堆'].includes(game.system[i].name)) continue;
+				let node = ui.create.div(".controls", game.system[i].name, HOME);
+				// node.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/buttons.png");
+				if (game.system[i].click) {
+					node.addEventListener("click", (function (clickFunc) {
+						return function (event) {
+							clickFunc();
+						};
+					})(game.system[i].click));
+				}
+			};
 		};
 	});
 	var plugin = {
@@ -553,7 +553,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			};
 		},
 		create: {
-			control() {},
+			control() { },
 			confirm() {
 				var confirm = ui.create.control("<span>确定</span>", "cancel");
 				confirm.classList.add("lbtn-confirm");
@@ -611,7 +611,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						item.dataset.type = "skill2";
 						if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
 						/*
-						           confirm.insertBefore(item, confirm.firstChild);*/
+								   confirm.insertBefore(item, confirm.firstChild);*/
 					}
 				}
 
@@ -1057,5 +1057,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 		},
 	};
+	lib.translate.zhong = '忠';
+	lib.translate.nei = '内';
 	return plugin;
 });
