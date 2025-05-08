@@ -2098,6 +2098,7 @@ export default async function () {
 										game.broadcast(
 											function (player, cards, num) {
 												for (var i = 0; i < cards.length; i++) {
+													cards[i].removeGaintag(true);
 													cards[i].classList.remove("glow");
 													cards[i].classList.remove("glows");
 													cards[i].fix();
