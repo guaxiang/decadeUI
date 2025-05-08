@@ -1696,8 +1696,8 @@ export default async function () {
 								},
 								$phaseJudge(card) {
 									game.addVideo("phaseJudge", this, get.cardInfo(card));
-									if (card.cards?.length) {
-										const cards = card.cards;
+									if (card[card.cardSymbol]?.cards?.length) {
+										const cards = card[card.cardSymbol].cards;
 										this.$throw(cards);
 									} else {
 										const VCard = game.createCard(card.name, "虚拟", "");
