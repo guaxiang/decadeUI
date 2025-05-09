@@ -2277,7 +2277,7 @@ export default async function () {
 							}
 						},
 
-						updatem(player) { },
+						updatem(player) {},
 
 						updatez() {
 							window.documentZoom = game.documentZoom;
@@ -3133,10 +3133,10 @@ export default async function () {
 								game.me.$syncExpand();
 							}
 						}
-						if (ui.equipSolts && game.me && typeof game.me.$handleEquipChange === 'function') {
+						if (ui.equipSolts && game.me && typeof game.me.$handleEquipChange === "function") {
 							game.me.$handleEquipChange();
 						}
-						if (ui.equipSolts && player && typeof player.$handleEquipChange === 'function') {
+						if (ui.equipSolts && player && typeof player.$handleEquipChange === "function") {
 							player.$handleEquipChange();
 						}
 						return result;
@@ -4514,9 +4514,9 @@ export default async function () {
 												let j = judges[i],
 													cardj = j.viewAs
 														? {
-															name: j.viewAs,
-															cards: j.cards || [j],
-														}
+																name: j.viewAs,
+																cards: j.cards || [j],
+														  }
 														: j;
 												if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
 													wuxie--;
@@ -4684,12 +4684,12 @@ export default async function () {
 										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
 										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
 									}
-								}
-								image.onerror = () => {
-									create()
 								};
-								if (decadeUI.config.newDecadeStyle != 'onlineUI') this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
-								else create()
+								image.onerror = () => {
+									create();
+								};
+								if (decadeUI.config.newDecadeStyle != "onlineUI") this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
+								else create();
 								image.src = url;
 							},
 						},
@@ -6227,13 +6227,13 @@ export default async function () {
 					if (style == null)
 						return canUseDefault
 							? {
-								width: 108,
-								height: 150,
-							}
+									width: 108,
+									height: 150,
+							  }
 							: {
-								width: 0,
-								height: 0,
-							};
+									width: 0,
+									height: 0,
+							  };
 					var size = {
 						width: parseFloat(style.width),
 						height: parseFloat(style.height),
@@ -7071,7 +7071,7 @@ export default async function () {
 
 					return element;
 				},
-				clone(element) { },
+				clone(element) {},
 			};
 
 			decadeUI.game = {
@@ -9281,8 +9281,8 @@ export default async function () {
 							this.js(
 								layoutPath + pack + "/" + pack + "/main" + listmap + ".js",
 								null,
-								function () { },
-								function () { }
+								function () {},
+								function () {}
 							);
 						});
 					}
@@ -9442,8 +9442,8 @@ export default async function () {
 					var listens = app.listens[event] || [];
 					var filters = listen
 						? listens.filter(function (item) {
-							return item === listen || item.listen === listen;
-						})
+								return item === listen || item.listen === listen;
+						  })
 						: listens.slice(0);
 					filters.forEach(function (item) {
 						listens.remove(item);
@@ -9478,7 +9478,7 @@ export default async function () {
 						});
 						return;
 					}
-					setText = typeof setText === "function" ? setText() : function () { };
+					setText = typeof setText === "function" ? setText() : function () {};
 					var zip = new JSZip(data);
 					var dirList = [],
 						fileList = [];
@@ -9776,8 +9776,8 @@ export default async function () {
 					lib.init.js(
 						layoutPath + pack + "/main" + listmap + ".js",
 						null,
-						function () { },
-						function () { }
+						function () {},
+						function () {}
 					);
 					switch (pack) {
 						case "character":
@@ -10391,7 +10391,7 @@ export default async function () {
 				lib.setScroll(window.qicai);
 				clickFK(window.qicai);
 				//-----7---小酒-------//
-				game.open_xiaojiu = function () { };
+				game.open_xiaojiu = function () {};
 				window.xiaojiu = ui.create.div("hidden", "", game.open_xiaojiu);
 				window.xiaojiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:36px;transition:none;background-size:100% 100%";
 
@@ -11586,7 +11586,7 @@ export default async function () {
 					"OL样式联机适配",
 					"新版本函数跟进",
 					"回滚$throw，添加弃牌动画",
-					"致谢：萌新(转型中)、U、小爱莉",
+					"致谢：萌新（转型中）、U、小爱莉",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);
