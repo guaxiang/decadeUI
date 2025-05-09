@@ -166,7 +166,10 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 	//势力选择
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
-			get: () => ["wei", "shu", "wu", "qun", "jin"],
+			get: () => {
+				if (get.mode() === "guozhan") return ["wei", "shu", "wu", "qun", "jin", 'key'];
+				return ["wei", "shu", "wu", "qun", "jin", 'key'];
+			},
 			set: () => {},
 		});
 		lib.skill._slyh = {
@@ -178,7 +181,10 @@ decadeModule.import(function(lib, game, ui, get, ai, _status) {
 			popup: false,
 			silent: true,
 			priority: Infinity,
-			filter: (_, player) => player.group && !lib.group.includes(player.group),
+			filter: (_, player) => {
+				if (get.mode() === "guozhan") return false;
+				return player.group && !lib.group.includes(player.group);
+			},
 			async content(event, trigger, player) {
 				const list = lib.group.slice(0, 5);
 				const result = await player
