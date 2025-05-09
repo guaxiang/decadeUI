@@ -5,40 +5,40 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		//给龙头添加OL等阶框
 		lib.skill._longLevel = {
 			trigger: {
-				global: "gameStart"
+				global: "gameStart",
 			},
 			silent: true,
 			forced: true,
 			filter: function (event, player) {
-				return (lib.config.extension_十周年UI_longLevel == 'ten') || (lib.config.extension_十周年UI_longLevel == 'eleven');
+				return lib.config.extension_十周年UI_longLevel == "ten" || lib.config.extension_十周年UI_longLevel == "eleven";
 			},
 			content: function () {
-				if (lib.config.extension_十周年UI_longLevel == 'ten') {
-					var rarity = ['silver', 'gold', 'yu', 'bing', 'yan'];
+				if (lib.config.extension_十周年UI_longLevel == "ten") {
+					var rarity = ["silver", "gold", "yu", "bing", "yan"];
 					switch (game.getRarity(player.name)) {
-						case 'junk':
+						case "junk":
 							rarity = rarity[0];
 							break;
-						case 'common':
+						case "common":
 							rarity = rarity[1];
 							break;
-						case 'rare':
+						case "rare":
 							rarity = rarity[2];
 							break;
-						case 'epic':
+						case "epic":
 							rarity = rarity[3];
 							break;
-						case 'legend':
+						case "legend":
 							rarity = rarity[4];
 							break;
 						default:
 							break;
-					};
+					}
 				}
-				if (lib.config.extension_十周年UI_longLevel == 'eleven') {
-					var rarity = ['silver', 'gold', 'yu', 'bing', 'yan'].randomGet();
-				};
-				if (rarity === 'yan') {
+				if (lib.config.extension_十周年UI_longLevel == "eleven") {
+					var rarity = ["silver", "gold", "yu", "bing", "yan"].randomGet();
+				}
+				if (rarity === "yan") {
 					var longtou = document.createElement("img");
 					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k2.png";
 					longtou.style.cssText = "pointer-events:none";
@@ -49,7 +49,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.height = "115%";
 					longtou.style.width = "130%";
 					longtou.style.zIndex = "60";
-					player.appendChild(longtou)
+					player.appendChild(longtou);
 					var longwei = document.createElement("img");
 					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL5.png";
 					longwei.style.cssText = "pointer-events:none";
@@ -60,9 +60,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.height = "115%";
 					longwei.style.width = "130%";
 					longwei.style.zIndex = "72";
-					player.appendChild(longwei)
-				};
-				if (rarity === 'bing') {
+					player.appendChild(longwei);
+				}
+				if (rarity === "bing") {
 					var longtou = document.createElement("img");
 					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k8.png";
 					longtou.style.cssText = "pointer-events:none";
@@ -73,7 +73,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.height = "109%";
 					longtou.style.width = "123%";
 					longtou.style.zIndex = "60";
-					player.appendChild(longtou)
+					player.appendChild(longtou);
 					var longwei = document.createElement("img");
 					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL4.png";
 					longwei.style.cssText = "pointer-events:none";
@@ -84,9 +84,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.height = "107%";
 					longwei.style.width = "123%";
 					longwei.style.zIndex = "72";
-					player.appendChild(longwei)
-				};
-				if (rarity === 'yu') {
+					player.appendChild(longwei);
+				}
+				if (rarity === "yu") {
 					var longtou = document.createElement("img");
 					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k6.png";
 					longtou.style.cssText = "pointer-events:none";
@@ -97,7 +97,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.height = "107.5%";
 					longtou.style.width = "114.5%";
 					longtou.style.zIndex = "60";
-					player.appendChild(longtou)
+					player.appendChild(longtou);
 					var longwei = document.createElement("img");
 					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL3.png";
 					longwei.style.cssText = "pointer-events:none";
@@ -108,9 +108,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.height = "105.5%";
 					longwei.style.width = "114.5%";
 					longwei.style.zIndex = "72";
-					player.appendChild(longwei)
-				};
-				if (rarity === 'gold') {
+					player.appendChild(longwei);
+				}
+				if (rarity === "gold") {
 					var longtou = document.createElement("img");
 					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k4.png";
 					longtou.style.cssText = "pointer-events:none";
@@ -121,7 +121,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.height = "107.5%";
 					longtou.style.width = "114.5%";
 					longtou.style.zIndex = "60";
-					player.appendChild(longtou)
+					player.appendChild(longtou);
 					var longwei = document.createElement("img");
 					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL2.png";
 					longwei.style.cssText = "pointer-events:none";
@@ -132,9 +132,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.height = "107.5%";
 					longwei.style.width = "114.5%";
 					longwei.style.zIndex = "72";
-					player.appendChild(longwei)
-				};
-				if (rarity === 'silver') {
+					player.appendChild(longwei);
+				}
+				if (rarity === "silver") {
 					var longtou = document.createElement("img");
 					longtou.src = decadeUIPath + "/assets/image/OL等阶露头框/k2.png";
 					longtou.style.cssText = "pointer-events:none";
@@ -145,7 +145,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.height = "115%";
 					longtou.style.width = "130%";
 					longtou.style.zIndex = "60";
-					player.appendChild(longtou)
+					player.appendChild(longtou);
 					var longwei = document.createElement("img");
 					longwei.src = decadeUIPath + "/assets/image/OL等阶露头框/border_campOL5.png";
 					longwei.style.cssText = "pointer-events:none";
@@ -156,20 +156,20 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.height = "115%";
 					longwei.style.width = "130%";
 					longwei.style.zIndex = "72";
-					player.appendChild(longwei)
-				};
-			}
-		}
-	};
+					player.appendChild(longwei);
+				}
+			},
+		};
+	}
 
 	//势力选择
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
 			get: () => {
-				if (get.mode() === "guozhan") return ["wei", "shu", "wu", "qun", "jin", 'key'];
-				return ["wei", "shu", "wu", "qun", "jin", 'key'];
+				if (get.mode() === "guozhan") return ["wei", "shu", "wu", "qun", "jin", "key"];
+				return ["wei", "shu", "wu", "qun", "jin", "key"];
 			},
-			set: () => { },
+			set: () => {},
 		});
 		lib.skill._slyh = {
 			trigger: {
@@ -215,8 +215,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					if (!player) return;
 					// 检查游戏模式和双将设置
 					const mode = get.mode();
-					const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[
-						mode].double_character;
+					const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode].double_character;
 					if (mode === "guozhan" || isDoubleCharacter) {
 						// 国战模式或开启双将时使用bj2
 						player.setAttribute("data-mode", "guozhan");
@@ -237,8 +236,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		// 在游戏开始时检查并设置背景
 		lib.arenaReady.push(function () {
 			const mode = get.mode();
-			const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode]
-				.double_character;
+			const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode].double_character;
 			if (mode === "guozhan" || isDoubleCharacter) {
 				document.body.setAttribute("data-mode", "guozhan");
 			} else {
@@ -350,8 +348,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		document.body.addEventListener("mousedown", function (e) {
 			const target = e.target;
 			if (target.closest("#dui-controls")) {
-				if (target.classList.contains("control") || target.parentElement.classList.contains(
-					"control")) {
+				if (target.classList.contains("control") || target.parentElement.classList.contains("control")) {
 					game.playAudio("..", "extension", "十周年UI", "audio/BtnSure");
 				}
 			}

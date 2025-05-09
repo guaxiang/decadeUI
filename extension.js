@@ -1140,7 +1140,7 @@ export default async function () {
 											if (isViewAsCard) {
 												cardx.cards = cards || [];
 												cardx.viewAs = VCard.name;
-												const bgMark = lib.translate[cardx.viewAs + "_bg"] || get.translation(cardx.viewAs)[0]
+												const bgMark = lib.translate[cardx.viewAs + "_bg"] || get.translation(cardx.viewAs)[0];
 												//cardx.node.name2.innerHTML = `${suit}${number} [${get.translation(VCard.name)}]`;
 												if (cardx.classList.contains("fullskin") || cardx.classList.contains("fullborder")) {
 													if (window.decadeUI) cardx.node.judgeMark.node.judge.innerHTML = bgMark;
@@ -11575,6 +11575,7 @@ export default async function () {
 				let log = [
 					`魔改十周年UI ${pack.version}`,
 					"最低适配：v1.10.18",
+					"bugfix",
 					"OL样式联机完善适配",
 					"新版本函数跟进",
 					"回滚$throw，添加弃牌动画",
