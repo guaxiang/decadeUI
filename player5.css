@@ -352,9 +352,9 @@
 
 .player>.camp-wrap>.camp-name {
 	/*玩家势力*/
-	font-family: HYZLSJ;
+	font-family: 'shousha';
 	font-display: swap;
-	font-size: 26px;
+	font-size: 18px;
 	width: 45%;
 	height: 32%;
 	left: 12px;
@@ -368,6 +368,7 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	transition: none;
+	font-weight:600;
 }
 
 .player>.camp-wrap[data-camp='wei']>.camp-name {
