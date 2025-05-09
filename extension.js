@@ -10910,6 +10910,39 @@ export default async function () {
 					game.reload();
 				},
 			},
+			borderLevel: {
+				name: "玩家边框等阶",
+				init: "five",
+				item: {
+					one: "一阶",
+					two: "二阶",
+					three: "三阶",
+					four: "四阶",
+					five: "五阶",
+				},
+				update() {
+					if (window.decadeUI) ui.arena.dataset.borderLevel = lib.config["extension_十周年UI_borderLevel"];
+				},
+			},
+			longLevel: {
+				name: '<b><font color="#FF0FF0">龙头框等阶',
+				init: "eight",
+				item: {
+					eight: "关闭",
+					one: "银龙",
+					two: "金龙",
+					three: "玉龙",
+					four: "冰龙",
+					five: "炎龙",
+					sex: "随机",
+					seven: "评级",
+					ten: "OL等阶框·评级",
+					eleven: "OL等阶框·随机",
+				},
+				update() {
+					if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
+				},
+			},
 			FL120: {
 				name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
 				intro: "",
@@ -11201,20 +11234,6 @@ export default async function () {
 					if (window.decadeUI) ui.arena.dataset.outcropSkin = lib.config["extension_十周年UI_outcropSkin"];
 				},
 			},
-			borderLevel: {
-				name: "玩家边框等阶",
-				init: "five",
-				item: {
-					one: "一阶",
-					two: "二阶",
-					three: "三阶",
-					four: "四阶",
-					five: "五阶",
-				},
-				update() {
-					if (window.decadeUI) ui.arena.dataset.borderLevel = lib.config["extension_十周年UI_borderLevel"];
-				},
-			},
 			gainSkillsVisible: {
 				name: "获得技能显示",
 				init: "on",
@@ -11270,25 +11289,6 @@ export default async function () {
 				},
 				update() {
 					if (window.decadeUI) ui.arena.dataset.shadowStyle = lib.config["extension_十周年UI_shadowStyle"];
-				},
-			},
-			longLevel: {
-				name: '<b><font color="#FF0FF0">龙头框等阶',
-				init: "eight",
-				item: {
-					one: "银龙",
-					two: "金龙",
-					three: "玉龙",
-					four: "冰龙",
-					five: "炎龙",
-					sex: "随机",
-					seven: "评级",
-					eight: "关闭",
-					ten: "OL等阶露头框·评级",
-					eleven: "OL等阶露头框·随机",
-				},
-				update() {
-					if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
 				},
 			},
 			loadingStyle: {
