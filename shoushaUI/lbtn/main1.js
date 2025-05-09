@@ -536,6 +536,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 
 						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
+							if (_status.event?.skill === "_recasting") return;
 							e.stopPropagation();
 							ui.click.skill(this.link);
 						});
