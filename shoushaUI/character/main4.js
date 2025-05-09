@@ -341,8 +341,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (player == game.me && player.hiddenSkills.length) oSkills.addArray(player.hiddenSkills);
 					var allShown = player.isUnderControl() || (!game.observe && game.me && game.me.hasSkillTag("viewHandcard", null, player, true));
 					var shownHs = player.getShownCards();
-					var eSkills = player.getVCards("e");
-					var judges = player.getVCards("j");
 					//技能区===================================================================================
 					let hasSkills = [];
 					if (oSkills.length) {
@@ -476,6 +474,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					}
 					//装备区===================================================================================
+					var eSkills = player.getCards("e");
 					if (eSkills.length) {
 						ui.create.div(".xcaption", "装备区", rightPane.firstChild);
 						const suitConfigMap = {
@@ -516,13 +515,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						});
 					}
 					//判定区===================================================================================
+					var judges = player.getCards("j");
 					if (judges.length) {
 						ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
 						judges.forEach(function (card) {
 							const cards = card.cards;
-							let str = get.translation(card);
-							if ((cards?.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) str += "（" + get.translation(cards) + "）";
-							ui.create.div(".xskill", "<div data-color>" + str + "</div><div>" + get.translation(card.name + "_info") + "</div>", rightPane.firstChild);
+							let str = [get.translation(card), get.translation(card.name + "_info")];
+							if ((Array.isArray(cards) && cards.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) str[0] += "（" + get.translation(cards) + "）";
+							ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
 						});
 					}
 					container.classList.remove("hidden");

@@ -677,7 +677,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					} else {
 						//装备
-						var eSkills = player.getVCards("e");
+						var eSkills = player.getCards("e");
 						if (eSkills.length) {
 							ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
 							eSkills.forEach(function (card) {
@@ -686,12 +686,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								rightPane.firstChild.appendChild(cardx);
 							});
 							eSkills.forEach(function (card) {
-								let str = [get.translation(card), get.translation(card.name + "_info")];
 								const cards = card.cards;
-								if (cards?.length && (cards?.length !== 1 || cards[0].name !== card.name)) str[0] += "（" + get.translation(card.cards) + "）";
-								const special = card.cards?.find(item => item.name == card.name && lib.card[item.name]?.cardPrompt);
-								if (special) str[1] = lib.card[special.name].cardPrompt(special);
-								ui.create.div(".xskillx", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
+								let str = [get.translation(card), get.translation(card.name + "_info")];
+								if (Array.isArray(cards) && cards.length) str[0] += "（" + get.translation(card.cards) + "）";
+								if (lib.card[card.name]?.cardPrompt) str[1] = lib.card[card.name].cardPrompt(card, player);
+								ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
 							});
 						}
 						if (shownHs.length) {
@@ -725,13 +724,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 						}
 
-						var judges = player.getVCards("j");
+						var judges = player.getCards("j");
 						if (judges.length) {
 							ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
 							judges.forEach(function (card) {
 								var cardx = game.createCard(get.name(card, false), get.suit(card, false), get.number(card, false), get.nature(card, false));
 								cardx.style.zoom = "0.8";
 								rightPane.firstChild.appendChild(cardx);
+							});
+							judges.forEach(function (card) {
+								const cards = card.cards;
+								let str = [get.translation(card), get.translation(card.name + "_info")];
+								if ((Array.isArray(cards) && cards.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) str[0] += "（" + get.translation(cards) + "）";
+								ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
 							});
 						}
 						if (!shownHs.length && !allShown && !judges.length && !eSkills.length) ui.create.div(".noxcaption", rightPane.firstChild);
