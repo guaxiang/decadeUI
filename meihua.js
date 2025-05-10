@@ -249,13 +249,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	lib.hooks.checkBegin.add("Selectall", () => {
 		const event = get.event();
 		const needMultiSelect = event.selectCard?.[1] > 1 && event.player == game.me;
-		if (needMultiSelect && !ui.Selectall) {
+		const isDiscardPhase = event.name === "phaseDiscard" || event.parent?.name === "phaseDiscard";
+		if (needMultiSelect && !ui.Selectall && !isDiscardPhase) {
 			ui.Selectall = ui.create.control("全选", () => {
 				ai.basic.chooseCard(card => (get.position(card) === "h" ? 114514 : 0));
 				event.custom?.add?.card?.();
 				ui.selected.cards?.forEach(card => card.updateTransform(true));
 			});
-		} else if (!needMultiSelect) {
+		} else if (!needMultiSelect || isDiscardPhase) {
 			removeCardQX();
 		}
 	});
