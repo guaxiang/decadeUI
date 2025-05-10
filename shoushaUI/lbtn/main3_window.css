@@ -37,7 +37,7 @@
 	white-space: normal;
 	position: fixed;
 	bottom: calc(100% - 280px);
-	left: calc(100% - 112.5px);
+	left: calc(100% - 142.5px);
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -215,7 +215,7 @@
 }
 
 .handcardNumber>.cardPicture {
-	left: 110px;
+	left: 80px;
 	bottom: 10px;
 	--w: 100px;
 	--h: calc(var(--w) * 92 / 370);
@@ -230,7 +230,7 @@
 
 /*手牌数参数*/
 .handcardNumber>.cardNumber {
-	left: 115px;
+	left: 90px;
 	bottom: 30px;
 	height: 8px;
 	line-height: 25px;
