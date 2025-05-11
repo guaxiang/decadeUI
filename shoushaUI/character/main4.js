@@ -358,7 +358,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							if (info.juexingji || info.limited) {
 								typeText = player.awakenedSkills.includes(name) ? "已发动" : "未发动";
 							} else {
-								typeText = info.trigger ? "被动" : "主动";
+								typeText = info.enable ? "主动" : "被动";
 							}
 							const skillTypeHTML = `<span class="skill-type-tag">(${typeText})</span>`;
 							const generateSkillHTML = (nameContent, descContent) => {
