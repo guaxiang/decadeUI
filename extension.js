@@ -9212,6 +9212,7 @@ export default async function () {
 					this.css(decadeUIPath + "extension.css");
 					this.css(decadeUIPath + "decadeLayout.css");
 					this.css(decadeUIPath + "card.css");
+					this.css(decadeUIPath + "meihua.css");
 					// 当且仅当初次载入时，newDecadeStyle == void 0
 					if (lib.config.extension_十周年UI_newDecadeStyle != void 0) {
 						this.css(decadeUIPath + "player" + parseFloat(["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(lib.config.extension_十周年UI_newDecadeStyle) + 1) + ".css");
@@ -11586,7 +11587,7 @@ export default async function () {
 					"OL样式联机适配",
 					"新版本函数跟进",
 					"回滚$throw，添加弃牌动画",
-					"致谢：萌新（转型中）、U、小爱莉",
+					"致谢：萌新（转型中）、戏志才、U、小爱莉",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);

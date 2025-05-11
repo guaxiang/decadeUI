@@ -213,27 +213,18 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			content() {
 				const setBackground = player => {
 					if (!player) return;
-					// 检查游戏模式和双将设置
 					const mode = get.mode();
 					const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode].double_character;
 					if (mode === "guozhan" || isDoubleCharacter) {
-						// 国战模式或开启双将时使用bj2
 						player.setAttribute("data-mode", "guozhan");
 					} else {
-						// 其他情况使用bj1
 						player.setAttribute("data-mode", "normal");
 					}
 				};
-				// 为所有玩家设置背景
 				game.players.forEach(setBackground);
 				game.dead.forEach(setBackground);
 			},
 		};
-		// 添加全局技能
-		if (!_status.connectMode) {
-			game.addGlobalSkill("_wjBackground");
-		}
-		// 在游戏开始时检查并设置背景
 		lib.arenaReady.push(function () {
 			const mode = get.mode();
 			const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode].double_character;
@@ -339,13 +330,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 			},
 		};
-		if (!_status.connectMode) {
-			game.addGlobalSkill("_useCardAudio");
-		}
-		if (!_status.connectMode) {
-			game.addGlobalSkill("_phaseStartAudio");
-		}
-		// 处理按钮点击音效
 		document.body.addEventListener("mousedown", function (e) {
 			const target = e.target;
 			if (target.closest("#dui-controls")) {
@@ -360,17 +344,61 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.playAudio("..", "extension", "十周年UI", "audio/card_click");
 			}
 		});
-		// 处理按钮缩放效果
-		document.body.addEventListener("mousedown", function (e) {
-			const control = e.target.closest(".control");
-			if (control && !control.classList.contains("disabled")) {
-				control.style.transform = "scale(0.95)";
-				control.style.filter = "brightness(0.9)";
-				setTimeout(() => {
-					control.style.transform = "";
-					control.style.filter = "";
-				}, 100);
-			}
-		});
 	}
+
+	//宝宝杀人机技能显示
+	lib.skill._babyskill = {
+		trigger: {
+			global: ["gameStart", "addSkill", "removeSkill"],
+		},
+		forced: true,
+		popup: false,
+		priority: 114514,
+		filter: function () {
+			return (get.mode() == "doudizhu" || get.mode() == "versus") && lib.config.extension_十周年UI_newDecadeStyle == "babysha";
+		},
+		content: function () {
+			game.players.forEach(function (player) {
+				if (player != game.me) {
+					var skills = player.skills.filter(function (skill) {
+						return lib.skill[skill];
+					});
+					console.log(player.name, player.skills, skills);
+					if (!skills.length) return;
+					var skillBox = ui.create.div(".doudizhu-skill-box");
+					skillBox.style.position = "absolute";
+					skillBox.style.right = "30px";
+					skillBox.style.top = "10px";
+					skillBox.style.display = "flex";
+					skillBox.style.flexDirection = "column";
+					skillBox.style.zIndex = 10;
+					skills.forEach(function (skill) {
+						var btn = ui.create.div(".doudizhu-skill-btn", get.translation(skill));
+						btn.style.margin = "2px 0";
+						skillBox.appendChild(btn);
+					});
+					player.node.babyskillBox = skillBox;
+					let avatarNode = player.node.name || player.node.avatar;
+					let rect = avatarNode && avatarNode.getBoundingClientRect ? avatarNode.getBoundingClientRect() : null;
+					let showRight = false;
+					if (rect && rect.left < 120) {
+						showRight = true;
+					}
+					skillBox.style.top = "10px";
+					skillBox.style.bottom = "auto";
+					skillBox.style.left = showRight ? "440%" : "auto";
+					skillBox.style.right = showRight ? "auto" : "100%";
+					if (player.node.name && player.node.name.parentNode) {
+						player.node.name.parentNode.style.position = "relative";
+						player.node.name.parentNode.appendChild(skillBox);
+					} else if (player.node.avatar && player.node.avatar.parentNode) {
+						player.node.avatar.parentNode.style.position = "relative";
+						player.node.avatar.parentNode.appendChild(skillBox);
+					} else {
+						player.appendChild(skillBox);
+					}
+				}
+			});
+		},
+	};
 });
