@@ -372,7 +372,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					skillBox.style.display = "flex";
 					skillBox.style.flexDirection = "column";
 					skillBox.style.zIndex = 10;
-					skills.forEach(function (skill) {
+					skills.reverse().forEach(function (skill) {
 						var btn = ui.create.div(".doudizhu-skill-btn", get.translation(skill));
 						btn.style.margin = "2px 0";
 						skillBox.appendChild(btn);
