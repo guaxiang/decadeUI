@@ -11582,7 +11582,7 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`魔改十周年UI ${pack.version}`,
-					"最低适配：v1.10.17.3",
+					"最低适配：v1.10.17.2",
 					"bugfix",
 					"OL样式联机适配",
 					"新版本函数跟进",

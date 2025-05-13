@@ -1183,24 +1183,38 @@
 /*人物弹出文字*/
 /*新样式*/
 /*代码来自Empty city*/
-#arena[data-shadow-style="off"]>.player>.damage {
+#arena[data-shadow-style='off']>.player>.damage {
 	width: 100%;
 	transition: none;
 	color: transparent;
-	font-family: "HYZLSJ";
+	font-family: 'HYZLSJ';
 	text-align: center;
 	white-space: nowrap;
-	font-weight: 500;
-	-webkit-text-stroke: 0.7px #3e362a;
+	font-weight: bold;
+	-webkit-text-stroke: 0.8px rgba(38,37,34,0.5);
 	text-shadow: none;
-	background: linear-gradient(180deg, #f5df88 16%, #ab8d35 60%);
-	/*-webkit-background-clip: text;*/
+	background: linear-gradient(180deg, #f5df88 16%, #ab8d35 60%); 
+	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
-	font-size: 28.5px;
-	z-index: 91;
+	font-size: 24px;
+	z-index: 999;
+	display: flex;
+	justify-content: center;
 }
 
-#arena[data-shadow-style="off"]>.player>.damage::before {
+
+#arena[data-shadow-style='off']>.player>.damage >.damage-child {
+	-webkit-text-stroke: 4.5px #102030;
+	opacity: 0.5;
+}
+#arena[data-shadow-style='off']>.player>.damage >.damage-child2 {
+	z-index: 1;
+	background-image: -webkit-linear-gradient(bottom,#c7a746 58%, #f0d775 22%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+#arena[data-shadow-style='off']>.player>.damage::before {
 	content: attr(data-text);
 	position: absolute;
 	left: 0;
