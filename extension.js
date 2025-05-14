@@ -4709,6 +4709,7 @@ export default async function () {
 					};
 
 					lib.element.player.$damagepop = function (num, nature, font, nobroadcast) {
+						if(lib.config.extension_十周年UI_newDecadeStyle == "onlineUI")return;
 						if (typeof num == "number" || typeof num == "string") {
 							game.addVideo("damagepop", this, [num, nature, font]);
 							if (nobroadcast !== false) {
