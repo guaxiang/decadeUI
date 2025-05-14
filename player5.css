@@ -182,6 +182,7 @@
 	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.6);
 	background-size: 100% 100%;
 	border-radius: 6px 0 0 6px;
+	border: 0.5px solid black;
 }
 
 .player > .camp-wrap > .camp-back::before {
@@ -193,35 +194,35 @@
 	height: 100%;
 	background-image: url("image/decoration/border_diwen.png");
 	background-size: 100% 100%;
-	filter: saturate(100%);
-	opacity: 0.3;
+	opacity: 0.1;
 	/* 调整背景图片的透明度 */
 	z-index: 1;
 	/* 确保图片在背景颜色上方 */
+	box-shadow: 0 0 0 2px black;
 }
 .player > .camp-wrap[data-camp="wei"] > .camp-back {
-	background: rgb(33, 79, 117);
+	background: #484d60;
 }
 .player > .camp-wrap[data-camp="shu"] > .camp-back {
-	background: rgb(124, 21, 28);
+	background: #754c50;
 }
 
 .player > .camp-wrap[data-camp="wu"] > .camp-back {
-	background: rgb(24, 94, 24);
+	background: #515b42;
 }
 
 .player > .camp-wrap[data-camp="qun"] > .camp-back {
-	background: rgb(129, 124, 102);
+	background: #685a37;
 }
 .player > .camp-wrap[data-camp="shen"] > .camp-back {
-	background: rgb(97, 87, 15);
+	background: #685f40;
 }
 
 .player > .camp-wrap[data-camp="shen2"] > .camp-back {
 	background: rgb(112, 52, 126);
 }
 .player > .camp-wrap[data-camp="ye"] > .camp-back {
-	background: rgb(112, 52, 126);
+	background: #574259;
 }
 .player > .camp-wrap[data-camp="key"] > .camp-back {
 	background: rgb(147, 132, 183);
@@ -230,7 +231,7 @@
 	background: rgb(93, 44, 105);
 }
 .player > .camp-wrap[data-camp="jin"] > .camp-back {
-	background: rgb(112, 52, 126);
+	background: #574259;
 }
 .player > .camp-wrap[data-camp="daqin"] > .camp-back {
 	background: rgb(100, 100, 100);
@@ -291,6 +292,7 @@
 .player > .camp-wrap > .avatar-name,
 #arena > .player:not(.minskin) > .name.name {
 	display: flex;
+	font-family: "FZLBJW";
 	align-items: center;
 	align-content: center;
 	justify-content: center;
@@ -299,21 +301,24 @@
 	top: 250px;
 	width: 18px;
 	height: 96px;
-	font-size: 12px;
+	font-size: 17px;
 	line-height: 15px;
 	/*字体间距*/
 	text-shadow: none;
-	z-index: 89;
+	z-index: 79;
+	font-weight: 700;
+	text-shadow: 1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black;
 }
 
 .player > .camp-wrap > .avatar-name,
 .player > .camp-wrap > .avatar-name-default,
 .player > .camp-wrap > .camp-back {
 	display: flex;
+	font-family: "FZLBJW";
 	align-items: center;
 	align-content: center;
 	justify-content: center;
-	font-size: 16px;
+	font-size: 17px;
 	text-align: center;
 	text-shadow: none;
 	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
@@ -324,7 +329,11 @@
 	position: absolute;
 	white-space: nowrap;
 	writing-mode: vertical-rl;
+	color: #f3f2ee;
 	-webkit-writing-mode: vertical-rl;
+	font-weight: 680;
+	filter: hue-rotate(350deg) saturate(1.2) opacity(1);
+	text-shadow: 2px 2px 0px #403227, -2px -2px 0px #403227, 2px -2px 0px #403227, -2px 2px 0px #403227;
 }
 
 .player.unseen > .camp-wrap > .avatar-name,
@@ -345,14 +354,14 @@
 }
 
 .player > .camp-wrap > .camp-name {
-	/*玩家势力*/
+	/* 玩家势力 */
 	font-family: "shousha";
 	font-display: swap;
-	font-size: 18px;
-	width: 45%;
-	height: 32%;
+	font-size: 19px;
+	width: 42%;
+	height: 29%;
 	left: 12px;
-	top: 30px;
+	top: 35px;
 	display: flex;
 	text-align: center;
 	align-items: center;
@@ -364,31 +373,42 @@
 	transition: none;
 	font-weight: 600;
 	filter: contrast(90%) opacity(0.7) brightness(1.2);
+	text-shadow: 1px 1px 1px rgba(128, 128, 128, 0.5);
+	font-stretch: extra-condensed !important;
+	transform: scaleY(0.8);
+}
+.player > .camp-wrap[data-camp="jin"] > .camp-name {
+	text-shadow: 1px 1px 0px #7f4f79, -1px -1px 0px #7f4f79, 1px -1px 0px #7f4f79, -1px 1px 0px #7f4f79;
 }
 
 .player > .camp-wrap[data-camp="wei"] > .camp-name {
-	text-shadow: 0 0 5px rgb(50, 50, 255), 0 0 10px rgb(120, 120, 255), 0 0 15px rgb(100, 100, 255);
+	text-shadow: 1px 1px 0px #4a4b5f, -1px -1px 0px #4a4b5f, 1px -1px 0px #4a4b5f, -1px 1px 0px #4a4b5f;
+	color: #bdc6e5;
 }
 
 .player > .camp-wrap[data-camp="shu"] > .camp-name {
-	text-shadow: 0 0 5px rgb(255, 100, 100), 0 0 10px rgb(255, 50, 50), 0 0 15px rgb(255, 50, 50);
+	text-shadow: 1px 1px 0px #754c50, -1px -1px 0px #754c50, 1px -1px 0px #754c50, -1px 1px 0px #754c50;
+	color: #eeae97;
 }
 
 .player > .camp-wrap[data-camp="wu"] > .camp-name {
-	text-shadow: 0 0 5px rgb(100, 233, 100), 0 0 10px rgb(50, 255, 50), 0 0 15px rgb(50, 255, 50);
+	text-shadow: 1px 1px 0px #48563c, -1px -1px 0px #48563c, 1px -1px 0px #48563c, -1px 1px 0px #48563c;
+	color: #bbeeaa;
 }
 
 .player > .camp-wrap[data-camp="qun"] > .camp-name {
-	text-shadow: 0 0 5px rgb(170, 170, 170), 0 0 10px rgb(118, 118, 118), 0 0 15px rgb(118, 118, 118);
+	text-shadow: 1px 1px 0px #685f40, -1px -1px 0px #685f40, 1px -1px 0px #685f40, -1px 1px 0px #685f40;
+	color: #e6d69b;
 }
 
 .player > .camp-wrap[data-camp="shen"] > .camp-name {
-	text-shadow: 0 0 5px rgb(255, 200, 0), 0 0 10px rgb(255, 200, 0), 0 0 15px rgb(255, 200, 0);
+	text-shadow: 1px 1px 0px #685f40, -1px -1px 0px #685f40, 1px -1px 0px #685f40, -1px 1px 0px #685f40;
+	color: #ebd6a1;
 }
-
-.player > .camp-wrap > .camp-name {
+/*
+.player>.camp-wrap>.camp-name {
 	text-shadow: 0 0 5px #e0ea33, 0 0 15px #e0ea33, 0 0 25px #e0ea33;
-}
+}*/
 
 /*副将名*/
 .player > .name.name2,
@@ -1116,9 +1136,9 @@
 #arena > .player:not(.minskin) > .identity {
 	left: auto;
 	top: -12px;
-	right: -10px;
-	width: 40px;
-	height: 38px;
+	right: -7px;
+	width: 36px;
+	height: 40px;
 	line-height: 31px;
 	font-size: 31px;
 	background-size: 100% 100%;
