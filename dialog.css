@@ -104,6 +104,25 @@
 	background-image: url("assets/image/tnode-A2.png") !important;
 }
 
+#arena.decadeUI[data-loading-style="onlineUI"]>.dialog .tdnode {
+	--h: 30px;
+	--w: calc(var(--h) * 77 / 44);
+	width: auto;
+	height: auto;
+	min-width: var(--w);
+	min-height: var(--h);
+	padding: 0 !important;
+	border-radius: 0 !important;
+	background-image: url("assets/image/tnode-A1.png");
+	background-size: 100% 100%;
+	line-height: var(--h);
+	text-align: center;
+}
+
+#arena.decadeUI[data-loading-style="onlineUI"]>.dialog .tdnode.bluebg {
+	background-image: url("assets/image/tnode-A2.png") !important;
+}
+
 /*-----------------分割线-----------------*/
 
 /*-----------------分割线-----------------*/
@@ -156,6 +175,24 @@
 	/*所有选项框*/
 	background-position: center;
 	background-image: url("assets/image/dialog4.png") !important;
+	background-size: 100% 100% !important;
+	background-repeat: no-repeat !important;
+	/*padding: -10px 120px !important; /*高度 + 宽度*/
+	/*margin: -10px -120px !important;*/
+	white-space: normal;
+	width: 900px !important;
+	left: calc(50% - 450px) !important;
+	height: 200px;
+	background: none;
+	box-shadow: none !important;
+}
+
+#arena.decadeUI[data-loading-style="onlineUI"]>.dialog.scroll1:not(.dclieqiong),
+#arena.decadeUI[data-loading-style="onlineUI"]>.dialog.scroll2:not(.dclieqiong),
+#arena.decadeUI[data-loading-style="onlineUI"]>.dialog.addNewRow:not(.dclieqiong) {
+	/*所有选项框*/
+	background-position: center;
+	background-image: url("assets/image/dialog5.png") !important;
 	background-size: 100% 100% !important;
 	background-repeat: no-repeat !important;
 	/*padding: -10px 120px !important; /*高度 + 宽度*/
