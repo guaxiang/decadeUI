@@ -41,11 +41,6 @@
 	background-image: url("assets/image/long_yu1.png");
 }
 
-/*冰龙框*/
-#arena[data-long-level="four"]>.player>.long {
-	background-image: url("assets/image/long_bing1.png");
-}
-
 /*炎龙框*/
 #arena[data-long-level="five"]>.player>.long {
 	background-image: url("assets/image/long_yan1.png");
@@ -86,11 +81,6 @@
 /*玉龙框*/
 #arena[data-long-level="three"]>.player>.wei {
 	background-image: url("assets/image/long_yu2.png");
-}
-
-/*冰龙框*/
-#arena[data-long-level="four"]>.player>.wei {
-	background-image: url("assets/image/long_bing2.png");
 }
 
 /*炎龙框*/

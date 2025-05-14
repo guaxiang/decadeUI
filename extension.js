@@ -11190,7 +11190,6 @@ export default async function () {
 					one: "银龙",
 					two: "金龙",
 					three: "玉龙",
-					four: "冰龙",
 					five: "炎龙",
 					sex: "随机",
 					seven: "评级",
