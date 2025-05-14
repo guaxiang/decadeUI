@@ -1974,12 +1974,6 @@ if (decadeModule)
 						y: [17, 0.15],
 						height: [0, 0.5],
 					},
-					/*动态边框: {//这部分别管
-		  name: 'skin_chengzhu_ChengZhuBianKuang',
-		  x: [12, 0.893],
-		  y: [16, 0.15],
-		  height: [0, 0.53],
-		},*/
 				},
 				skin_caojinyu: {
 					惊鸿: {
