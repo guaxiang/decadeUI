@@ -252,8 +252,8 @@
 .cardRoundNumber>.cardPileNumber {
 	left: 20px;
 	top: -15px;
-	--w: 65px;
-	--h: calc(var(--w) * 173 / 127);
+	--w: 80px;
+	--h: calc(var(--w) * 430 / 360);
 	width: var(--w);
 	height: var(--h);
 	background-image: url("./images/uibutton/new_cardback3.png");
@@ -266,37 +266,38 @@
 .cardRoundNumber>.cardPileNumber>span {
 	left: 12px;
 	/*牌堆数右移，越大越靠右*/
-	top: 6px;
+	top: 15px;
 	width: 100%;
 	display: block;
 	position: absolute;
 	line-height: 20px;
 	text-align: center;
-	color: #cda448;
+	color: #a78d72;
 	font-size: 18px;
 }
 
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	left: 32px;
+	left: 35px;
 	/*牌堆数/时间右移，越大越靠右*/
-	top: 24px;
+	top: 30px;
 	height: 20px;
 	line-height: 16px;
+	font-size: 20px;
 	/*游戏轮数/时间间隔*/
 	white-space: nowrap;
-	color: #fae2bc;
+	color: #a78d72;
 	z-index: 3;
 }
 
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	top: 48px;
+	top: 55px;
 	/*高度*/
-	left: 34px;
-	font-size: 17px;
-	color: #e0c192;
+	left: 43px;
+	font-size: 16px;
+	color: #a78d72;
 }
 
 /*托管中图片（）*/

@@ -8,63 +8,57 @@
 /*龙框美化*/
 /*龙头*/
 /*-----------------分割线-----------------*/
-.player>.long {
+.player > .long {
 	display: block;
-	--w: 60px;
-	--h: calc(var(--w) * 110 / 60);
-	width: var(--w);
-	height: var(--h);
-	right: -18px;
-	/*左移*/
-	top: -25px;
-	/*下移*/
+	width: 80px;
+	height: 133px;
+	right: -26px; /*左移*/
+	top: -32px; /*下移*/
 	position: absolute;
 	background-image: none;
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
-	z-index: 63;
+	z-index: 80;
 	pointer-events: none;
 }
-
 /*银龙框*/
-#arena[data-long-level="one"]>.player>.long {
+#arena[data-long-level="one"] > .player > .long {
 	background-image: url("assets/image/long_silver1.png");
 }
 
 /*金龙框*/
-#arena[data-long-level="two"]>.player>.long {
+#arena[data-long-level="two"] > .player > .long {
 	background-image: url("assets/image/long_gold1.png");
 }
 
 /*玉龙框*/
-#arena[data-long-level="three"]>.player>.long {
-	background-image: url("assets/image/long_yu1.png");
-}
-
-/*冰龙框*/
-#arena[data-long-level="four"]>.player>.long {
-	background-image: url("assets/image/long_bing1.png");
+#arena[data-long-level="three"] > .player > .long {
+	background-image: url("assets/image/long1_yu.png");
+	width: 156%;
+	height: 139%;
+    left: -25px;
+    top: -40px;
 }
 
 /*炎龙框*/
-#arena[data-long-level="five"]>.player>.long {
-	background-image: url("assets/image/long_yan1.png");
+#arena[data-long-level="five"] > .player > .long {
+	background-image: url("assets/image/long1_yan.png");
+	width: 160%;
+	height: 213%;
+    left: -23px;
+    top: -88px;
 }
 
 /*龙尾巴*/
 /***********************分割线**********************/
-.player>.wei {
+.player > .wei {
 	display: block;
-	--w: 80px;
-	--h: calc(var(--w) * 40 / 80);
-	width: var(--w);
-	height: var(--h);
+	width: 92px;
+	height: 40px;
 	left: auto;
 	top: auto;
-	right: -9px;
-	/*左移*/
-	bottom: -10px;
-	/*上移*/
+	right: -13px; /*左移*/
+	bottom: -10px; /*上移*/
 	position: absolute;
 	background-image: none;
 	background-size: 100% 100%;
@@ -72,32 +66,25 @@
 	z-index: 99;
 	pointer-events: none;
 }
-
 /*银龙框*/
-#arena[data-long-level="one"]>.player>.wei {
+#arena[data-long-level="one"] > .player > .wei {
 	background-image: url("assets/image/long_silver2.png");
 }
 
 /*金龙框*/
-#arena[data-long-level="two"]>.player>.wei {
+#arena[data-long-level="two"] > .player > .wei {
 	background-image: url("assets/image/long_gold2.png");
 }
 
 /*玉龙框*/
-#arena[data-long-level="three"]>.player>.wei {
-	background-image: url("assets/image/long_yu2.png");
-}
-
-/*冰龙框*/
-#arena[data-long-level="four"]>.player>.wei {
-	background-image: url("assets/image/long_bing2.png");
+#arena[data-long-level="three"] > .player > .wei {
+	/* background-image: url("assets/image/long_yu2.png"); */
 }
 
 /*炎龙框*/
-#arena[data-long-level="five"]>.player>.wei {
-	background-image: url("assets/image/long_yan2.png");
+#arena[data-long-level="five"] > .player > .wei {
+	/* background-image: url("assets/image/long_yan2.png"); */
 }
-
 /*-----------------分割线-----------------*/
 
 html {

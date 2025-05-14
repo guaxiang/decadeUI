@@ -49,59 +49,89 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event, player) {
 				return lib.config.extension_十周年UI_longLevel == "sex" || lib.config.extension_十周年UI_longLevel == "seven";
 			},
-			content() {
-				game.removeGlobalSkill("mx_longLevel");
-				game.players.forEach(target => {
-					if (lib.config.extension_十周年UI_longLevel == "seven") {
-						var rarity = ["silver", "gold", "yu", "bing", "yan"];
-						switch (game.getRarity(player.name)) {
-							case "junk":
-								rarity = rarity[0];
-								break;
-							case "common":
-								rarity = rarity[1];
-								break;
-							case "rare":
-								rarity = rarity[2];
-								break;
-							case "epic":
-								rarity = rarity[3];
-								break;
-							case "legend":
-								rarity = rarity[4];
-								break;
-							default:
-								break;
-						}
-					}
-					if (lib.config.extension_十周年UI_longLevel == "sex") {
-						var rarity = ["silver", "gold", "yu", "bing", "yan"].randomGet();
-					}
-					var longtou = document.createElement("img");
-					longtou.src = decadeUIPath + "/assets/image/long_" + rarity + "1.png";
-					longtou.style.cssText = "pointer-events:none";
-					longtou.style.position = "absolute";
-					longtou.style.display = "block";
-					longtou.style.top = "-24px";
-					longtou.style.right = "-18px";
-					longtou.style.height = "110";
-					longtou.style.width = "60px";
-					longtou.style.zIndex = "63";
-					target.appendChild(longtou);
-
-					var longwei = document.createElement("img");
-					longwei.src = decadeUIPath + "/assets/image/long_" + rarity + "2.png";
-					longwei.style.cssText = "pointer-events:none";
-					longwei.style.position = "absolute";
-					longwei.style.display = "block";
-					longwei.style.bottom = "-10px";
-					longwei.style.right = "-9px";
-					longwei.style.height = "40";
-					longwei.style.width = "80px";
-					longwei.style.zIndex = "99";
-					target.appendChild(longwei);
-				});
-			},
+			content: function () {
+                game.removeGlobalSkill("mx_longLevel");
+                game.players.forEach(target => {
+                    let rarity;
+                    if (lib.config.extension_十周年UI_longLevel == "seven") {
+                        const rarityList = ["silver", "gold", "yu", "yan"];
+                        switch (game.getRarity(player.name)) {
+                            case "junk":
+                                rarity = rarityList[0];
+                                break;
+                            case "common":
+                                rarity = rarityList[1];
+                                break;
+                            case "rare":
+                                rarity = rarityList[2];
+                                break;
+                            case "epic":
+                                rarity = rarityList[3];
+                                break;
+                            case "legend":
+                                rarity = rarityList[4];
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (lib.config.extension_十周年UI_longLevel == "sex") {
+                        const rarityList = ["gold", "yu", "yan"];
+                        rarity = rarityList[Math.floor(Math.random() * rarityList.length)];
+                    }
+                    let longtou;
+                    let longwei;
+                    if (rarity === "yan") {
+                        const wholeYanDragon = document.createElement("img");
+                        wholeYanDragon.src = decadeUIPath + "/assets/image/long1_yan.png"; 
+                        wholeYanDragon.style.cssText = "pointer-events:none";
+                        wholeYanDragon.style.position = "absolute";
+                        wholeYanDragon.style.display = "block";
+                        wholeYanDragon.style.top = "-88px";
+                        wholeYanDragon.style.left = "-23px";
+                        wholeYanDragon.style.height = "213%";
+                        wholeYanDragon.style.width = "160%";
+                        wholeYanDragon.style.zIndex = "98";
+                        target.appendChild(wholeYanDragon);
+                    } else if (rarity === "yu") {
+                        const wholeYuDragon = document.createElement("img");
+                        wholeYuDragon.src = decadeUIPath + "/assets/image/long1_yu.png";
+                        wholeYuDragon.style.cssText = "pointer-events:none";
+                        wholeYuDragon.style.position = "absolute";
+                        wholeYuDragon.style.display = "block";
+                        wholeYuDragon.style.top = "-40px";
+                        wholeYuDragon.style.left = "-25px";
+                        wholeYuDragon.style.height = "139%";
+                        wholeYuDragon.style.width = "156%";
+                        wholeYuDragon.style.zIndex = "85";
+                        target.appendChild(wholeYuDragon);
+                    } else {
+                        longtou = document.createElement("img");
+                        longtou.src = decadeUIPath + "/assets/image/long_" + rarity + "1.png";
+                        longtou.style.cssText = "pointer-events:none";
+                        longtou.style.position = "absolute";
+                        longtou.style.display = "block";
+                        longtou.style.top = "-36px";
+                        longtou.style.right = "-26px";
+                        longtou.style.height = "133px";
+                        longtou.style.width = "80px";
+                        longtou.style.zIndex = "80";
+                        target.appendChild(longtou);
+        
+                        longwei = document.createElement("img");
+                        longwei.src = decadeUIPath + "/assets/image/long_" + rarity + "2.png";
+                        longwei.style.cssText = "pointer-events:none";
+                        longwei.style.position = "absolute";
+                        longwei.style.display = "block";
+                        longwei.style.bottom = "-10px";
+                        longwei.style.right = "-13px";
+                        longwei.style.height = "40px";
+                        longwei.style.width = "92px";
+                        longwei.style.zIndex = "99";
+                        target.appendChild(longwei);
+                    }
+                });
+            },
 		},
 		//属性赋予
 		decadeUI_usecardBegin: {
