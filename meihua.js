@@ -347,58 +347,203 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 
 	//宝宝杀人机技能显示
-	lib.skill._babyskill = {
-		trigger: {
-			global: ["gameStart", "addSkill", "removeSkill"],
-		},
-		forced: true,
-		popup: false,
-		priority: 114514,
-		filter: function () {
-			return (get.mode() == "doudizhu" || get.mode() == "versus") && lib.config.extension_十周年UI_newDecadeStyle == "babysha";
-		},
-		content: function () {
-			game.players.forEach(function (player) {
-				if (player != game.me) {
-					var skills = player.skills.filter(function (skill) {
-						return lib.skill[skill];
-					});
-					console.log(player.name, player.skills, skills);
-					if (!skills.length) return;
-					var skillBox = ui.create.div(".doudizhu-skill-box");
-					skillBox.style.position = "absolute";
-					skillBox.style.right = "30px";
-					skillBox.style.top = "10px";
-					skillBox.style.display = "flex";
-					skillBox.style.flexDirection = "column";
-					skillBox.style.zIndex = 10;
-					skills.reverse().forEach(function (skill) {
-						var btn = ui.create.div(".doudizhu-skill-btn", get.translation(skill));
-						btn.style.margin = "2px 0";
-						skillBox.appendChild(btn);
-					});
-					player.node.babyskillBox = skillBox;
-					let avatarNode = player.node.name || player.node.avatar;
-					let rect = avatarNode && avatarNode.getBoundingClientRect ? avatarNode.getBoundingClientRect() : null;
-					let showRight = false;
-					if (rect && rect.left < 120) {
-						showRight = true;
+	if (lib.config["extension_十周年UI_babyshaskill"]) {
+		lib.skill._babyskill = {
+			trigger: {
+				global: ["gameStart", "addSkill", "removeSkill"],
+			},
+			forced: true,
+			popup: false,
+			priority: 114514,
+			filter: function () {
+				return (get.mode() == "doudizhu" || get.mode() == "versus") && lib.config.extension_十周年UI_newDecadeStyle == "babysha";
+			},
+			content: function () {
+				game.players.forEach(function (player) {
+					if (player != game.me) {
+						var skills = player.skills.filter(function (skill) {
+							return lib.skill[skill];
+						});
+						console.log(player.name, player.skills, skills);
+						if (!skills.length) return;
+						var skillBox = ui.create.div(".doudizhu-skill-box");
+						skillBox.style.position = "absolute";
+						skillBox.style.right = "30px";
+						skillBox.style.top = "10px";
+						skillBox.style.display = "flex";
+						skillBox.style.flexDirection = "column";
+						skillBox.style.zIndex = 10;
+						skills.reverse().forEach(function (skill) {
+							var btn = ui.create.div(".doudizhu-skill-btn", get.translation(skill));
+							btn.style.margin = "2px 0";
+							skillBox.appendChild(btn);
+						});
+						player.node.babyskillBox = skillBox;
+						let avatarNode = player.node.name || player.node.avatar;
+						let rect = avatarNode && avatarNode.getBoundingClientRect ? avatarNode.getBoundingClientRect() : null;
+						let showRight = false;
+						if (rect && rect.left < 120) {
+							showRight = true;
+						}
+						skillBox.style.top = "10px";
+						skillBox.style.bottom = "auto";
+						skillBox.style.left = showRight ? "440%" : "auto";
+						skillBox.style.right = showRight ? "auto" : "100%";
+						if (player.node.name && player.node.name.parentNode) {
+							player.node.name.parentNode.style.position = "relative";
+							player.node.name.parentNode.appendChild(skillBox);
+						} else if (player.node.avatar && player.node.avatar.parentNode) {
+							player.node.avatar.parentNode.style.position = "relative";
+							player.node.avatar.parentNode.appendChild(skillBox);
+						} else {
+							player.appendChild(skillBox);
+						}
 					}
-					skillBox.style.top = "10px";
-					skillBox.style.bottom = "auto";
-					skillBox.style.left = showRight ? "440%" : "auto";
-					skillBox.style.right = showRight ? "auto" : "100%";
-					if (player.node.name && player.node.name.parentNode) {
-						player.node.name.parentNode.style.position = "relative";
-						player.node.name.parentNode.appendChild(skillBox);
-					} else if (player.node.avatar && player.node.avatar.parentNode) {
-						player.node.avatar.parentNode.style.position = "relative";
-						player.node.avatar.parentNode.appendChild(skillBox);
-					} else {
-						player.appendChild(skillBox);
-					}
+				});
+			},
+		};
+	}
+
+	//手气卡美化
+	if (lib.config["extension_十周年UI_shouqikamh"]) {
+		lib.element.content.gameDraw = function () {
+			"step 0";
+			if (_status.brawl && _status.brawl.noGameDraw) {
+				event.finish();
+				return;
+			}
+			var end = player;
+			var numx = num;
+			do {
+				if (typeof num == "function") {
+					numx = num(player);
 				}
-			});
-		},
-	};
+				/*otherPile主要是针对那些用专属牌堆，不从一般牌堆摸牌的角色（如陈寿），该属性目前只有两个键值对，且都为函数
+				 *getCards函数与获得牌相关，只传入要获得的牌数num作为参数
+				 *discard与手气卡换牌后弃置牌相关，只传入要弃置的牌card作为参数
+				 */
+				const cards = [],
+					otherGetCards = event.otherPile?.[player.playerid]?.getCards;
+				//先专属牌堆，再一般的牌堆
+				if (otherGetCards) cards.addArray(otherGetCards(numx));
+				if (player.getTopCards) cards.addArray(player.getTopCards(numx - cards.length));
+				cards.addArray(get.cards(numx - cards.length));
+				//别问，问就是初始手牌要有标记 by 星の语
+				//event.gaintag支持函数、字符串、数组。数组就是添加一连串的标记；函数的返回格式为[[cards1,gaintag1],[cards2,gaintag2]...]
+				if (event.gaintag?.[player.playerid]) {
+					const gaintag = event.gaintag[player.playerid];
+					const list = typeof gaintag == "function" ? gaintag(numx, cards) : [[cards, gaintag]];
+					game.broadcastAll(
+						(player, list) => {
+							for (let i = list.length - 1; i >= 0; i--) {
+								player.directgain(list[i][0], null, list[i][1]);
+							}
+						},
+						player,
+						list
+					);
+				} else player.directgain(cards);
+
+				if (player.singleHp === true && get.mode() != "guozhan" && (lib.config.mode != "doudizhu" || _status.mode != "online")) {
+					player.doubleDraw();
+				}
+				player._start_cards = player.getCards("h");
+				player = player.next;
+			} while (player != end);
+			event.changeCard = get.config("change_card");
+			if (_status.connectMode || (lib.config.mode == "single" && _status.mode != "wuxianhuoli") || (lib.config.mode == "doudizhu" && _status.mode == "online") || (lib.config.mode != "identity" && lib.config.mode != "guozhan" && lib.config.mode != "doudizhu" && lib.config.mode != "single")) {
+				event.changeCard = "disabled";
+			}
+			("step 1");
+			if (event.changeCard != "disabled" && !_status.auto && game.me.countCards("h")) {
+				function getRandomInt(min, max) {
+					min = Math.ceil(min);
+					max = Math.floor(max);
+					return Math.floor(Math.random() * (max - min + 1)) + min;
+				}
+				event.numsl = getRandomInt(10000, 99999);
+				event.numsy = 5; //手气卡次数改这里
+				var str = "本场还可更换" + event.numsy + "次手牌(剩余" + event.numsl + "张手气卡)";
+				event.dialog = ui.create.dialog(str);
+				ui.create.confirm("oc");
+				event.custom.replace.confirm = function (bool) {
+					_status.event.bool = bool;
+					game.resume();
+				};
+			} else {
+				event.finish();
+			}
+			("step 2");
+			if (event.changeCard == "once") {
+				event.changeCard = "disabled";
+			} else if (event.changeCard == "twice") {
+				event.changeCard = "once";
+			} else if (event.changeCard == "disabled") {
+				event.bool = false;
+				return;
+			}
+			_status.imchoosing = true;
+			event.switchToAuto = function () {
+				_status.event.bool = false;
+				game.resume();
+			};
+			game.pause();
+			("step 3");
+			_status.imchoosing = false;
+			if (event.bool) {
+				if (game.changeCoin) {
+					game.changeCoin(-3);
+				}
+				/*otherPile主要是针对那些用专属牌堆，不从一般牌堆摸牌的角色（如陈寿），该属性目前只有两个键值对，且都为函数
+				 *getCards函数与获得牌相关，只传入要获得的牌数num作为参数
+				 *discard与手气卡换牌后弃置牌相关，只传入要弃置的牌card作为参数
+				 */
+				const hs = game.me.getCards("h"),
+					cards = [],
+					otherGetCards = event.otherPile?.[game.me.playerid]?.getCards,
+					otherDiscacrd = event.otherPile?.[game.me.playerid]?.discard;
+				//先弃牌
+				game.addVideo("lose", game.me, [get.cardsInfo(hs), [], [], []]);
+				for (let i = 0; i < hs.length; i++) {
+					hs[i].removeGaintag(true);
+					if (otherDiscacrd) otherDiscacrd(hs[i]);
+					else hs[i].discard(false);
+				}
+				//再摸牌
+				if (otherGetCards) cards.addArray(otherGetCards(hs.length));
+				//专属牌堆不够时从正常牌堆获取
+				cards.addArray(get.cards(hs.length - cards.length));
+				//添加标记相关
+				//别问，问就是初始手牌要有标记 by 星の语
+				//event.gaintag支持函数、字符串、数组。数组就是添加一连串的标记；函数的返回格式为[[cards1,gaintag1],[cards2,gaintag2]...]
+				if (event.gaintag?.[game.me.playerid]) {
+					const gaintag = event.gaintag[game.me.playerid];
+					const list = typeof gaintag == "function" ? gaintag(hs.length, cards) : [[cards, gaintag]];
+					for (let i = list.length - 1; i >= 0; i--) {
+						game.me.directgain(list[i][0], null, list[i][1]);
+					}
+				} else game.me.directgain(cards);
+				event.numsl--;
+				event.numsy--;
+				if (event.numsy <= 0) {
+					if (event.dialog) event.dialog.close();
+					if (ui.confirm) ui.confirm.close();
+					game.me._start_cards = game.me.getCards("h");
+					event.finish();
+				} else {
+					var str = "本场还可更换" + event.numsy + "次手牌(剩余" + event.numsl + "张手气卡)";
+					event.dialog.remove();
+					event.dialog = ui.create.dialog(str);
+					event.goto(2);
+				}
+			} else {
+				if (event.dialog) event.dialog.close();
+				if (ui.confirm) ui.confirm.close();
+				game.me._start_cards = game.me.getCards("h");
+				event.finish();
+			}
+			("step 4");
+			setTimeout(decadeUI.effect.gameStart, 51);
+		};
+	}
 });

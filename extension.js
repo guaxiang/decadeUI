@@ -11152,6 +11152,11 @@ export default async function () {
 				init: false,
 				intro: "开启后，非魏蜀吴群晋势力的角色将会重新选择势力",
 			},
+			shouqikamh: {
+				name: "手气卡美化",
+				init: false,
+				intro: "开启后，手气卡锁定五次",
+			},
 			aloneEquip: {
 				name: '单独装备栏',
 				intro: '切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整',
@@ -11176,6 +11181,11 @@ export default async function () {
 						}
 					}
 				},
+			},
+			babyshaskill: {
+				name: "欢杀技能显示",
+				init: false,
+				intro: "开启后，斗地主对决模式人机技能显示，目前有bug",
 			},
 			outcropSkin: {
 				name: "露头样式",
