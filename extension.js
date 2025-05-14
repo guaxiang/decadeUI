@@ -10878,7 +10878,7 @@ export default async function () {
 				init: false,
 			},
 			newDecadeStyle: {
-				name: '样式切换',
+				name: '切换样式',
 				intro: '切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置',
 				init: "off",
 				item: {
@@ -10920,39 +10920,6 @@ export default async function () {
 					lib.config["extension_十周年UI_rightLayout"] = item || "off";
 					game.saveConfig("extension_十周年UI_rightLayout", item);
 					game.reload();
-				},
-			},
-			borderLevel: {
-				name: "等阶边框",
-				init: "five",
-				item: {
-					one: "一阶",
-					two: "二阶",
-					three: "三阶",
-					four: "四阶",
-					five: "五阶",
-				},
-				update() {
-					if (window.decadeUI) ui.arena.dataset.borderLevel = lib.config["extension_十周年UI_borderLevel"];
-				},
-			},
-			longLevel: {
-				name: '等阶龙头',
-				init: "eight",
-				item: {
-					eight: "关闭",
-					one: "银龙",
-					two: "金龙",
-					three: "玉龙",
-					four: "冰龙",
-					five: "炎龙",
-					sex: "随机",
-					seven: "评级",
-					ten: "OL等阶框·评级",
-					eleven: "OL等阶框·随机",
-				},
-				update() {
-					if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
 				},
 			},
 			FL120: {
@@ -11197,6 +11164,39 @@ export default async function () {
 				},
 				update() {
 					if (window.decadeUI) ui.arena.dataset.outcropSkin = lib.config["extension_十周年UI_outcropSkin"];
+				},
+			},
+			borderLevel: {
+				name: "等阶边框",
+				init: "five",
+				item: {
+					one: "一阶",
+					two: "二阶",
+					three: "三阶",
+					four: "四阶",
+					five: "五阶",
+				},
+				update() {
+					if (window.decadeUI) ui.arena.dataset.borderLevel = lib.config["extension_十周年UI_borderLevel"];
+				},
+			},
+			longLevel: {
+				name: '等阶龙头',
+				init: "eight",
+				item: {
+					eight: "关闭",
+					one: "银龙",
+					two: "金龙",
+					three: "玉龙",
+					four: "冰龙",
+					five: "炎龙",
+					sex: "随机",
+					seven: "评级",
+					ten: "OL等阶框·评级",
+					eleven: "OL等阶框·随机",
+				},
+				update() {
+					if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
 				},
 			},
 			foldCardMinWidth: {
@@ -11556,9 +11556,11 @@ export default async function () {
 					`魔改十周年UI ${pack.version}`,
 					"最低适配：v1.10.17.2",
 					"bugfix",
-					"OL样式联机适配",
+					"局内UI显示调整",
 					"新版本函数跟进",
+					"简化菜单名称、动态背景",
 					"回滚$throw，添加弃牌动画",
+					"新增手气卡美化，欢杀技能显示",
 					"致谢：萌新（转型中）、戏志才、U、小爱莉",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
