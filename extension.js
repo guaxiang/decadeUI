@@ -3701,7 +3701,7 @@ export default async function () {
 										/*-----------------分割线-----------------*/
 										// 不同样式身份标记
 										if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
-											image.src = decadeUIPath + "image/decorations/identity2_" + filename + ".png";
+											image.src = decadeUIPath + "image/decorationo/identity2_" + filename + ".png";
 										} else if (lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
 											image.src = decadeUIPath + "image/decorationh/identity3_" + filename + ".png";
 										} else if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
