@@ -1211,7 +1211,7 @@ export default async function () {
 										game.addVideo("line", player, [target.dataset.position, config]);
 
 										player.checkBoundsCache(true);
-                						target.checkBoundsCache(true);
+										target.checkBoundsCache(true);
 										var x1, y1;
 										var x2, y2;
 										var hand = dui.boundsCaches.hand;
@@ -4709,7 +4709,6 @@ export default async function () {
 					};
 
 					lib.element.player.$damagepop = function (num, nature, font, nobroadcast) {
-						if(lib.config.extension_十周年UI_newDecadeStyle == "onlineUI")return;
 						if (typeof num == "number" || typeof num == "string") {
 							game.addVideo("damagepop", this, [num, nature, font]);
 							if (nobroadcast !== false) {
@@ -4750,8 +4749,10 @@ export default async function () {
 								node.popupNumber = null;
 							}
 
-							node.innerHTML = num;
-							node.dataset.text = node.textContent || node.innerText;
+							if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI") {
+								node.innerHTML = num;
+								node.dataset.text = node.textContent || node.innerText;
+							}
 							node.nature = nature || "soil";
 							this.damagepopups.push(node);
 						}
@@ -10879,8 +10880,8 @@ export default async function () {
 				init: false,
 			},
 			newDecadeStyle: {
-				name: '切换样式',
-				intro: '切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置',
+				name: "切换样式",
+				intro: "切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置",
 				init: "off",
 				item: {
 					on: "十周年",
@@ -10905,7 +10906,7 @@ export default async function () {
 				},
 			},
 			rightLayout: {
-				name: '左右布局',
+				name: "左右布局",
 				init: "on",
 				intro: "切换完以后自动重启游戏，手杀十周年一将之后的样式不再维护",
 				item: {
@@ -11126,8 +11127,8 @@ export default async function () {
 				intro: "开启后，手气卡锁定五次",
 			},
 			aloneEquip: {
-				name: '单独装备栏',
-				intro: '切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整',
+				name: "单独装备栏",
+				intro: "切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整",
 				init: true,
 				update() {
 					const config = lib.config["extension_十周年UI_aloneEquip"];
@@ -11182,7 +11183,7 @@ export default async function () {
 				},
 			},
 			longLevel: {
-				name: '等阶龙头',
+				name: "等阶龙头",
 				init: "eight",
 				item: {
 					eight: "关闭",
@@ -11233,8 +11234,8 @@ export default async function () {
 				},
 			},
 			shadowStyle: {
-				name: '特效风格',
-				intro: '可根据个人喜好切换局内阴影动态特效与人物弹出文字的样式，目前只有新手杀样式可用',
+				name: "特效风格",
+				intro: "可根据个人喜好切换局内阴影动态特效与人物弹出文字的样式，目前只有新手杀样式可用",
 				init: "on",
 				item: {
 					on: "原样式",
@@ -11257,8 +11258,8 @@ export default async function () {
 				},
 			},
 			loadingStyle: {
-				name: '更换光标+loading框',
-				intro: '可以更换局内选项框以及光标',
+				name: "更换光标+loading框",
+				intro: "可以更换局内选项框以及光标",
 				init: "on",
 				item: {
 					off: "关闭",
