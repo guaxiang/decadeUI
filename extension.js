@@ -4738,21 +4738,21 @@ export default async function () {
 
 							if (typeof num == "number") {
 								node.popupNumber = num;
-								if (num == Infinity) {
-									num = "+∞";
-								} else if (num == -Infinity) {
-									num = "-∞";
-								} else if (num > 0) {
-									num = "+" + num;
-								}
+								if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI") {
+									if (num == Infinity) {
+										num = "+∞";
+									} else if (num == -Infinity) {
+										num = "-∞";
+									} else if (num > 0) {
+										num = "+" + num;
+									}
+								} else num = "";
 							} else {
 								node.popupNumber = null;
 							}
 
-							if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI") {
-								node.innerHTML = num;
-								node.dataset.text = node.textContent || node.innerText;
-							}
+							node.innerHTML = num;
+							node.dataset.text = node.textContent || node.innerText;
 							node.nature = nature || "soil";
 							this.damagepopups.push(node);
 						}
