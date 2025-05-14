@@ -1211,31 +1211,32 @@ export default async function () {
 										game.addVideo("line", player, [target.dataset.position, config]);
 
 										player.checkBoundsCache(true);
-										target.checkBoundsCache(true);
-										var x1, y1;
-										var x2, y2;
-										var hand = dui.boundsCaches.hand;
-										if (player == game.me) {
-											hand.check();
-											x1 = hand.x + hand.width / 2;
-											y1 = hand.y;
-										} else {
-											x1 = player.cacheLeft + player.cacheWidth / 2;
-											y1 = player.cacheTop + player.cacheHeight / 2;
-										}
-
-										if (target == game.me) {
-											hand.check();
-											x2 = hand.x + hand.width / 2;
-											y2 = hand.y;
-										} else {
-											x2 = target.cacheLeft + target.cacheWidth / 2;
-											y2 = target.cacheTop + target.cacheHeight / 2;
-										}
-
-										game.linexy([x1, y1, x2, y2], config, true);
-									}
-								},
+                						target.checkBoundsCache(true);
+                						var x1, y1;
+                						var x2, y2;
+                						var hand = dui.boundsCaches.hand;
+                						var targetRect = target.getBoundingClientRect();
+                						var playerRect = player.getBoundingClientRect();
+                						if (player == game.me) {
+                							hand.check();
+                							x1 = playerRect.right / 2;
+                							y1 = hand.y;
+                						} else {
+                							x1 = playerRect.x + playerRect.width / 2;
+                							y1 = playerRect.y + playerRect.height / 2;
+                						}
+                						
+                						if (target == game.me) {
+                							hand.check();
+                							x2 = targetRect.right / 2;
+                							y2 = hand.y;
+                						} else {
+                							x2 = targetRect.x + targetRect.width / 2;
+                							y2 = targetRect.y + targetRect.height / 2;
+                						}
+                						game.linexy([x1, y1, x2, y2], config, true);
+                					}
+                				},
 								checkBoundsCache(forceUpdate) {
 									var update;
 									var refer = dui.boundsCaches.arena;
