@@ -1467,10 +1467,10 @@
 
 /* 主玩家判定区位置调整 */
 #arena[data-layout="nova"] > .player[data-position="0"]:not(.minskin) > .judges {
-	top: -30px;
+	top: -25px;
 	/* 调整到装备栏上方 */
 	left: auto;
-	right: 10%;
+	right: 30%;
 	width: 100%;
 	text-align: center;
 }
