@@ -337,6 +337,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				str += "<br>";
 			}
 			if (game.me) str += '<span style="color: orange;"><center>' + get.translation(game.me.identity + "_win_option") + "</span>";
+			if (lib.config.mode == "taixuhuanjing") {
+				game.gamePremise = function () {
+					return;
+				};
+				str = '<span style="color: orange;"><center>' + _status.TaiXuHuanJingGame.premise + "" + "</span>";
+			}
 			identityShow.innerHTML = '<span style="font-family:shousha;font-size:16px;font-weight:500;text-align:right;line-height:20px;color:#C1AD92;text-shadow:none;max-width:20px;word-wrap:break-word;">' + str + "</span>";
 			let jiluShow = ui.create.div(".jiluButton", identityShow, ui.click.pause);
 		};
