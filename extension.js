@@ -3058,10 +3058,12 @@ export default async function () {
 						}
 					};
 					//根据手杀ui选项开关调用不同结束出牌阶段的弹出样式
+					//为onlineUI样式单独改为取消
 					lib.hooks["checkEnd"].push(function decadeUI_UIconfirm() {
 						if (ui.confirm && ui.confirm.lastChild.link == "cancel") {
 							if (_status.event.type == "phase") {
-								const innerHTML = lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌";
+								const isOnlineUI = lib.config.extension_十周年UI_newDecadeStyle === "onlineUI";
+								const innerHTML = isOnlineUI ? "取消" : (lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌");
 								ui.confirm.lastChild.innerHTML = _status.event.skill ? "取消" : innerHTML;
 							}
 						}

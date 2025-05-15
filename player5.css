@@ -39,10 +39,10 @@
 }
 
 .player::before {
-	left: -20px;
-	top: -7px;
-	width: 129%;
-	height: 190px;
+	left: -25px;
+	top: -10px;
+	width: 140%;
+	height: 200px;
 	background-size: 93% 100%;
 	opacity: 0;
 	background-image: url("assets/image/select_green.png");
@@ -68,9 +68,9 @@
 .player.selected::after,
 .player.selectable::after {
 	left: -25px;
-	top: -13px;
+	top: -10px;
 	width: 140%;
-	height: 205px;
+	height: 200px;
 	background-size: 93% 100%;
 	opacity: 0;
 	background-image: url("assets/image/select_orange.png");
