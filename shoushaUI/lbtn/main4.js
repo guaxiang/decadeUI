@@ -1,4 +1,10 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
+	/*预留的接口
+    game.huanfubutton   武将头像上面的换肤按钮
+    game.ui_identityShow    左上角的牌局记录及胜利条件
+    game.caidanHOME       右上角的菜单按钮点击显示的内容
+    game.anniubuttons       左下角的三个按钮
+    */
 	const originalChat = lib.message.server.chat;
 	lib.message.server.chat = function (id, str) {
 		if (str.slice(0, 6) === "/audio") {
@@ -189,8 +195,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 	};
 	lib.arenaReady.push(function () {
-		let huanfu = ui.create.div(".huanfubutton", ui.window);
-		huanfu.onclick = function () {
+		game.huanfubutton = ui.create.div(".huanfubutton", ui.window);
+		game.huanfubutton.onclick = function () {
 			game.qhly_open_small ? game.qhly_open_small(game.me.name, null, game.me) : ui.click.charactercard(game.me.name, game.me, lib.config.mode === "guozhan" ? "guozhan" : true);
 		};
 		let modeConfigs = {
@@ -358,8 +364,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			originUpdateRoundNumber.apply(this, arguments);
 			if (ui.cardRoundTime) ui.cardRoundTime.updateRoundCard();
 		};
-		var caidanbutton = ui.create.div(".caidanbutton", ui.window);
-		caidanbutton.onclick = function () {
+		game.caidanbutton = ui.create.div(".caidanbutton", ui.window);
+		game.caidanbutton.onclick = function () {
 			//菜单按钮
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
 			var popuperContainer = ui.create.div(".popup-container", ui.window);
@@ -368,10 +374,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				event.stopPropagation();
 				popuperContainer.delete(200);
 			});
-			var HOME = ui.create.div(".caidanopen", popuperContainer);
-			var caidan2 = ui.create.div(".controls", HOME); //展开后的菜单按钮
+			game.caidanHOME = ui.create.div(".caidanopen", popuperContainer);
+			var caidan2 = ui.create.div(".controls", game.caidanHOME); //展开后的菜单按钮
 			caidan2.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/caidan2.png");
-			var SZ = ui.create.div(".controls", HOME); //设置
+			var SZ = ui.create.div(".controls", game.caidanHOME); //设置
 			SZ.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/shezhi.png");
 			SZ.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
@@ -382,7 +388,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.system1.classList.remove("shown");
 				ui.system2.classList.remove("shown");
 			});
-			var BJ = ui.create.div(".controls", HOME); //背景
+			var BJ = ui.create.div(".controls", game.caidanHOME); //背景
 			BJ.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/beijing.png");
 			BJ.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
@@ -424,19 +430,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				});
 			});
-			var TG = ui.create.div(".controls", HOME); //托管
+			var TG = ui.create.div(".controls", game.caidanHOME); //托管
 			TG.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/tuoguan.png");
 			TG.addEventListener("click", event => {
 				ui.click.auto();
 			});
-			var TC = ui.create.div(".controls", HOME); //离开
+			var TC = ui.create.div(".controls", game.caidanHOME); //离开
 			TC.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/likai.png");
 			TC.addEventListener("click", event => {
 				window.location.reload();
 			});
 			for (let i in game.system) {
 				if (["聊天", "房间信息", "房间设置", "投降", "重来", "选项", "暂停", "不询问无懈", "托管", "♫", "整理手牌", "收藏", "牌堆"].includes(game.system[i].name)) continue;
-				let node = ui.create.div(".controls", game.system[i].name, HOME);
+				let node = ui.create.div(".controls", game.system[i].name, game.caidanHOME);
 				// node.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/buttons.png");
 				if (game.system[i].click) {
 					node.addEventListener(
@@ -649,12 +655,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 			handcardNumber() {
 				//左下角配件
-				let anniubuttons;
+				game.anniubuttons;
 				if (lib.config.extension_十周年UI_XPJ != "on") {
 					if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-						anniubuttons = ui.create.div(".leftbuttons", ui.window);
+						game.anniubuttons = ui.create.div(".leftbuttons", ui.window);
 					} else {
-						anniubuttons = ui.create.div(".rightbuttons", ui.window);
+						game.anniubuttons = ui.create.div(".rightbuttons", ui.window);
 					}
 				}
 				let buttonConfigs = {
@@ -955,7 +961,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				};
 				for (let [buttonName, config] of Object.entries(buttonConfigs)) {
-					let button = ui.create.div(".anniubutton", anniubuttons);
+					let button = ui.create.div(".anniubutton", game.anniubuttons);
 					button.setBackgroundImage(config.imageBg);
 					if (config.click) button.onclick = config.click;
 				}
