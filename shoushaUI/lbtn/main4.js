@@ -14,11 +14,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	ui.create.system = function (str, func, right, before) {
 		var node = originalSystem(str, func, right, before); // 调用原始函数并获取返回的节点
 		game.system[str] = {
-			name: str
+			name: str,
 		};
 		if (func) game.system[str].click = func;
 		return node; // 返回创建的节点
-	}
+	};
 	lib.ui.create.pause = function () {
 		/*覆写历史记录*/
 		if (_status.pausing) return;
@@ -189,6 +189,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 	};
 	lib.arenaReady.push(function () {
+		let huanfu = ui.create.div(".huanfubutton", ui.window);
+		huanfu.onclick = function () {
+			game.qhly_open_small ? game.qhly_open_small(game.me.name, null, game.me) : ui.click.charactercard(game.me.name, game.me, lib.config.mode === "guozhan" ? "guozhan" : true);
+		};
 		let modeConfigs = {
 			//身份任务（阵营划分）
 			single: {
@@ -282,7 +286,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			game.countPlayer(current => {
 				//添加 确定每个玩家的名字
 				var namex = current === game.me ? lib.config.connect_nickname : ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "k9", "扶苏", "皇叔"].randomGet();
-				if (!game.hasPlayer(current => { })) if (!current.nickname) current.nickname = namex;
+				if (!game.hasPlayer(current => {})) if (!current.nickname) current.nickname = namex;
 			});
 			var identityShow = game.ui_identityShow;
 			var str = "";
@@ -348,6 +352,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			originUpdateRoundNumber.apply(this, arguments);
 			if (ui.cardRoundTime) ui.cardRoundTime.updateRoundCard();
 		};
+		var yinying = ui.create.div(".handcardyinying", ui.window); //阴影
 		var caidanbutton = ui.create.div(".caidanbutton", ui.window);
 		caidanbutton.onclick = function () {
 			//菜单按钮
@@ -425,17 +430,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				window.location.reload();
 			});
 			for (let i in game.system) {
-				if (['聊天', '房间信息', '房间设置', '投降', '重来', '选项', '暂停', '不询问无懈', '托管', '♫', '整理手牌', '收藏', '牌堆'].includes(game.system[i].name)) continue;
+				if (["聊天", "房间信息", "房间设置", "投降", "重来", "选项", "暂停", "不询问无懈", "托管", "♫", "整理手牌", "收藏", "牌堆"].includes(game.system[i].name)) continue;
 				let node = ui.create.div(".controls", game.system[i].name, HOME);
 				// node.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/buttons.png");
 				if (game.system[i].click) {
-					node.addEventListener("click", (function (clickFunc) {
-						return function (event) {
-							clickFunc();
-						};
-					})(game.system[i].click));
+					node.addEventListener(
+						"click",
+						(function (clickFunc) {
+							return function (event) {
+								clickFunc();
+							};
+						})(game.system[i].click)
+					);
 				}
-			};
+			}
 		};
 	});
 	var plugin = {
@@ -552,7 +560,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			};
 		},
 		create: {
-			control() { },
+			control() {},
 			confirm() {
 				var confirm = ui.create.control("<span>确定</span>", "cancel");
 				confirm.classList.add("lbtn-confirm");
@@ -1056,7 +1064,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 		},
 	};
-	lib.translate.zhong = '忠';
-	lib.translate.nei = '内';
+	lib.translate.zhong = "忠";
+	lib.translate.nei = "内";
 	return plugin;
 });
