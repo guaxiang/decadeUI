@@ -797,8 +797,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		ui.timeNode = ui.create.div(".time", ui.cardRoundTimeNode);
 
 		game.updateRoundNum = function () {
-			var roundNumber = game.roundNumber || 0;
-			roundNumberNode.innerHTML = "<span>第" + (game.roundNumber == 2 ? "二" : get.cnNumber(game.roundNumber)) + "轮</span>";
+			var roundNumber = Math.max(1, game.roundNumber || 1);
+			roundNumberNode.innerHTML = "<span>第" + get.cnNumber(roundNumber, true) + "轮</span>";
 			ui.cardRoundTimeNode.style.display = "block";
 		};
 

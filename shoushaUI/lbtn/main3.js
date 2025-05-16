@@ -207,7 +207,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				updateCardRoundTime(opts) {
 					if (!ui.cardRoundTime) return;
-					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + game.roundNumber + "轮</span>";
+					var roundNumber = Math.max(1, game.roundNumber || 1);
+					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
 					ui.cardRoundTime.setNumberAnimation(opts.cardNumber);
 				},
 				updateCardnumber(opts) {
@@ -444,8 +445,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 				node.updateRoundCard = function () {
 					var cardNumber = ui.cardPile.childNodes.length || 0;
-					var roundNumber = game.roundNumber || 0;
-					this.node.roundNumber.innerHTML = "<span>第" + game.roundNumber + "轮</span>";
+					var roundNumber = Math.max(1, game.roundNumber || 1);
+					this.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
 					this.setNumberAnimation(cardNumber);
 					this.show();
 					game.addVideo("updateCardRoundTime", null, {
