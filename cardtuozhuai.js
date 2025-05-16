@@ -1,5 +1,3 @@
-// 十周年UI扩展功能 - 卡牌拖拽交换位置
-// 本文件添加了卡牌左右交换移动位置的功能
 (function () {
 	window.TenYearUI = window.TenYearUI || {};
 	TenYearUI.init = function () {
@@ -33,7 +31,7 @@
 		return Math.abs(sourceIndex - targetIndex) === 1;
 	};
 	TenYearUI.dragCardStart = function (e) {
-		if (lib && lib.config && lib.config.enable_drag) return;
+		if (typeof lib !== "undefined" && lib && lib.config && lib.config.enable_drag) return;
 		if (TenYearUI.sourceNode) return;
 		let target = e.target;
 		while (target && !target.classList.contains("card")) {
@@ -150,8 +148,6 @@
 			}
 		}
 	};
-
-	// 卡牌拖动结束
 	TenYearUI.dragCardEnd = function (e) {
 		if (!TenYearUI.sourceNode) return;
 		function clear() {
@@ -184,6 +180,7 @@
 					TenYearUI.sourceNode.style.transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.initialTranslateY + "px) scale(" + cardScale + ")";
 				}
 			}
+
 			clear();
 		}
 		document.removeEventListener(TenYearUI.evts[1], TenYearUI.dragCardMove);
