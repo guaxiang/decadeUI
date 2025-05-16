@@ -2277,7 +2277,7 @@ export default async function () {
 							}
 						},
 
-						updatem(player) { },
+						updatem(player) {},
 
 						updatez() {
 							window.documentZoom = game.documentZoom;
@@ -3063,7 +3063,7 @@ export default async function () {
 						if (ui.confirm && ui.confirm.lastChild.link == "cancel") {
 							if (_status.event.type == "phase") {
 								const isOnlineUI = lib.config.extension_十周年UI_newDecadeStyle === "onlineUI";
-								const innerHTML = isOnlineUI ? "取消" : (lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌");
+								const innerHTML = isOnlineUI ? "取消" : lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌";
 								ui.confirm.lastChild.innerHTML = _status.event.skill ? "取消" : innerHTML;
 							}
 						}
@@ -4517,9 +4517,9 @@ export default async function () {
 													let j = judges[i],
 														cardj = j.viewAs
 															? {
-																name: j.viewAs,
-																cards: j.cards || [j],
-															}
+																	name: j.viewAs,
+																	cards: j.cards || [j],
+															  }
 															: j;
 													if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
 														wuxie--;
@@ -6232,13 +6232,13 @@ export default async function () {
 					if (style == null)
 						return canUseDefault
 							? {
-								width: 108,
-								height: 150,
-							}
+									width: 108,
+									height: 150,
+							  }
 							: {
-								width: 0,
-								height: 0,
-							};
+									width: 0,
+									height: 0,
+							  };
 					var size = {
 						width: parseFloat(style.width),
 						height: parseFloat(style.height),
@@ -7076,7 +7076,7 @@ export default async function () {
 
 					return element;
 				},
-				clone(element) { },
+				clone(element) {},
 			};
 
 			decadeUI.game = {
@@ -9288,8 +9288,8 @@ export default async function () {
 							this.js(
 								layoutPath + pack + "/" + pack + "/main" + listmap + ".js",
 								null,
-								function () { },
-								function () { }
+								function () {},
+								function () {}
 							);
 						});
 					}
@@ -9449,8 +9449,8 @@ export default async function () {
 					var listens = app.listens[event] || [];
 					var filters = listen
 						? listens.filter(function (item) {
-							return item === listen || item.listen === listen;
-						})
+								return item === listen || item.listen === listen;
+						  })
 						: listens.slice(0);
 					filters.forEach(function (item) {
 						listens.remove(item);
@@ -9485,7 +9485,7 @@ export default async function () {
 						});
 						return;
 					}
-					setText = typeof setText === "function" ? setText() : function () { };
+					setText = typeof setText === "function" ? setText() : function () {};
 					var zip = new JSZip(data);
 					var dirList = [],
 						fileList = [];
@@ -9783,8 +9783,8 @@ export default async function () {
 					lib.init.js(
 						layoutPath + pack + "/main" + listmap + ".js",
 						null,
-						function () { },
-						function () { }
+						function () {},
+						function () {}
 					);
 					switch (pack) {
 						case "character":
@@ -10398,7 +10398,7 @@ export default async function () {
 				lib.setScroll(window.qicai);
 				clickFK(window.qicai);
 				//-----7---小酒-------//
-				game.open_xiaojiu = function () { };
+				game.open_xiaojiu = function () {};
 				window.xiaojiu = ui.create.div("hidden", "", game.open_xiaojiu);
 				window.xiaojiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:36px;transition:none;background-size:100% 100%";
 
@@ -10888,7 +10888,7 @@ export default async function () {
 				init: false,
 				intro: "开启后手牌可以任意拖拽牌序，自动重启",
 				onclick(bool) {
-					game.saveConfig('extension_十周年UI_kapaituozhuai', bool);
+					game.saveConfig("extension_十周年UI_kapaituozhuai", bool);
 					setTimeout(() => game.reload(), 100);
 				},
 			},
@@ -11569,10 +11569,8 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`魔改十周年UI ${pack.version}`,
-					"最低适配：v1.10.17.2",
-					"bugfix",
-					"局内UI显示调整",
-					"新版本函数跟进",
+					"最低适配：v1.10.17.2", "bugfix",
+					"局内UI显示调整", "新版本函数跟进",
 					"简化菜单名称、动态背景",
 					"回滚$throw，添加弃牌动画",
 					"新增手气卡美化，欢杀技能显示",

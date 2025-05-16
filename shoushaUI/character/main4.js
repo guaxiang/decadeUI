@@ -71,7 +71,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						let popuperContainer = null;
 						let popuperContainerBool = true;
 						//胜率同理
-						const intPart = get.SL ? get.SL(player)*100+'%' : Math.floor(Math.random() * (95 - 50 + 1)) + 50 + "%";
+						const intPart = get.SL ? get.SL(player) * 100 + "%" : Math.floor(Math.random() * (95 - 50 + 1)) + 50 + "%";
 						//官阶同理
 						const guanjiejibie = Math.floor(Math.random() * 13 + 1);
 						//人气值

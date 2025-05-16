@@ -1,10 +1,10 @@
 "use strict";
 decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	if (lib.config["extension_十周年UI_kapaituozhuai"]) {
-		lib.init.js(lib.assetURL + 'extension/十周年UI/cardtuozhuai.js');
-		game.saveConfig('enable_drag', false);
+		lib.init.js(lib.assetURL + "extension/十周年UI/cardtuozhuai.js");
+		game.saveConfig("enable_drag", false);
 	} else {
-		game.saveConfig('enable_drag', true);
+		game.saveConfig("enable_drag", true);
 	}
 
 	//OL随机框 by柳下跖
@@ -461,7 +461,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			if (_status.connectMode || (lib.config.mode == "single" && _status.mode != "wuxianhuoli") || (lib.config.mode == "doudizhu" && _status.mode == "online") || (lib.config.mode != "identity" && lib.config.mode != "guozhan" && lib.config.mode != "doudizhu" && lib.config.mode != "single")) {
 				event.changeCard = "disabled";
 			}
-			("step 1");
+			"step 1";
 			if (event.changeCard != "disabled" && !_status.auto && game.me.countCards("h")) {
 				function getRandomInt(min, max) {
 					min = Math.ceil(min);
@@ -480,7 +480,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			} else {
 				event.finish();
 			}
-			("step 2");
+			"step 2";
 			if (event.changeCard == "once") {
 				event.changeCard = "disabled";
 			} else if (event.changeCard == "twice") {
@@ -495,7 +495,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.resume();
 			};
 			game.pause();
-			("step 3");
+			"step 3";
 			_status.imchoosing = false;
 			if (event.bool) {
 				if (game.changeCoin) {
@@ -549,7 +549,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.me._start_cards = game.me.getCards("h");
 				event.finish();
 			}
-			("step 4");
+			"step 4";
 			setTimeout(decadeUI.effect.gameStart, 51);
 		};
 	}
