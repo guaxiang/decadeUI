@@ -343,8 +343,10 @@
 .leftbuttons,
 .rightbuttons {
 	width: 85px;
-	height: 170px;
+	/*height: 170px;*/
 	bottom: 5px;
+	max-height: 205px;
+	overflow: auto;
 }
 .leftbuttons {
 	/*右手布局*/
@@ -357,10 +359,20 @@
 .anniubutton {
 	/*单独按钮*/
 	width: 100%;
-	height: 35%;
+	height: 59.9px;
 	background-size: 100% 100%;
 	margin-top: -9%;
 	position: relative;
+	background-image: url("./images/OL_line/uibutton/gameanniubuttonsbg.png");
+	background-size: 100% 100%;
+	font-size: 20px;
+	font-weight: 550;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: rgb(197, 167, 139);
+	font-family: "shousha";
+	text-shadow: none;
 }
 .caidanbutton {
 	/*菜单按钮*/
@@ -408,6 +420,7 @@
 	background-color: rgb(87, 59, 38);
 	border-radius: 2px;
 	text-align: center;
+	text-shadow: none;
 }
 .giftbg {
 	/* 礼物选择 */
@@ -801,11 +814,16 @@
 .cardRoundNumber > .time {
 	/*游戏时间*/
 	top: 45px;
-	/*高度*/
-	left: 40px;
+	/* 使用flex布局，使子元素水平居中，即使它们的宽度不同 */
+	display: flex;
+	justify-content: center; /* 水平居中 */
 	font-size: 16px;
 	font-family: "shousha";
 	color: #b08463;
+	/* 设置最小宽度，确保即使没有小时数，元素的总宽度也是一致的 */
+	min-width: 70px; /* 根据实际需要调整这个值 */
+	/* 如果需要，你也可以设置一个固定的宽度 */
+	/* width: 80px; */
 }
 
 /*托管中图片（）*/
