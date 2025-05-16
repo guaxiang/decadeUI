@@ -11569,8 +11569,10 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`魔改十周年UI ${pack.version}`,
-					"最低适配：v1.10.17.2", "bugfix",
-					"局内UI显示调整", "新版本函数跟进",
+					"最低适配：v1.10.17.2",
+					"bugfix",
+					"局内UI显示调整",
+					"新版本函数跟进",
 					"简化菜单名称、动态背景",
 					"回滚$throw，添加弃牌动画",
 					"新增手气卡美化，欢杀技能显示",
