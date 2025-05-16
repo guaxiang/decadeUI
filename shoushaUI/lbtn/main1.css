@@ -391,7 +391,7 @@
 
 /*手牌数图片*/
 .handcardNumber>.cardPicture {
-	left: 338px;
+	left: 345px;
 	bottom: -10px;
 	--w: 450px;
 	--h: calc(var(--w) * 300 / 720);
@@ -408,35 +408,44 @@
 /*由于重新设置了数值，所以不调用默认值*/
 .handcardNumber>.cardNumber {
 	left: 490px;
-	bottom: 15px;
+	bottom: 18px;
 	height: 8px;
 	font-family: "HYZLSJ";
-	font-weight: 600;
+	font-weight: 500;
 	line-height: 25px;
 	text-align: right;
 	font-size: 18px;
-	-webkit-text-stroke: 0.3px black;
+	text-shadow: #000000 0 0 1px,
+		black 0 0 2px,
+		black 0 0 2px,
+		black 0 0 2px, 
+		black 0 0 2px,
+		black 0 0 2px,
+		black 0 0 2px;
 	white-space: nowrap;
 }
 
 /*牌堆数*/
 /*同理，定义整体*/
 .cardRoundNumber {
-	top: 30px;
-	right: 123px;
+	top: 32px;
+	right: 150px;
 	/*牌堆数及游戏时间，轮数整体。越大越往左*/
 	font-family: "shousha";
-	text-shadow: black 1px 1px 1px, black 1px -1px 1px, black -1px 1px 1px, black -1px -1px 1px;
+	text-shadow: black 1px 1px 1px,
+		black 1px -1px 1px,
+		black -1px 1px 1px,
+		black -1px -1px 1px;
 }
 
 /*牌堆图片*/
 .cardRoundNumber>.cardPileNumber {
-	bottom: -15px;
+	bottom: 20px;
 	width: 44px;
 	height: 57px;
 	background-image: url("./images/uibutton/cardback.png");
 	background-size: 100% 100%;
-	left: -8px;
+	left: 25px;
 	position: relative;
 	/*为了兼容武将界面*/
 }
@@ -452,8 +461,15 @@
 	text-align: center;
 	font-family: "HYZLSJ";
 	font-stretch: ultra-condensed;
-	font-size: 25px;
-	font-weight: 100;
+	font-size: 25px; 
+	text-shadow: 
+	black 0 0 2px,
+	black 0 0 2px,
+	black 0 0 2px, 
+	black 0 0 2px,
+	black 0 0 2px,
+	black 0 0 2px;
+  font-weight: 400;
 }
 
 /*游戏轮数和时间*/
@@ -461,14 +477,15 @@
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏轮数显示*/
-	left: -20px;
-	bottom: 55px;
+	left: -30px;
+	bottom: 60px;
 	height: 16px;
 	line-height: 16px;
 	letter-spacing: 3.2px;
 	font-family: "shousha";
-	font-size: 20px;
+	font-size: 18px;
 	font-weight: 900;
+	text-shadow:-1.7px 0px 3px #2b1f19, 0px -1.7px 3px #2b1f19, 1.7px 0px 3px #2b1f19 ,0px 1.7px 3px #2b1f19;/*这个是文字阴影*/
 	white-space: nowrap;
 	color: #97856a;
 }
@@ -476,15 +493,14 @@
 /*游戏时间显示*/
 /*Q：可能有小伙伴不李姐了，说上面不是定义了游戏时间的参数了吗？为啥这里又来一遍？A：js里创造了两个布局一个是时间，另一个是游戏轮数。关于位置关系，不能一同用一种参数调用，不然会叠在一起（不信你试试），当然下面的颜色属性是可以删掉的，不影响。*/
 .cardRoundNumber>.time {
-	bottom: 55px;
-	font-size: 20px;
+	bottom: 60px;
+	font-size: 18px;
 	font-family: "shousha";
 	line-height: 16px;
 	/*文字行高*/
 	letter-spacing: 3.2px;
 	left: -90px;
 	color: #97856a;
-	/*font-size: 0px;*/
 }
 
 .control.dou3>div {
