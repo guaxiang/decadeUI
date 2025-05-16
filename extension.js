@@ -11215,7 +11215,7 @@ export default async function () {
 			foldCardMinWidth: {
 				name: "手牌折叠",
 				intro: "设置当手牌过多时，折叠手牌露出部分的最小宽度（默认值为81）",
-				init: "81",
+				init: "9",
 				item: {
 					9: "9",
 					18: "18",
