@@ -9249,7 +9249,7 @@ export default async function () {
 					this.js(decadeUIPath + "content.js");
 					this.js(decadeUIPath + "effect.js");
 					this.js(decadeUIPath + "meihua.js");
-					this.js(decadeUIPath + "cardtuozhuai.js");
+					//this.js(decadeUIPath + "cardtuozhuai.js");
 					this.js(decadeUIPath + "animation.js");
 					this.js(decadeUIPath + "dynamicSkin.js");
 
@@ -10881,6 +10881,15 @@ export default async function () {
 			eruda: {
 				name: "调试助手",
 				init: false,
+			},
+			kapaituozhuai:{
+				name: "卡牌拖拽",
+				init: false,
+				intro: "开启后手牌可以任意拖拽牌序，自动重启",
+				onclick(bool) {
+					game.saveConfig('extension_十周年UI_kapaituozhuai', bool);
+					setTimeout(() => game.reload(), 100);
+				},
 			},
 			newDecadeStyle: {
 				name: "切换样式",

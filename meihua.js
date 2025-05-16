@@ -1,5 +1,12 @@
 "use strict";
 decadeModule.import(function (lib, game, ui, get, ai, _status) {
+	if (lib.config["extension_十周年UI_kapaituozhuai"]) {
+		lib.init.js(lib.assetURL + 'extension/十周年UI/cardtuozhuai.js');
+		game.saveConfig('enable_drag', false);
+	} else {
+		game.saveConfig('enable_drag', true);
+	}
+
 	//OL随机框 by柳下跖
 	if (lib.config.extension_十周年UI_newDecadeStyle && lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
 		//给龙头添加OL等阶框
