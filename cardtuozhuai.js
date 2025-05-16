@@ -30,6 +30,60 @@
 	TenYearUI.isSimple = function (sourceIndex, targetIndex) {
 		return Math.abs(sourceIndex - targetIndex) === 1;
 	};
+	TenYearUI.preserveOriginalCardAnimation = function () {
+		if (typeof ui !== "undefined" && ui.handcards1) {
+			if (ui.handcards1.$cardadd && typeof ui.handcards1.$cardadd === "function") {
+				const originalCardAdd = ui.handcards1.$cardadd;
+				ui.handcards1.$cardadd = function (cards) {
+					const result = originalCardAdd.apply(this, arguments);
+					setTimeout(function () {
+						TenYearUI.ensureCardPositions();
+					}, 500);
+					return result;
+				};
+			}
+			if (typeof game !== "undefined" && game.addCard && typeof game.addCard === "function") {
+				const originalAddCard = game.addCard;
+				game.addCard = function () {
+					const result = originalAddCard.apply(this, arguments);
+					setTimeout(function () {
+						TenYearUI.ensureCardPositions();
+					}, 600);
+					return result;
+				};
+			}
+		}
+	};
+	TenYearUI.fixCardOverlap = function () {
+		if (!ui || !ui.handcards1) return;
+		const cards = Array.from(ui.handcards1.querySelectorAll(".card"));
+		if (cards.length <= 1) return;
+		let cardScale = 1;
+		if (typeof dui !== "undefined" && dui.boundsCaches && dui.boundsCaches.hand) {
+			cardScale = dui.boundsCaches.hand.cardScale;
+		}
+		let lastPos = -9999;
+		let needFix = false;
+		cards.forEach((card, index) => {
+			if (!card || typeof card.tx === "undefined") return;
+			if (card.tx - lastPos < TenYearUI.cardMargin * 0.5 && index > 0) {
+				needFix = true;
+			}
+			lastPos = card.tx;
+		});
+		if (needFix) {
+			let startX = cards[0].tx;
+			cards.forEach((card, index) => {
+				if (index === 0) return;
+
+				const newX = startX + index * (90 * cardScale + TenYearUI.cardMargin);
+				card.tx = newX;
+				card.style.transform = `translate(${newX}px, ${card.ty}px) scale(${cardScale})`;
+				card._transform = card.style.transform;
+			});
+			console.log("修复卡牌重叠");
+		}
+	};
 	TenYearUI.dragCardStart = function (e) {
 		if (typeof lib !== "undefined" && lib && lib.config && lib.config.enable_drag) return;
 		if (TenYearUI.sourceNode) return;
@@ -39,7 +93,7 @@
 			if (!target || target === document.body) return;
 		}
 		if (target && target.classList.contains("card")) {
-			e.preventDefault(); // 阻止默认行为
+			e.preventDefault();
 			TenYearUI.sourceNode = target;
 			let transformValues = TenYearUI.getTransformValues(TenYearUI.sourceNode);
 			TenYearUI.sourceNode.initialTranslateX = transformValues.translateX;
@@ -56,7 +110,6 @@
 			if (typeof TenYearUI.sourceNode.ty === "undefined") {
 				TenYearUI.sourceNode.ty = TenYearUI.sourceNode.initialTranslateY;
 			}
-
 			document.addEventListener(TenYearUI.evts[1], TenYearUI.dragCardMove, { passive: false });
 			document.addEventListener(TenYearUI.evts[2], TenYearUI.dragCardEnd);
 			console.log("开始拖拽卡牌", TenYearUI.sourceNode);
@@ -64,15 +117,14 @@
 	};
 	TenYearUI.dragCardMove = function (e) {
 		if (TenYearUI.sourceNode) {
-			e.preventDefault(); // 阻止默认行为
+			e.preventDefault();
 			TenYearUI.sourceNode.style.pointerEvents = "none";
 			TenYearUI.sourceNode.style.transition = "none";
 			TenYearUI.sourceNode.style.opacity = 0.5;
 			let dx = (e.clientX ? e.clientX : e.touches && e.touches[0] ? e.touches[0].clientX : 0) - TenYearUI.sourceNode.startX;
-			let dy = (e.clientY ? e.clientY : e.touches && e.touches[0] ? e.touches[0].clientY : 0) - TenYearUI.sourceNode.startY;
 			let zoomFactor = typeof game !== "undefined" && game.documentZoom ? game.documentZoom : 1;
 			let newTranslateX = TenYearUI.sourceNode.initialTranslateX + dx / zoomFactor;
-			let newTranslateY = TenYearUI.sourceNode.initialTranslateY + dy / zoomFactor;
+			let newTranslateY = TenYearUI.sourceNode.initialTranslateY;
 			TenYearUI.sourceNode.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px) scale(${TenYearUI.sourceNode.scale})`;
 			const x = e.pageX ? e.pageX : e.touches && e.touches[0] ? e.touches[0].pageX : 0;
 			const y = e.pageY ? e.pageY : e.touches && e.touches[0] ? e.touches[0].pageY : 0;
@@ -97,6 +149,7 @@
 				if (typeof dui !== "undefined" && dui.boundsCaches && dui.boundsCaches.hand) {
 					cardScale = dui.boundsCaches.hand.cardScale;
 				}
+				TenYearUI.ensureCardPositions();
 				if (sourceIndex > targetIndex) {
 					ui.handcards1.insertBefore(TenYearUI.sourceNode, targetCard);
 					if (TenYearUI.isSimple(sourceIndex, targetIndex)) {
@@ -144,6 +197,9 @@
 						TenYearUI.sourceNode._transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.ty + "px) scale(" + cardScale + ")";
 					}
 				}
+				requestAnimationFrame(function () {
+					TenYearUI.fixCardOverlap();
+				});
 				console.log("交换位置:", sourceIndex, "=>", targetIndex);
 			}
 		}
@@ -162,25 +218,21 @@
 			if (typeof dui !== "undefined" && dui.boundsCaches && dui.boundsCaches.hand) {
 				cardScale = dui.boundsCaches.hand.cardScale;
 			}
+
 			TenYearUI.sourceNode.style.transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.initialTranslateY + "px) scale(" + cardScale + ")";
 			clear();
 			TenYearUI.movedNode = null;
+			setTimeout(function () {
+				TenYearUI.fixCardOverlap();
+			}, 50);
 		} else if (TenYearUI.sourceNode) {
-			let t = TenYearUI.sourceNode.style.transform;
-			const regex = new RegExp(`translateY\\(([^)]+)\\)`);
-			let match = t.match(regex);
-			if (match) {
-				TenYearUI.sourceNode.style.transform = t.replace(regex, `translateY(${match[1]})`);
-			} else {
-				let cardScale = 1;
-				if (typeof dui !== "undefined" && dui.boundsCaches && dui.boundsCaches.hand) {
-					cardScale = dui.boundsCaches.hand.cardScale;
-				}
-				if (typeof TenYearUI.sourceNode.tx !== "undefined") {
-					TenYearUI.sourceNode.style.transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.initialTranslateY + "px) scale(" + cardScale + ")";
-				}
+			let cardScale = 1;
+			if (typeof dui !== "undefined" && dui.boundsCaches && dui.boundsCaches.hand) {
+				cardScale = dui.boundsCaches.hand.cardScale;
 			}
-
+			if (typeof TenYearUI.sourceNode.tx !== "undefined") {
+				TenYearUI.sourceNode.style.transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.initialTranslateY + "px) scale(" + cardScale + ")";
+			}
 			clear();
 		}
 		document.removeEventListener(TenYearUI.evts[1], TenYearUI.dragCardMove);
@@ -191,13 +243,18 @@
 	TenYearUI.ensureCardPositions = function () {
 		if (!ui || !ui.handcards1) return;
 		const cards = ui.handcards1.querySelectorAll(".card");
+		let hasPositionIssue = false;
 		cards.forEach((card, index) => {
 			if (typeof card.tx === "undefined" || typeof card.ty === "undefined") {
 				let transformValues = TenYearUI.getTransformValues(card);
 				card.tx = transformValues.translateX;
 				card.ty = transformValues.translateY;
+				hasPositionIssue = true;
 			}
 		});
+		if (hasPositionIssue) {
+			TenYearUI.fixCardOverlap();
+		}
 	};
 	TenYearUI.initCardDragSwap = function () {
 		TenYearUI.sourceNode = null;
@@ -210,12 +267,25 @@
 		}
 		ui.handcards1.removeEventListener(TenYearUI.evts[0], TenYearUI.dragCardStart);
 		TenYearUI.ensureCardPositions();
+		TenYearUI.preserveOriginalCardAnimation();
 		ui.handcards1.addEventListener(TenYearUI.evts[0], TenYearUI.dragCardStart, { passive: false });
 		if (TenYearUI.positionInterval) {
 			clearInterval(TenYearUI.positionInterval);
 		}
 		TenYearUI.positionInterval = setInterval(TenYearUI.ensureCardPositions, 2000);
-		console.log("卡牌拖拽交换位置功能已初始化");
+		if (TenYearUI.handObserver) {
+			TenYearUI.handObserver.disconnect();
+		}
+		TenYearUI.handObserver = new MutationObserver(function (mutations) {
+			setTimeout(function () {
+				TenYearUI.ensureCardPositions();
+				TenYearUI.fixCardOverlap();
+			}, 300);
+		});
+		TenYearUI.handObserver.observe(ui.handcards1, {
+			childList: true,
+		});
+		console.log("卡牌拖拽交换位置功能已初始化（仅限水平移动）");
 	};
 	if (document.readyState === "complete") {
 		setTimeout(TenYearUI.init, 1000);
@@ -231,7 +301,19 @@
 			setTimeout(TenYearUI.init, 1000);
 			return result;
 		};
+		if (decadeUI.animate && decadeUI.animate.card) {
+			const originalDraw = decadeUI.animate.card.draw;
+			decadeUI.animate.card.draw = function () {
+				const result = originalDraw.apply(this, arguments);
+				setTimeout(function () {
+					TenYearUI.ensureCardPositions();
+					TenYearUI.fixCardOverlap();
+				}, 500);
+				return result;
+			};
+		}
 	}
 	window.initCardDragSwap = TenYearUI.initCardDragSwap;
+	window.fixCardOverlap = TenYearUI.fixCardOverlap;
 	console.log("十周年UI卡牌拖拽交换位置功能模块已加载");
 })();
