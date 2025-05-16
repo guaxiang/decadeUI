@@ -381,8 +381,8 @@
 /*手牌*/
 /*这里给这个元素设置了一些默认值，如果在这个标签下的元素，不再设置其他值时，将调用这些默认值*/
 .handcardNumber {
-	bottom: 2px;
-	right: 275px;
+	bottom: -3px;
+	right: 250px;
 	font-family: "HYZLSJ";
 	color: #ffffff;
 	font-weight: 100 !important;
@@ -428,8 +428,8 @@
 /*牌堆数*/
 /*同理，定义整体*/
 .cardRoundNumber {
-	top: 65px;
-	right: 150px;
+	top: 90px;
+	right: 120px;
 	/*牌堆数及游戏时间，轮数整体。越大越往左*/
 	font-family: "shousha";
 	text-shadow: black 1px 1px 1px,

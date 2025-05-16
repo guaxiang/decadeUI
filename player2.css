@@ -79,7 +79,7 @@
 }
 #arena[data-shadow-style='off']>.player.glow_phase:not(.selectable)::before {
 	animation-duration: 0.9s; 
-	background-image: url('assets/image/sprites_shadow_green.png');
+	background-image: url('assets/image/sprites_shadow_green1.png');
 	opacity: 1;
 	z-index: 75;
 }
@@ -1279,8 +1279,8 @@ display:none;
 	font-family: 'HYZLSJ';
 	text-align: center;
 	white-space: nowrap;
-	font-weight: bold;
-	-webkit-text-stroke: 0.8px rgba(38,37,34,0.5);
+	font-weight: 500;
+	-webkit-text-stroke: 0.7px rgba(38,37,34,0.5);
 	text-shadow: none;
 	background: linear-gradient(180deg, #f5df88 16%, #ab8d35 60%); 
 	-webkit-background-clip: text;
@@ -1574,4 +1574,14 @@ display:none;
 .player .tipContainer {
 	width: 83% !important;
 	right: 0;
+}
+
+/*玩家喝酒效果*/
+.player .playerjiu {
+	background: linear-gradient(
+    to bottom, 
+    rgba(255, 0, 0, 0) 25%,
+	rgba(255, 0, 0, 0.4) 50%,    
+    rgb(255, 0, 0.8) 150%
+	)
 }

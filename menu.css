@@ -190,3 +190,8 @@
 .config.config.toggle > div > div {
 	visibility: hidden;
 }
+
+.menu-container > .menu.main.center {
+    top: 12px !important;
+    left: 10px !important;
+}
