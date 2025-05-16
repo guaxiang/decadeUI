@@ -10951,8 +10951,9 @@ export default async function () {
 				init: "webp",
 				item: {
 					off: "关闭",
-					webp: "WEBP素材",
-					png: "PNG 素材",
+					jpg: "online",
+					webp: "彩色卡牌",
+					png: "原十周年",
 				},
 			},
 			//菜单美化
