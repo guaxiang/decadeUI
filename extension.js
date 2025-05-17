@@ -11577,7 +11577,7 @@ export default async function () {
 					"简化菜单名称、动态背景",
 					"回滚$throw，添加弃牌动画",
 					"新增手气卡美化，欢杀技能显示",
-					"增加手牌拖拽功能，需要关闭本体拖拽",
+					"增加手牌拖拽功能，开启后自动关闭本体拖拽",
 					"致谢：萌新（转型中）、戏志才、U、小爱莉、扶苏、小曦、凌梦",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
