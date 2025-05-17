@@ -183,6 +183,11 @@
 	background-size: 100% 100%;
 	border-radius: 6px 0 0 6px;
 	border: 0.5px solid black;
+	left: 26%;
+	top: 24%;
+	right: 26%;
+	bottom: 1%;
+	position: absolute;
 }
 
 .player > .camp-wrap > .camp-back::before {
@@ -289,8 +294,7 @@
 }
 
 /*主将名，根据部分群友需要，添加定位代码*/
-.player > .camp-wrap > .avatar-name,
-#arena > .player:not(.minskin) > .name.name {
+.player > .camp-wrap > .avatar-name {
 	display: flex;
 	font-family: "FZLBJW";
 	align-items: center;
@@ -298,21 +302,26 @@
 	justify-content: center;
 	left: 29.5% !important;
 	right: auto;
-	top: 250px;
+	top: 70px;
 	width: 18px;
 	height: 96px;
-	font-size: 17px;
+	font-size: 15px;
 	line-height: 15px;
 	/*字体间距*/
 	text-shadow: none;
 	z-index: 79;
 	font-weight: 700;
 	text-shadow: 1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black;
+	position: absolute;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	color: #f3f2ee;
+	-webkit-writing-mode: vertical-rl;
+	filter: hue-rotate(350deg) saturate(1.2) opacity(1);
+	text-shadow: 2px 2px 0px #403227, -2px -2px 0px #403227, 2px -2px 0px #403227, -2px 2px 0px #403227;
 }
 
-.player > .camp-wrap > .avatar-name,
-.player > .camp-wrap > .avatar-name-default,
-.player > .camp-wrap > .camp-back {
+.player > .camp-wrap > .avatar-name-default {
 	display: flex;
 	font-family: "FZLBJW";
 	align-items: center;
@@ -321,7 +330,6 @@
 	font-size: 17px;
 	text-align: center;
 	text-shadow: none;
-	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
 	left: 26%;
 	top: 24%;
 	right: 26%;
