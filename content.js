@@ -349,25 +349,20 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				//触碰
 				_touchStart(e) {
 					if (this.finishing || this.finished) return;
-					if (game.me != player) return;
-
-					this.draggedCard = e.target.closest(".card");
-					if (!this.draggedCard) return;
-
+					if (!e.target?.classList.contains("card") || game.me != player) return;
+					this.draggedCard = e.target;
 					this.draggedCard.classList.add("dragging");
 					this.draggedCard.style.zIndex = 1000;
 					this.draggedCard.style.transition = "none";
-
 					this.touchStartX = e.touches[0].clientX;
 					this.touchStartY = e.touches[0].clientY;
-
+					this.touchStartTime = Date.now();
 					let rect = this.draggedCard.getBoundingClientRect();
 					this.initialX = rect.left + rect.width / 2 - this.touchStartX;
 					this.initialY = rect.top + rect.height / 2 - this.touchStartY;
 				},
 				_touchMove(e) {
 					if (!this.draggedCard) return;
-
 					let x = e.touches[0].clientX - this.initialX;
 					let y = e.touches[0].clientY - this.initialY;
 					this.draggedCard.style.transform = `translate(${x}px, ${y}px)`;
@@ -375,28 +370,34 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				_touchEnd(e) {
 					if (!this.draggedCard) return;
 					this.draggedCard.classList.remove("dragging");
-					this.draggedCard.style.transition = ""; // 恢复过渡动画
+					// 恢复过渡动画
+					this.draggedCard.style.transition = "";
 					this.draggedCard.style.transform = "translate(0, 0)";
-
 					// 获取触摸结束时的坐标
 					let touchEndX = e.changedTouches[0].clientX;
 					let touchEndY = e.changedTouches[0].clientY;
-
+					let deltaX = touchEndX - this.touchStartX;
+					let deltaY = touchEndY - this.touchStartY;
+					// 判断时间和移动距离
+					let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+					let duration = Date.now() - this.touchStartTime;
+					if (distance < 10 && duration < 300) {
+						this._click({ target: this.draggedCard, stopPropagation: () => {} });
+						this.draggedCard = null;
+						return;
+					}
 					// 判断触摸结束时的位置
-					var targetCard = document.elementFromPoint(touchEndX, touchEndY).closest(".card");
-					if (targetCard && targetCard !== this.draggedCard) {
-						this.swap(this.draggedCard, targetCard);
+					const target = document.elementFromPoint(touchEndX, touchEndY);
+					if (target?.classList.contains("card") && target !== this.draggedCard) {
+						this.swap(this.draggedCard, target);
 					} else {
-						var targetArea = document.elementFromPoint(touchEndX, touchEndY).closest(".content");
-						if (targetArea) {
-							var fromIndex = this.getCardArrayIndex(this.draggedCard);
-							var toIndex = fromIndex === 0 ? 1 : 0;
-							if (this.cards[toIndex].length < this.movables[toIndex]) {
-								this.cards[fromIndex].remove(this.draggedCard);
-								this.cards[toIndex].push(this.draggedCard);
-								this.update();
-								this.onMoved();
-							}
+						const fromIndex = this.getCardArrayIndex(this.draggedCard);
+						const toIndex = fromIndex === 0 ? 1 : 0;
+						if (this.cards[toIndex].length < this.movables[toIndex]) {
+							this.cards[fromIndex].remove(this.draggedCard);
+							this.cards[toIndex].push(this.draggedCard);
+							this.update();
+							this.onMoved();
 						}
 					}
 					this.draggedCard = null;
