@@ -321,6 +321,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 					e.stopPropagation();
 				},
+				//拖曳
 				_dragStart(e) {
 					if (this.finishing || this.finished) return;
 					if (game.me != player) return;
@@ -344,6 +345,61 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					if (e.target.classList.contains("card")) {
 						e.target.classList.remove("drag-over");
 					}
+				},
+				//触碰
+				_touchStart(e) {
+					if (this.finishing || this.finished) return;
+					if (game.me != player) return;
+
+					this.draggedCard = e.target.closest(".card");
+					if (!this.draggedCard) return;
+
+					this.draggedCard.classList.add("dragging");
+					this.draggedCard.style.zIndex = 1000;
+					this.draggedCard.style.transition = "none";
+
+					this.touchStartX = e.touches[0].clientX;
+					this.touchStartY = e.touches[0].clientY;
+
+					let rect = this.draggedCard.getBoundingClientRect();
+					this.initialX = rect.left + rect.width / 2 - this.touchStartX;
+					this.initialY = rect.top + rect.height / 2 - this.touchStartY;
+				},
+				_touchMove(e) {
+					if (!this.draggedCard) return;
+
+					let x = e.touches[0].clientX - this.initialX;
+					let y = e.touches[0].clientY - this.initialY;
+					this.draggedCard.style.transform = `translate(${x}px, ${y}px)`;
+				},
+				_touchEnd(e) {
+					if (!this.draggedCard) return;
+					this.draggedCard.classList.remove("dragging");
+					this.draggedCard.style.transition = ""; // 恢复过渡动画
+					this.draggedCard.style.transform = "translate(0, 0)";
+
+					// 获取触摸结束时的坐标
+					let touchEndX = e.changedTouches[0].clientX;
+					let touchEndY = e.changedTouches[0].clientY;
+
+					// 判断触摸结束时的位置
+					var targetCard = document.elementFromPoint(touchEndX, touchEndY).closest(".card");
+					if (targetCard && targetCard !== this.draggedCard) {
+						this.swap(this.draggedCard, targetCard);
+					} else {
+						var targetArea = document.elementFromPoint(touchEndX, touchEndY).closest(".content");
+						if (targetArea) {
+							var fromIndex = this.getCardArrayIndex(this.draggedCard);
+							var toIndex = fromIndex === 0 ? 1 : 0;
+							if (this.cards[toIndex].length < this.movables[toIndex]) {
+								this.cards[fromIndex].remove(this.draggedCard);
+								this.cards[toIndex].push(this.draggedCard);
+								this.update();
+								this.onMoved();
+							}
+						}
+					}
+					this.draggedCard = null;
 				},
 				_drop(e) {
 					e.preventDefault();
@@ -557,6 +613,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			content.addEventListener("dragenter", guanXing._dragEnter.bind(guanXing));
 			content.addEventListener("dragleave", guanXing._dragLeave.bind(guanXing));
 			content.addEventListener("drop", guanXing._drop.bind(guanXing));
+
+			// 为content添加触摸事件监听器
+			content.addEventListener("touchstart", guanXing._touchStart.bind(guanXing));
+			content.addEventListener("touchmove", guanXing._touchMove.bind(guanXing));
+			content.addEventListener("touchend", guanXing._touchEnd.bind(guanXing));
 
 			decadeUI.game.wait();
 			guanXing.infohide = infohide == null ? (game.me == player ? false : true) : infohide;
