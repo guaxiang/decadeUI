@@ -353,27 +353,24 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					const draggedCard = this.draggedCard;
 					const targetCard = e.target;
 
-					if (draggedCard && targetCard) {
-						if (targetCard === this._content) {
+					if (draggedCard) {
+						if (targetCard?.classList.contains("card") && draggedCard !== targetCard) {
+							this.swap(draggedCard, targetCard);
+						} else {
 							const fromIndex = this.getCardArrayIndex(draggedCard);
 							const toIndex = fromIndex === 0 ? 1 : 0;
-
 							if (this.cards[toIndex].length < this.movables[toIndex]) {
 								this.cards[fromIndex].remove(draggedCard);
 								this.cards[toIndex].push(draggedCard);
 								this.update();
 								this.onMoved();
-							} else if (draggedCard !== targetCard) this.swap(draggedCard, targetCard);
+							}
 						}
-					}
 
-					if (draggedCard) {
 						draggedCard.classList.remove("dragging");
+						if (targetCard?.classList.contains("card")) targetCard.classList.remove("drag-over");
+						this.draggedCard = null;
 					}
-					if (targetCard.classList.contains("card")) {
-						targetCard.classList.remove("drag-over");
-					}
-					this.draggedCard = null;
 				},
 				_dragEnd(e) {
 					if (this.draggedCard) {
