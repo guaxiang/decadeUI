@@ -324,25 +324,25 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				_dragStart(e) {
 					if (this.finishing || this.finished) return;
 					if (game.me != player) return;
-					
+
 					this.draggedCard = e.target;
-					this.draggedCard.classList.add('dragging');
-					e.dataTransfer.effectAllowed = 'move';
-					e.dataTransfer.setData('text/plain', e.target.cardid);
+					this.draggedCard.classList.add("dragging");
+					e.dataTransfer.effectAllowed = "move";
+					e.dataTransfer.setData("text/plain", e.target.cardid);
 				},
 				_dragOver(e) {
 					e.preventDefault();
-					e.dataTransfer.dropEffect = 'move';
+					e.dataTransfer.dropEffect = "move";
 				},
 				_dragEnter(e) {
 					e.preventDefault();
-					if (e.target.classList.contains('card')) {
-						e.target.classList.add('drag-over');
+					if (e.target.classList.contains("card")) {
+						e.target.classList.add("drag-over");
 					}
 				},
 				_dragLeave(e) {
-					if (e.target.classList.contains('card')) {
-						e.target.classList.remove('drag-over');
+					if (e.target.classList.contains("card")) {
+						e.target.classList.remove("drag-over");
 					}
 				},
 				_drop(e) {
@@ -352,25 +352,35 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 					const draggedCard = this.draggedCard;
 					const targetCard = e.target;
-					
-					if (draggedCard && targetCard && draggedCard !== targetCard) {
-						this.swap(draggedCard, targetCard);
+
+					if (draggedCard && targetCard) {
+						if (targetCard === this._content) {
+							const fromIndex = this.getCardArrayIndex(draggedCard);
+							const toIndex = fromIndex === 0 ? 1 : 0;
+
+							if (this.cards[toIndex].length < this.movables[toIndex]) {
+								this.cards[fromIndex].remove(draggedCard);
+								this.cards[toIndex].push(draggedCard);
+								this.update();
+								this.onMoved();
+							} else if (draggedCard !== targetCard) this.swap(draggedCard, targetCard);
+						}
 					}
 
 					if (draggedCard) {
-						draggedCard.classList.remove('dragging');
+						draggedCard.classList.remove("dragging");
 					}
-					if (targetCard.classList.contains('card')) {
-						targetCard.classList.remove('drag-over');
+					if (targetCard.classList.contains("card")) {
+						targetCard.classList.remove("drag-over");
 					}
 					this.draggedCard = null;
 				},
 				_dragEnd(e) {
 					if (this.draggedCard) {
-						this.draggedCard.classList.remove('dragging');
+						this.draggedCard.classList.remove("dragging");
 					}
-					document.querySelectorAll('.card.drag-over').forEach(card => {
-						card.classList.remove('drag-over');
+					document.querySelectorAll(".card.drag-over").forEach(card => {
+						card.classList.remove("drag-over");
 					});
 					this.draggedCard = null;
 				},
@@ -532,11 +542,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						cards[j].objectType = "card";
 						cards[j].removeEventListener("click", ui.click.intro);
 						cards[j].addEventListener("click", guanXing._click, false);
-						
+
 						// 添加拖拽事件监听器
-						cards[j].setAttribute('draggable', 'true');
-						cards[j].addEventListener('dragstart', guanXing._dragStart.bind(guanXing));
-						cards[j].addEventListener('dragend', guanXing._dragEnd.bind(guanXing));
+						cards[j].setAttribute("draggable", "true");
+						cards[j].addEventListener("dragstart", guanXing._dragStart.bind(guanXing));
+						cards[j].addEventListener("dragend", guanXing._dragEnd.bind(guanXing));
 					}
 
 					cards[j].rawCssText = cards[j].style.cssText;
@@ -544,20 +554,20 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					content.appendChild(cards[j]);
 				}
 			}
-			
+
 			// 为content添加拖拽事件监听器
-			content.addEventListener('dragover', guanXing._dragOver.bind(guanXing));
-			content.addEventListener('dragenter', guanXing._dragEnter.bind(guanXing));
-			content.addEventListener('dragleave', guanXing._dragLeave.bind(guanXing));
-			content.addEventListener('drop', guanXing._drop.bind(guanXing));
-			
+			content.addEventListener("dragover", guanXing._dragOver.bind(guanXing));
+			content.addEventListener("dragenter", guanXing._dragEnter.bind(guanXing));
+			content.addEventListener("dragleave", guanXing._dragLeave.bind(guanXing));
+			content.addEventListener("drop", guanXing._drop.bind(guanXing));
+
 			decadeUI.game.wait();
 			guanXing.infohide = infohide == null ? (game.me == player ? false : true) : infohide;
 			guanXing.caption = get.translation(player) + "正在发动【观星】";
 			guanXing.tip = "单击卡牌可直接在牌堆顶和牌堆底之间切换位置，也可以拖拽卡牌交换位置";
-			
+
 			// 添加拖拽相关的CSS样式
-			var style = document.createElement('style');
+			var style = document.createElement("style");
 			style.textContent = `
 				.card.dragging {
 					opacity: 0.5;
@@ -575,7 +585,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 			`;
 			document.head.appendChild(style);
-			
+
 			guanXing.update();
 			ui.arena.appendChild(guanXing);
 			decadeUI.eventDialog = guanXing;
