@@ -11165,11 +11165,6 @@ export default async function () {
 					}
 				},
 			},
-			babyshaskill: {
-				name: "欢杀技能显示",
-				init: false,
-				intro: "开启后，斗地主对决模式人机技能显示，目前有bug",
-			},
 			outcropSkin: {
 				name: "露头样式",
 				init: "off",

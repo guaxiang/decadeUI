@@ -353,64 +353,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 	}
 
-	//宝宝杀人机技能显示
-	if (lib.config["extension_十周年UI_babyshaskill"]) {
-		lib.skill._babyskill = {
-			trigger: {
-				global: ["gameStart", "addSkill", "removeSkill"],
-			},
-			forced: true,
-			popup: false,
-			priority: 114514,
-			filter: function () {
-				return (get.mode() == "doudizhu" || get.mode() == "versus") && lib.config.extension_十周年UI_newDecadeStyle == "babysha";
-			},
-			content: function () {
-				game.players.forEach(function (player) {
-					if (player != game.me) {
-						var skills = player.skills.filter(function (skill) {
-							return lib.skill[skill];
-						});
-						console.log(player.name, player.skills, skills);
-						if (!skills.length) return;
-						var skillBox = ui.create.div(".doudizhu-skill-box");
-						skillBox.style.position = "absolute";
-						skillBox.style.right = "30px";
-						skillBox.style.top = "10px";
-						skillBox.style.display = "flex";
-						skillBox.style.flexDirection = "column";
-						skillBox.style.zIndex = 10;
-						skills.reverse().forEach(function (skill) {
-							var btn = ui.create.div(".doudizhu-skill-btn", get.translation(skill));
-							btn.style.margin = "2px 0";
-							skillBox.appendChild(btn);
-						});
-						player.node.babyskillBox = skillBox;
-						let avatarNode = player.node.name || player.node.avatar;
-						let rect = avatarNode && avatarNode.getBoundingClientRect ? avatarNode.getBoundingClientRect() : null;
-						let showRight = false;
-						if (rect && rect.left < 120) {
-							showRight = true;
-						}
-						skillBox.style.top = "10px";
-						skillBox.style.bottom = "auto";
-						skillBox.style.left = showRight ? "440%" : "auto";
-						skillBox.style.right = showRight ? "auto" : "100%";
-						if (player.node.name && player.node.name.parentNode) {
-							player.node.name.parentNode.style.position = "relative";
-							player.node.name.parentNode.appendChild(skillBox);
-						} else if (player.node.avatar && player.node.avatar.parentNode) {
-							player.node.avatar.parentNode.style.position = "relative";
-							player.node.avatar.parentNode.appendChild(skillBox);
-						} else {
-							player.appendChild(skillBox);
-						}
-					}
-				});
-			},
-		};
-	}
-
 	//手气卡美化
 	if (lib.config["extension_十周年UI_shouqikamh"]) {
 		lib.element.content.gameDraw = function () {
