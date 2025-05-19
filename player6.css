@@ -343,11 +343,59 @@
 	height: 96px;
 	font-size: 16px;
 	line-height: 15px;
-	/*字体间距*/
-	color: black;
-	/* 设置字体颜色为黑色 */
 	text-shadow: none;
 	z-index: 89;
+	font-weight: bold;
+}
+
+/* 魏势力武将名称颜色 */
+.player > .camp-wrap[data-camp="wei"] > .avatar-name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="wei"] ~ .name.name {
+	color: rgb(50, 50, 255);
+}
+
+/* 蜀势力武将名称颜色 */
+.player > .camp-wrap[data-camp="shu"] > .avatar-name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="shu"] ~ .name.name {
+	color: rgb(255, 50, 50);
+}
+
+/* 吴势力武将名称颜色 */
+.player > .camp-wrap[data-camp="wu"] > .avatar-name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="wu"] ~ .name.name {
+	color: rgb(50, 255, 50);
+}
+
+/* 群势力武将名称颜色 */
+.player > .camp-wrap[data-camp="qun"] > .avatar-name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="qun"] ~ .name.name {
+	color: rgb(170, 170, 170);
+}
+
+/* 神势力武将名称颜色 */
+.player > .camp-wrap[data-camp="shen"] > .avatar-name,
+.player > .camp-wrap[data-camp="shen2"] > .avatar-name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="shen"] ~ .name.name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="shen2"] ~ .name.name {
+	color: rgb(255, 200, 0);
+}
+
+/* 晋势力武将名称颜色 */
+.player > .camp-wrap[data-camp="jin"] > .avatar-name,
+.player > .camp-wrap[data-camp="daqin"] > .avatar-name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="jin"] ~ .name.name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="daqin"] ~ .name.name {
+	color: rgb(255, 200, 0);
+}
+
+/* 其他势力武将名称颜色 */
+.player > .camp-wrap[data-camp="ye"] > .avatar-name,
+.player > .camp-wrap[data-camp="key"] > .avatar-name,
+.player > .camp-wrap[data-camp="western"] > .avatar-name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="ye"] ~ .name.name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="key"] ~ .name.name,
+#arena > .player:not(.minskin) > .camp-wrap[data-camp="western"] ~ .name.name {
+	color: rgb(255, 200, 0);
 }
 
 .player > .camp-wrap > .avatar-name,
