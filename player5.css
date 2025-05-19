@@ -545,31 +545,24 @@
 	transform: none !important;
 }
 
-/*护甲*/
 .hujia {
+	display: flex;
 	top: auto;
-	/*上下*/
-	bottom: 70px;
-	/*左右*/
-	left: 112px;
-	/*指向护甲图片放的位置*/
+	bottom: 80px;
+	left: 113px;
 	background-image: url("image/decoration/shieldOL.png");
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
-	/*图片宽*/
-	width: 27px;
-	/*图片高*/
-	height: 26px;
-	/*字体*/
-	text-align: center;
-	color: rgb(211, 233, 147);
-	font-family: "shousha";
-	font-size: 18px;
-	font-weight: 900;
-	/*其他*/
+	width: 25.5px;
+	height: 27px;
+	justify-content: center;
+	align-items: center;
 	position: relative;
 	z-index: 100;
-	padding-top: 8px;
+	font-family: "shousha";
+	font-size: 18px;
+	font-weight: 500;
+	color: white;
 }
 
 /*武将牌显示*/
