@@ -51,6 +51,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				orderCardsList: [[], []],
 				finishing: undefined,
 				finished: undefined,
+				originalLongpressInfo: lib.config.longpress_info,
 				finishTime(time) {
 					if (this.finishing || this.finished) return;
 					if (typeof time != "number") throw time;
@@ -72,6 +73,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					if (hideBtn && hideBtn.parentNode) {
 						document.body.removeChild(hideBtn);
 					}
+
+					// 恢复原始longpress_info设置
+					lib.config.longpress_info = this.originalLongpressInfo;
 
 					cards = guanXing.cards[0];
 					if (cards.length) {
@@ -321,7 +325,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 					e.stopPropagation();
 				},
-				//拖曳
 				_dragStart(e) {
 					if (this.finishing || this.finished) return;
 					if (game.me != player) return;
@@ -345,62 +348,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					if (e.target.classList.contains("card")) {
 						e.target.classList.remove("drag-over");
 					}
-				},
-				//触碰
-				_touchStart(e) {
-					if (this.finishing || this.finished) return;
-					if (!e.target?.classList.contains("card") || game.me != player) return;
-					this.draggedCard = e.target;
-					this.draggedCard.classList.add("dragging");
-					this.draggedCard.style.zIndex = 1000;
-					this.draggedCard.style.transition = "none";
-					this.touchStartX = e.touches[0].clientX;
-					this.touchStartY = e.touches[0].clientY;
-					this.touchStartTime = Date.now();
-					let rect = this.draggedCard.getBoundingClientRect();
-					this.initialX = rect.left + rect.width / 2 - this.touchStartX;
-					this.initialY = rect.top + rect.height / 2 - this.touchStartY;
-				},
-				_touchMove(e) {
-					if (!this.draggedCard) return;
-					let x = e.touches[0].clientX - this.initialX;
-					let y = e.touches[0].clientY - this.initialY;
-					this.draggedCard.style.transform = `translate(${x}px, ${y}px)`;
-				},
-				_touchEnd(e) {
-					if (!this.draggedCard) return;
-					this.draggedCard.classList.remove("dragging");
-					// 恢复过渡动画
-					this.draggedCard.style.transition = "";
-					this.draggedCard.style.transform = "translate(0, 0)";
-					// 获取触摸结束时的坐标
-					let touchEndX = e.changedTouches[0].clientX;
-					let touchEndY = e.changedTouches[0].clientY;
-					let deltaX = touchEndX - this.touchStartX;
-					let deltaY = touchEndY - this.touchStartY;
-					// 判断时间和移动距离
-					let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-					let duration = Date.now() - this.touchStartTime;
-					if (distance < 10 && duration < 300) {
-						this._click({ target: this.draggedCard, stopPropagation: () => {} });
-						this.draggedCard = null;
-						return;
-					}
-					// 判断触摸结束时的位置
-					const target = document.elementFromPoint(touchEndX, touchEndY);
-					if (target?.classList.contains("card") && target !== this.draggedCard) {
-						this.swap(this.draggedCard, target);
-					} else {
-						const fromIndex = this.getCardArrayIndex(this.draggedCard);
-						const toIndex = fromIndex === 0 ? 1 : 0;
-						if (this.cards[toIndex].length < this.movables[toIndex]) {
-							this.cards[fromIndex].remove(this.draggedCard);
-							this.cards[toIndex].push(this.draggedCard);
-							this.update();
-							this.onMoved();
-						}
-					}
-					this.draggedCard = null;
 				},
 				_drop(e) {
 					e.preventDefault();
@@ -563,6 +510,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					if (hideBtn && hideBtn.parentNode) {
 						document.body.removeChild(hideBtn);
 					}
+					// 恢复原始longpress_info设置
+					lib.config.longpress_info = this.originalLongpressInfo;
 				});
 			}
 			var size = decadeUI.getHandCardSize();
@@ -615,15 +564,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			content.addEventListener("dragleave", guanXing._dragLeave.bind(guanXing));
 			content.addEventListener("drop", guanXing._drop.bind(guanXing));
 
-			// 为content添加触摸事件监听器
-			content.addEventListener("touchstart", guanXing._touchStart.bind(guanXing));
-			content.addEventListener("touchmove", guanXing._touchMove.bind(guanXing));
-			content.addEventListener("touchend", guanXing._touchEnd.bind(guanXing));
-
 			decadeUI.game.wait();
 			guanXing.infohide = infohide == null ? (game.me == player ? false : true) : infohide;
 			guanXing.caption = get.translation(player) + "正在发动【观星】";
 			guanXing.tip = "单击卡牌可直接在牌堆顶和牌堆底之间切换位置，也可以拖拽卡牌交换位置";
+
+			// 禁用longpress_info
+			lib.config.longpress_info = false;
 
 			// 添加拖拽相关的CSS样式
 			var style = document.createElement("style");
@@ -648,6 +595,16 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			guanXing.update();
 			ui.arena.appendChild(guanXing);
 			decadeUI.eventDialog = guanXing;
+
+			// 添加remove事件监听器来恢复longpress_info设置
+			guanXing.addEventListener("remove", function () {
+				if (hideBtn && hideBtn.parentNode) {
+					document.body.removeChild(hideBtn);
+				}
+				// 恢复原始longpress_info设置
+				lib.config.longpress_info = guanXing.originalLongpressInfo;
+			});
+
 			return guanXing;
 		},
 	};
