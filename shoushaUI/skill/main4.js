@@ -194,7 +194,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var node = self.querySelector('[data-id="' + item.id + '"]');
 					if (node) return;
 					if (item.type === "enable") {
-						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable, get.translation(item.name));
+						let skillName = get.translation(item.name);
+						// 如果是装备技能，只显示前两个字符
+						if (eSkills && eSkills.includes(item.id)) {
+							skillName = skillName.slice(0, 2);
+						}
+						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable, skillName);
 						node.dataset.id = item.id;
 						node.addEventListener("click", function () {
 							game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
