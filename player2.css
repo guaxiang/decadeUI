@@ -1224,14 +1224,14 @@
 /*玩家身份标记*/
 .player > .identity,
 #arena > .player:not(.minskin) > .identity {
-	left: 100px;
-	top: -11.5px;
-	right: -9px;
-	width: 37px;
-	height: 41px;
+	left: auto;
+	top: -14px;
+	right: -11px;
+	width: 43px;
+	height: 47px;
 	line-height: 31px;
 	font-size: 31px;
-	background-size: 100% 100%;
+	background-size: 80% 80%;
 	background-repeat: no-repeat;
 	background-position: center;
 	z-index: 99;
