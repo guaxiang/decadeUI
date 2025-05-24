@@ -1,5 +1,13 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
 	lib.arenaReady.push(function () {
+		setInterval(function () {
+			game.countPlayer(current => {
+				//需要加在这里，不然可能会不出现
+				//添加 确定每个玩家的名字
+				var namex = current === game.me ? lib.config.connect_nickname : ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "k9", "扶苏", "皇叔"].randomGet();
+				if (!current.nickname) current.nickname = namex;
+			});
+		}, 1000);
 		//更新轮次
 		var originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
