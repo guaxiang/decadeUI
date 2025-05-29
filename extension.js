@@ -11606,6 +11606,7 @@ export default async function () {
 					"最低适配：v1.10.17.3",
 					"bugfix",
 					"局内UI显示调整",
+					"新版本函数跟进",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);

@@ -173,8 +173,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
 			get: () => {
-				if (get.mode() === "guozhan") return ["wei", "shu", "wu", "qun", "jin", "key"];
-				return ["wei", "shu", "wu", "qun", "jin", "key"];
+				if (get.mode() === "guozhan") return ["wei", "shu", "wu", "qun", "jin"];
+				return ["wei", "shu", "wu", "qun", "jin"];
 			},
 			set: () => {},
 		});
