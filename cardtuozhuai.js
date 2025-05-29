@@ -65,7 +65,9 @@
 			if (!target || target === document.body) return;
 		}
 
+		// 新增：只允许手牌区的牌拖拽，防止装备区或虚拟装备牌错位
 		if (target && target.classList.contains("card")) {
+			if (!ui.handcards1 || !ui.handcards1.contains(target)) return;
 			e.preventDefault(); // 阻止默认行为
 			TenYearUI.sourceNode = target;
 
