@@ -3960,7 +3960,7 @@ export default async function () {
 							event.finish();
 							return;
 						}
-						game.log(player, "对", target, "发起拼点");
+						game.log(player, "对", target, "发起", event.isDelay ? "延时" : "", "拼点");
 						if (!event.filterCard) event.filterCard = lib.filter.all;
 						// 更新拼点框
 						event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
@@ -3983,7 +3983,7 @@ export default async function () {
 							target,
 							event.compareName
 						);
-						"step 1";
+						("step 1");
 						event.list = [player, target].filter(function (current) {
 							return !event.fixedResult || !event.fixedResult[current.playerid];
 						});
@@ -4002,7 +4002,7 @@ export default async function () {
 								};
 							};
 						}
-						"step 2";
+						("step 2");
 						const lose_list = [];
 						if (event.fixedResult && event.fixedResult[player.playerid]) {
 							lose_list.push([player, [event.fixedResult[player.playerid]]]);
@@ -4040,19 +4040,57 @@ export default async function () {
 							dialog.$playerCard.classList.add("infoflip");
 						}, event.compareName);
 						event.lose_list = lose_list;
-						"step 3";
+						("step 3");
 						if (event.card2.number >= 10 || event.card2.number <= 4) {
 							if (target.countCards("h") > 2) event.addToAI = true;
 						}
-						"step 4";
+						("step 4");
 						if (event.lose_list.length) {
 							game.loseAsync({
 								lose_list: event.lose_list,
 							}).setContent("chooseToCompareLose");
 						}
-						"step 5";
-						event.trigger("compareCardShowBefore");
-						"step 6";
+						("step 5");
+						if (event.isDelay) {
+							let cards = [];
+							for (let current of event.lose_list) {
+								current[0].$giveAuto(current[1], current[0], false);
+								cards.addArray(current[1]);
+							}
+							game.cardsGotoSpecial(cards);
+							player
+								.when({
+									global: ["dieAfter", "phaseEnd"],
+								})
+								.assign({
+									forceDie: true,
+								})
+								.filter((event, player) => {
+									return event.name == "phase" || [player, target].includes(event.player);
+								})
+								.vars({
+									cards,
+									target,
+									evt: event,
+								})
+								.then(() => {
+									if (cards.some(card => get.position(card) == "s")) {
+										game.cardsDiscard(cards);
+										evt.isDestoryed = true;
+									}
+								});
+							event.untrigger();
+							game.broadcastAll(function (eventName) {
+								if (!window.decadeUI) return;
+								var dialog = ui.dialogs[eventName];
+								if (dialog) dialog.close();
+								ui.dialogs[eventName] = undefined;
+							}, event.compareName);
+							event.finish();
+						} else {
+							event.trigger("compareCardShowBefore");
+						}
+						("step 6");
 						// 更新拼点框
 						game.broadcastAll(
 							function (eventName, player, target, playerCard, targetCard) {
@@ -4085,7 +4123,7 @@ export default async function () {
 						event.num2 = getNum(event.card2);
 						event.trigger("compare");
 						decadeUI.delay(400);
-						"step 7";
+						("step 7");
 						event.result = {
 							player: event.card1,
 							target: event.card2,
@@ -4093,7 +4131,7 @@ export default async function () {
 							num2: event.num2,
 						};
 						event.trigger("compareFixing");
-						"step 8";
+						("step 8");
 						var str;
 						if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
 							event.result.bool = true;
@@ -4154,7 +4192,7 @@ export default async function () {
 							event.result.bool
 						);
 						decadeUI.delay(1800);
-						"step 9";
+						("step 9");
 						if (typeof event.target.ai.shown == "number" && event.target.ai.shown <= 0.85 && event.addToAI) {
 							event.target.ai.shown += 0.1;
 						}
