@@ -255,6 +255,10 @@
 	background: linear-gradient(to top, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 
+.player > .camp-wrap[data-camp="devil"] > .camp-back {
+	background: linear-gradient(to top, rgb(112, 52, 126), rgb(52, 18, 55));
+}
+
 .player > .camp-wrap[data-camp="daqin"] > .camp-back {
 	background: linear-gradient(to top, rgb(100, 100, 100), rgb(0, 0, 0));
 }

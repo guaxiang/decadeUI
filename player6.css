@@ -292,6 +292,16 @@
 	pointer-events: none;
 }
 
+.player > .camp-wrap[data-camp="devil"] > .camp-back {
+	background-image: url("image/decoration/babyjin.png");
+	width: 390%;
+	height: 150%;
+	top: 0px;
+	left: 5px;
+	background-size: 100% 100%;
+	pointer-events: none;
+}
+
 .player > .camp-wrap[data-camp="daqin"] > .camp-back {
 	background-image: url("image/decoration/babyjin.png");
 	width: 390%;
