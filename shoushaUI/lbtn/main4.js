@@ -796,6 +796,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		var roundNumberNode = ui.create.div(".roundNumber", ui.cardRoundTimeNode);
 		ui.timeNode = ui.create.div(".time", ui.cardRoundTimeNode);
 
+		lib.config.show_time3 = false;
+		lib.config.show_time2 = false;
+		lib.config.show_cardpile_number = false;
+
 		game.updateRoundNum = function () {
 			var roundNumber = Math.max(1, game.roundNumber || 1);
 			roundNumberNode.innerHTML = "<span>第" + get.cnNumber(roundNumber, true) + "轮</span>";
@@ -847,6 +851,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (game.updateRoundNum) game.updateRoundNum();
 			}, cardNumber);
 		};
+		setTimeout(function () {
+			// 隐藏本体左上角时间
+			document.querySelectorAll(".touchinfo.left, .time").forEach(function (node) {
+				if (!ui.cardRoundTimeNode || !ui.cardRoundTimeNode.contains(node)) {
+					node.style.display = "none";
+				}
+			});
+			// 隐藏本体右上角牌堆数
+			document.querySelectorAll(".touchinfo.right").forEach(function (node) {
+				if (!ui.cardRoundTimeNode || !ui.cardRoundTimeNode.contains(node)) {
+					node.style.display = "none";
+				}
+			});
+			// 隐藏本体的 .cardPileNumber（只隐藏不是你自己UI里的）
+			document.querySelectorAll(".cardPileNumber").forEach(function (node) {
+				if (!ui.cardRoundTimeNode || !ui.cardRoundTimeNode.contains(node)) {
+					node.style.display = "none";
+				}
+			});
+		}, 1000);
 	}
 	lib.arenaReady.push(function () {
 		huanfu(); //换肤按钮
