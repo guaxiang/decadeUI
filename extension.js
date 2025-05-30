@@ -1886,7 +1886,7 @@ export default async function () {
 									game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[0]);
 									game.delay(2);
 									if (!event.noJudgeTrigger) event.trigger("judge");
-									"step 1";
+									("step 1");
 									event.result = {
 										card: player.judging[0],
 										name: player.judging[0].name,
@@ -2277,7 +2277,7 @@ export default async function () {
 							}
 						},
 
-						updatem(player) {},
+						updatem(player) { },
 
 						updatez() {
 							window.documentZoom = game.documentZoom;
@@ -3982,7 +3982,7 @@ export default async function () {
 							event.compareName,
 							event.compareId
 						);
-						"step 1";
+						("step 1");
 						event.list = [player, target].filter(current => !event.fixedResult?.[current.playerid]);
 						if (event.list.length) {
 							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
@@ -3999,7 +3999,7 @@ export default async function () {
 								};
 							};
 						}
-						"step 2";
+						("step 2");
 						const lose_list = [];
 						if (event.fixedResult && event.fixedResult[player.playerid]) {
 							lose_list.push([player, [event.fixedResult[player.playerid]]]);
@@ -4037,17 +4037,17 @@ export default async function () {
 							dialog.$playerCard.classList.add("infoflip");
 						}, event.compareId);
 						event.lose_list = lose_list;
-						"step 3";
+						("step 3");
 						if (event.card2.number >= 10 || event.card2.number <= 4) {
 							if (target.countCards("h") > 2) event.addToAI = true;
 						}
-						"step 4";
+						("step 4");
 						if (event.lose_list.length) {
 							game.loseAsync({
 								lose_list: event.lose_list,
 							}).setContent("chooseToCompareLose");
 						}
-						"step 5";
+						("step 5");
 						if (event.isDelay) {
 							let cards = [];
 							for (let current of event.lose_list) {
@@ -4086,7 +4086,7 @@ export default async function () {
 						} else {
 							event.trigger("compareCardShowBefore");
 						}
-						"step 6";
+						("step 6");
 						// 更新拼点框
 						game.broadcastAll(
 							function (eventName, player, target, playerCard, targetCard) {
@@ -4119,7 +4119,7 @@ export default async function () {
 						event.num2 = getNum(event.card2);
 						event.trigger("compare");
 						decadeUI.delay(400);
-						"step 7";
+						("step 7");
 						event.result = {
 							player: event.card1,
 							target: event.card2,
@@ -4127,7 +4127,7 @@ export default async function () {
 							num2: event.num2,
 						};
 						event.trigger("compareFixing");
-						"step 8";
+						("step 8");
 						var str;
 						if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
 							event.result.bool = true;
@@ -4188,7 +4188,7 @@ export default async function () {
 							event.result.bool
 						);
 						decadeUI.delay(1800);
-						"step 9";
+						("step 9");
 						if (typeof event.target.ai.shown == "number" && event.target.ai.shown <= 0.85 && event.addToAI) {
 							event.target.ai.shown += 0.1;
 						}
@@ -4250,7 +4250,7 @@ export default async function () {
 							event.compareName,
 							event.compareId
 						);
-						"step 1";
+						("step 1");
 						event._result = [];
 						event.list = targets.filter(current => !event.fixedResult?.[current.playerid]);
 						if (event.list.length || !event.fixedResult?.[player.playerid]) {
@@ -4269,7 +4269,7 @@ export default async function () {
 								};
 							};
 						}
-						"step 2";
+						("step 2");
 						var cards = [];
 						var lose_list = [];
 						event.lose_list = lose_list;
@@ -4321,9 +4321,9 @@ export default async function () {
 							num1: [],
 							num2: [],
 						};
-						"step 3";
+						("step 3");
 						event.trigger("compareCardShowBefore");
-						"step 4";
+						("step 4");
 						game.log(player, "的拼点牌为", event.card1);
 						// 更新拼点框
 						game.broadcastAll(
@@ -4335,7 +4335,7 @@ export default async function () {
 							event.compareId,
 							event.card1
 						);
-						"step 5";
+						("step 5");
 						if (event.iwhile < targets.length) {
 							event.target = targets[event.iwhile];
 							event.card2 = event.cardlist[event.iwhile];
@@ -4378,11 +4378,11 @@ export default async function () {
 							}, event.compareId);
 							event.goto(10);
 						}
-						"step 6";
+						("step 6");
 						event.iiwhile = event.iwhile;
 						delete event.iwhile;
 						event.trigger("compareFixing");
-						"step 7";
+						("step 7");
 						event.result.num1[event.iiwhile] = event.num1;
 						event.result.num2[event.iiwhile] = event.num2;
 						var str, result;
@@ -4443,7 +4443,7 @@ export default async function () {
 							result
 						);
 						decadeUI.delay(1800);
-						"step 8";
+						("step 8");
 						if (event.callback) {
 							game.broadcastAll(
 								function (card1, card2) {
@@ -4466,12 +4466,12 @@ export default async function () {
 							next.setContent(event.callback);
 							event.compareMultiple = true;
 						}
-						"step 9";
+						("step 9");
 						delete event.winner;
 						delete event.forceWinner;
 						event.iwhile = event.iiwhile + 1;
 						event.goto(5);
-						"step 10";
+						("step 10");
 						game.broadcastAll(ui.clear);
 						event.cards.add(event.card1);
 					};
@@ -4550,9 +4550,9 @@ export default async function () {
 													let j = judges[i],
 														cardj = j.viewAs
 															? {
-																	name: j.viewAs,
-																	cards: j.cards || [j],
-															  }
+																name: j.viewAs,
+																cards: j.cards || [j],
+															}
 															: j;
 													if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
 														wuxie--;
@@ -4624,7 +4624,7 @@ export default async function () {
 									time += 500;
 								}
 							}
-							"step 1";
+							("step 1");
 							var [top, bottom] = [event.cards1, event.cards2];
 							event.result = {
 								bool: true,
@@ -6265,13 +6265,13 @@ export default async function () {
 					if (style == null)
 						return canUseDefault
 							? {
-									width: 108,
-									height: 150,
-							  }
+								width: 108,
+								height: 150,
+							}
 							: {
-									width: 0,
-									height: 0,
-							  };
+								width: 0,
+								height: 0,
+							};
 					var size = {
 						width: parseFloat(style.width),
 						height: parseFloat(style.height),
@@ -7109,7 +7109,7 @@ export default async function () {
 
 					return element;
 				},
-				clone(element) {},
+				clone(element) { },
 			};
 
 			decadeUI.game = {
@@ -7554,7 +7554,7 @@ export default async function () {
 							for (var i = 0; i < list.length; i++) {
 								list[i].childNodes[0].classList.add("choice"); /*添加类名*/
 								//--------背水-----//
-								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff"&& lib.config.extension_十周年UI_newDecadeStyle != "babysha" && lib.config.extension_十周年UI_newDecadeStyle != "onlineUI") {
+								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "babysha" && lib.config.extension_十周年UI_newDecadeStyle != "onlineUI") {
 									/*list[i].childNodes[0].setBackgroundImage('extension/无名补丁/image/beishui.png');*/
 									list[i].childNodes[0].setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/beishui.png");
 									list[i].childNodes[0].innerText = "背水";
@@ -7581,7 +7581,7 @@ export default async function () {
 				} else {
 					event.result = "ai";
 				}
-				"step 1";
+				("step 1");
 				if (event.result == "ai") {
 					event.result = {};
 					if (event.ai) {
@@ -9321,8 +9321,8 @@ export default async function () {
 							this.js(
 								layoutPath + pack + "/" + pack + "/main" + listmap + ".js",
 								null,
-								function () {},
-								function () {}
+								function () { },
+								function () { }
 							);
 						});
 					}
@@ -9482,8 +9482,8 @@ export default async function () {
 					var listens = app.listens[event] || [];
 					var filters = listen
 						? listens.filter(function (item) {
-								return item === listen || item.listen === listen;
-						  })
+							return item === listen || item.listen === listen;
+						})
 						: listens.slice(0);
 					filters.forEach(function (item) {
 						listens.remove(item);
@@ -9518,7 +9518,7 @@ export default async function () {
 						});
 						return;
 					}
-					setText = typeof setText === "function" ? setText() : function () {};
+					setText = typeof setText === "function" ? setText() : function () { };
 					var zip = new JSZip(data);
 					var dirList = [],
 						fileList = [];
@@ -9816,8 +9816,8 @@ export default async function () {
 					lib.init.js(
 						layoutPath + pack + "/main" + listmap + ".js",
 						null,
-						function () {},
-						function () {}
+						function () { },
+						function () { }
 					);
 					switch (pack) {
 						case "character":
@@ -10431,7 +10431,7 @@ export default async function () {
 				lib.setScroll(window.qicai);
 				clickFK(window.qicai);
 				//-----7---小酒-------//
-				game.open_xiaojiu = function () {};
+				game.open_xiaojiu = function () { };
 				window.xiaojiu = ui.create.div("hidden", "", game.open_xiaojiu);
 				window.xiaojiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:36px;transition:none;background-size:100% 100%";
 
@@ -11037,6 +11037,12 @@ export default async function () {
 			dynamicSkin: {
 				name: "动态皮肤",
 				init: false,
+				onclick: function (value) {
+					game.saveConfig("extension_十周年UI_dynamicSkin", value);
+					lib.config.dynamicSkin = value;
+					game.saveConfig("dynamicSkin", value);
+					if (confirm("此功能需要手动导入骨骼文件以及安装《皮肤切换》和《千幻聆音》扩展\n点击确定自动重启")) game.reload();
+				},
 			},
 			dynamicSkinOutcrop: {
 				name: "动皮露头",
