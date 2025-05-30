@@ -7554,7 +7554,7 @@ export default async function () {
 							for (var i = 0; i < list.length; i++) {
 								list[i].childNodes[0].classList.add("choice"); /*添加类名*/
 								//--------背水-----//
-								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
+								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff"&& lib.config.extension_十周年UI_newDecadeStyle != "babysha" && lib.config.extension_十周年UI_newDecadeStyle != "onlineUI") {
 									/*list[i].childNodes[0].setBackgroundImage('extension/无名补丁/image/beishui.png');*/
 									list[i].childNodes[0].setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/beishui.png");
 									list[i].childNodes[0].innerText = "背水";
