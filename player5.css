@@ -318,10 +318,38 @@
 	justify-content: center;
 	left: 25% !important;
 	right: auto;
-	top: 75px;
+	top: 82px;
 	width: 18px;
 	height: auto !important;
-	font-size: 15px;
+	font-size: 13px;
+	line-height: 15px;
+	text-shadow: none;
+	z-index: 79;
+	font-weight: 700;
+	text-shadow: 1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black;
+	position: absolute;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	color: #f3f2ee;
+	-webkit-writing-mode: vertical-rl;
+	filter: hue-rotate(350deg) saturate(1.2) opacity(1);
+	text-shadow: 2px 2px 0px #403227, -2px -2px 0px #403227, 2px -2px 0px #403227, -2px 2px 0px #403227;
+}
+
+/*副将名*/
+.player>.name.name2,
+#arena>.player:not(.minskin)>.name.name2 {
+	display: flex;
+	align-items: flex-start !important;
+	justify-content: flex-start !important;
+	left: 50% !important;
+	right: auto;
+	top: 17px;
+	width: 18px;
+	height: auto !important;
+	font-size: 13px;
+	font-family: "FZLBJW";
+	font-size: 13px;
 	line-height: 15px;
 	text-shadow: none;
 	z-index: 79;
@@ -434,24 +462,6 @@
 .player>.camp-wrap>.camp-name {
 	text-shadow: 0 0 5px #e0ea33, 0 0 15px #e0ea33, 0 0 25px #e0ea33;
 }*/
-
-/*副将名*/
-.player>.name.name2,
-#arena>.player:not(.minskin)>.name.name2 {
-	display: flex;
-	align-items: flex-start !important;
-	justify-content: flex-start !important;
-	left: 50% !important;
-	right: auto;
-	top: 15px;
-	width: 18px;
-	height: auto !important;
-	font-size: 16px;
-	text-shadow: none;
-	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
-	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
-	z-index: 89;
-}
 
 .player>.name.name2:empty,
 #arena>.player:not(.minskin)>.name.name2:empty {
