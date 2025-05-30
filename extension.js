@@ -10984,7 +10984,7 @@ export default async function () {
 				init: "webp",
 				item: {
 					off: "关闭",
-					jpg: "online",
+					jpg: "OL卡牌",
 					webp: "彩色卡牌",
 					png: "原十周年",
 				},
