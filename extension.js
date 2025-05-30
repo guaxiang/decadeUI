@@ -3952,11 +3952,8 @@ export default async function () {
 
 					lib.element.content.chooseToCompare = function () {
 						"step 0";
-						if (((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards("h") == 0) || ((!event.fixedResult || !event.fixedResult[target.playerid]) && target.countCards("h") == 0)) {
-							event.result = {
-								cancelled: true,
-								bool: false,
-							};
+						if ((!event.fixedResult?.[player.playerid] && !player.countCards("h")) || (!event.fixedResult?.[target.playerid] && !target.countCards("h"))) {
+							event.result = { cancelled: true, bool: false };
 							event.finish();
 							return;
 						}
@@ -3964,12 +3961,13 @@ export default async function () {
 						if (!event.filterCard) event.filterCard = lib.filter.all;
 						// 更新拼点框
 						event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+						event.compareId = `${event.compareName}_${get.id()}`;
 						event.addMessageHook("finished", function () {
-							var dialog = ui.dialogs[this.compareName];
+							var dialog = ui.dialogs[this.compareId];
 							if (dialog) dialog.close();
 						});
 						game.broadcastAll(
-							function (player, target, eventName) {
+							function (player, target, eventName, compareId) {
 								if (!window.decadeUI) return;
 								var dialog = decadeUI.create.compareDialog();
 								dialog.caption = get.translation(eventName) + "拼点";
@@ -3977,16 +3975,15 @@ export default async function () {
 								dialog.target = target;
 								dialog.open();
 								decadeUI.delay(400);
-								ui.dialogs[eventName] = dialog;
+								ui.dialogs[compareId] = dialog;
 							},
 							player,
 							target,
-							event.compareName
+							event.compareName,
+							event.compareId
 						);
-						("step 1");
-						event.list = [player, target].filter(function (current) {
-							return !event.fixedResult || !event.fixedResult[current.playerid];
-						});
+						"step 1";
+						event.list = [player, target].filter(current => !event.fixedResult?.[current.playerid]);
 						if (event.list.length) {
 							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
 								var hs = target.getCards("h");
@@ -4002,7 +3999,7 @@ export default async function () {
 								};
 							};
 						}
-						("step 2");
+						"step 2";
 						const lose_list = [];
 						if (event.fixedResult && event.fixedResult[player.playerid]) {
 							lose_list.push([player, [event.fixedResult[player.playerid]]]);
@@ -4020,7 +4017,7 @@ export default async function () {
 							var dialog = ui.dialogs[eventName];
 							dialog.$playerCard.classList.add("infohidden");
 							dialog.$playerCard.classList.add("infoflip");
-						}, event.compareName);
+						}, event.compareId);
 						if (event.list.includes(target)) {
 							let index = event.list.indexOf(target);
 							if (result[index].skill && lib.skill[result[index].skill] && lib.skill[result[index].skill].onCompare) {
@@ -4038,19 +4035,19 @@ export default async function () {
 							var dialog = ui.dialogs[eventName];
 							dialog.$playerCard.classList.add("infohidden");
 							dialog.$playerCard.classList.add("infoflip");
-						}, event.compareName);
+						}, event.compareId);
 						event.lose_list = lose_list;
-						("step 3");
+						"step 3";
 						if (event.card2.number >= 10 || event.card2.number <= 4) {
 							if (target.countCards("h") > 2) event.addToAI = true;
 						}
-						("step 4");
+						"step 4";
 						if (event.lose_list.length) {
 							game.loseAsync({
 								lose_list: event.lose_list,
 							}).setContent("chooseToCompareLose");
 						}
-						("step 5");
+						"step 5";
 						if (event.isDelay) {
 							let cards = [];
 							for (let current of event.lose_list) {
@@ -4084,13 +4081,12 @@ export default async function () {
 								if (!window.decadeUI) return;
 								var dialog = ui.dialogs[eventName];
 								if (dialog) dialog.close();
-								ui.dialogs[eventName] = undefined;
-							}, event.compareName);
+							}, event.compareId);
 							event.finish();
 						} else {
 							event.trigger("compareCardShowBefore");
 						}
-						("step 6");
+						"step 6";
 						// 更新拼点框
 						game.broadcastAll(
 							function (eventName, player, target, playerCard, targetCard) {
@@ -4104,7 +4100,7 @@ export default async function () {
 								dialog.playerCard = playerCard.copy();
 								dialog.targetCard = targetCard.copy();
 							},
-							event.compareName,
+							event.compareId,
 							player,
 							target,
 							event.card1,
@@ -4123,7 +4119,7 @@ export default async function () {
 						event.num2 = getNum(event.card2);
 						event.trigger("compare");
 						decadeUI.delay(400);
-						("step 7");
+						"step 7";
 						event.result = {
 							player: event.card1,
 							target: event.card2,
@@ -4131,7 +4127,7 @@ export default async function () {
 							num2: event.num2,
 						};
 						event.trigger("compareFixing");
-						("step 8");
+						"step 8";
 						var str;
 						if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
 							event.result.bool = true;
@@ -4188,11 +4184,11 @@ export default async function () {
 								);
 							},
 							str,
-							event.compareName,
+							event.compareId,
 							event.result.bool
 						);
 						decadeUI.delay(1800);
-						("step 9");
+						"step 9";
 						if (typeof event.target.ai.shown == "number" && event.target.ai.shown <= 0.85 && event.addToAI) {
 							event.target.ai.shown += 0.1;
 						}
@@ -4214,7 +4210,7 @@ export default async function () {
 
 					lib.element.content.chooseToCompareMultiple = function () {
 						"step 0";
-						if ((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards("h") == 0) {
+						if (!event.fixedResult?.[player.playerid] && !player.countCards("h")) {
 							event.result = { cancelled: true, bool: false };
 							event.finish();
 							return;
@@ -4233,12 +4229,13 @@ export default async function () {
 						if (!event.filterCard) event.filterCard = lib.filter.all;
 						// 更新拼点框
 						event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+						event.compareId = `${event.compareName}_${get.id()}`;
 						event.addMessageHook("finished", function () {
-							var dialog = ui.dialogs[this.compareName];
+							var dialog = ui.dialogs[this.compareId];
 							if (dialog) dialog.close();
 						});
 						game.broadcastAll(
-							function (player, target, eventName) {
+							function (player, target, eventName, compareId) {
 								if (!window.decadeUI) return;
 								var dialog = decadeUI.create.compareDialog();
 								dialog.caption = get.translation(eventName) + "拼点";
@@ -4246,19 +4243,18 @@ export default async function () {
 								dialog.target = target;
 								dialog.open();
 								decadeUI.delay(400);
-								ui.dialogs[eventName] = dialog;
+								ui.dialogs[compareId] = dialog;
 							},
 							player,
 							targets[0],
-							event.compareName
+							event.compareName,
+							event.compareId
 						);
 						"step 1";
 						event._result = [];
-						event.list = targets.filter(function (current) {
-							return !event.fixedResult || !event.fixedResult[current.playerid];
-						});
-						if (event.list.length || !event.fixedResult || !event.fixedResult[player.playerid]) {
-							if (!event.fixedResult || !event.fixedResult[player.playerid]) event.list.unshift(player);
+						event.list = targets.filter(current => !event.fixedResult?.[current.playerid]);
+						if (event.list.length || !event.fixedResult?.[player.playerid]) {
+							if (!event.fixedResult?.[player.playerid]) event.list.unshift(player);
 							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
 								var hs = target.getCards("h");
 								var event = _status.event;
@@ -4336,7 +4332,7 @@ export default async function () {
 								var dialog = ui.dialogs[eventName];
 								dialog.playerCard = playerCard.copy();
 							},
-							event.compareName,
+							event.compareId,
 							event.card1
 						);
 						"step 5";
@@ -4358,7 +4354,7 @@ export default async function () {
 									dialog.target = target;
 									dialog.targetCard = targetCard.copy();
 								},
-								event.compareName,
+								event.compareId,
 								player,
 								event.target,
 								event.card1,
@@ -4370,7 +4366,6 @@ export default async function () {
 							// 更新拼点框
 							game.broadcastAll(function (eventName) {
 								if (!window.decadeUI) return;
-
 								var dialog = ui.dialogs[eventName];
 								dialog.close();
 								setTimeout(
@@ -4380,7 +4375,7 @@ export default async function () {
 									110,
 									dialog
 								);
-							}, event.compareName);
+							}, event.compareId);
 							event.goto(10);
 						}
 						"step 6";
@@ -4427,7 +4422,7 @@ export default async function () {
 								var dialog = ui.dialogs[eventName];
 								dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
 								setTimeout(
-									function (dialog, eventName) {
+									function (dialog) {
 										dialog.hide();
 										dialog.$playerCard.dataset.result = "";
 										setTimeout(
@@ -4444,7 +4439,7 @@ export default async function () {
 								);
 							},
 							str,
-							event.compareName,
+							event.compareId,
 							result
 						);
 						decadeUI.delay(1800);
