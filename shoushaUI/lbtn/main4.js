@@ -305,7 +305,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			game.countPlayer(current => {
 				//需要加在这里，不然可能会不出现
 				//添加 确定每个玩家的名字
-				var namex = current === game.me ? lib.config.connect_nickname : ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "k9", "扶苏", "皇叔"].randomGet();
+				var namex = current === game.me ? lib.config.connect_nickname : ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "无语", "小曦", "墨渊", "k9", "扶苏", "皇叔"].randomGet();
 				if (!game.hasPlayer(current => {})) if (!current.nickname) current.nickname = namex;
 			});
 			//左上角整体（身份任务及牌局记录）
@@ -796,11 +796,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		var roundNumberNode = ui.create.div(".roundNumber", ui.cardRoundTimeNode);
 		ui.timeNode = ui.create.div(".time", ui.cardRoundTimeNode);
 
-		// Hide show_time3, show_time2 and show_cardpile_number
-		lib.config.show_time3 = false;
-		lib.config.show_time2 = false;
-		lib.config.show_cardpile_number = false;
-
 		game.updateRoundNum = function () {
 			var roundNumber = Math.max(1, game.roundNumber || 1);
 			roundNumberNode.innerHTML = "<span>第" + get.cnNumber(roundNumber, true) + "轮</span>";
@@ -852,27 +847,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (game.updateRoundNum) game.updateRoundNum();
 			}, cardNumber);
 		};
-
-		setTimeout(function () {
-			// 隐藏本体左上角时间
-			document.querySelectorAll('.touchinfo.left, .time').forEach(function(node) {
-				if (!ui.cardRoundTimeNode || !ui.cardRoundTimeNode.contains(node)) {
-					node.style.display = "none";
-				}
-			});
-			// 隐藏本体右上角牌堆数
-			document.querySelectorAll('.touchinfo.right').forEach(function(node) {
-				if (!ui.cardRoundTimeNode || !ui.cardRoundTimeNode.contains(node)) {
-					node.style.display = "none";
-				}
-			});
-			// 隐藏本体的 .cardPileNumber（只隐藏不是你自己UI里的）
-			document.querySelectorAll('.cardPileNumber').forEach(function(node) {
-				if (!ui.cardRoundTimeNode || !ui.cardRoundTimeNode.contains(node)) {
-					node.style.display = "none";
-				}
-			});
-		}, 1000);
 	}
 	lib.arenaReady.push(function () {
 		huanfu(); //换肤按钮

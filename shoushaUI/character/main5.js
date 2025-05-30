@@ -238,6 +238,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var duihuak = ui.create.div(".duihuak", biankuang4);
 					duihuak.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/seatinfo.png`);
 
+					//分包
+					var getPack = function (name) {
+						const pack = Object.keys(lib.characterPack).find(pack => lib.characterPack[pack][name]);
+						if (pack) {
+							if (lib.characterSort[pack]) {
+								const sort = Object.keys(lib.characterSort[pack]).find(sort => lib.characterSort[pack][sort].includes(name));
+								if (sort) return lib.translate[sort];
+							}
+							return lib.translate[pack + "_character_config"] || lib.translate[pack];
+						}
+						return "暂无分包";
+					};
+
+					ui.create.div(".pack", getPack(name), biankuang4);
+
 					//技能文本
 					dialog.classList.add("single");
 

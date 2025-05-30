@@ -65,8 +65,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						game.resume2();
 					}
 				});
+
 				//container.style.backgroundColor='RGBA(0, 0, 0, 0.65)';
+
+				//玩家名字
 				var player = this;
+				let playname = player === game.me ? lib.config.connect_nickname : get.translation((innerText = num = ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "无语", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "小曦", "墨渊", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "k9", "扶苏", "皇叔"].randomGet(1)));
+
 				var dialog = ui.create.div(".character-dialog.popped", container);
 				var leftPane = ui.create.div(".left", dialog);
 				var rightPane = ui.create.div(".right", dialog);
@@ -149,13 +154,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 								var bigdialog = ui.create.div(".bigdialog", popuperContainer);
 
-								var kuangkuang1 = ui.create.div(".kuangkuang1", bigdialog);
-								var kuangkuang2 = ui.create.div(".kuangkuang2", bigdialog);
-								var kuangkuang3 = ui.create.div(".kuangkuang3", bigdialog);
-								var kuangkuang4 = ui.create.div(".kuangkuang4", bigdialog);
-
-								//var jingji = ui.create.div('.jingji', bigdialog);
-								var xingbie = ui.create.div(".xingbie", bigdialog);
 								var useless = ui.create.div(".useless", bigdialog);
 								var nameshutiao = ui.create.div(".nameshutiao", bigdialog);
 								nameshutiao.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + rarity + ".png");
@@ -165,12 +163,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								//皮肤框
 								var pifuk = ui.create.div(".pifuk", bigdialog);
 								pifuk.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/pifuk.png");
-								var shutiao2 = ui.create.div(".shutiao2", bigdialog);
-								shutiao2.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/shutiao.png");
-								/*新增势力*/
-								/*    var namegroup = ui.create.div('.namegroup',dialog);
-							  namegroup.setBackgroundImage('extension/十周年UI/image/decoration/name_' + group + '.png');
-							  */
+
 								//皮肤名
 								var pos1 = player.node.avatar.style.backgroundImage.lastIndexOf("/");
 								var pos2 = player.node.avatar.style.backgroundImage.lastIndexOf("\\");
@@ -184,155 +177,134 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								if (skinname == player["name"] || skinname == player["name"] + "_shadow" || skinname == player["name"] + "2" || skinname == player["name"] + "3" || skinname == "default_silhouette_male" || skinname == "default_silhouette_female" || skinname == "default_silhouette_double") var pfzwm = "经典形象";
 								else var pfzwm = skinname;
 								var pifuming = ui.create.div(".pifuming", bigdialog, get.translation((innerText = pfzwm)));
+
+								//资料页玩家信息
+
 								var wujiangming = ui.create.div(".wujiangming", bigdialog, get.translation(player["name"]));
-								/*修改，感谢猫猫虫的提供的vip代码以及太子之争，素来如此的素材*/
-								var wanjiaming = ui.create.div(
-									".wanjiaming",
-									bigdialog,
-									player === game.me
-										? lib.config.connect_nickname
-										: get.translation(
-												(innerText = num =
-													[
-														"氪金抽66",
-														"卡宝真可爱",
-														"蒸蒸日上",
-														"√卡视我如父",
-														"麒麟弓免疫枸杞",
-														"坏可宣（老坏批）",
-														"六千大败而归",
-														"开局酒古锭",
-														"遇事不决刷个乐",
-														"见面两刀喜相逢",
-														"改名出66",
-														"时代的六万五",
-														"韩旭",
-														"司马长衫",
-														"ogx",
-														"狗卡不如无名杀",
-														"王八万",
-														"一拳兀突骨",
-														"开局送神将",
-														"丈八二桃",
-														"装甲车车",
-														"等我喝口酒",
-														"Samuri",
-														"马",
-														"Log-Frunki",
-														"aoe银钱豹",
-														"没有丈八就托管",
-														"无中yyds",
-														"给咸鱼鸽鸽打call",
-														"小零二哟～",
-														"长歌最帅了",
-														"大猫有侠者之风",
-														"布灵布灵❤️",
-														"我爱～摸鱼🐠～",
-														"小寻寻真棒",
-														"呲牙哥超爱笑",
-														"是俺杀哒",
-														"阿七阿七",
-														"祖安·灰晖是龙王",
-														"吃颗桃桃好遗计",
-														"好可宣✓良民",
-														"藏海表锅好",
-														"金乎？木乎？水乎！！",
-														"无法也无天",
-														"西风不识相",
-														"神秘喵酱",
-														"星城在干嘛？",
-														"子鱼今天摸鱼了吗？",
-														"阳光苞里有阳光",
-														"诗笺的小裙裙",
-														"轮回中的消逝",
-														"乱踢jb的云野",
-														"小一是不是...是不是...",
-														"美羊羊爱瑟瑟",
-														"化梦的星辰",
-														"杰哥带你登dua郎",
-														"世中君子人",
-														"叹年华未央",
-														"短咕咕",
-														"洛天依？！",
-														"黄老板是好人～",
-														"来点瑟瑟文和",
-														"鲨鱼配辣椒",
-														"萝卜～好萝卜",
-														"废城君",
-														"E佬细节鬼才",
-														"感到棘手要怀念谁？",
-														"半价小薯片",
-														"JK欧拉欧拉欧拉",
-														"新年快乐",
-														"乔姐带你飞",
-														"12345678？",
-														"缘之空",
-														"小小恐龙",
-														"教主：杀我！",
-														"才思泉涌的司马",
-														"我是好人",
-														"喜怒无常的大宝",
-														"黄赌毒",
-														"阴间杀～秋",
-														"敢于劈瓜的关羽",
-														"萌新陆逊",
-														"猫猫虫",
-														"芽衣姐，我不想死---",
-														"暮暮子",
-													].randomGet(1))
-										  )
-								);
+
+								// 修改VIP固定
+								var wanjiaming = ui.create.div(".wanjiaming", bigdialog, playname);
+
 								var vipimg = document.createElement("div");
 								vipimg.id = "vip-img";
 								vipimg.style.cssText = `
-                width:60px;
-                top:2px;
-                height:20px;
-                left:3px;
-                position:relative;
-                background-size: 100% 100%;
-              `;
+    width:60px;
+    top:2px;
+    height:20px;
+    left:3px;
+    position:relative;
+    background-size: 100% 100%;
+`;
+
+								// 使用玩家对象缓存VIP图片路径
 								var viptuji = ["vip0", "vip1", "vip2", "vip3", "vip4", "vip5", "vip6", "vip7"];
-								vipimg.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + viptuji.randomGet() + ".png");
+								var vipPath = player._vipCache || (player._vipCache = viptuji.randomGet()); // 关键修改点
+
+								vipimg.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + vipPath + ".png");
 								wanjiaming.appendChild(vipimg);
+
 								/*修改*/
-								var gonghui = ui.create.div(".gonghui", bigdialog, get.translation((innerText = "公会：" + (num = ["武将美化群", "活动武将群", "萌新代码群", "萌新花园", "爱门", "爱莉爱莉爱", "小爱莉の动物园", "Ciallo～(∠・ω< )⌒★", "美图交流群", "无名杀十周年样式", "无名杀主题样式", "💎备用💎", "无名杀琉璃版", "点草施法小鱼"]).randomGet(1))));
+								// 公会名称部分
+								var gonghui = ui.create.div(
+									".gonghui",
+									bigdialog,
+									get.translation(
+										"公会：" +
+											(
+												player._guildInfo ||
+												(player._guildInfo = {
+													name: ["武将美化群", "活动武将群", "😋精致小杀", "萌新花园", "😋精致小酒", "小爱莉の动物园", "Ciallo～(∠・ω< )⌒★", "美图交流群", "无名杀主题样式", "💎备用💎", "无名杀琉璃版", "圣杯战争"].randomGet(1),
+													icon: ["c1", "c2", "c3"].randomGet(),
+												})
+											).name
+									)
+								);
+
+								// 公会图标部分
 								var gonghuiimg = document.createElement("div");
 								gonghuiimg.id = "gonghui-img";
 								gonghuiimg.style.cssText = `
-                width:40px;
-                top:2px;
-                height:15px;
-                left:20px;
-                position:relative;
-                background-size: 100% 100%;
-              `;
-								var gonghuituji = ["c1", "c2", "c3"];
-								gonghuiimg.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + gonghuituji.randomGet() + ".png");
+    width:40px;
+    top:2px;
+    height:15px;
+    left:20px;
+    position:relative;
+    background-size: 100% 100%;
+`;
+								gonghuiimg.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + player._guildInfo.icon + ".png");
 								gonghui.appendChild(gonghuiimg);
 
-								var xinyu = ui.create.div(".xinyu", bigdialog, get.translation((innerText = (num = Math.floor(Math.random() * (999 - 1 + 1) + 99)) + "<br>" + "信誉")));
-								var meili = ui.create.div(".meili", bigdialog, get.translation((innerText = (num = Math.floor(Math.random() * (999 - 1 + 1) + 99)) + "<br>" + "魅力")));
-								var shouhu = ui.create.div(".shouhu", bigdialog, get.translation((innerText = (num = Math.floor(Math.random() * (999 - 1 + 1) + 999)) + "<br>" + "守护")));
-								var wujiang1 = ui.create.div(".wujiang1", bigdialog, get.translation((innerText = (num = Math.floor(Math.random() * (999 - 1 + 1) + 1000)) + "<br>" + "武将")));
-								var pifu1 = ui.create.div(".pifu1", bigdialog, get.translation((innerText = (num = Math.floor(Math.random() * (999 - 1 + 1) + 3000)) + "<br>" + "皮肤")));
-								var jiangling = ui.create.div(".jiangling", bigdialog, get.translation((innerText = (num = Math.floor(Math.random() * (99 - 1 + 1) + 10)) + "<br>" + "将灵")));
+								// 信息固定信誉魅力守护武将皮肤将灵
+								if (!player.profileData) {
+									player.profileData = {
+										xinyu: Math.floor(Math.random() * (999 - 99 + 1)) + 99,
+										meili: Math.floor(Math.random() * (999 - 99 + 1)) + 99,
+										shouhu: Math.floor(Math.random() * (999 - 999 + 1)) + 999, // 999-1998
+										wujiang1: Math.floor(Math.random() * (999 - 1 + 1)) + 1000,
+										pifu1: Math.floor(Math.random() * (999 - 1 + 1)) + 3000,
+										jiangling: Math.floor(Math.random() * (99 - 10 + 1)) + 10,
+									};
+								}
+								// 创建带缓存值的组件
+								var xinyu = ui.create.div(".xinyu", bigdialog, get.translation((innerText = player.profileData.xinyu + "<br>" + "信誉")));
+								var meili = ui.create.div(".meili", bigdialog, get.translation((innerText = player.profileData.meili + "<br>" + "魅力")));
+								var shouhu = ui.create.div(".shouhu", bigdialog, get.translation((innerText = player.profileData.shouhu + "<br>" + "守护")));
+								var wujiang1 = ui.create.div(".wujiang1", bigdialog, get.translation((innerText = player.profileData.wujiang1 + "<br>" + "武将")));
+								var pifu1 = ui.create.div(".pifu1", bigdialog, get.translation((innerText = player.profileData.pifu1 + "<br>" + "皮肤")));
+								var jiangling = ui.create.div(".jiangling", bigdialog, get.translation((innerText = player.profileData.jiangling + "<br>" + "将灵")));
+
 								var changyongwujiang = ui.create.div(".changyongwujiang", bigdialog, get.translation((innerText = "武将展示")));
-								/*称号*/
+
+								/* 称号 */
 								var minichenghao = ui.create.div(".minichenghao", bigdialog);
 								var chenghaotu = ["ch0", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "ch17", "ch18", "ch19", "ch20", "ch21", "ch22", "ch23", "ch24", "ch25", "ch26"];
-								minichenghao.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + chenghaotu.randomGet() + ".png");
-								/*拜师*/
+
+								// 初始化玩家称号数据
+								if (!player.chenghaoData) {
+									player.chenghaoData = {
+										img: chenghaotu.randomGet(), // 随机选择并永久存储
+									};
+								}
+
+								// 使用模板字符串设置背景图路径
+								minichenghao.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.chenghaoData.img}.png`);
+
+								/* 拜师 */
 								var baishi = ui.create.div(".baishi", bigdialog);
 								var baishitu = ["b1", "b2", "b3"];
-								baishi.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + baishitu.randomGet() + ".png");
-								/*历史最高*/
+
+								// 初始化拜师数据（每个玩家独立）
+								if (!player.baishiData) {
+									player.baishiData = {
+										img: baishitu.randomGet(), // 随机选择并存储
+									};
+								}
+								baishi.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.baishiData.img}.png`);
+
+								/* 历史最高 */
 								var wngs = ui.create.div(".wngs", bigdialog);
 								var wngstu = ["s1", "s2", "s3", "s4", "s5", "s6"];
-								wngs.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + wngstu.randomGet() + ".png"); /*将灯*/
+
+								// 初始化历史数据
+								if (!player.historyData) {
+									player.historyData = {
+										img: wngstu.randomGet(),
+									};
+								}
+								wngs.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.historyData.img}.png`);
+
+								/* 将灯 */
 								var deng = ui.create.div(".deng", bigdialog);
 								var dengto = ["d1", "d2", "d3", "d4", "d5", "d6", "d7"];
-								deng.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + dengto.randomGet() + ".png");
+
+								// 初始化将灯数据
+								if (!player.lampData) {
+									player.lampData = {
+										img: dengto.randomGet(),
+									};
+								}
+								deng.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.lampData.img}.png`);
+
 								/*关闭*/
 								var haoyou3 = ui.create.div(".haoyou3", bigdialog, get.translation((innerText = "   ")));
 								// 为haoyou3元素添加点击事件监听器，点击时关闭页面
@@ -344,9 +316,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 								var shanchang4 = ui.create.div(".shanchang4", bigdialog);
 								shanchang4.style.backgroundImage = player.node.avatar.style.backgroundImage;
+
+								//迷你头像
 								var minixingxiang = ui.create.div(".minixingxiang", bigdialog);
 								var xingxiangtu = ["xingxiang0", "xingxiang1", "xingxiang2", "xingxiang3", "xingxiang4", "xingxiang5"];
-								minixingxiang.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + xingxiangtu.randomGet() + ".png");
+
+								// 初始化玩家迷你形象数据
+								if (!player.miniXingxiangData) {
+									player.miniXingxiangData = {
+										img: xingxiangtu.randomGet(), // 随机选择并永久存储
+									};
+								}
+
+								// 使用模板字符串设置背景图路径
+								minixingxiang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.miniXingxiangData.img}.png`);
 							});
 
 						//通过势力判断技能框的背景颜色
@@ -499,7 +482,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						/*level等级第一页*/
 						var level = ui.create.div(".level", dialog);
 						var leveltu = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
-						level.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + leveltu.randomGet() + ".png");
+
+						// 初始化等级标识数据（每个玩家独立存储）
+						if (!player.levelData) {
+							player.levelData = {
+								img: leveltu.randomGet(), // 随机选择等级标识
+							};
+						}
+
+						// 使用模板字符串设置背景图路径
+						level.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.levelData.img}.png`);
+
 						//新增技能框
 						var wjkuang = ui.create.div(".wjkuang", dialog);
 
@@ -508,103 +501,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						var jineng = ui.create.div(".jineng", dialog, get.translation((innerText = "武将技能")));
 						//修改第一页武将姓名
 						var wjname = ui.create.div(".wjname", dialog, get.translation(player["name"]));
+						//新加
+
 						//复用第二页面得随机名字
-						var wanjiaming2 = ui.create.div(
-							".wanjiaming2",
-							dialog,
-							player === game.me
-								? lib.config.connect_nickname
-								: get.translation(
-										(innerText = num =
-											[
-												"氪金抽66",
-												"卡宝真可爱",
-												"蒸蒸日上",
-												"√卡视我如父",
-												"麒麟弓免疫枸杞",
-												"坏可宣（老坏批）",
-												"六千大败而归",
-												"开局酒古锭",
-												"遇事不决刷个乐",
-												"见面两刀喜相逢",
-												"改名出66",
-												"时代的六万五",
-												"韩旭",
-												"司马长衫",
-												"ogx",
-												"狗卡不如无名杀",
-												"王八万",
-												"一拳兀突骨",
-												"开局送神将",
-												"丈八二桃",
-												"装甲车车",
-												"等我喝口酒",
-												"Samuri",
-												"马",
-												"Log-Frunki",
-												"aoe银钱豹",
-												"没有丈八就托管",
-												"无中yyds",
-												"给咸鱼鸽鸽打call",
-												"小零二哟～",
-												"长歌最帅了",
-												"大猫有侠者之风",
-												"布灵布灵❤️",
-												"我爱～摸鱼🐠～",
-												"小寻寻真棒",
-												"呲牙哥超爱笑",
-												"是俺杀哒",
-												"阿七阿七",
-												"祖安·灰晖是龙王",
-												"吃颗桃桃好遗计",
-												"好可宣✓良民",
-												"藏海表锅好",
-												"金乎？木乎？水乎！！",
-												"无法也无天",
-												"西风不识相",
-												"神秘喵酱",
-												"星城在干嘛？",
-												"子鱼今天摸鱼了吗？",
-												"阳光苞里有阳光",
-												"诗笺的小裙裙",
-												"轮回中的消逝",
-												"乱踢jb的云野",
-												"小一是不是...是不是...",
-												"美羊羊爱瑟瑟",
-												"化梦的星辰",
-												"杰哥带你登dua郎",
-												"世中君子人",
-												"叹年华未央",
-												"短咕咕",
-												"洛天依？！",
-												"黄老板是好人～",
-												"来点瑟瑟文和",
-												"鲨鱼配辣椒",
-												"萝卜～好萝卜",
-												"废城君",
-												"E佬细节鬼才",
-												"感到棘手要怀念谁？",
-												"半价小薯片",
-												"JK欧拉欧拉欧拉",
-												"新年快乐",
-												"乔姐带你飞",
-												"12345678？",
-												"缘之空",
-												"小小恐龙",
-												"教主：杀我！",
-												"才思泉涌的司马",
-												"我是好人",
-												"喜怒无常的大宝",
-												"黄赌毒",
-												"阴间杀～秋",
-												"敢于劈瓜的关羽",
-												"萌新陆逊",
-												"猫猫虫",
-												"芽衣姐，我不想死---",
-												"暮暮子",
-											].randomGet(1))
-								  )
-						);
+						//复用第二页面得随机名字
+						var wanjiaming2 = ui.create.div(".wanjiaming2", dialog, playname);
 
 						leftPane.innerHTML = "<div></div>";
 						rightPane.innerHTML = "<div></div>";
