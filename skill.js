@@ -1504,9 +1504,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						else if (!target.countCards("he") || !target.canUse("sha", player)) {
 							if (
 								target.hp +
-									target.countCards("hs", {
-										name: ["tao", "jiu"],
-									}) <=
+								target.countCards("hs", {
+									name: ["tao", "jiu"],
+								}) <=
 								1
 							)
 								num = 2;
@@ -1541,7 +1541,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				next.set("custom", {
 					add: {},
 					replace: {
-						window() {},
+						window() { },
 					},
 				});
 				next.backup("twtanfeng_backup");
