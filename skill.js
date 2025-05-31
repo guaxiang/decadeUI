@@ -353,15 +353,25 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 		chengxiang: {
-			content() {
-				"step 0";
+			async content(event, trigger, player) {
+				let num = 4;
+				if (!event.showCards) {
+					event.showCards = [];
+				}
+				await event.trigger("chengxiangShowBegin");
 				var chengxiangNum = event.name == "oldchengxiang" ? 12 : 13;
-				var mark = 0;
 				if (event.name == "olchengxiang") {
-					mark += player.countMark("olchengxiang");
+					let mark = player.countMark("olchengxiang");
+					num += mark;
 					player.removeMark("olchengxiang", mark, false);
 				}
-				var cards = get.cards(4 + mark);
+				const cards = [];
+				if (num > event.showCards.length) {
+					cards.addArray(get.cards(num - event.showCards.length));
+					await game.cardsGotoOrdering(cards);
+				}
+				cards.addArray(event.showCards);
+				const videoId = lib.status.videoId++;
 				var guanXing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 4, false);
 				guanXing.doubleSwitch = true;
 				guanXing.caption = "【称象】";
