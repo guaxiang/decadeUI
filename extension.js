@@ -11603,14 +11603,15 @@ export default async function () {
 			};
 			pack.intro = (pack => {
 				let log = [
-					`魔改十周年UI ${pack.version}`,
+					`十周年UI ${pack.version}`,
 					"最低适配：v1.10.17.3",
-					"bugfix",
-					"局内UI显示调整",
-					"新版本函数跟进",
+					"那一天的八哥，修复起来",
+					"那一天的界面，调整起来",
+					"那一天的函数，跟进起来",
+					"",
+					"连同着迷🥺这个炎炎🔥夏日🥵万般滋味👄那个你",
 				];
-				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
-			})(pack);
+				return `<a href="javascript:void(0)" onclick="navigator.clipboard.writeText('https://github.com/diandian157/decadeUI--mx').then(() => alert('已成功复制，粘贴到浏览器打开，部分进不去需要翻墙'))">点击复制十周年UIGithub仓库地址</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;})(pack);
 			return pack;
 		})(),
 		files: {
