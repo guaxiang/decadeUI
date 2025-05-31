@@ -355,15 +355,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		chengxiang: {
 			async content(event, trigger, player) {
 				let num = 4;
-				if (!event.showCards) {
-					event.showCards = [];
-				}
+				event.showCards ??= [];
 				await event.trigger("chengxiangShowBegin");
-				var chengxiangNum = event.name == "oldchengxiang" ? 12 : 13;
+				const chengxiangNum = event.name == "oldchengxiang" ? 12 : 13;
 				if (event.name == "olchengxiang") {
-					let mark = player.countMark("olchengxiang");
-					num += mark;
-					player.removeMark("olchengxiang", mark, false);
+					num += player.countMark("olchengxiang");
+					player.clearMark("olchengxiang", false);
 				}
 				const cards = [];
 				if (num > event.showCards.length) {
@@ -371,24 +368,22 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					await game.cardsGotoOrdering(cards);
 				}
 				cards.addArray(event.showCards);
-				const videoId = lib.status.videoId++;
-				var guanXing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 4, false);
+				await Promise.all(event.next);
+				const guanXing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 4, false);
 				guanXing.doubleSwitch = true;
 				guanXing.caption = "【称象】";
 				guanXing.header2 = "获得的牌";
 				guanXing.callback = function () {
-					var num = 0;
-					for (var i = 0; i < this.cards[1].length; i++) {
+					let num = 0;
+					for (let i = 0; i < this.cards[1].length; i++) {
 						num += get.number(this.cards[1][i]);
 					}
-
 					return num > 0 && num <= chengxiangNum;
 				};
-
 				game.broadcast(
 					function (player, cards, callback) {
 						if (!window.decadeUI) return;
-						var guanXing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 4, false);
+						const guanXing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 4, false);
 						guanXing.caption = "【称象】";
 						guanXing.header2 = "获得的牌";
 						guanXing.callback = callback;
@@ -397,95 +392,159 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					cards,
 					guanXing.callback
 				);
-
-				var player = event.player;
-				event.switchToAuto = function () {
-					var cards = guanXing.cards[0];
-					var num, sum, next;
-					var index = 0;
-					var results = [];
-
-					for (var i = 0; i < cards.length; i++) {
+				const switchToAuto = function () {
+					_status.imchoosing = false;
+					const cards = guanXing.cards[0];
+					let num, sum, next;
+					let index = 0;
+					let results = [];
+					for (let i = 0; i < cards.length; i++) {
 						num = 0;
 						sum = 0;
 						next = i + 1;
-						for (var j = i; j < cards.length; j++) {
+						for (let j = i; j < cards.length; j++) {
 							if (j != i && j < next) continue;
-
 							num = sum + get.number(cards[j]);
 							if (num <= chengxiangNum) {
 								sum = num;
 								if (!results[index]) results[index] = [];
 								results[index].push(cards[j]);
 							}
-
 							if (j >= cards.length - 1) index++;
 						}
-
 						if (results[index] && results[index].length == cards.length) break;
 					}
-
-					var costs = [];
-					for (var i = 0; i < results.length; i++) {
+					let costs = [];
+					for (let i = 0; i < results.length; i++) {
 						costs[i] = {
 							value: 0,
 							index: i,
 						};
-						for (var j = 0; j < results[i].length; j++) {
+						for (let j = 0; j < results[i].length; j++) {
 							costs[i].value += get.value(results[i][j], player);
-							// 如果有队友且有【仁心】且血量不低，优先选择装备牌
 							if (player.hasFriend() && player.hasSkill("renxin") && get.type(results[i][j]) == "equip" && player.hp > 1) {
 								costs[i].value += 5;
 							}
-
-							// 如果自己有延时牌且没有无懈可击，优先选择无懈可击
 							if (player.node.judges.childNodes.length > 0 && !player.hasWuxie() && results[i][j] == "wuxie") {
 								costs[i].value += 5;
 							}
 						}
 					}
-
-					costs.sort(function (a, b) {
-						return b.value - a.value;
-					});
-
-					var time = 500;
-					var result = results[costs[0].index];
-
-					for (var i = 0; i < result.length; i++) {
-						setTimeout(
-							function (move, finished) {
-								guanXing.move(move, guanXing.cards[1].length, 1);
-								if (finished) guanXing.finishTime(1000);
-							},
-							time,
-							result[i],
-							i >= result.length - 1
-						);
+					costs.sort((a, b) => b.value - a.value);
+					const result = results[costs[0].index];
+					let time = 500;
+					for (let i = 0; i < result.length; i++) {
+						setTimeout((move, finished) => {
+							guanXing.move(move, guanXing.cards[1].length, 1);
+							if (finished) guanXing.finishTime(1000);
+						}, time, result[i], i >= result.length - 1);
 						time += 500;
 					}
+					return Promise.resolve({
+						bool: true,
+						cards1: guanXing.cards[0],
+						cards2: guanXing.cards[1],
+					});
 				};
-
-				if (event.isOnline()) {
-					event.player.send(function () {
-						if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
-					}, event.player);
-
-					event.player.wait();
-					decadeUI.game.wait();
-				} else if (!event.isMine()) {
-					event.switchToAuto();
-				}
-				"step 1";
-				if (event.result && event.result.bool) {
-					game.cardsDiscard(event.cards1);
-					var cards2 = event.cards2;
-					player.gain(cards2, "gain2");
+				const chooseGuanXing = (player, guanXing) => {
+					const { promise, resolve } = Promise.withResolvers();
+					guanXing._resolve = resolve;
+					const originalFinish = guanXing.finish.bind(guanXing);
+					guanXing.finish = function () {
+						originalFinish();
+						this._resolve?.({
+							bool: this.confirmed === true,
+							cards1: this.cards[0].slice(),
+							cards2: this.cards[1].slice(),
+						});
+					};
+					event.switchToAuto = function () {
+						_status.imchoosing = false;
+						const cards = guanXing.cards[0];
+						let num, sum, next;
+						let index = 0;
+						let results = [];
+						for (let i = 0; i < cards.length; i++) {
+							num = 0;
+							sum = 0;
+							next = i + 1;
+							for (let j = i; j < cards.length; j++) {
+								if (j != i && j < next) continue;
+								num = sum + get.number(cards[j]);
+								if (num <= chengxiangNum) {
+									sum = num;
+									if (!results[index]) results[index] = [];
+									results[index].push(cards[j]);
+								}
+								if (j >= cards.length - 1) index++;
+							}
+							if (results[index] && results[index].length == cards.length) break;
+						}
+						let costs = [];
+						for (let i = 0; i < results.length; i++) {
+							costs[i] = {
+								value: 0,
+								index: i,
+							};
+							for (let j = 0; j < results[i].length; j++) {
+								costs[i].value += get.value(results[i][j], player);
+								if (player.hasFriend() && player.hasSkill("renxin") && get.type(results[i][j]) == "equip" && player.hp > 1) {
+									costs[i].value += 5;
+								}
+								if (player.node.judges.childNodes.length > 0 && !player.hasWuxie() && results[i][j] == "wuxie") {
+									costs[i].value += 5;
+								}
+							}
+						}
+						costs.sort((a, b) => b.value - a.value);
+						const result = results[costs[0].index];
+						let time = 500;
+						for (let i = 0; i < result.length; i++) {
+							setTimeout((move, finished) => {
+								guanXing.move(move, guanXing.cards[1].length, 1);
+								if (finished) guanXing.finishTime(1000);
+							}, time, result[i], i >= result.length - 1);
+							time += 500;
+						}
+						event._result = {
+							bool: true,
+							cards1: guanXing.cards[0],
+							cards2: guanXing.cards[1],
+						};
+						resolve(event._result);
+						game.resume();
+					};
+					event._result = {
+						bool: true,
+						cards1: guanXing.cards[0],
+						cards2: guanXing.cards[1],
+					};
+					resolve(event._result);
+					game.pause();
+					_status.imchoosing = true;
+					return promise;
+				};
+				let next;
+				if (event.isMine()) {
+					next = chooseGuanXing(player, guanXing);
+				} else if (event.isOnline()) {
+					const { promise, resolve } = Promise.withResolvers();
+					player.send(chooseGuanXing, player, guanXing);
+					player.wait(result => {
+						if (result == "ai") result = switchToAuto();
+						resolve(result);
+					});
+					next = promise;
+					result = await promise;
+				} else next = switchToAuto();
+				const result = await next;
+				if (result?.bool) {
+					await game.cardsDiscard(result.cards1);
+					const cards2 = result.cards2;
+					await player.gain(cards2, "gain2");
 					if (event.name == "olchengxiang") {
-						let num = cards2.reduce((num, i) => {
-							return num + get.number(i, player);
-						}, 0);
-						if (num == 13) player.addMark("olchengxiang", 1, false);
+						const total = cards2.reduce((num, i) => num + get.number(i, player), 0);
+						if (total == 13) player.addMark("olchengxiang", 1, false);
 					}
 				}
 			},
