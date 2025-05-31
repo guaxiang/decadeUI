@@ -299,7 +299,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var info = lib.skill[k];
 				var item = node.querySelector('[data-id="' + k + '"]');
 				if (!item) {
-					if (!info.zhuanhuanji) item = ui.create.div(".skillMarkItem.xiandingji", node, "");
+					if (!info.zhuanhuanji) {
+						item = ui.create.div(".skillMarkItem.xiandingji", node, get.translation(k).charAt(0));
+					}
 					else item = ui.create.div(".skillMarkItem.zhuanhuanji", node, "");
 					//如果不是转换技就调用限定技的标记
 				}

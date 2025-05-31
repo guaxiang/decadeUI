@@ -159,20 +159,26 @@
 }
 
 .skillMarkItem.xiandingji {
-	background-image: url("./images/xiandingjiOL.png");
-	background-size: 100% 100%;
-	text-shadow: none;
-	--w: 30px;
-	--h: calc(var(--w) * 1 / 1);
-	/*高和长*/
-	width: var(--w);
-	/*按比例调节*/
-	height: var(--h);
-	/*同理*/
+    background-image: url("./images/xiandingjiOL.png");
+    background-size: 100% 100%;
+    text-shadow: none;
+    --w: 30px;
+    --h: calc(var(--w) * 1 / 1);
+    width: var(--w);
+    height: var(--h);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f5d78e;
+    font-size: 16px;
+    font-family: "FZLBJW";
+    font-weight: bold;
+    text-shadow: 0 0 2px #000;
 }
 
 .skillMarkItem.xiandingji.used {
-	-webkit-filter: grayscale(1);
+    -webkit-filter: grayscale(1);
+    color: #888;
 }
 
 .skillMarkItem + .skillMarkItem {
