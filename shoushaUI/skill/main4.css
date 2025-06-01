@@ -1,11 +1,12 @@
-#arena[data-right-layout="on"] > .skill-control {
+#arena[data-right-layout="on"]>.skill-control {
 	/*技能按钮*/
 	max-width: 200px;
 	bottom: 0px;
 	right: 200px;
 	z-index: 0;
 }
-#arena[data-right-layout="off"] > .skill-control {
+
+#arena[data-right-layout="off"]>.skill-control {
 	/*技能按钮左手布局*/
 	max-width: 200px;
 	bottom: 0px;
@@ -24,20 +25,21 @@
 	font-size: 18px;
 }
 
-.skill-control > div {
+.skill-control>div {
 	display: flex;
 	flex-wrap: wrap-reverse;
 	flex-direction: row-reverse;
 }
 
-.skill-control > div::after {
+.skill-control>div::after {
 	content: "";
 	display: block;
 	clear: both;
 }
+
 /*右手布局*/
-#arena[data-right-layout="on"] > .skill-control .trigger,
-#arena[data-right-layout="on"] > .skill-control .enable {
+#arena[data-right-layout="on"]>.skill-control .trigger,
+#arena[data-right-layout="on"]>.skill-control .enable {
 	height: auto;
 	width: auto;
 	display: flex;
@@ -47,9 +49,10 @@
 	margin-left: 5px;
 	/* 技能间距 */
 }
+
 /*左手布局*/
-#arena[data-right-layout="off"] > .skill-control .trigger,
-#arena[data-right-layout="off"] > .skill-control .enable {
+#arena[data-right-layout="off"]>.skill-control .trigger,
+#arena[data-right-layout="off"]>.skill-control .enable {
 	height: auto;
 	width: auto;
 	display: flex;
@@ -59,7 +62,8 @@
 	margin-left: 5px;
 	/* 技能间距 */
 }
-.skill-control > .trigger > .skillitem {
+
+.skill-control>.trigger>.skillitem {
 	margin: 3px 4px;
 	width: 85px;
 	height: 35px;
@@ -73,7 +77,7 @@
 	letter-spacing: 2px;
 }
 
-.skill-control > .enable > .skillitem {
+.skill-control>.enable>.skillitem {
 	margin: 3px 4px;
 	/* 增加宽度 */
 	width: 85px;
@@ -89,7 +93,7 @@
 	/*border: 1px solid rgb(3,4,5);/*调试用*/
 }
 
-.skill-control > .enable > .xiandingji {
+.skill-control>.enable>.xiandingji {
 	/*限定技按钮*/
 	margin: 3px 4px;
 	width: 85px;
@@ -105,28 +109,28 @@
 	letter-spacing: 2px;
 }
 
-.skill-control > .enable > .skillitem.select {
+.skill-control>.enable>.skillitem.select {
 	background-image: url("./images/btnnOL4.png");
 	filter: brightness(1.2);
 }
 
-.skill-control > .enable > .skillitem:not(.usable):not(.select) {
+.skill-control>.enable>.skillitem:not(.usable):not(.select) {
 	/*技能按钮不可用时变灰*/
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 }
 
-.skill-control > .enable > .xiandingji:not(.usable):not(.select) {
+.skill-control>.enable>.xiandingji:not(.usable):not(.select) {
 	/*限定技按钮不可用时变灰*/
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(90%);
 }
 
-.skill-control > .enable > .xiandingji.select {
+.skill-control>.enable>.xiandingji.select {
 	background-image: url("./images/btnnOL2.png");
 }
 
-.skill-control > .enable > .xiandingji:not(.usable):not(.select) {
+.skill-control>.enable>.xiandingji:not(.usable):not(.select) {
 	/*background-image: url("./images/btn5.png");*/
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
@@ -142,7 +146,7 @@
 	align-items: center;
 }
 
-.skillMarks > .skillMarkItem {
+.skillMarks>.skillMarkItem {
 	--h: 19px;
 	width: 28.5px !important;
 	height: 28.5px !important;
@@ -159,29 +163,29 @@
 }
 
 .skillMarkItem.xiandingji {
-    background-image: url("./images/xiandingjiOL.png");
-    background-size: 100% 100%;
-    text-shadow: none;
-    --w: 30px;
-    --h: calc(var(--w) * 1 / 1);
-    width: var(--w);
-    height: var(--h);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #f5d78e;
-    font-size: 16px;
-    font-family: "FZLBJW";
-    font-weight: bold;
-    text-shadow: 0 0 2px #000;
+	background-image: url("./images/xiandingjiOL.png");
+	background-size: 100% 100%;
+	text-shadow: none;
+	--w: 30px;
+	--h: calc(var(--w) * 1 / 1);
+	width: var(--w);
+	height: var(--h);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #f5d78e;
+	font-size: 16px;
+	font-family: "FZLBJW";
+	font-weight: bold;
+	text-shadow: 0 0 2px #000;
 }
 
 .skillMarkItem.xiandingji.used {
-    -webkit-filter: grayscale(1);
-    color: #888;
+	-webkit-filter: grayscale(1);
+	color: #888;
 }
 
-.skillMarkItem + .skillMarkItem {
+.skillMarkItem+.skillMarkItem {
 	margin-top: -6.5px;
 }
 
