@@ -553,6 +553,4 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	window.kpimport = function (func) {
 		func(lib, game, ui, get, ai, _status);
 	};
-
-	
 });
