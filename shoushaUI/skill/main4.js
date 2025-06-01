@@ -199,7 +199,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (eSkills && eSkills.includes(item.id)) {
 							skillName = skillName.slice(0, 2);
 						}
-						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable, skillName);
+						// 检查是否为转换技，跟随头像旁边的转换技图标class
+						if (lib.skill[item.id] && lib.skill[item.id].zhuanhuanji) {
+							let imgType = "yang";
+							let player = game.me;
+							let markNode = player && player.node && player.node.xSkillMarks && player.node.xSkillMarks.querySelector('.skillMarkItem.zhuanhuanji[data-id="' + item.id + '"]');
+							if (markNode && markNode.classList.contains('yin')) {
+								imgType = "ying";
+							}
+							let imgPath = "extension/十周年UI/shoushaUI/skill/images/mark_" + imgType + "OL.png";
+							skillName = '<img src="' + imgPath + '" style="vertical-align:middle;height:22px;margin-right:2px;">' + skillName;
+						}
+						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable);
+						node.innerHTML = skillName;
 						node.dataset.id = item.id;
 						node.addEventListener("click", function () {
 							game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
@@ -322,7 +334,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (node.querySelector('[data-id="' + k + '"]')) continue;
 				var item;
 				if (info.dutySkill) {
-					item = ui.create.div(".skillMarkItem.duty", node, get.translation(k).charAt(0));
+					item = ui.create.div(".skillMarkItem.duty", node, "");
 				} else {
 					item = ui.create.div(".skillMarkItem.juexingji", node, get.translation(k).charAt(0));
 				}
