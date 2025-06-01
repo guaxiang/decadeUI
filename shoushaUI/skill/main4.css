@@ -196,6 +196,19 @@
 	/*按比例调节*/
 	height: var(--h);
 	/*同理*/
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #f5d78e;
+	font-size: 16px;
+	font-family: "FZLBJW";
+	font-weight: bold;
+	text-shadow: 0 0 2px #000;
+}
+
+.skillMarkItem.juexingji.used {
+	-webkit-filter: grayscale(1);
+	color: #888;
 }
 
 .skillMarkItem.zhuanhuanji {
@@ -244,11 +257,20 @@
 
 .skillMarkItem.duty {
 	background-image: url("./images/mark_dutyOL.png");
-	background-size: contain;
+	background-size: 100% 100%;
 	background-repeat: no-repeat;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #f5d78e;
+	font-size: 16px;
+	font-family: "FZLBJW";
+	font-weight: bold;
+	text-shadow: 0 0 2px #000;
 }
 
 .skillMarkItem.duty.fail {
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
+	color: #888;
 }

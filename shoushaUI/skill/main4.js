@@ -322,8 +322,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (node.querySelector('[data-id="' + k + '"]')) continue;
 				var item;
 				if (info.dutySkill) {
-					item = ui.create.div(".skillMarkItem.duty", node, "");
-				} else item = ui.create.div(".skillMarkItem.juexingji", node, "");
+					item = ui.create.div(".skillMarkItem.duty", node, get.translation(k).charAt(0));
+				} else {
+					item = ui.create.div(".skillMarkItem.juexingji", node, get.translation(k).charAt(0));
+				}
 				item.dataset.id = k;
 			}
 		},

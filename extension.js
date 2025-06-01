@@ -10998,7 +10998,6 @@ export default async function () {
 			},
 			cardkmh: {
 				name: "卡牌边框",
-				intro: "参考扩展武将美化做适配，重启生效。",
 				init: "off",
 				item: {
 					off: "关闭",
@@ -11009,7 +11008,6 @@ export default async function () {
 			},
 			cardbj: {
 				name: "卡牌背景",
-				intro: "可以根据自己的喜好选择卡背样式，重启生效",
 				init: "kb1",
 				item: {
 					kb1: "默认",
