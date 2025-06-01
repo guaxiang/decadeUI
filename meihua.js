@@ -495,4 +495,64 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			setTimeout(decadeUI.effect.gameStart, 51);
 		};
 	}
+
+	// 卡牌边框
+	if (lib.config["extension_十周年UI_cardkmh"]) {
+		/**
+		 * @param {string} borderImageName - 边框图片名称
+		 */
+		function applyCardBeautification(borderImageName) {
+			if (!borderImageName) {
+				console.warn('Card beautification image name not specified');
+				return;
+			}
+			const style = document.createElement("style");
+			const borderImageUrl = `${lib.assetURL}extension/十周年UI/assets/image/${borderImageName}.png`;
+			const commonBorderStyles = `
+				border: 1px solid;
+				border-radius: 6px;
+				border-image-source: url('${borderImageUrl}');
+				border-image-slice: 20 20 20 20;
+			`;
+			const handCardStyles = `
+				.hand-cards > .handcards > .card {
+					margin: 0px;
+					width: 108px;
+					height: 150px;
+					position: absolute;
+					transition-property: transform, opacity, left, top;
+					${commonBorderStyles}
+					border-image-width: 20px 20px 20px 20px;
+					z-index: 1;
+				}
+			`;
+			const playedCardStyles = `
+				#arena > .card,
+				#arena.oblongcard:not(.chess) > .card,
+				#arena.oblongcard:not(.chess) .handcards > .card {
+					width: 108px;
+					height: 150px;
+					${commonBorderStyles}
+					border-image-width: 16px 16px 16px 16px;
+				}
+			`;
+
+			style.innerHTML = handCardStyles + playedCardStyles;
+			document.head.appendChild(style);
+		}
+		// 初始化卡牌美化
+		applyCardBeautification(lib.config.extension_十周年UI_cardkmh);
+	}
+
+	//卡牌背景
+	if (lib.config.extension_十周年UI_cardbj && lib.config.extension_十周年UI_cardbj != "kb1") {
+		var KPcss = document.createElement("style");
+		KPcss.innerHTML = ".card:empty,.card.infohidden{background:url('" + lib.assetURL + "extension/十周年UI/assets/image/" + lib.config.extension_十周年UI_cardbj + ".png" + "');background-size:100% 100% !important;}";
+		document.head.appendChild(KPcss);
+	}
+	window.kpimport = function (func) {
+		func(lib, game, ui, get, ai, _status);
+	};
+
+	
 });

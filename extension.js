@@ -10989,6 +10989,37 @@ export default async function () {
 					png: "原十周年",
 				},
 			},
+			cardkmh: {
+				name: "卡牌边框",
+				intro: "参考扩展武将美化做适配，重启生效。",
+				init: "off",
+				item: {
+					off: "关闭",
+					kuang1: "大司马",
+					kuang2: "大将军",
+					kuang3: "国都护",
+				},
+			},
+			cardbj: {
+				name: "卡牌背景",
+				intro: "可以根据自己的喜好选择卡背样式，重启生效",
+				init: "kb1",
+				item: {
+					kb1: "默认",
+					kb2: "国都护",
+					kb3: "大将军",
+					kb4: "大司马",
+				},
+				onclick: function (item) {
+					game.saveConfig("extension_十周年UI_cardbj", item);
+				},
+				visualMenu: function (node, link) {
+					node.style.height = node.offsetWidth * 1.4 + "px";
+					node.style.backgroundSize = "100% 100%";
+					node.className = "button character incardback";
+					node.setBackgroundImage("extension/十周年UI/assets/image/" + link + ".png");
+				},
+			},
 			//菜单美化
 			meanPrettify: {
 				name: "菜单美化",
