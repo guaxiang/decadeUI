@@ -204,9 +204,27 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	function huanfu() {
 		ui.huanfubutton = ui.create.div(".huanfubutton", ui.window);
 		ui.huanfubutton.onclick = function () {
-			if (!game.me) return;
+			if (!game.me || !game.me.name) {
+				if (typeof ui.showMessage === "function") {
+					ui.showMessage("请先选择武将");
+				} else {
+					alert("请先选择武将");
+				}
+				return;
+			}
 			game.qhly_open_small ? game.qhly_open_small(game.me.name, null, game.me) : ui.click.charactercard(game.me.name, game.me, lib.config.mode === "guozhan" ? "guozhan" : true);
 		};
+		ui.updateHuanfuButton = function() {
+			if (!game.me || !game.me.name) {
+				ui.huanfubutton.style.opacity = "0.5";
+				ui.huanfubutton.style.cursor = "not-allowed";
+			} else {
+				ui.huanfubutton.style.opacity = "1";
+				ui.huanfubutton.style.cursor = "pointer";
+			}
+		};
+		ui.updateHuanfuButton();
+		setInterval(ui.updateHuanfuButton, 1000);
 	}
 
 	function shenfenrenwu() {
