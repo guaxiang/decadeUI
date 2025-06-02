@@ -886,3 +886,163 @@
 	left: calc(50% - (var(--w) / 2));
 	top: 9px;
 }
+
+/*--------------------分割线--------------------*/
+/*8人座*/
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="1"] {
+	left: auto;
+	top: 20%;
+	right: 60px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="2"] {
+	left: auto;
+	top: 6%;
+	right: calc(24% - (var(--w) / 2));
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="3"] {
+	left: auto;
+	top: 10px;
+	right: calc(37% - (var(--w) / 2));
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="4"] {
+	left: calc(50% - (var(--w) / 2));
+	top: 7px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="5"] {
+	left: calc(37% - (var(--w) / 2));
+	top: 10px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="6"] {
+	left: calc(24% - (var(--w) / 2));
+	top: 6%;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="7"] {
+	left: 70px;
+	top: 20%;
+}
+
+/*7人座*/
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="1"] {
+	left: auto;
+	top: 20%;
+	right: 60px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="2"] {
+	left: auto;
+	top: 6%;
+	right: calc(24.8% - (var(--w) / 2));
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="3"] {
+	left: auto;
+	top: 10px;
+	right: calc(41.6% - (var(--w) / 2));
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="4"] {
+	left: calc(41.6% - (var(--w) / 2));
+	top: 10px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="5"] {
+	left: calc(24.8% - (var(--w) / 2));
+	top: 6%;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="6"] {
+	left: 70px;
+	top: 20%;
+}
+
+/*6人座*/
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="6"]>.player[data-position="1"] {
+	left: auto;
+	top: 20%;
+	right: 60px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="6"]>.player[data-position="2"] {
+	left: auto;
+	top: 6%;
+	right: calc(28% - (var(--w) / 2));
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="6"]>.player[data-position="3"] {
+	left: calc(50% - (var(--w) / 2));
+	top: 9px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="6"]>.player[data-position="4"] {
+	left: calc(28% - (var(--w) / 2));
+	top: 6%;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="6"]>.player[data-position="5"] {
+	left: 70px;
+	top: 20%;
+}
+
+/*5人座*/
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="5"]>.player[data-position="1"] {
+	left: auto;
+	top: 20%;
+	right: 60px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="5"]>.player[data-position="2"] {
+	left: auto;
+	top: 6%;
+	right: calc(35% - (var(--w) / 2));
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="5"]>.player[data-position="3"] {
+	left: calc(35% - (var(--w) / 2));
+	top: 6%;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="5"]>.player[data-position="4"] {
+	left: 70px;
+	top: 20%;
+}
+
+/*4人座*/
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="4"]>.player[data-position="1"] {
+	left: auto;
+	top: 20%;
+	right: 60px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="4"]>.player[data-position="2"] {
+	left: calc(50% - (var(--w) / 2));
+	top: 9px;
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="4"]>.player[data-position="3"] {
+	left: 70px;
+	top: 20%;
+}
+
+/*3人座*/
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="3"]>.player[data-position="1"] {
+	left: auto;
+	top: 9px;
+	right: calc(32.5% - (var(--w) / 2));
+}
+
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="3"]>.player[data-position="2"] {
+	left: calc(32.5% - (var(--w) / 2));
+	top: 9px;
+}
+
+/*2人座*/
+#arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="2"]>.player[data-position="1"] {
+	left: calc(50% - (var(--w) / 2));
+	top: 9px;
+}

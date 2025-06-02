@@ -9,7 +9,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		if (lib.config.mode == "identity" || lib.config.mode == "doudizhu" || lib.config.mode == "guozhan" || lib.config.mode == "versus" || lib.config.mode == "single" || lib.config.mode == "martial") {
 			var wenhao = ui.create.node("img");
 			wenhao.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_wenhao.png";
-			wenhao.style.cssText = "display: block;width: 40px;height: 29px;position: absolute;bottom: calc(100% - 55px);left: calc(100% - 159.5px);background-color: transparent;z-index:3";
+			wenhao.style.cssText = "display: block;width: 40px;height: 29px;position: absolute;bottom: calc(100% - 55px);left: calc(100% - 200px);background-color: transparent;z-index:3";
 
 			//--------------//
 			if (lib.config.mode == "identity" || lib.config.mode == "doudizhu" || lib.config.mode == "versus" || lib.config.mode == "guozhan") {
@@ -73,19 +73,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 		var head = ui.create.node("img");
 		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png";
-		head.style.cssText = "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-1";
+		head.style.cssText = "display: block;width: 100%;height: 20%;position: absolute;bottom: 0px;background-color: transparent;z-index:-1";
 		document.body.appendChild(head);
 
 		var head = ui.create.node("img");
 		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_button3.png";
-		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 69px);left: calc(100% - 112.5px);background-color: transparent;z-index:1";
+		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 69px);left: calc(100% - 150px);background-color: transparent;z-index:1";
 		head.onclick = function () {
 			head.style.transform = "scale(0.95)";
 		};
 		document.body.appendChild(head);
 
 		var head = ui.create.node("div");
-		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 69px);left: calc(100% - 112.5px);background-color: transparent;z-index:1";
+		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 69px);left: calc(100% - 150px);background-color: transparent;z-index:1";
 		head.onclick = function () {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
 			var popuperContainer = ui.create.div(
@@ -148,7 +148,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/new_zhengli.png";
 		//左手整理手牌按钮位置
 		if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-			head.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 46px);left: calc(100% - 340px);background-color: transparent;z-index:2";
+			head.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 46px);left: calc(100% - 375px);background-color: transparent;z-index:2";
 		} else {
 			head.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:2;";
 		}

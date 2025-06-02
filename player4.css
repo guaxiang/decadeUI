@@ -179,7 +179,7 @@
 #arena[data-right-layout="on"] > .player[data-position="0"],
 #arena[data-right-layout="on"] > .player[data-position="0"]:not(.miniskin) {
 	left: auto;
-	right: 25px;
+	right: 60px;
 }
 
 /*玩家姓名阵营*/
@@ -1105,12 +1105,12 @@
 	font-family: "yuanli";
 	font-weight: bold;
 	/*字体加粗*/
-	font-size: 15px;
+	font-size: 17px;
 	text-align: center;
-	text-shadow: 0 0 2px black, 0 0 1px black;
 	white-space: nowrap;
 	z-index: 89;
 	pointer-events: none;
+	text-shadow: 0 0 2px black, 0 0 4px black, 0 0 6px black;
 }
 
 .player[data-position="0"] > .seat {

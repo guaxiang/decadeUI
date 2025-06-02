@@ -37,7 +37,7 @@
 	white-space: normal;
 	position: fixed;
 	bottom: calc(100% - 280px);
-	left: calc(100% - 112.5px);
+	left: calc(100% - 150px);
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -206,7 +206,7 @@
 /*------有点懒具体看main1.css---------------*/
 .handcardNumber {
 	bottom: 0px;
-	right: 230px;
+	right: 265px;
 	font-family: "yuanli";
 	text-shadow: #f5d78e 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
 	color: #f5d78e;
@@ -243,7 +243,7 @@
 
 .cardRoundNumber {
 	top: 16px;
-	left: 25px;
+	left: 40px;
 	font-weight: 400;
 	font-family: "yuanli";
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;
