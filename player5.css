@@ -259,9 +259,9 @@
 
 .player>.camp-wrap>.camp-border {
 	display: block;
-	left: -4px;
+	left: -6px;
 	top: 40px;
-	width: 342%;
+	width: 345%;
 	height: 85%;
 	position: absolute;
 	background-image: url("image/decoration/border_campOL5.png");
@@ -299,9 +299,9 @@
 
 #arena.decadeUI[data-border-level="four"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: 5px;
+	left: 3px;
 	top: 52px;
-	width: 320%;
+	width: 325%;
 	height: 80%;
 	position: absolute;
 	background-image: url("image/decoration/border_campOL4.png");
