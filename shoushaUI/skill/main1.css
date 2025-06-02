@@ -126,7 +126,6 @@
 	margin: 1px 12px;
 	width: 147%;
 	height: 170%;
-
 	font-family: "HanYiZhongLiShuFan", "HYZLSJ";
 	background-image: url("./images/feng.png");
 	background-size: 100% 100%;
@@ -225,7 +224,7 @@
 .skillMarks {
 	max-height: 80px;
 	overflow-y: auto;
-	left: 100px;
+	left: 98px;
 	top: 30px;
 	z-index: 101 !important;
 	justify-content: center;
@@ -258,14 +257,14 @@
 	font-weight: 500;
 	/*字体加粗*/
 	text-shadow: 0 0 2px #996633,0 0 2px #996633,0 0 2px #996633,0 0 2px #996633,0 0 2px #996633,0 0 2px #996633,0 0 2px #996633,0 0 2px #996633,0 0 2px #996633;
-	--w: 35px;
+	--w: 36px;
 	font-size: 16px;
 	--h: calc(var(--w) * 13 / 22);
 	/*高和长*/
 	width: var(--w);
 	/*按比例调节*/
 	height: var(--h);
-	left: 3px;
+	left: 2px;
 	/* 添加轻微模糊效果 */
 	filter: blur(0.2px); 
 }
@@ -275,7 +274,7 @@
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	text-shadow: 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c, 0 0 1.3px #3c3c3c;
-	--w: 47px;
+	--w: 48px;
 	font-size: 15px;
 	font-family: "FZLBJW";
 	font-weight: bold;
@@ -288,14 +287,14 @@
 
 .skillMarkItem.xiandingji.used {
 	position: relative;
-	--w: 35px;
+	--w: 36px;
 	font-size: 16px;
 	--h: calc(var(--w) * 13 / 22);
 	/*高和长*/
 	width: var(--w);
 	/*按比例调节*/
 	height: var(--h);
-	left: 3px;
+	left: 2px;
 	background-image: url("./images/used.png");
 	background-size: 100% 100%;
 	text-shadow: none;
@@ -321,7 +320,7 @@
 	/*同理*/
 	background-image: url("./images/noxianding.png");
 	background-size: 100% 100%;
-	right: -3px;
+	right: -1px;
 	top: -3px;
 	pointer-events: none;
 }
@@ -331,14 +330,14 @@
 	box-shadow: 0px -2px 3px #5a4a31  , 0px 2px 3px #5a4a31  ,2px 0px 3px #5a4a31  ,2px 0px 3px #5a4a31, 0.6px 0.6px 1.5px #a1fafa inset, 0.3px -0.5px 1px #a1fafa inset , 1px 1px 1.5px #a1fafa inset;*/
 	background-image: url("./images/juexing.png");
 	background-size: 100% 100%;
-	--w: 35px;
+	--w: 36px;
 	font-size: 16px;
 	--h: calc(var(--w) * 13 / 22);
 	/*高和长*/
 	width: var(--w);
 	/*按比例调节*/
 	height: var(--h);
-	left: 3px;
+	left: 2px;
 	text-shadow: none;
 	font-family: "HYZLSJ";
 	font-weight: 500;
@@ -353,14 +352,14 @@
 	box-shadow: 0px -2px 3px #5a4a31  , 0px 2px 3px #5a4a31  ,2px 0px 3px #5a4a31  ,2px 0px 3px #5a4a31, 0.6px 0.6px 1.5px #a1fafa inset, 0.3px -0.5px 1px #a1fafa inset , 1px 1px 1.5px #a1fafa inset;*/
 	background-image: url("./images/duty.png");
 	background-size: 100% 100%;
-	--w: 35px;
+	--w: 36px;
 	font-size: 16px;
 	--h: calc(var(--w) * 13 / 22);
 	/*高和长*/
 	width: var(--w);
 	/*按比例调节*/
 	height: var(--h);
-	left: 3px;
+	left: 2px;
 	text-shadow: none;
 	font-family: "HYZLSJ";
 	font-weight: 500;
@@ -372,14 +371,14 @@
 
 .skillMarkItem.duty.fail {
 	position: relative;
-	--w: 35px;
+	--w: 36px;
 	font-size: 16px;
 	--h: calc(var(--w) * 13 / 22);
 	/*高和长*/
 	width: var(--w);
 	/*按比例调节*/
 	height: var(--h);
-	left: 3px;
+	left: 2px;
 	background-image: url("./images/used.png");
 	background-size: 100% 100%;
 	text-shadow: none;
@@ -405,7 +404,7 @@
 	/*同理*/
 	background-image: url("./images/noxianding.png");
 	background-size: 100% 100%;
-	right: -3px;
+	right: -1px;
 	top: -3px;
 	pointer-events: none;
 }
