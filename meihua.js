@@ -403,7 +403,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			if (_status.connectMode || (lib.config.mode == "single" && _status.mode != "wuxianhuoli") || (lib.config.mode == "doudizhu" && _status.mode == "online") || (lib.config.mode != "identity" && lib.config.mode != "guozhan" && lib.config.mode != "doudizhu" && lib.config.mode != "single")) {
 				event.changeCard = "disabled";
 			}
-			"step 1";
+			("step 1");
 			if (event.changeCard != "disabled" && !_status.auto && game.me.countCards("h")) {
 				function getRandomInt(min, max) {
 					min = Math.ceil(min);
@@ -422,7 +422,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			} else {
 				event.finish();
 			}
-			"step 2";
+			("step 2");
 			if (event.changeCard == "once") {
 				event.changeCard = "disabled";
 			} else if (event.changeCard == "twice") {
@@ -437,7 +437,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.resume();
 			};
 			game.pause();
-			"step 3";
+			("step 3");
 			_status.imchoosing = false;
 			if (event.bool) {
 				if (game.changeCoin) {
@@ -491,7 +491,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.me._start_cards = game.me.getCards("h");
 				event.finish();
 			}
-			"step 4";
+			("step 4");
 			setTimeout(decadeUI.effect.gameStart, 51);
 		};
 	}
@@ -503,7 +503,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		 */
 		function applyCardBeautification(borderImageName) {
 			if (!borderImageName) {
-				console.warn('Card beautification image name not specified');
+				console.warn("Card beautification image name not specified");
 				return;
 			}
 			const style = document.createElement("style");
@@ -552,5 +552,113 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 	window.kpimport = function (func) {
 		func(lib, game, ui, get, ai, _status);
+	};
+
+	//弹出记录
+	game.log = function () {
+		var str = "",
+			str2 = "",
+			logvid = null;
+		for (var i = 0; i < arguments.length; i++) {
+			var itemtype = get.itemtype(arguments[i]);
+			if (itemtype === "player" || itemtype === "players") {
+				str += '<span class="bluetext">' + get.translation(arguments[i]) + "</span>";
+				str2 += get.translation(arguments[i]);
+			} else if (itemtype === "cards" || itemtype === "card" || (typeof arguments[i] === "object" && arguments[i] && arguments[i].name)) {
+				str += '<span class="yellowtext">' + get.translation(arguments[i]) + "</span>";
+				str2 += get.translation(arguments[i]);
+			} else if (typeof arguments[i] === "object") {
+				if (arguments[i]) {
+					if (arguments[i].parentNode === ui.historybar) {
+						logvid = arguments[i].logvid;
+					} else {
+						str += get.translation(arguments[i]);
+						str2 += get.translation(arguments[i]);
+					}
+				}
+			} else if (typeof arguments[i] === "string") {
+				if (arguments[i][0] === "【" && arguments[i][arguments[i].length - 1] === "】") {
+					str += '<span class="greentext">' + get.translation(arguments[i]) + "</span>";
+					str2 += get.translation(arguments[i]);
+				} else if (arguments[i][0] === "#") {
+					var color = "";
+					switch (arguments[i][1]) {
+						case "b":
+							color = "blue";
+							break;
+						case "y":
+							color = "yellow";
+							break;
+						case "g":
+							color = "green";
+							break;
+					}
+					str += '<span class="' + color + 'text">' + get.translation(arguments[i].slice(2)) + "</span>";
+					str2 += get.translation(arguments[i].slice(2));
+				} else {
+					if (arguments[i].indexOf("使命") !== -1 && arguments[i].indexOf("失败") !== -1) {
+						let playerp = _status.event.player;
+						let skillp = lib.skill[_status.event.name].parentskill;
+						setTimeout(function () {
+							if (skillp) var mark = playerp.node.xSkillMarks.querySelector('[data-id="' + skillp + '"]');
+							if (mark) mark.classList.add("fail");
+						}, 0);
+					}
+					str += get.translation(arguments[i]);
+					str2 += get.translation(arguments[i]);
+				}
+			} else {
+				str += arguments[i];
+				str2 += arguments[i];
+			}
+		}
+		var node = ui.create.div();
+		node.innerHTML = lib.config.log_highlight ? str : str2;
+		ui.sidebar.insertBefore(node, ui.sidebar.firstChild);
+		game.addVideo("log", null, lib.config.log_highlight ? str : str2);
+		game.broadcast(
+			function (str, str2) {
+				game.log(lib.config.log_highlight ? str : str2);
+			},
+			str,
+			str2
+		);
+		if (!_status.video && !game.online) {
+			if (!logvid) {
+				logvid = _status.event.getLogv();
+			}
+			if (logvid) {
+				game.logv(logvid, '<div class="text center">' + lib.config.log_highlight ? str : str2 + "</div>");
+			}
+		}
+		if (!_status.event.skill) return;
+		//这里，清除使用卡牌在中间的显示
+		if (_status.event === "useCard") return;
+		if (lib.config.show_log !== "off" && !game.chess) {
+			var nodeentry = node.cloneNode(true);
+			ui.arenalog.insertBefore(nodeentry, ui.arenalog.firstChild);
+			if (!lib.config.clear_log) {
+				while (ui.arenalog.childNodes.length && ui.arenalog.scrollHeight > ui.arenalog.offsetHeight) {
+					ui.arenalog.lastChild.remove();
+				}
+			}
+			if (!lib.config.low_performance) {
+				nodeentry.style.transition = "all 0s";
+				nodeentry.style.marginBottom = -nodeentry.offsetHeight + "px";
+				ui.refresh(nodeentry);
+				nodeentry.style.transition = "";
+				nodeentry.style.marginBottom = "";
+			}
+			if (lib.config.clear_log) {
+				nodeentry.timeout = setTimeout(function () {
+					nodeentry.delete();
+				}, 1000);
+				for (var i = 0; i < ui.arenalog.childElementCount; i++) {
+					if (!ui.arenalog.childNodes[i].timeout) {
+						ui.arenalog.childNodes[i].remove();
+					}
+				}
+			}
+		}
 	};
 });
