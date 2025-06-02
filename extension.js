@@ -9290,7 +9290,6 @@ export default async function () {
 					this.js(decadeUIPath + "content.js");
 					this.js(decadeUIPath + "effect.js");
 					this.js(decadeUIPath + "meihua.js");
-					//this.js(decadeUIPath + "cardtuozhuai.js");
 					this.js(decadeUIPath + "animation.js");
 					this.js(decadeUIPath + "dynamicSkin.js");
 

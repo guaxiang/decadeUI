@@ -898,9 +898,9 @@
 
 #arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark {
 	display: flex;
-	width: 40px;
+	width: 35px;
 	/* 宽度 */
-	height: 20px;
+	height: 15px;
 	/* 高度 */
 	white-space: nowrap;
 	background: rgba(30, 30, 30, 0.7);
@@ -921,7 +921,7 @@
 	height: auto;
 	line-height: 17px;
 	/*换行高度*/
-	font-size: 16px;
+	font-size: 13px;
 	/*字体大小*/
 	color: white;
 	/*字体颜色*/
@@ -944,7 +944,7 @@
 	height: auto;
 	line-height: 17px;
 	border-radius: 0;
-	font-size: 16px;
+	font-size: 13px;
 	/*字体大小*/
 	font-weight: inherit;
 	color: white;
