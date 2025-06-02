@@ -193,22 +193,22 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				showSkills.forEach(function (item) {
 					var node = self.querySelector('[data-id="' + item.id + '"]');
 					if (node) return;
+					let skillName = get.translation(item.name);
+					if (lib.skill[item.id] && lib.skill[item.id].zhuanhuanji) {
+						let imgType = "yang";
+						let player = game.me;
+						let markNode = player && player.node && player.node.xSkillMarks && player.node.xSkillMarks.querySelector('.skillMarkItem.zhuanhuanji[data-id="' + item.id + '"]');
+						if (markNode && markNode.classList.contains('yin')) {
+							imgType = "ying";
+						}
+						let imgPath = "extension/十周年UI/shoushaUI/skill/images/mark_" + imgType + "OL.png";
+						skillName = '<img src="' + imgPath + '" style="vertical-align:middle;height:22px;margin-right:2px;">' + skillName;
+					}
+
 					if (item.type === "enable") {
-						let skillName = get.translation(item.name);
 						// 如果是装备技能，只显示前两个字符
 						if (eSkills && eSkills.includes(item.id)) {
 							skillName = skillName.slice(0, 2);
-						}
-						// 检查是否为转换技，跟随头像旁边的转换技图标class
-						if (lib.skill[item.id] && lib.skill[item.id].zhuanhuanji) {
-							let imgType = "yang";
-							let player = game.me;
-							let markNode = player && player.node && player.node.xSkillMarks && player.node.xSkillMarks.querySelector('.skillMarkItem.zhuanhuanji[data-id="' + item.id + '"]');
-							if (markNode && markNode.classList.contains('yin')) {
-								imgType = "ying";
-							}
-							let imgPath = "extension/十周年UI/shoushaUI/skill/images/mark_" + imgType + "OL.png";
-							skillName = '<img src="' + imgPath + '" style="vertical-align:middle;height:22px;margin-right:2px;">' + skillName;
 						}
 						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable);
 						node.innerHTML = skillName;
@@ -222,7 +222,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!item.info) return;
 					if (!item.translation) return;
 					if (eSkills && eSkills.includes(item.id)) return;
-					node = ui.create.div(".skillitem", self.node[get.is.phoneLayout() ? "trigger" : "enable"], item.name);
+					node = ui.create.div(".skillitem", self.node[get.is.phoneLayout() ? "trigger" : "enable"], skillName);
 					node.dataset.id = item.id;
 				});
 				return this;
