@@ -509,22 +509,6 @@
 	z-index: 88;
 }
 
-.player[data-max-hp="1"]>.hp-wrap {
-	height: 5px;
-}
-
-.player[data-max-hp="2"]>.hp-wrap {
-	height: 20px;
-}
-
-.player[data-max-hp="3"]>.hp-wrap {
-	height: 35px;
-}
-
-.player[data-max-hp="5"]>.hp-wrap {
-	height: 65px;
-}
-
 .player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).hp-wrap {
 	display: block !important;
 }
@@ -574,7 +558,7 @@
 .hujia {
 	display: flex;
 	top: auto;
-	bottom: 80px;
+	bottom: 120%;
 	left: 113px;
 	background-image: url("image/decoration/shieldOL.png");
 	background-size: 100% 100%;
