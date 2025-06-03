@@ -492,13 +492,13 @@
 
 .player>.camp-wrap>.camp-name {
 	/* 玩家势力 */
-	font-family: "shousha";
+	font-family: "yuanli";
 	font-display: swap;
-	font-size: 19px;
+	font-size: 15px;
 	width: 42%;
 	height: 29%;
-	left: 12px;
-	top: 35px;
+	left: 13px;
+	top: 36px;
 	display: flex;
 	text-align: center;
 	align-items: center;
@@ -509,13 +509,14 @@
 	background-position: center;
 	transition: none;
 	font-weight: 600;
-	filter: contrast(90%) opacity(0.7) brightness(1.2);
-	text-shadow: 1px 1px 1px rgba(128, 128, 128, 0.5);
 	font-stretch: extra-condensed !important;
-	transform: scaleY(0.8);
 }
 
 .player>.camp-wrap[data-camp="jin"]>.camp-name {
+	text-shadow: 1px 1px 0px #7f4f79, -1px -1px 0px #7f4f79, 1px -1px 0px #7f4f79, -1px 1px 0px #7f4f79;
+}
+
+.player>.camp-wrap[data-camp="devil"]>.camp-name {
 	text-shadow: 1px 1px 0px #7f4f79, -1px -1px 0px #7f4f79, 1px -1px 0px #7f4f79, -1px 1px 0px #7f4f79;
 }
 
@@ -543,11 +544,6 @@
 	text-shadow: 1px 1px 0px #685f40, -1px -1px 0px #685f40, 1px -1px 0px #685f40, -1px 1px 0px #685f40;
 	color: #ebd6a1;
 }
-
-/*
-.player>.camp-wrap>.camp-name {
-	text-shadow: 0 0 5px #e0ea33, 0 0 15px #e0ea33, 0 0 25px #e0ea33;
-}*/
 
 .player>.name.name2:empty,
 #arena>.player:not(.minskin)>.name.name2:empty {
