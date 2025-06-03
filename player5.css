@@ -41,7 +41,7 @@
 	background-size: 100% 100% !important;
 }
 
-.player::before {
+#arena[data-shadow-style="on"]>.player::before {
 	left: -25px;
 	top: -10px;
 	width: 140%;
@@ -53,23 +53,23 @@
 	box-shadow: none;
 }
 
-.player.selected:not(.target):before,
-.player.glow_phase:not(.selectable):not(*[data-position="0"])::before {
+#arena[data-shadow-style="on"]>.player.selected:not(.target):before,
+#arena[data-shadow-style="on"]>.player.glow_phase:not(.selectable):not(*[data-position="0"])::before {
 	animation-duration: 0.9s;
 	/*新增*/
 	background-image: url("assets/image/select_red.png");
 	opacity: 1;
 }
 
-.player.selectable:not(.selected):not(.target)::before {
+#arena[data-shadow-style="on"]>.player.selectable:not(.selected):not(.target)::before {
 	animation-duration: 0.9s;
 	/*新增*/
 	opacity: 1;
 }
 
-.player::after,
-.player.selected::after,
-.player.selectable::after {
+#arena[data-shadow-style="on"]>.player::after,
+#arena[data-shadow-style="on"]>.player.selected::after,
+#arena[data-shadow-style="on"]>.player.selectable::after {
 	left: -25px;
 	top: -10px;
 	width: 140%;
@@ -81,7 +81,7 @@
 	box-shadow: none;
 }
 
-.player.target:not(.glow_phase):not(.selectable):not(.selected)::after {
+#arena[data-shadow-style="on"]>.player.target:not(.glow_phase):not(.selectable):not(.selected)::after {
 	animation-duration: 0.9s;
 	/*新增*/
 	opacity: 1;
@@ -89,6 +89,92 @@
 
 #arena>.player {
 	z-index: 4;
+}
+
+/*新样式*/
+#arena[data-shadow-style="off"]>.player::before {
+	left: -65px;
+	top: -30px;
+	width: 228px;
+	height: 228px;
+	opacity: 0;
+	background-image: url("assets/image/sprites_shadow_orange.png");
+	background-repeat: no-repeat;
+	animation-name: kf-sprites-glow;
+	animation-duration: 0s;
+	animation-delay: 0s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: forwards;
+	animation-timing-function: steps(1);
+	pointer-events: none;
+	box-shadow: none;
+	transition: opacity 0s linear;
+}
+
+#arena[data-shadow-style="off"]>.player.selectable.selected.target:before,
+#arena[data-shadow-style="off"]>.player.selected:not(.target):before {
+	animation-duration: 0.9s;
+	background-image: url("assets/image/sprites_shadow_orange.png");
+	opacity: 1;
+	z-index: 79;
+}
+
+#arena[data-shadow-style="off"]>.player.glow_phase:not(.selectable)::before {
+	animation-duration: 0.9s;
+	background-image: url("assets/image/sprites_shadow_green1.png");
+	opacity: 1;
+	z-index: 75;
+}
+
+#arena[data-shadow-style="off"]>.player.selectable:not(.selected):not(.target)::before {
+	animation-duration: 0.9s;
+	background-image: url("assets/image/sprites_shadow_lvse.png");
+	opacity: 1;
+	z-index: 79;
+	top: -38.4px;
+	left: -55px;
+}
+
+#arena[data-shadow-style="off"]>.player::after,
+#arena[data-shadow-style="off"]>.player.selected::after,
+#arena[data-shadow-style="off"]>.player.selectable::after {
+	left: -65px;
+	top: -30px;
+	width: 228px;
+	height: 228px;
+	opacity: 0;
+	background-image: url("assets/image/sprites_shadow_lvse.png");
+	background-repeat: no-repeat;
+	animation-name: kf-sprites-glow;
+	animation-duration: 0s;
+	animation-delay: 0s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: forwards;
+	animation-timing-function: steps(1);
+	pointer-events: none;
+	box-shadow: none;
+	transition: opacity 0.1s linear;
+}
+
+#arena[data-shadow-style="off"]>.player:not(*[data-position="0"])::after,
+#arena[data-shadow-style="off"]>.player.selected:not(*[data-position="0"])::after,
+#arena[data-shadow-style="off"]>.player.selectable:not(*[data-position="0"])::after {
+	left: -65px;
+	top: -30px;
+	width: 228px;
+	height: 228px;
+	opacity: 0;
+	background-image: url("assets/image/sprites_shadow_red.png");
+	background-repeat: no-repeat;
+	animation-name: kf-sprites-glow;
+	animation-duration: 0s;
+	animation-delay: 0s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: forwards;
+	animation-timing-function: steps(1);
+	pointer-events: none;
+	box-shadow: none;
+	transition: opacity 0.1s linear;
 }
 
 .player>.mask {
@@ -1195,14 +1281,58 @@
 }
 
 /*人物弹出文字*/
-.player>.damage {
+/*新样式*/
+/*代码来自Empty city*/
+#arena[data-shadow-style="off"]>.player>.damage {
+	width: 100%;
+	transition: none;
+	color: transparent;
+	font-family: "HYZLSJ";
+	text-align: center;
+	white-space: nowrap;
+	font-weight: 500;
+	-webkit-text-stroke: 0.7px rgba(38, 37, 34, 0.5);
+	text-shadow: none;
+	background: linear-gradient(180deg, #f5df88 16%, #ab8d35 60%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	font-size: 24px;
+	z-index: 999;
+	display: flex;
+	justify-content: center;
+}
+
+#arena[data-shadow-style="off"]>.player>.damage>.damage-child {
+	-webkit-text-stroke: 4.5px #102030;
+	opacity: 0.5;
+}
+
+#arena[data-shadow-style="off"]>.player>.damage>.damage-child2 {
+	z-index: 1;
+	background-image: -webkit-linear-gradient(bottom, #c7a746 58%, #f0d775 22%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+#arena[data-shadow-style="off"]>.player>.damage::before {
+	content: attr(data-text);
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	color: #ff1300;
+	z-index: -1;
+}
+
+/*原样式*/
+#arena[data-shadow-style="on"]>.player>.damage {
 	width: 100%;
 	text-shadow: none;
 	transition: none;
 	z-index: 91;
 }
 
-.player>.damage::before {
+#arena[data-shadow-style="on"]>.player>.damage::before {
 	content: attr(data-text);
 	position: absolute;
 	left: 0;
@@ -1212,25 +1342,6 @@
 	-webkit-text-stroke: 4px #803b02;
 	z-index: -1;
 }
-
-/*.player>.damage[data-nature="metal"]::before{ */
-/* -webkit-text-stroke:4px #FFCB00; */
-/* } */
-/*.player>.damage[data-nature="wood"]::before{ */
-/* -webkit-text-stroke:4px #5D832C; */
-/* } */
-/*.player>.damage[data-nature="water"]::before{ */
-/* -webkit-text-stroke:4px #355CA1; */
-/* } */
-/*.player>.damage[data-nature="fire"]::before{ */
-/* -webkit-text-stroke:4px #EE7F01; */
-/* } */
-/*.player>.damage[data-nature="soil"]::before{ */
-/* -webkit-text-stroke:4px #803B02; */
-/* } */
-/*.player>.damage[data-nature="thunder"]::before{ */
-/* -webkit-text-stroke:4px #644A8B; */
-/* } */
 
 /*联机用牌时限*/
 .player>.timerbar {

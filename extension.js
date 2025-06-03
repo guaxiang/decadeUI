@@ -11318,8 +11318,8 @@ export default async function () {
 			},
 			shadowStyle: {
 				name: "特效风格",
-				intro: "可根据个人喜好切换局内阴影动态特效与人物弹出文字的样式，目前只有新手杀样式可用",
-				init: "on",
+				intro: "可根据个人喜好切换局内阴影动态特效与人物弹出文字的样式，目前只有新手杀/online样式可用",
+				init: "off",
 				item: {
 					on: "原样式",
 					off: "新样式",
