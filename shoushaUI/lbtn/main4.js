@@ -294,6 +294,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				fan: "击败主公",
 				nei: "击败所有角色，最后击败主公",
 				mingzhong: "保护主公，击败反贼内奸",
+				commoner: "苟住，有一方获胜你就胜利",
 				undefined: "击败所有敌方",
 			},
 		};
