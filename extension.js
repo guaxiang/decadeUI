@@ -9254,44 +9254,44 @@ export default async function () {
 
 				decadeModule.init = function () {
 					//原十周年UI内容加载
-					this.css(decadeUIPath + "extension.css");
-					this.css(decadeUIPath + "decadeLayout.css");
-					this.css(decadeUIPath + "card.css");
-					this.css(decadeUIPath + "arena.css");
+					this.css(decadeUIPath + "css/extension.css");
+					this.css(decadeUIPath + "css/decadeLayout.css");
+					this.css(decadeUIPath + "css/card.css");
+					this.css(decadeUIPath + "css/arena.css");
 					// 当且仅当初次载入时，newDecadeStyle == void 0
 					if (lib.config.extension_十周年UI_newDecadeStyle != void 0) {
-						this.css(decadeUIPath + "player" + parseFloat(["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(lib.config.extension_十周年UI_newDecadeStyle) + 1) + ".css");
+						this.css(decadeUIPath + "css/player" + parseFloat(["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(lib.config.extension_十周年UI_newDecadeStyle) + 1) + ".css");
 					} else {
-						this.css(decadeUIPath + "player2.css");
+						this.css(decadeUIPath + "css/player2.css");
 					}
 					if (lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
-						this.css(decadeUIPath + "equip_new_new.css");
-						this.css(decadeUIPath + "layout_new.css");
+						this.css(decadeUIPath + "css/equip_new_new.css");
+						this.css(decadeUIPath + "css/layout_new.css");
 					} else if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
-						this.css(decadeUIPath + "equipOL.css");
-						this.css(decadeUIPath + "layout_new.css");
+						this.css(decadeUIPath + "css/equip_ol.css");
+						this.css(decadeUIPath + "css/layout_new.css");
 					} else if (lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
-						this.css(decadeUIPath + "equiphs.css");
-						this.css(decadeUIPath + "layout_new.css");
+						this.css(decadeUIPath + "css/equip_baby.css");
+						this.css(decadeUIPath + "css/layout_new.css");
 					} else {
 						this.css(decadeUIPath + (lib.config.extension_十周年UI_newDecadeStyle == "on" ? "equip.css" : "equip_new.css"));
-						this.css(decadeUIPath + "layout.css");
+						this.css(decadeUIPath + "css/layout.css");
 					}
 
 					if (lib.config.extension_十周年UI_meanPrettify) {
-						this.css(decadeUIPath + "menu.css");
+						this.css(decadeUIPath + "css/menu.css");
 					}
 					if (lib.config["extension_十周年UI_choosecharboder"]) {
-						this.css(decadeUIPath + "style.css");
+						this.css(decadeUIPath + "css/style.css");
 					}
-					this.js(decadeUIPath + "spine.js");
-					this.js(decadeUIPath + "component.js");
-					this.js(decadeUIPath + "skill.js");
-					this.js(decadeUIPath + "content.js");
-					this.js(decadeUIPath + "effect.js");
-					this.js(decadeUIPath + "meihua.js");
-					this.js(decadeUIPath + "animation.js");
-					this.js(decadeUIPath + "dynamicSkin.js");
+					this.js(decadeUIPath + "js/spine.js");
+					this.js(decadeUIPath + "js/component.js");
+					this.js(decadeUIPath + "js/skill.js");
+					this.js(decadeUIPath + "js/content.js");
+					this.js(decadeUIPath + "js/effect.js");
+					this.js(decadeUIPath + "js/meihua.js");
+					this.js(decadeUIPath + "js/animation.js");
+					this.js(decadeUIPath + "js/dynamicSkin.js");
 
 					//原手杀UI内容加载
 					//避免提示是否下载图片和字体素材
@@ -10922,12 +10922,12 @@ export default async function () {
 				name: "调试助手",
 				init: false,
 			},
-			kapaituozhuai: {
+			translate: {
 				name: "卡牌拖拽",
 				init: false,
 				intro: "开启后手牌可以任意拖拽牌序，自动重启",
 				onclick(bool) {
-					game.saveConfig("extension_十周年UI_kapaituozhuai", bool);
+					game.saveConfig("extension_十周年UI_translate", bool);
 					setTimeout(() => game.reload(), 100);
 				},
 			},
@@ -11031,7 +11031,7 @@ export default async function () {
 				init: false,
 				onclick(bool) {
 					game.saveConfig("extension_十周年UI_meanPrettify", bool);
-					if (bool) lib.init.css(lib.assetURL + "extension/十周年UI", "menu");
+					if (bool) lib.init.css(decadeUIPath + "extension/十周年UI", "menu");
 					else {
 						for (const link of document.head.querySelectorAll("link")) {
 							if (link.href.includes("menu.css")) {

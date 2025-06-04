@@ -62,37 +62,54 @@
 		}
 	};
 
+	// 检查元素是否为有效的卡牌
+	TenYearUI.isValidCard = function (element) {
+		// 检查元素是否存在且为卡牌元素
+		return element && element.classList && (element.classList.contains("card") || (element.parentNode && element.parentNode.classList && element.parentNode.classList.contains("card")));
+	};
+
+	// 获取卡牌元素（如果点击的是卡牌内部元素，获取其父卡牌）
+	TenYearUI.getCardElement = function (element) {
+		if (!element) return null;
+
+		if (element.classList && element.classList.contains("card")) {
+			return element;
+		} else if (element.parentNode && element.parentNode.classList && element.parentNode.classList.contains("card")) {
+			return element.parentNode;
+		}
+
+		return null;
+	};
+
 	// 卡牌拖拽开始
 	TenYearUI.dragCardStart = function (e) {
 		if (e.button === 2) return; // 右键不触发拖拽
 
 		const target = e.target || e.srcElement;
-		if (!target || !target.classList || !target.classList.contains("card")) return;
+		if (!target) return;
 
-		// 如果卡牌已经被选中，不启动拖拽
-		if (target.classList.contains("selected")) return;
-
-		// 如果有任何卡牌被选中，不启动拖拽
-		if (ui.selected.cards && ui.selected.cards.length > 0) return;
+		// 获取卡牌元素（可能是点击了卡牌内部元素）
+		const cardElement = TenYearUI.getCardElement(target);
+		if (!cardElement) return;
 
 		// 获取起始位置
 		const startX = e.clientX ? e.clientX : e.touches && e.touches[0] ? e.touches[0].clientX : 0;
 		const startY = e.clientY ? e.clientY : e.touches && e.touches[0] ? e.touches[0].clientY : 0;
 
 		// 保存初始状态和位置
-		TenYearUI.sourceNode = target;
+		TenYearUI.sourceNode = cardElement;
 		TenYearUI.sourceNode.startX = startX;
 		TenYearUI.sourceNode.startY = startY;
 		TenYearUI.isDragging = false;
 
 		// 获取transform值
-		const transformValues = TenYearUI.getTransformValues(target);
+		const transformValues = TenYearUI.getTransformValues(cardElement);
 		TenYearUI.sourceNode.initialTranslateX = transformValues.translateX;
 		TenYearUI.sourceNode.initialTranslateY = transformValues.translateY;
 		TenYearUI.sourceNode.scale = transformValues.scale;
 
 		// 存储原始pointer-events值
-		TenYearUI.originalPointerEvents = getComputedStyle(target).pointerEvents;
+		TenYearUI.originalPointerEvents = getComputedStyle(cardElement).pointerEvents;
 
 		// 添加鼠标移动和松开事件
 		document.addEventListener(TenYearUI.evts[1], TenYearUI.dragCardMove, { passive: false });
@@ -102,12 +119,6 @@
 	// 卡牌拖动过程
 	TenYearUI.dragCardMove = function (e) {
 		if (!TenYearUI.sourceNode) return;
-
-		// 如果在拖拽过程中有卡牌被选中，取消拖拽
-		if (ui.selected.cards && ui.selected.cards.length > 0) {
-			TenYearUI.dragCardEnd(e);
-			return;
-		}
 
 		const currentX = e.clientX ? e.clientX : e.touches && e.touches[0] ? e.touches[0].clientX : 0;
 		const currentY = e.clientY ? e.clientY : e.touches && e.touches[0] ? e.touches[0].clientY : 0;
@@ -124,6 +135,7 @@
 			TenYearUI.sourceNode.style.pointerEvents = "none";
 			TenYearUI.sourceNode.style.transition = "none";
 			TenYearUI.sourceNode.style.opacity = 0.5;
+			TenYearUI.sourceNode.style.zIndex = 99; // 确保拖拽的卡牌在最上层
 		}
 
 		if (TenYearUI.isDragging) {
@@ -138,17 +150,13 @@
 			// 获取当前指向的元素
 			const x = e.pageX ? e.pageX : e.touches && e.touches[0] ? e.touches[0].pageX : 0;
 			const y = e.pageY ? e.pageY : e.touches && e.touches[0] ? e.touches[0].pageY : 0;
-			const currentElement = document.elementFromPoint(x, y);
+			const pointElement = document.elementFromPoint(x, y);
+
+			// 获取可能的卡牌元素
+			const currentElement = TenYearUI.getCardElement(pointElement);
 
 			// 检查是否正在拖动到另一张卡牌上
-			if (
-				currentElement &&
-				currentElement.classList &&
-				currentElement.classList.contains("card") &&
-				!currentElement.classList.contains("selected") && // 不交换已选中的卡牌
-				currentElement !== TenYearUI.sourceNode &&
-				currentElement.parentNode === ui.handcards1
-			) {
+			if (currentElement && currentElement !== TenYearUI.sourceNode && currentElement.parentNode === ui.handcards1) {
 				// 如果鼠标下的卡牌变了，则更新要交换的卡牌
 				if (TenYearUI.movedNode !== currentElement) {
 					TenYearUI.movedNode = currentElement;
