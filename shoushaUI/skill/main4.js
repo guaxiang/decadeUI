@@ -6,6 +6,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		content(next) {},
 		precontent() {
+			// 添加小黄点样式
+			if (!document.getElementById("skill-yellow-dot-style")) {
+				var style = document.createElement("style");
+				style.id = "skill-yellow-dot-style";
+				style.innerHTML = ".skill-yellow-dot{position:absolute;left:2px;top:2px;width:12px;height:12px;z-index:2;display:flex;align-items:center;justify-content:center;color:#FFD700;font-weight:bold;font-size:10px;background:none;border-radius:0;}";
+				document.head.appendChild(style);
+			}
 			Object.assign(ui.create, {
 				skills(skills) {
 					ui.skills = plugin.createSkills(skills, ui.skills);
@@ -178,6 +185,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 
 				var self = this;
+				// 获取当前武将的原生技能，适配双将
+				let nativeSkills = [];
+				if (game.me) {
+					let info1 = game.me.name && lib.character[game.me.name];
+					let info2 = game.me.name2 && lib.character[game.me.name2];
+					if (info1 && Array.isArray(info1[3])) nativeSkills = nativeSkills.concat(info1[3]);
+					if (info2 && Array.isArray(info2[3])) nativeSkills = nativeSkills.concat(info2[3]);
+				}
 				var skills = game.expandSkills([skill]).map(function (item) {
 					return app.get.skillInfo(item);
 				});
@@ -198,7 +213,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						let imgType = "yang";
 						let player = game.me;
 						let markNode = player && player.node && player.node.xSkillMarks && player.node.xSkillMarks.querySelector('.skillMarkItem.zhuanhuanji[data-id="' + item.id + '"]');
-						if (markNode && markNode.classList.contains('yin')) {
+						if (markNode && markNode.classList.contains("yin")) {
 							imgType = "ying";
 						}
 						let imgPath = "extension/十周年UI/shoushaUI/skill/images/mark_" + imgType + "OL.png";
@@ -213,6 +228,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable);
 						node.innerHTML = skillName;
 						node.dataset.id = item.id;
+						// 不是当前武将原生技能才加小黄点
+						if (lib.skill[item.id] && nativeSkills.indexOf(item.id) === -1 && node) {
+							var dot = document.createElement("span");
+							dot.className = "skill-yellow-dot";
+							dot.textContent = "+";
+							node.style.position = "relative";
+							node.appendChild(dot);
+						}
 						node.addEventListener("click", function () {
 							game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 						});
@@ -224,6 +247,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (eSkills && eSkills.includes(item.id)) return;
 					node = ui.create.div(".skillitem", self.node[get.is.phoneLayout() ? "trigger" : "enable"], skillName);
 					node.dataset.id = item.id;
+					// 不是当前武将原生技能才加小黄点（这里也要用nativeSkills判断！）
+					if (lib.skill[item.id] && nativeSkills.indexOf(item.id) === -1 && node) {
+						var dot = document.createElement("span");
+						dot.className = "skill-yellow-dot";
+						dot.textContent = "+";
+						node.style.position = "relative";
+						node.appendChild(dot);
+					}
 				});
 				return this;
 			},
@@ -313,8 +344,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (!item) {
 					if (!info.zhuanhuanji) {
 						item = ui.create.div(".skillMarkItem.xiandingji", node, get.translation(k).charAt(0));
-					}
-					else item = ui.create.div(".skillMarkItem.zhuanhuanji", node, "");
+					} else item = ui.create.div(".skillMarkItem.zhuanhuanji", node, "");
 					//如果不是转换技就调用限定技的标记
 				}
 				if (skills1[k]) item.classList.add("used");
