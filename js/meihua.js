@@ -497,7 +497,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 
 	// 卡牌边框
-	if (lib.config["extension_十周年UI_cardkmh"]) {
+	if (lib.config["extension_十周年UI_cardkmh"] !="off") {
 		/**
 		 * @param {string} borderImageName - 边框图片名称
 		 */

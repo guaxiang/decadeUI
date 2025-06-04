@@ -9297,8 +9297,6 @@ export default async function () {
 					//避免提示是否下载图片和字体素材
 					if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
 					var layoutPath = decadeUIPath + "shoushaUI/";
-					if (lib.config.extension_十周年UI_KGMH == "1") this.css(layoutPath + "KGMH/" + "kaiguan.css");
-					if (lib.config.extension_十周年UI_KGMH == "2") this.css(layoutPath + "KGMH/" + "kaiguan_new.css");
 
 					var listmap =
 						{
@@ -9806,8 +9804,6 @@ export default async function () {
 			if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
 			//函数加载
 			var layoutPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
-			if (lib.config.extension_十周年UI_KGMH == "1") lib.init.css(layoutPath, "KGMH/kaiguan");
-			if (lib.config.extension_十周年UI_KGMH == "2") lib.init.css(layoutPath, "KGMH/kaiguan_new");
 			if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode == "hs_hearthstone")) {
 				for (var pack of [/*'card',*/ "character", "lbtn", "skill"]) {
 					var listmap =
@@ -11584,16 +11580,6 @@ export default async function () {
 				init: false,
 				intro: "<li>手杀样式下在游戏中，隐藏左下角的聊天按钮<li>需重启",
 				name: "聊天按钮隐藏",
-			},
-			KGMH: {
-				init: "0",
-				intro: "开启后可以美化游戏的选项开关，需要重启",
-				name: "开关美化",
-				item: {
-					0: "关闭",
-					1: "手杀",
-					2: "十周年",
-				},
 			},
 			mx_decade_characterDialog: {
 				name: "自由选将筛选框",
