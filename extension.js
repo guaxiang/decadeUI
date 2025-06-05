@@ -9274,7 +9274,7 @@ export default async function () {
 						this.css(decadeUIPath + "css/equip_baby.css");
 						this.css(decadeUIPath + "css/layout_new.css");
 					} else {
-						this.css(decadeUIPath + (lib.config.extension_十周年UI_newDecadeStyle == "on" ? "equip.css" : "equip_new.css"));
+						this.css(decadeUIPath + (lib.config.extension_十周年UI_newDecadeStyle == "on" ? "css/equip.css" : "css/equip_new.css"));
 						this.css(decadeUIPath + "css/layout.css");
 					}
 
