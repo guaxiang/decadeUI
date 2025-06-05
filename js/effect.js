@@ -262,7 +262,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					top: calc(50% - ${160 * sprite.scale}px);
 					writing-mode: vertical-lr;
 					text-orientation: upright;
-					font-family: xingkai;
+					font-family: yuanli;
 					color: rgb(215, 234, 67);
 					font-size: 25px;
 					text-shadow: 0 0 5px black, 0 0 10px black;
