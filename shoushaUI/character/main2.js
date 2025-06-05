@@ -152,7 +152,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!rarity) rarity = "junk";
 					var pe = ui.create.div(".pe1", dialog);
 					var url;
-					if (lib.config["extension_千幻聆音_enable"]) {
+					if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkinLevel === "function" && typeof game.qhly_getSkin === "function") {
 						var temp;
 						switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
 							case "xiyou":
@@ -184,13 +184,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					pe.style.backgroundImage = 'url("' + url + '")';
 					let value = "";
 					let value2, value3;
-					if (lib.config["extension_千幻聆音_enable"]) {
+					if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkinInfo === "function" && typeof game.qhly_getSkin === "function") {
 						value2 = game.qhly_getSkinInfo(name, game.qhly_getSkin(name), null).translation || "经典形象";
 					} else value2 = "经典形象";
 					value += value2 + "*" + get.translation(name);
 					if (name2) {
 						value += "<br>";
-						if (lib.config["extension_千幻聆音_enable"]) {
+						if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkinInfo === "function" && typeof game.qhly_getSkin === "function") {
 							value3 = game.qhly_getSkinInfo(name2, game.qhly_getSkin(name2), null).translation || "经典形象";
 						} else value3 = "经典形象";
 						value += value3 + "*" + get.translation(name2);
