@@ -244,7 +244,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 				showSkills.forEach(function (item) {
 					//势力技能筛选
-					if (lib.skill[item.id].filter) {
+					if (lib.skill[item.id] && lib.skill[item.id].filter) {
 						if ((lib.skill[item.id].filter + "").indexOf("player.group") != -1) {
 							var str = (lib.skill[item.id].filter + "").substr((lib.skill[item.id].filter + "").indexOf("player.group"));
 							if (str.indexOf("'") != -1) {
