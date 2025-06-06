@@ -345,7 +345,7 @@
 }
 
 .player>.camp-wrap[data-camp="devil"]>.camp-back {
-	background: #574259;
+	background: rgb(77,24,28);
 }
 
 .player>.camp-wrap[data-camp="daqin"]>.camp-back {
