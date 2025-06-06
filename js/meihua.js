@@ -497,7 +497,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 
 	// 卡牌边框
-	if (lib.config["extension_十周年UI_cardkmh"] !="off") {
+	if (lib.config["extension_十周年UI_cardkmh"] != "off") {
 		/**
 		 * @param {string} borderImageName - 边框图片名称
 		 */
@@ -550,6 +550,222 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		KPcss.innerHTML = ".card:empty,.card.infohidden{background:url('" + lib.assetURL + "extension/十周年UI/assets/image/" + lib.config.extension_十周年UI_cardbj + ".png" + "');background-size:100% 100% !important;}";
 		document.head.appendChild(KPcss);
 	}
+
+	// 手杀角标
+	if (lib.config.extension_十周年UI_newDecadeStyle == "othersOn" || lib.config.extension_十周年UI_newDecadeStyle == "off") {
+		const style = document.createElement("style");
+		style.innerHTML = `
+			.character-prefix-anchor {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				width: 0;
+				height: 0;
+				pointer-events: none;
+			}
+			.character-prefix {
+				position: absolute !important;
+				right: 0px !important;
+				bottom: 0px !important;
+				font-size: 18px;
+				color: #fff;
+				text-shadow: 2px 2px 4px #000, 0 0 2px #000, 0 0 1px #000;
+				z-index: 999;
+				font-weight: bold;
+				pointer-events: none;
+				font-family: 'yuanli';
+			}
+		`;
+		document.head.appendChild(style);
+
+		// 检测前缀函数
+		function getPrefixAuto(nameText) {
+			let maxLen = 0;
+			let prefix = "";
+			for (let key in lib.character) {
+				let trans = get.translation(key);
+				if (nameText.endsWith(trans) && trans.length > maxLen) {
+					maxLen = trans.length;
+					prefix = nameText.slice(0, nameText.length - maxLen);
+				}
+			}
+			return prefix;
+		}
+
+		// 进游戏时处理一次
+		lib.arenaReady.push(function () {
+			setTimeout(function () {
+				game.players.concat(game.dead).forEach(function (player) {
+					if (!player.node || !player.node.name) return;
+					let nameNode = player.node.name;
+					let prefix = "";
+					let trueName = "";
+
+					// 检查是否有带颜色的span前缀
+					if (nameNode.childNodes.length > 1 && nameNode.childNodes[0].nodeType === 1 && nameNode.childNodes[0].tagName === "SPAN") {
+						let span = nameNode.childNodes[0];
+						if (span.style && span.style.color) {
+							prefix = span.innerText;
+							trueName = "";
+							for (let i = 1; i < nameNode.childNodes.length; i++) {
+								trueName += nameNode.childNodes[i].textContent;
+							}
+						}
+					}
+
+					// 检查emoji或特殊字符前缀
+					if (!prefix && nameNode.childNodes.length > 1 && nameNode.childNodes[0].nodeType === 3) {
+						let text = nameNode.childNodes[0].textContent;
+						// 检查第一个字符是否为 emoji 或特殊字符（非中英文和数字）
+						if (/^[^\u4e00-\u9fa5a-zA-Z0-9]/.test(text)) {
+							prefix = text.trim();
+							trueName = "";
+							for (let i = 1; i < nameNode.childNodes.length; i++) {
+								trueName += nameNode.childNodes[i].textContent;
+							}
+						}
+					}
+
+					// 如果没有span或emoji前缀，检查英文前缀
+					if (!prefix) {
+						let key = player.name;
+						let trans = get.translation(key);
+						let nameText = nameNode.innerText || nameNode.textContent;
+						if (nameText.endsWith(trans) && nameText.length > trans.length) {
+							prefix = nameText.slice(0, nameText.length - trans.length);
+							trueName = trans;
+						}
+					}
+
+					let old = player.node.avatar.querySelector(".character-prefix");
+					if (old) old.remove();
+
+					let showChar = "";
+					let prefixKey = player.name + "_prefix";
+					let prefixTrans = get.translation(prefixKey, false);
+					if (prefixTrans && prefixTrans !== prefixKey) {
+						// 有专门的前缀翻译
+						let nameText = get.translation(player.name);
+						let trueName = nameText.replace(prefixTrans, "");
+						nameNode.innerText = trueName;
+						// 判断_prefix是否为英文+中文
+						let match = prefixTrans.match(/^([a-zA-Z]+)([\u4e00-\u9fa5]+)/);
+						if (match) {
+							showChar = match[1]; // 只显示前面的英文部分
+						} else if (/^[a-zA-Z]+$/.test(prefixTrans)) {
+							showChar = prefixTrans;
+						} else {
+							showChar = prefixTrans[0];
+						}
+					} else if (prefix && trueName) {
+						// 直接使用前缀的第一个字符
+						showChar = prefix[0];
+					}
+
+					if (showChar) {
+						let prefixDiv = document.createElement("div");
+						prefixDiv.className = "character-prefix";
+						prefixDiv.innerText = showChar;
+						// 适配双将，角标始终在整个头像区域右下角
+						let avatarContainer = player.node.avatar.parentNode;
+						let anchor = avatarContainer.querySelector('.character-prefix-anchor');
+						if (!anchor) {
+							anchor = document.createElement('div');
+							anchor.className = 'character-prefix-anchor';
+							avatarContainer.appendChild(anchor);
+						}
+						anchor.innerHTML = '';
+						anchor.appendChild(prefixDiv);
+					}
+				});
+			}, 500);
+		});
+
+		// 全局技能
+		lib.skill._prefixDetect = {
+			trigger: {
+				player: ["showCharacterEnd", "enterGame", "changeCharacter", "removeCharacter", "addCharacter"],
+				global: "gameStart",
+			},
+			forced: true,
+			popup: false,
+			priority: 100,
+			content: function () {
+				if (!player.node || !player.node.name) return;
+				let nameNode = player.node.name;
+				let prefix = "";
+				let trueName = "";
+				if (nameNode.childNodes.length > 1 && nameNode.childNodes[0].nodeType === 1 && nameNode.childNodes[0].tagName === "SPAN") {
+					let span = nameNode.childNodes[0];
+					if (span.style && span.style.color) {
+						prefix = span.innerText;
+						trueName = "";
+						for (let i = 1; i < nameNode.childNodes.length; i++) {
+							trueName += nameNode.childNodes[i].textContent;
+						}
+					}
+				}
+				if (!prefix && nameNode.childNodes.length > 1 && nameNode.childNodes[0].nodeType === 3) {
+					let text = nameNode.childNodes[0].textContent;
+					if (/^[^\u4e00-\u9fa5a-zA-Z0-9]/.test(text)) {
+						prefix = text.trim();
+						trueName = "";
+						for (let i = 1; i < nameNode.childNodes.length; i++) {
+							trueName += nameNode.childNodes[i].textContent;
+						}
+					}
+				}
+				if (!prefix) {
+					let key = player.name;
+					let trans = get.translation(key);
+					let nameText = nameNode.innerText || nameNode.textContent;
+					if (nameText.endsWith(trans) && nameText.length > trans.length) {
+						prefix = nameText.slice(0, nameText.length - trans.length);
+						trueName = trans;
+					}
+				}
+
+				let old = player.node.avatar.querySelector(".character-prefix");
+				if (old) old.remove();
+
+				let showChar = "";
+				let prefixKey = player.name + "_prefix";
+				let prefixTrans = get.translation(prefixKey, false);
+				if (prefixTrans && prefixTrans !== prefixKey) {
+					let nameText = get.translation(player.name);
+					let trueName = nameText.replace(prefixTrans, "");
+					nameNode.innerText = trueName;
+					let match = prefixTrans.match(/^([a-zA-Z]+)([\u4e00-\u9fa5]+)/);
+					if (match) {
+						showChar = match[1];
+					} else if (/^[a-zA-Z]+$/.test(prefixTrans)) {
+						showChar = prefixTrans;
+					} else {
+						showChar = prefixTrans[0];
+					}
+				} else if (prefix && trueName) {
+					showChar = prefix[0];
+				}
+
+				if (showChar) {
+					let prefixDiv = document.createElement("div");
+					prefixDiv.className = "character-prefix";
+					prefixDiv.innerText = showChar;
+					// 适配双将，角标始终在整个头像区域右下角
+					let avatarContainer = player.node.avatar.parentNode;
+					let anchor = avatarContainer.querySelector('.character-prefix-anchor');
+					if (!anchor) {
+						anchor = document.createElement('div');
+						anchor.className = 'character-prefix-anchor';
+						avatarContainer.appendChild(anchor);
+					}
+					anchor.innerHTML = '';
+					anchor.appendChild(prefixDiv);
+				}
+			},
+		};
+	}
+
 	window.kpimport = function (func) {
 		func(lib, game, ui, get, ai, _status);
 	};
