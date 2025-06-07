@@ -221,7 +221,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (markNode && markNode.classList.contains("yin")) {
 							imgType = "ying";
 						}
-						let imgPath = "extension/十周年UI/shoushaUI/skill/images/mark_" + imgType + "OL.png";
+						let imgPath = "extension/十周年UI/shoushaUI/skill/online/mark_" + imgType + "OL.png";
 						skillName = '<img src="' + imgPath + '" style="vertical-align:middle;height:22px;margin-right:2px;">' + skillName;
 					}
 
