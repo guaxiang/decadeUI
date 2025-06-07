@@ -185,13 +185,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 
 				var self = this;
-				// 获取当前武将的原生技能，适配双将
+				// 国战模式下，获取所有原生技能
 				let nativeSkills = [];
 				if (game.me) {
-					let info1 = game.me.name && lib.character[game.me.name];
-					let info2 = game.me.name2 && lib.character[game.me.name2];
-					if (info1 && Array.isArray(info1[3])) nativeSkills = nativeSkills.concat(info1[3]);
-					if (info2 && Array.isArray(info2[3])) nativeSkills = nativeSkills.concat(info2[3]);
+					if (get.mode() == "guozhan") {
+						// 国战模式下，获取所有原生技能
+						nativeSkills = app.get.playerSkills(game.me, false);
+					} else {
+						let info1 = game.me.name && lib.character[game.me.name];
+						let info2 = game.me.name2 && lib.character[game.me.name2];
+						if (info1 && Array.isArray(info1[3])) nativeSkills = nativeSkills.concat(info1[3]);
+						if (info2 && Array.isArray(info2[3])) nativeSkills = nativeSkills.concat(info2[3]);
+					}
 				}
 				var skills = game.expandSkills([skill]).map(function (item) {
 					return app.get.skillInfo(item);
