@@ -815,7 +815,8 @@ export default async function () {
 									// 为onlineUI样式设置单独的路径判断
 									var url;
 									if (decadeUI.config.newDecadeStyle === "onlineUI") {
-										url = decadeUIPath + "image/decoration/dead_" + identity + ".png";
+										url = decadeUIPath + "image/decorationo/dead4_" + identity + ".png";
+										that.node.dieidentity.style.left = "25px";
 									} else if (decadeUI.config.newDecadeStyle === "babysha") {
 										url = decadeUIPath + "image/decorationh/dead3_" + identity + ".png";
 									} else {
@@ -830,7 +831,7 @@ export default async function () {
 									if ((that._trueMe || that) != game.me && that != game.me && Math.random() < 0.5) {
 										if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
 											// onlineUI样式固定使用第一个路径
-											that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:0px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
+											that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:10px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
 										} else {
 											// 其他样式保持随机
 											if (goon) {

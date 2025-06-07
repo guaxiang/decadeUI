@@ -54,7 +54,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.top = "-20.5px";
 					longtou.style.right = "-5px";
 					longtou.style.height = "115%";
-					longtou.style.width = "130%";
+					longtou.style.width = "120%";
 					longtou.style.zIndex = "60";
 					player.appendChild(longtou);
 					var longwei = document.createElement("img");
@@ -65,7 +65,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.top = "-20.5px";
 					longwei.style.right = "-5px";
 					longwei.style.height = "115%";
-					longwei.style.width = "130%";
+					longwei.style.width = "120%";
 					longwei.style.zIndex = "72";
 					player.appendChild(longwei);
 				}
@@ -78,7 +78,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.top = "-6px";
 					longtou.style.right = "-5.5px";
 					longtou.style.height = "109%";
-					longtou.style.width = "123%";
+					longtou.style.width = "113%";
 					longtou.style.zIndex = "60";
 					player.appendChild(longtou);
 					var longwei = document.createElement("img");
@@ -89,7 +89,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.top = "-6px";
 					longwei.style.right = "-5.5px";
 					longwei.style.height = "107%";
-					longwei.style.width = "123%";
+					longwei.style.width = "113%";
 					longwei.style.zIndex = "72";
 					player.appendChild(longwei);
 				}
@@ -102,7 +102,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.top = "-3px";
 					longtou.style.right = "-3px";
 					longtou.style.height = "107.5%";
-					longtou.style.width = "114.5%";
+					longtou.style.width = "105%";
 					longtou.style.zIndex = "60";
 					player.appendChild(longtou);
 					var longwei = document.createElement("img");
@@ -113,7 +113,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.top = "-3px";
 					longwei.style.right = "-3px";
 					longwei.style.height = "105.5%";
-					longwei.style.width = "114.5%";
+					longwei.style.width = "104.5%";
 					longwei.style.zIndex = "72";
 					player.appendChild(longwei);
 				}
@@ -126,7 +126,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.top = "-5px";
 					longtou.style.right = "-3px";
 					longtou.style.height = "107.5%";
-					longtou.style.width = "114.5%";
+					longtou.style.width = "105%";
 					longtou.style.zIndex = "60";
 					player.appendChild(longtou);
 					var longwei = document.createElement("img");
@@ -137,7 +137,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.top = "-5px";
 					longwei.style.right = "-3px";
 					longwei.style.height = "107.5%";
-					longwei.style.width = "114.5%";
+					longwei.style.width = "104.5%";
 					longwei.style.zIndex = "72";
 					player.appendChild(longwei);
 				}
@@ -150,7 +150,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longtou.style.top = "-20.5px";
 					longtou.style.right = "-5px";
 					longtou.style.height = "115%";
-					longtou.style.width = "130%";
+					longtou.style.width = "120%";
 					longtou.style.zIndex = "60";
 					player.appendChild(longtou);
 					var longwei = document.createElement("img");
@@ -161,7 +161,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					longwei.style.top = "-20.5px";
 					longwei.style.right = "-5px";
 					longwei.style.height = "115%";
-					longwei.style.width = "130%";
+					longwei.style.width = "120%";
 					longwei.style.zIndex = "72";
 					player.appendChild(longwei);
 				}
