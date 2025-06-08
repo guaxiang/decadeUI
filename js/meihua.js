@@ -830,10 +830,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -875,10 +872,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -971,10 +965,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1035,10 +1026,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1071,10 +1059,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1127,10 +1112,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1183,10 +1165,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1239,10 +1218,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1295,10 +1271,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1351,10 +1324,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1407,10 +1377,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [6, 65, 8, 4.4], true);
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "4") {
-					game.as_showImage(imgPath, [5, 70, 8, 4.4], true);
+				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
