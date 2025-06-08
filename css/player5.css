@@ -196,6 +196,10 @@
 	opacity: 1;
 }
 
+#arena>.player {
+	z-index: 4;
+}
+
 .player>.mask {
 	position: absolute;
 	left: 0;
