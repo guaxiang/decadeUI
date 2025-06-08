@@ -125,7 +125,6 @@
 #arena:not(.fewplayer)>.player:not(.minskin),
 #arena:not(.fewplayer):not(*[data-player_height=""])>.player:not(.minskin) {
 	height: 180px !important;
-	width: 130px !important;
 }
 
 /*玩家锁链*/
@@ -199,7 +198,7 @@
 
 .player>.camp-wrap[data-camp="wei"]>.camp-back {
 	background-image: url("../image/decoration/babywei.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -209,7 +208,7 @@
 
 .player>.camp-wrap[data-camp="shu"]>.camp-back {
 	background-image: url("../image/decoration/babyshu.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -219,7 +218,7 @@
 
 .player>.camp-wrap[data-camp="wu"]>.camp-back {
 	background-image: url("../image/decoration/babywu.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -229,7 +228,7 @@
 
 .player>.camp-wrap[data-camp="qun"]>.camp-back {
 	background-image: url("../image/decoration/babyqun.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -239,7 +238,7 @@
 
 .player>.camp-wrap[data-camp="shen"]>.camp-back {
 	background-image: url("../image/decoration/babyshen.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -249,7 +248,7 @@
 
 .player>.camp-wrap[data-camp="shen2"]>.camp-back {
 	background-image: url("../image/decoration/babyshen.png");
-	width: 390%;
+	width: 365%;
 	height: 147%;
 	top: 3px;
 	left: 5px;
@@ -259,7 +258,7 @@
 
 .player>.camp-wrap[data-camp="ye"]>.camp-back {
 	background-image: url("../image/decoration/babyjin.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -269,7 +268,7 @@
 
 .player>.camp-wrap[data-camp="key"]>.camp-back {
 	background-image: url("../image/decoration/babyshen.png");
-	width: 390%;
+	width: 365%;
 	height: 147%;
 	top: 3px;
 	left: 5px;
@@ -281,7 +280,7 @@
 
 .player>.camp-wrap[data-camp="jin"]>.camp-back {
 	background-image: url("../image/decoration/babyjin.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -291,7 +290,7 @@
 
 .player>.camp-wrap[data-camp="devil"]>.camp-back {
 	background-image: url("../image/decoration/babyjin.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -301,7 +300,7 @@
 
 .player>.camp-wrap[data-camp="daqin"]>.camp-back {
 	background-image: url("../image/decoration/babyjin.png");
-	width: 390%;
+	width: 365%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -313,11 +312,12 @@
 	display: block;
 	left: 40px;
 	top: 10px;
-	width: 215%;
-	height: 13%;
+	width: 185%;
+	height: 12%;
 	position: absolute;
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 #arena.decadeUI[data-border-level="five"] .player>.camp-wrap>.camp-border {
@@ -358,7 +358,7 @@
 /* 魏势力武将名称颜色 */
 .player>.camp-wrap[data-camp="wei"]>.avatar-name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="wei"]~.name.name {
-	color: rgb(50, 50, 255);
+	color: rgb(70, 168, 233);
 }
 
 /* 蜀势力武将名称颜色 */
@@ -392,7 +392,7 @@
 .player>.camp-wrap[data-camp="daqin"]>.avatar-name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="jin"]~.name.name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="daqin"]~.name.name {
-	color: rgb(255, 200, 0);
+	color: rgb(117, 89, 219);
 }
 
 /* 其他势力武将名称颜色 */
@@ -595,7 +595,7 @@
 	line-height: 23px;
 	height: 20.5px;
 	position: relative;
-	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
+	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
 	z-index: 100;
 }
 
@@ -1007,7 +1007,7 @@
 	left: auto;
 	top: 24px;
 	/*下移*/
-	right: 70px;
+	right: 60px;
 	/*左移*/
 	width: auto;
 	max-width: 80px;
@@ -1203,12 +1203,12 @@
 .player>.seat {
 	position: absolute;
 	bottom: -25px;
-	width: 40%;
+	width: 35%;
 	height: 8%;
 	left: 38px;
 	line-height: 15px;
 	font-family: "yuanli";
-	font-size: 13px;
+	font-size: 10px;
 	text-align: center;
 	color: #ffe5b4;
 	background: url("../image/decoration/card_countbj.png");
