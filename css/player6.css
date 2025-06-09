@@ -350,7 +350,6 @@
 	height: 96px;
 	font-size: 16px;
 	line-height: 15px;
-	text-shadow: none;
 	z-index: 89;
 	font-weight: bold;
 }
@@ -358,25 +357,25 @@
 /* 魏势力武将名称颜色 */
 .player>.camp-wrap[data-camp="wei"]>.avatar-name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="wei"]~.name.name {
-	color: rgb(70, 168, 233);
+	color: rgb(66, 79, 98);
 }
 
 /* 蜀势力武将名称颜色 */
 .player>.camp-wrap[data-camp="shu"]>.avatar-name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="shu"]~.name.name {
-	color: rgb(255, 50, 50);
+	color: rgb(125, 45, 34);
 }
 
 /* 吴势力武将名称颜色 */
 .player>.camp-wrap[data-camp="wu"]>.avatar-name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="wu"]~.name.name {
-	color: rgb(50, 255, 50);
+	color: rgb(64, 110, 81);
 }
 
 /* 群势力武将名称颜色 */
 .player>.camp-wrap[data-camp="qun"]>.avatar-name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="qun"]~.name.name {
-	color: rgb(170, 170, 170);
+	color: rgb(94, 88, 92);
 }
 
 /* 神势力武将名称颜色 */
@@ -392,7 +391,7 @@
 .player>.camp-wrap[data-camp="daqin"]>.avatar-name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="jin"]~.name.name,
 #arena>.player:not(.minskin)>.camp-wrap[data-camp="daqin"]~.name.name {
-	color: rgb(117, 89, 219);
+	color: rgb(153, 127, 228);
 }
 
 /* 其他势力武将名称颜色 */
