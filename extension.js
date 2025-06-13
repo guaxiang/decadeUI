@@ -11075,7 +11075,7 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`十周年UI 当前版本号${pack.version}`,
-					"最低适配：v1.10.17.3",
+					"适配本体：v1.10.17.3",
 					"让自己变得更加快乐🥳那件礼物🎁",
 					"那一天的八哥，修复起来",
 					"那一天的界面，调整起来",
