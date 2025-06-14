@@ -602,10 +602,10 @@
 .player>.hp-wrap {
 	display: block;
 	right: 117px;
-	bottom: 5px;
-	width: 12px;
-	height: 50px;
-	border-width: 24px 5px 21px 82px;
+	bottom: 10px;
+	width: 10px;
+	height: 40px;
+	border-width: 20px 4px 17px 70px;
 	border-style: solid;
 	border-color: transparent;
 	border-image-slice: 32 6 25 113 fill;
@@ -625,14 +625,12 @@
 #arena.slim_player .player .hp,
 #window>.player:not(.minskin) .hp {
 	display: flex;
-	left: 15px;
-	/*左右*/
+	left: 14px;
 	right: 0;
-	width: 18.4px;
-	bottom: -9.5px;
-	/*上下*/
-	font-size: 15px;
-	line-height: 14px;
+	width: 15px;
+	bottom: -7px;
+	font-size: 13px;
+	line-height: 12px;
 	text-align: center;
 	flex-direction: column;
 }
@@ -647,10 +645,9 @@
 
 .player>.hp-wrap>.hp>div:not(.shield) {
 	position: static;
-	margin-top: -2px;
-	/*间距*/
-	min-width: 18.4px;
-	min-height: 17.3px;
+	margin-top: -1px;
+	min-width: 15px;
+	min-height: 14px;
 	line-height: 100%;
 	border: none;
 }
