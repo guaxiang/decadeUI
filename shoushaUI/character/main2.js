@@ -68,7 +68,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					//通过势力判断技能框的背景颜色
 					var extensionPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
 					var group = player.group;
-					if (group != "wei" && group != "shu" && group != "wu" && group != "qun" && group != "ye" && group != "jin" && group != "daqin" && group != "western" && group != "shen" && group != "key") group = "default";
+					if (group != "wei" && group != "shu" && group != "wu" && group != "qun" && group != "ye" && group != "jin" && group != "daqin" && group != "western" && group != "shen" && group != "key" && group != "devil") group = "default";
 					var url = extensionPath + "character/images/shizhounian/skt_" + group + ".png";
 					dialog.style.backgroundImage = 'url("' + url + '")';
 					var skin1 = ui.create.div(".skin1", dialog);
