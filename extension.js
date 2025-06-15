@@ -7295,7 +7295,7 @@ export default async function () {
 				if (!get.is.zhuanhuanji(skill, this)) return;
 				var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
 				var num = this.countMark(skill);
-				var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/images/" + skill + "_yang.png";
+				var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
 
 				function ImageIsExist(url) {
 					let xmlHttp = new XMLHttpRequest();
@@ -7324,17 +7324,17 @@ export default async function () {
 							this.yingSkill(skill);
 							mark.dd = false;
 							if (mark.dk) {
-								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/" + skill + "_yang.png");
+								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png");
 							} else {
-								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/ditu_yang.png");
+								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png");
 							}
 						} else {
 							this.yangSkill(skill);
 							mark.dd = true;
 							if (mark.dk) {
-								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/" + skill + "_ying.png");
+								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_ying.png");
 							} else {
-								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/ditu_ying.png");
+								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/ditu_ying.png");
 							}
 						}
 					}
