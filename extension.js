@@ -835,7 +835,7 @@ export default async function () {
 										} else {
 											// 其他样式保持随机
 											if (goon) {
-												that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:0px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
+												that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:10px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
 											} else {
 												that.node.dieidentity.innerHTML = '<div style="width:21px; height:81px; left:18px; top:-12px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_2.png);background-size: 100% 100%;"></div>';
 											}
@@ -845,6 +845,11 @@ export default async function () {
 									}
 
 									that.node.dieidentity.style.backgroundImage = 'url("' + url + '")';
+									if (decadeUI.config.newDecadeStyle === "othersOff") {
+										that.node.dieidentity.style.backgroundSize = "80% 80%";
+										that.node.dieidentity.style.left = "17px";
+										that.node.dieidentity.style.bottom = "0px";
+									}
 									image.src = url;
 									setTimeout(function () {
 										var rect = that.getBoundingClientRect();
