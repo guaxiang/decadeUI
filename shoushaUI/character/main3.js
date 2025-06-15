@@ -419,46 +419,62 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (!rarity) rarity = "junk";
 						var pe = ui.create.div(".pe1", dialog);
 						var url;
-						if (lib.config["extension_千幻聆音_enable"]) {
-							var temp;
-							switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
-								case "xiyou":
-									temp = "rare";
-									break;
-								case "shishi":
-									temp = "epic";
-									break;
-								case "chuanshuo":
-									temp = "legend";
-									break;
-								case "putong":
-									temp = "common";
-									break;
-								case "dongtai":
-									temp = "legend";
-									break;
-								case "jueban":
-									temp = "unique";
-									break;
-								case "xianding":
-									temp = "restrictive";
-									break;
-								default:
-									temp = "junk";
+						if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkin === 'function' && typeof game.qhly_getSkinInfo === 'function') {
+							try {
+								switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
+									case "xiyou":
+										temp = "rare";
+										break;
+									case "shishi":
+										temp = "epic";
+										break;
+									case "chuanshuo":
+										temp = "legend";
+										break;
+									case "putong":
+										temp = "common";
+										break;
+									case "dongtai":
+										temp = "legend";
+										break;
+									case "jueban":
+										temp = "unique";
+										break;
+									case "xianding":
+										temp = "restrictive";
+										break;
+									default:
+										temp = "junk";
+								}
+								url = extensionPath + "character/images/xinsha/pe_" + temp + ".png";
+							} catch (e) {
+								console.error("千幻聆音扩展函数调用出错:", e);
+								url = extensionPath + "character/images/xinsha/pe_" + rarity + ".png";
 							}
-							url = extensionPath + "character/images/xinsha/pe_" + temp + ".png";
-						} else url = extensionPath + "character/images/xinsha/pe_" + rarity + ".png";
+						} else {
+							url = extensionPath + "character/images/xinsha/pe_" + rarity + ".png";
+						}
 						pe.style.backgroundImage = 'url("' + url + '")';
 						let value = "";
 						let value2, value3;
-						if (lib.config["extension_千幻聆音_enable"]) {
-							value2 = game.qhly_getSkinInfo(name, game.qhly_getSkin(name), null).translation || "经典形象";
+						if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkin === 'function' && typeof game.qhly_getSkinInfo === 'function') {
+							try {
+								value2 = game.qhly_getSkinInfo(name, game.qhly_getSkin(name), null).translation || "经典形象";
+							} catch (e) {
+								console.error("千幻聆音扩展获取皮肤信息出错:", e);
+								value2 = "经典形象";
+							}
 						} else value2 = "经典形象";
 						value += value2 + "*" + get.translation(name);
 						if (name2) {
 							value += "<br>";
-							if (lib.config["extension_千幻聆音_enable"]) {
-								value3 = game.qhly_getSkinInfo(name2, game.qhly_getSkin(name2), null).translation || "经典形象";
+							if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkin === 'function' && typeof game.qhly_getSkinInfo === 'function') {
+								try {
+									value3 = game.qhly_getSkinInfo(name2, game.qhly_getSkin(name2), null).translation || "经典形象";
+								} catch (e) {
+									console.error("千幻聆音扩展获取副将皮肤信息出错:", e);
+									value3 = "经典形象";
+								}
 							} else value3 = "经典形象";
 							value += value3 + "*" + get.translation(name2);
 						}
