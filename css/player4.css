@@ -185,7 +185,7 @@
 /*玩家姓名阵营*/
 .player>.camp-wrap {
 	display: block;
-	left: -19px;
+	left: -8px;
 	top: 1px;
 	width: 37px;
 	height: 128px;
@@ -1131,7 +1131,7 @@
 	position: absolute;
 	top: auto;
 	right: auto;
-	left: -12px;
+	left: 0px;
 	bottom: -1px;
 	line-height: 28px;
 	height: 28px;
@@ -1170,7 +1170,7 @@
 .player[data-position="0"]>.card-count {
 	position: absolute;
 	bottom: 5px;
-	left: -12px;
+	left: -1px;
 	height: 28px;
 	width: 28px;
 	background: url("../image/decoration/new_card_count6.png");

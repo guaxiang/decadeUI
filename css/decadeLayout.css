@@ -903,18 +903,18 @@
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="3"] {
 	left: auto;
-	top: 10px;
+	top: 0px;
 	right: calc(37% - (var(--w) / 2));
 }
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="4"] {
 	left: calc(50% - (var(--w) / 2));
-	top: 7px;
+	top: 0px;
 }
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="5"] {
 	left: calc(37% - (var(--w) / 2));
-	top: 10px;
+	top: 0px;
 }
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="6"] {
@@ -942,13 +942,13 @@
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="3"] {
 	left: auto;
-	top: 10px;
+	top: 0px;
 	right: calc(41.6% - (var(--w) / 2));
 }
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="4"] {
 	left: calc(41.6% - (var(--w) / 2));
-	top: 10px;
+	top: 0px;
 }
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="7"]>.player[data-position="5"] {
@@ -1021,7 +1021,7 @@
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="4"]>.player[data-position="2"] {
 	left: calc(50% - (var(--w) / 2));
-	top: 9px;
+	top: 0px;
 }
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="4"]>.player[data-position="3"] {
@@ -1032,17 +1032,17 @@
 /*3人座*/
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="3"]>.player[data-position="1"] {
 	left: auto;
-	top: 9px;
-	right: calc(32.5% - (var(--w) / 2));
+	top: 0px;
+	right: calc(40% - (var(--w) / 2));
 }
 
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="3"]>.player[data-position="2"] {
-	left: calc(32.5% - (var(--w) / 2));
-	top: 9px;
+	left: calc(40% - (var(--w) / 2));
+	top: 0px;
 }
 
 /*2人座*/
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="2"]>.player[data-position="1"] {
 	left: calc(50% - (var(--w) / 2));
-	top: 9px;
+	top: 0px;
 }
