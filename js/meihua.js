@@ -1481,4 +1481,65 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		};
 	}
+
+	//目标指示特效
+	lib.element.player.inits = [].concat(lib.element.player.inits || []).concat(player => {
+		if (player.ChupaizhishiXObserver) return;
+		const ChupaizhishiX = {
+			attributes: true,
+			attributeFilter: ["class"],
+		};
+		let timer = null;
+		const animations = {
+			jiangjun: "SF_xuanzhong_eff_jiangjun",
+			weijiangjun: "SF_xuanzhong_eff_weijiangjun",
+			cheqijiangjun: "SF_xuanzhong_eff_cheqijiangjun",
+			biaoqijiangjun: "SF_xuanzhong_eff_biaoqijiangjun",
+			dajiangjun: "SF_xuanzhong_eff_dajiangjun",
+			dasima: "SF_xuanzhong_eff_dasima",
+		};
+		const ChupaizhishiXObserver = new globalThis.MutationObserver(mutationRecords => {
+			for (let mutationRecord of mutationRecords) {
+				if (mutationRecord.attributeName !== "class") continue;
+				const targetElement = mutationRecord.target;
+
+				if (targetElement.classList.contains("selectable")) {
+					if (!targetElement.ChupaizhishiXid) {
+						if (!window.chupaiload) {
+							window.chupaiload = true;
+						}
+						if (timer) return;
+
+						timer = setTimeout(() => {
+							const config = decadeUI.config.chupaizhishi;
+							if (config !== "off" && animations[config]) {
+								targetElement.ChupaizhishiXid = dcdAnim.playSpine(
+									{
+										name: animations[config],
+										loop: true,
+									},
+									{
+										parent: targetElement,
+										scale: config === "biaoqijiangjun" ? 0.5 : 0.6,
+									}
+								);
+							}
+							timer = null;
+						}, 300);
+					}
+				} else {
+					if (targetElement.ChupaizhishiXid) {
+						dcdAnim.stopSpine(targetElement.ChupaizhishiXid);
+						delete targetElement.ChupaizhishiXid;
+						if (timer) {
+							clearTimeout(timer);
+							timer = null;
+						}
+					}
+				}
+			}
+		});
+		ChupaizhishiXObserver.observe(player, ChupaizhishiX);
+		player.ChupaizhishiXObserver = ChupaizhishiXObserver;
+	});
 });

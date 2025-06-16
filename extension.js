@@ -4780,7 +4780,7 @@ export default async function () {
 
 							if (typeof num == "number") {
 								node.popupNumber = num;
-								if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI") {
+								if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI" && lib.config.extension_十周年UI_newDecadeStyle !== "othersOff" && lib.config.extension_十周年UI_newDecadeStyle !== "on") {
 									if (num == Infinity) {
 										num = "+∞";
 									} else if (num == -Infinity) {
@@ -10471,6 +10471,23 @@ export default async function () {
 					node.style.backgroundSize = "100% 100%";
 					node.className = "button character incardback";
 					node.setBackgroundImage("extension/十周年UI/assets/image/" + link + ".png");
+				},
+			},
+			chupaizhishi: {
+				name: "出牌指示",
+				intro: "此选项可以切换目标指示特效，根据个人喜好自行切换，重启生效",
+				init: "off",
+				item: {
+					jiangjun: "将军",
+					weijiangjun: "卫将军",
+					cheqijiangjun: "车骑将军",
+					biaoqijiangjun: "骠骑将军",
+					dajiangjun: "大将军",
+					dasima: "大司马",
+					off: "关闭",
+				},
+				update() {
+					if (window.decadeUI) ui.arena.dataset.chupaizhishi = lib.config["extension_十周年UI_chupaizhishi"];
 				},
 			},
 			//菜单美化

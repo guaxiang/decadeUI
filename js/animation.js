@@ -1336,6 +1336,24 @@ if (decadeModule)
 
 			var fileList = [
 				{
+					name: "SF_xuanzhong_eff_jiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_weijiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_cheqijiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_biaoqijiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_dajiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_dasima",
+				},
+				{
 					name: "effect_youxikaishi",
 				},
 				{
