@@ -10484,11 +10484,18 @@ export default async function () {
 					biaoqijiangjun: "骠骑将军",
 					dajiangjun: "大将军",
 					dasima: "大司马",
+					shoushaX: "手杀经典",
+					shousha: "手杀新版",
+					random: "随机",
 					off: "关闭",
 				},
-				update() {
-					if (window.decadeUI) ui.arena.dataset.chupaizhishi = lib.config["extension_十周年UI_chupaizhishi"];
-				},
+				update: function () {
+					if (lib.config["extension_十周年UI_chupaizhishi"] == "random") {
+						var i = ["shousha", "shoushaX", "jiangjun", "weijiangjun", "cheqijiangjun", "biaoqijiangjun", "dajiangjun", "dasima"].randomGet();
+						if (window.decadeUI) decadeUI.config.chupaizhishi = i;
+					}
+					else if (window.decadeUI) ui.arena.dataset.chupaizhishi = lib.config["extension_十周年UI_chupaizhishi"];
+				}
 			},
 			//菜单美化
 			meanPrettify: {

@@ -1336,6 +1336,12 @@ if (decadeModule)
 
 			var fileList = [
 				{
+					name: "aar_chupaizhishiX",
+				},
+				{
+					name: "aar_chupaizhishi",
+				},
+				{
 					name: "SF_xuanzhong_eff_jiangjun",
 				},
 				{
@@ -1645,11 +1651,13 @@ if (decadeModule)
 							skill: "gx_taijifuchen",
 							name: "SSHW_TX_taijifuchen",
 							scale: 0.5,
+							x: [0, 0.48],
 						},
 						gx_chongyingshenfu: {
 							skill: "gx_chongyingshenfu",
 							name: "SSHW_TX_chongyingshenfu",
 							scale: 0.5,
+							x: [0, 0.58],
 						},
 						bagua_skill: {
 							skill: "bagua_skill",
