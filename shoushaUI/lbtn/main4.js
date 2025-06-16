@@ -214,7 +214,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			game.qhly_open_small ? game.qhly_open_small(game.me.name, null, game.me) : ui.click.charactercard(game.me.name, game.me, lib.config.mode === "guozhan" ? "guozhan" : true);
 		};
-		ui.updateHuanfuButton = function() {
+		ui.updateHuanfuButton = function () {
 			if (!game.me || !game.me.name) {
 				ui.huanfubutton.style.opacity = "0.5";
 				ui.huanfubutton.style.cursor = "not-allowed";
@@ -739,7 +739,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (allButtons.length > 0) allButtons[0].classList.add("typechangelight");
 					let dazi = ui.create.div(".dazi", "打字", bg);
 					let shuru = null;
-					dazi.addEventListener("click", function () {
+					dazi.addEventListener("click", function (event) {
+						event.stopPropagation(); // 阻止事件冒泡
 						if (!shuru) {
 							//输入框的样式
 							shuru = document.createElement("input");
@@ -753,11 +754,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							shuru.style.width = "60%";
 							shuru.style.height = "10%";
 							shuru.style.fontSize = "30px";
+							shuru.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+							shuru.style.border = "2px solid #C1AD92";
+							shuru.style.borderRadius = "5px";
+							shuru.style.padding = "5px";
+							shuru.style.outline = "none";
+							shuru.style.pointerEvents = "auto"; // 确保输入框可以接收鼠标事件
 							ui.window.appendChild(shuru);
 						}
 						shuru.style.display = "block";
 						shuru.focus();
 					});
+
+					// 修改点击事件处理
+					ui.window.addEventListener("click", function (event) {
+						if (shuru && shuru.style.display === "block") {
+							// 如果点击的不是输入框和打字按钮，则隐藏输入框
+							if (!shuru.contains(event.target) && event.target !== dazi) {
+								shuru.style.display = "none";
+							}
+						}
+					});
+
 					document.addEventListener("keydown", function (event) {
 						if (shuru && shuru.style.display === "block" && event.key === "Enter") {
 							let inputValue = shuru.value.trim();
