@@ -169,6 +169,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			}
 		};
+		// 新增：定时检测手牌数，动态显示/隐藏整理按钮
+		head._interval = setInterval(function() {
+			if (!game.me) return;
+			var num = game.me.getCards("hs").length;
+			head.style.display = num > 4 ? "block" : "none";
+		}, 1000);
 		document.body.appendChild(head);
 	});
 	var plugin = {
