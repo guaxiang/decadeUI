@@ -9396,7 +9396,6 @@ export default async function () {
 					boxContent.style.width = "400px";
 					boxContent.style.height = "13px";
 					boxContent.style.display = "block";
-					boxContent.style["boxShadow"] = "0 0 4px #000000";
 					boxContent.style.margin = "0 0 !important";
 					boxContent.style.position = "fixed";
 					boxContent.style.left = "calc(50% - 197px)";
@@ -9404,7 +9403,7 @@ export default async function () {
 
 					var boxTime = document.createElement("div");
 					boxTime.data = 395; /*黄色条长度*/
-					boxTime.style.cssText = "z-index:1;width:399px;height:10px;margin:0 0 0 0px;background-color: #A56C41;position: absolute;top: 1px;";
+					boxTime.style.cssText = "z-index:1;width:399px;height:10px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;";
 					boxContent.appendChild(boxTime);
 					/*底图*/
 					var imgBg2 = document.createElement("img");
@@ -9415,6 +9414,12 @@ export default async function () {
 				document.body.appendChild(boxContent);
 				window.timer = setInterval(function () {
 					boxTime.style.width = boxTime.data + "px";
+					// 剩余三分之一变红色
+					if (boxTime.data <= 395 / 3) {
+						boxTime.style.backgroundColor = "rgba(230, 56, 65, 0.88)";
+					} else {
+						boxTime.style.backgroundColor = "rgb(230, 151, 91)";
+					}
 					boxTime.data--;
 					if (boxTime.data == 0) {
 						clearInterval(window.timer);
