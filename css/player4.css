@@ -120,6 +120,7 @@
 #arena:not(.fewplayer)>.player:not(.minskin),
 #arena:not(.fewplayer):not(*[data-player_height=""])>.player:not(.minskin) {
 	height: 180px !important;
+	width: 125px !important;
 }
 
 /*玩家锁链*/
@@ -185,7 +186,7 @@
 /*玩家姓名阵营*/
 .player>.camp-wrap {
 	display: block;
-	left: -8px;
+	left: -13px;
 	top: 1px;
 	width: 37px;
 	height: 128px;
@@ -1170,7 +1171,7 @@
 .player[data-position="0"]>.card-count {
 	position: absolute;
 	bottom: 5px;
-	left: -1px;
+	left: -5px;
 	height: 28px;
 	width: 28px;
 	background: url("../image/decoration/new_card_count6.png");

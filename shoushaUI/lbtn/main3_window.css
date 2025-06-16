@@ -207,7 +207,7 @@
 /*------有点懒具体看main1.css---------------*/
 .handcardNumber {
 	bottom: 0px;
-	right: 250px;
+	right: 260px;
 	font-family: "yuanli";
 	text-shadow: #f5d78e 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
 	color: #f5d78e;
@@ -236,7 +236,7 @@
 	line-height: 25px;
 	text-align: center;
 	color: #fffcf5;
-	font-size: 20px;
+	font-size: 18px;
 	white-space: nowrap;
 	letter-spacing: 0.35px;
 	/*字体间距*/
