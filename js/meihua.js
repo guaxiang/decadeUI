@@ -799,8 +799,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], 10);
 					}
-				} else if (lib.config.extension_十周年UI_JDTSYangshi == "3") {
-					game.as_showImage(imgPath, [18, 65, 8, 4.4], 10);
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], 10);
 				}
@@ -830,7 +828,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -872,7 +869,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -965,7 +961,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1026,7 +1021,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1059,7 +1053,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1112,7 +1105,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1165,7 +1157,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1218,7 +1209,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1271,7 +1261,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1324,7 +1313,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1377,7 +1365,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.as_showImage(imgPath, [3, 58, 7, 6], true);
 					}
-				
 				} else {
 					game.as_showImage(imgPath, [18, 65, 8, 4.4], true);
 				}
@@ -1401,6 +1388,95 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				if (_status.as_showImage_phase && _status.as_showImage_phase == "hhjs") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
+				}
+			},
+		};
+	}
+
+	// 伤害恢复优化
+	if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff" || lib.config.extension_十周年UI_newDecadeStyle === "on") {
+		window._WJMHHUIFUSHUZITEXIAO = {
+			shuzi2: {
+				name: "../../../十周年UI/assets/animation/globaltexiao/huifushuzi/shuzi2",
+			},
+		};
+		window._WJMHXUNISHUZITEXIAO = {
+			SS_PaiJu_xunishanghai: {
+				name: "../../../十周年UI/assets/animation/globaltexiao/xunishuzi/SS_PaiJu_xunishanghai",
+			},
+		};
+		window._WJMHSHANGHAISHUZITEXIAO = {
+			SZN_shuzi: {
+				name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi",
+			},
+		};
+		lib.skill._wjmh_huifushuzi_ = {
+			priority: 10,
+			forced: true,
+			trigger: {
+				player: "recoverBegin",
+			},
+			filter(event, player) {
+				return event.num && event.num > 0 && event.num <= 9;
+			},
+			content() {
+				var action = trigger.num.toString();
+				if (action) {
+					dcdAnim.loadSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2.name, "skel", function () {
+						window._WJMHHUIFUSHUZITEXIAO.shuzi2.action = action;
+						dcdAnim.playSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2, {
+							speed: 0.6,
+							scale: 0.5,
+							parent: player,
+						});
+					});
+				}
+			},
+		};
+		lib.skill._wjmh_xunishuzi_ = {
+			priority: 10,
+			forced: true,
+			trigger: {
+				player: "damage",
+			},
+			filter(event, player) {
+				if ((event.num != 0 && !event.num) || (event.num < 0 && event.num > 9)) return false;
+				return event.unreal; // 判断是否是虚拟伤害
+			},
+			content() {
+				var action = "play" + trigger.num.toString();
+				if (action) {
+					dcdAnim.loadSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.name, "skel", function () {
+						window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.action = action;
+						dcdAnim.playSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai, {
+							speed: 0.6,
+							scale: 0.5,
+							parent: player,
+						});
+					});
+				}
+			},
+		};
+		lib.skill._wjmh_shanghaishuzi_ = {
+			priority: 210,
+			forced: true,
+			trigger: {
+				player: "damageBegin4",
+			},
+			filter(event, player) {
+				return event.num && event.num > 1 && event.num <= 9;
+			},
+			content() {
+				var action = trigger.num.toString();
+				if (action) {
+					dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.name, "skel", function () {
+						window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.action = action;
+						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi, {
+							speed: 0.6,
+							scale: 0.5,
+							parent: player,
+						});
+					});
 				}
 			},
 		};
