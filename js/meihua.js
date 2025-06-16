@@ -1519,7 +1519,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 									{
 										name: animations[config],
 										loop: true,
-										speed: config === "aar_chupaizhishiX" ? 1.2 : 1,
 									},
 									{
 										parent: targetElement,
