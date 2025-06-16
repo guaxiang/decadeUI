@@ -1497,6 +1497,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			biaoqijiangjun: "SF_xuanzhong_eff_biaoqijiangjun",
 			dajiangjun: "SF_xuanzhong_eff_dajiangjun",
 			dasima: "SF_xuanzhong_eff_dasima",
+			shoushaX: "aar_chupaizhishiX",
+			shousha: "aar_chupaizhishi",
 		};
 		const ChupaizhishiXObserver = new globalThis.MutationObserver(mutationRecords => {
 			for (let mutationRecord of mutationRecords) {
@@ -1517,6 +1519,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 									{
 										name: animations[config],
 										loop: true,
+										speed: config === "aar_chupaizhishiX" ? 1.2 : 1,
 									},
 									{
 										parent: targetElement,
