@@ -10846,18 +10846,18 @@ export default async function () {
 			},
 			/*进度条说明*/
 			JDTSM: {
-				name: '<div class="shousha_menu">进度条·查看</div>',
+				name: '<div class="shousha_menu">进度条&阶段提示·查看</div>',
 				clear: true,
 				onclick() {
 					if (this.JDTSM == undefined) {
 						var more = ui.create.div(".JDTSM", '<div class="shousha_text"><li><b>进度条</b>:完善时机包括玩家回合内、人机回合内、玩家回合外、人机回合外。<li><b>进度条时间间隔</b>:设置玩家进度条的时间间隔，默认100毫秒/次<li><b>时间间隔</b>：通俗点说，就是进度条刷新的自定义时间单位/次。时间间隔越小，进度条总时间越少，反之亦然。<li><b>切换不生效？</b>:在游戏里切换时间间隔后不会马上生效，会在下一次进度条出现时生效。<li><b>进度条高度百分比</b>:现在可以在游戏里动态调节进度条高度了，变化发生在每次刷新时，建议开启<b>进度条刷新</b>功能搭配使用。可调节的范围在10%-40%左右。<li><b>进度条刷新</b>:在游戏里开启后，进度条会在每个节点进行刷新（也就是大伙说的旧版进度条）。</div>');
 						this.parentNode.insertBefore(more, this.nextSibling);
 						this.JDTSM = more;
-						this.innerHTML = '<div class="shousha_menu">进度条·关闭</div>';
+						this.innerHTML = '<div class="shousha_menu">进度条&阶段提示·关闭</div>';
 					} else {
 						this.parentNode.removeChild(this.JDTSM);
 						delete this.JDTSM;
-						this.innerHTML = '<div class="shousha_menu">进度条·查看</div>';
+						this.innerHTML = '<div class="shousha_menu">进度条&阶段提示·查看</div>';
 					}
 				},
 			},
@@ -10866,6 +10866,37 @@ export default async function () {
 				init: false,
 				intro: "自己回合内显示进度条带素材",
 				name: "进度条",
+			},
+			JDTS: {
+				init: false,
+				intro: "自己回合内显示对应阶段图片提示",
+				name: "阶段提示",
+			},
+			jindutiaotuoguan: {
+				name: "托管效果",
+				init: false,
+				intro: "开启进度条的情况下，开启此选项后，当玩家的进度条时间走完时，将自动托管。",
+			},
+			jindutiaoUpdata: {
+				name: "玩家进度条刷新",
+				init: false,
+				intro: "开启进度条的情况下，开启此选项后，玩家进度条将会进行刷新",
+			},
+			jindutiaoaiUpdata: {
+				name: "人机进度条刷新",
+				init: false,
+				intro: "开启进度条的情况下，开启此选项后，ai的进度条将会进行刷新",
+			},
+			JDTSYangshi: {
+				name: "阶段提示",
+				init: "1",
+				intro: "切换阶段提示样式，可根据个人喜好切换",
+				item: {
+					1: "手杀阶段提示",
+					2: "十周年阶段提示",
+					3: "OL阶段提示",
+					4: "欢乐阶段提示",
+				},
 			},
 			jindutiaoYangshi: {
 				name: "进度条样式",
@@ -10877,11 +10908,6 @@ export default async function () {
 					3: "十周年客户端进度条",
 					4: "一将成名进度条",
 				},
-			},
-			jindutiaotuoguan: {
-				name: "托管效果",
-				init: false,
-				intro: "开启进度条的情况下，开启此选项后，当玩家的进度条时间走完时，将自动托管。",
 			},
 			jindutiaoST: {
 				name: "进度条时间间隔",
@@ -10897,16 +10923,6 @@ export default async function () {
 					1000: "1秒/次",
 					2000: "2秒/次",
 				},
-			},
-			jindutiaoUpdata: {
-				name: "玩家进度条刷新",
-				init: false,
-				intro: "开启进度条的情况下，开启此选项后，玩家进度条将会进行刷新",
-			},
-			jindutiaoaiUpdata: {
-				name: "人机进度条刷新",
-				init: false,
-				intro: "开启进度条的情况下，开启此选项后，ai的进度条将会进行刷新",
 			},
 			jindutiaoSet: {
 				name: "进度条高度",
@@ -10935,49 +10951,6 @@ export default async function () {
 					37: "37%",
 					38: "38%",
 					39: "39%",
-				},
-			},
-			FL2: {
-				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
-				intro: "",
-				init: true,
-				clear: true,
-				onclick: function () {
-					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
-				},
-			},
-			/*阶段提示说明*/
-			JDTSSM: {
-				name: '<div class="shousha_menu">阶段提示·查看</div>',
-				clear: true,
-				onclick() {
-					if (this.JDTSSM == undefined) {
-						var more = ui.create.div(".JDTSSM", '<div class="shousha_text"><li><b>阶段提示</b>:回合开始、判定阶段、摸牌阶段、出牌阶段、弃牌阶段、等待响应、对方思考中，其中[对方思考中]，在游戏人数不大于两人时才会出现。<li><b>位置微调</b>：在游玩太虚幻境模式或者使用Eng侍灵扩展时，为避免遮挡，会自动判断并调整阶段提示位置<li><b>人机也有？</b>:人机做了进度条美化和阶段提示美化，样式跟随UI切换。</div>');
-						this.parentNode.insertBefore(more, this.nextSibling);
-						this.JDTSSM = more;
-						this.innerHTML = '<div class="shousha_menu">阶段提示·关闭</div>';
-					} else {
-						this.parentNode.removeChild(this.JDTSSM);
-						delete this.JDTSSM;
-						this.innerHTML = '<div class="shousha_menu">阶段提示·查看</div>';
-					}
-				},
-			},
-			/*----阶段提示----*/
-			JDTS: {
-				init: false,
-				intro: "自己回合内显示对应阶段图片提示",
-				name: "阶段提示",
-			},
-			JDTSYangshi: {
-				name: "阶段提示",
-				init: "1",
-				intro: "切换阶段提示样式，可根据个人喜好切换",
-				item: {
-					1: "手杀阶段提示",
-					2: "十周年阶段提示",
-					3: "OL阶段提示",
-					4: "欢乐阶段提示",
 				},
 			},
 			FL3: {
@@ -11039,16 +11012,6 @@ export default async function () {
 					60000: "1min/次",
 					120000: "2min/次",
 					300000: "5min/次",
-				},
-			},
-			/*其它美化*/
-			FL4: {
-				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
-				intro: "",
-				init: true,
-				clear: true,
-				onclick: function () {
-					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
 				},
 			},
 			XPJ: {
