@@ -70,7 +70,7 @@
 	height: var(--h);
 	position: absolute;
 	bottom: 2%;
-	left: 2%;
+	left: 4%;
 	background-image: url("./images/uibutton/jiaoliuhs.png");
 	background-size: 100% 100%;
 	z-index: 3;
@@ -86,7 +86,7 @@
 	position: absolute;
 	bottom: 0.5%;
 	left: auto;
-	right: 170px;
+	right: 190px;
 	background-image: url("./images/uibutton/meiguihs.png");
 	background-size: 100% 100%;
 	z-index: 3;
@@ -191,11 +191,11 @@
 
 .handcardNumber {
 	bottom: 0px;
-	right: 230px;
+	right: 255px;
 	font-family: "yuanli";
 	text-shadow: #f5d78e 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
 	color: #f5d78e;
-	z-index: 13;
+	z-index: 3;
 }
 
 /*手牌数参数*/
@@ -214,7 +214,7 @@
 
 .cardRoundNumber {
 	top: 16px;
-	left: 25px;
+	left: 65px;
 	font-weight: 400;
 	font-family: "yuanli";
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;

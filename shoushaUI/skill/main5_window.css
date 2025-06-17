@@ -2,7 +2,7 @@
 	/*技能按钮*/
 	max-width: 200px;
 	bottom: 30px;
-	right: 180px;
+	right: 190px;
 	z-index: 0;
 }
 
@@ -43,13 +43,13 @@
 
 .skill-control>.trigger>.skillitem {
 	margin: 3px 4px;
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
+	width: 75px;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	font-family: "yuanli";
 	font-weight: 500;
-	font-size: 20px;
+	font-size: 18px;
 	color: #f7f5e7;
 	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
 		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
@@ -60,9 +60,9 @@
 .skill-control>.enable>.skillitem {
 	margin: 3px 4px;
 	/* 增加宽度 */
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
+	width: 75px;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	font-family: "yuanli";
 	font-weight: 500;
@@ -78,9 +78,9 @@
 .skill-control>.enable>.xiandingji {
 	/*限定技按钮*/
 	margin: 3px 4px;
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
+	width: 75px;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	font-family: "yuanli";
 	font-weight: 500;
@@ -241,7 +241,7 @@
 	/*技能按钮*/
 	max-width: 200px;
 	bottom: 30px;
-	right: 170px;
+	right: 190px;
 	z-index: 0;
 }
 
@@ -282,13 +282,13 @@
 
 .skill-control>.trigger>.skillitem {
 	margin: 3px 4px;
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
+	width: 75px;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	font-family: "yuanli";
 	font-weight: 500;
-	font-size: 20px;
+	font-size: 18px;
 	color: #f7f5e7;
 	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
 		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
@@ -299,9 +299,9 @@
 .skill-control>.enable>.skillitem {
 	margin: 3px 4px;
 	/* 增加宽度 */
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
+	width: 75px;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	font-family: "yuanli";
 	font-weight: 500;
@@ -317,9 +317,9 @@
 .skill-control>.enable>.xiandingji {
 	/*限定技按钮*/
 	margin: 3px 4px;
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
+	width: 75px;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	font-family: "yuanli";
 	font-weight: 500;

@@ -164,7 +164,7 @@
 #arena[data-right-layout="on"]>.player[data-position="0"],
 #arena[data-right-layout="on"]>.player[data-position="0"]:not(.miniskin) {
 	left: auto;
-	right: 25px;
+	right: 60px;
 }
 
 /*玩家姓名阵营*/
@@ -343,7 +343,7 @@
 	align-items: center;
 	align-content: center;
 	justify-content: center;
-	left: 40% !important;
+	left: 38% !important;
 	right: auto;
 	top: 30px;
 	width: 18px;
@@ -1202,12 +1202,12 @@
 .player>.seat {
 	position: absolute;
 	bottom: -25px;
-	width: 35%;
-	height: 8%;
-	left: 38px;
-	line-height: 15px;
+	width: 40%;
+	height: 9%;
+	left: 35px;
+	line-height: 17px;
 	font-family: "yuanli";
-	font-size: 10px;
+	font-size: 13px;
 	text-align: center;
 	color: #ffe5b4;
 	background: url("../image/decoration/card_countbj.png");
