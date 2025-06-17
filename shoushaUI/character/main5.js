@@ -132,7 +132,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!rarity) rarity = "junk";
 					var pe = ui.create.div(".pe1", dialog);
 					var url;
-					if (lib.config["extension_千幻聆音_enable"]) {
+					if (lib.config["extension_千幻聆音_enable"] && game.qhly_getSkin && game.qhly_getSkinLevel) {
 						var temp;
 						switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
 							case "xiyou":
