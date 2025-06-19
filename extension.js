@@ -8711,6 +8711,7 @@ export default async function () {
 					this.css(decadeUIPath + "css/extension.css");
 					this.css(decadeUIPath + "css/decadeLayout.css");
 					this.css(decadeUIPath + "css/card.css");
+					this.css(decadeUIPath + "css/meihua.css");
 					// 当且仅当初次载入时，newDecadeStyle == void 0
 					if (lib.config.extension_十周年UI_newDecadeStyle != void 0) {
 						this.css(decadeUIPath + "css/player" + parseFloat(["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(lib.config.extension_十周年UI_newDecadeStyle) + 1) + ".css");

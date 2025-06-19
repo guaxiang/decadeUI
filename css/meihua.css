@@ -1,0 +1,21 @@
+.handdisplays {
+	background-color: rgba(3, 3, 3, 0.5);
+	width: 35px;
+	height: 90px;
+	left: -45px;
+	bottom: 0;
+	overflow: scroll;
+	opacity: 1;
+}
+
+.handdisplays .handcard {
+	position: relative;
+	margin-top: 5px;
+	text-align: center;
+	width: 100%;
+	font-weight: 700;
+	overflow: scroll;
+	color: rgb(216, 203, 87);
+	font-family: "yuanli";
+	font-size: 13px;
+}
