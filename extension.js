@@ -10518,6 +10518,7 @@ export default async function () {
 							}
 						}
 					}
+					setTimeout(() => game.reload(), 100);
 				},
 			},
 			jiaohuyinxiao: {
