@@ -10688,6 +10688,11 @@ export default async function () {
 				init: false,
 				intro: "开启后，非魏蜀吴群晋势力的角色将会重新选择势力",
 			},
+			Seatlayout: {
+				name: "座位布局",
+				init: false,
+				intro: "开启后，对决22布局还原官方",
+			},
 			shouqikamh: {
 				name: "手气卡美化",
 				init: false,
