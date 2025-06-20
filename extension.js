@@ -104,6 +104,8 @@ export default async function () {
 						},
 						game: {
 							swapSeat: game.swapSeat,
+							addGlobalSkill: game.addGlobalSkill,
+							removeGlobalSkill: game.removeGlobalSkill,
 						},
 						lib: {
 							element: {
@@ -985,6 +987,117 @@ export default async function () {
 											}
 										}
 									}
+									//手牌可见
+									if (!this.node.showCards) {
+										const player = this;
+										function createElement(tag, opts = {}) {
+											const d = document.createElement(tag);
+											for (const key in opts) {
+												if (!Object.hasOwnProperty.call(opts, key)) continue;
+												switch (key) {
+													case "class":
+														opts[key].forEach(v => d.classList.add(v));
+														break;
+													case "id":
+														d.id = opts[key];
+														break;
+													case "innerHTML":
+													case "innerText":
+														d[key] = opts[key];
+														break;
+													case "parentNode":
+														opts[key].appendChild(d);
+														break;
+													case "listen":
+														for (const evt in opts[key]) {
+															if (typeof opts[key][evt] == "function") d[evt] = opts[key][evt];
+														}
+														break;
+													case "style":
+														for (const s in opts[key]) d.style[s] = opts[key][s];
+														break;
+													case "children":
+														opts[key].forEach(v => d.appendChild(v));
+														break;
+													case "insertBefore":
+														opts[key][0].insertBefore(d, opts[key][1]);
+														break;
+												}
+											}
+											return d;
+										}
+										player.node.showCards = createElement("div", {
+											class: ["handdisplays"],
+											parentNode: player,
+										}).hide();
+										// 自动检测武将牌位置，决定显示区域左右
+										(function adjustShowCardsPosition() {
+											const rect = player.getBoundingClientRect();
+											const winWidth = window.innerWidth || document.documentElement.clientWidth;
+											const showCards = player.node.showCards;
+											// 默认宽度，可根据实际调整
+											const offset = 10;
+											const showWidth = 120; // 预估显示区宽度
+											if (rect.left < winWidth / 2) {
+												// 靠左，显示在右侧
+												showCards.style.left = player.offsetWidth + offset + "px";
+												showCards.style.right = "";
+											} else {
+												// 靠右，显示在左侧
+												showCards.style.left = "";
+												showCards.style.right = player.offsetWidth + offset + "px";
+											}
+											showCards.style.top = "90px";
+										})();
+										player.node.showCards.onclick = function () {
+											const cards = player.getCards("h", c => get.is.shownCard(c) || player.isUnderControl(true) || game.me?.hasSkillTag("viewHandcard", null, player, true));
+											if (cards.length > 0) {
+												const Fool_popup = ui.create.div(".popup-container", ui.window);
+												const handdisplay = ui.create.dialog(get.translation(player) + "的手牌", cards);
+												handdisplay.static = true;
+												Fool_popup.addEventListener("click", () => {
+													Fool_popup.delete();
+													handdisplay.close();
+													handdisplay.delete();
+												});
+											}
+										};
+										// 边界修正
+										const _rect = player.node.showCards.getBoundingClientRect();
+										if (_rect.left <= 10 && !player.node.showCards.classList.contains("hidden")) {
+											const left = lib.config.extension_十周年UI_enable && lib.config.extension_十周年UI_newDecadeStyle == "on" ? player.offsetWidth + 10 : player.offsetWidth + 5;
+											player.node.showCards.style.left = left + "px";
+											player.node.showCards.style.top = "90px";
+										}
+										// 鼠标悬停/触摸事件
+										player.node.showCards.onmouseover = player.node.showCards.ontouchend = function (e) {
+											const cards = player.getCards("h");
+											if (!cards.length) return;
+											cards.forEach(c => {
+												c.copy()._customintro = c._customintro;
+											});
+											if (e.type == "mouseover") {
+												player.node.showCards.onmouseleave = function () {};
+											} else {
+												ui.window.addEventListener("touchend", function touch() {}, { once: true });
+											}
+										};
+										// 监听手牌区变化
+										["handcards1", "handcards2"].forEach(handcardZone => {
+											const observer = new MutationObserver(mutationsList => {
+												for (let mutation of mutationsList) {
+													if (mutation.type === "childList") {
+														const added = mutation.addedNodes.length > 0;
+														const removed = mutation.removedNodes.length > 0;
+														if (added || removed) player.decadeUI_updateShowCards();
+													}
+												}
+											});
+											observer.observe(player.node[handcardZone], { childList: true });
+										});
+									}
+									// 刷新显示
+									this.decadeUI_updateShowCards();
 									return this;
 								},
 								$uninit() {
@@ -998,6 +1111,7 @@ export default async function () {
 									campName.style.removeProperty("background-image");
 									const hujiat = this.node.hpWrap.querySelector(".hujia");
 									if (hujiat) hujiat.remove();
+									this.node.showCards?.hide();
 									base.lib.element.player.$uninit.apply(this, arguments);
 									return this;
 								},
@@ -1037,6 +1151,8 @@ export default async function () {
 									//手牌数显示修改
 									let count = this.countCards("h");
 									if (count >= 10) this.node.count.innerHTML = count;
+									//可见手牌显示刷新
+									this.decadeUI_updateShowCards();
 									return this;
 								},
 								directgain(cards, broadcast, gaintag) {
@@ -1709,6 +1825,65 @@ export default async function () {
 										this.$throw(VCard);
 									}
 									dui.delay(451);
+								},
+								decadeUI_updateShowCards() {
+									const player = this;
+									if (!player.node.showCards) return;
+									if (player == game.me || player.isDead()) {
+										player.node.showCards.hide();
+										while (player.node.showCards.hasChildNodes()) player.node.showCards.removeChild(player.node.showCards.firstChild);
+										return;
+									}
+									const cards = player.getCards("h", c => get.is.shownCard(c) || player.isUnderControl(true) || game.me?.hasSkillTag("viewHandcard", null, player, true));
+									if (!cards.length) {
+										player.node.showCards.hide();
+										return;
+									}
+									player.node.showCards.show();
+									while (player.node.showCards.hasChildNodes()) player.node.showCards.removeChild(player.node.showCards.firstChild);
+									function createElement(tag, opts = {}) {
+										const d = document.createElement(tag);
+										for (const key in opts) {
+											if (!Object.hasOwnProperty.call(opts, key)) continue;
+											switch (key) {
+												case "class":
+													opts[key].forEach(v => d.classList.add(v));
+													break;
+												case "id":
+													d.id = opts[key];
+													break;
+												case "innerHTML":
+												case "innerText":
+													d[key] = opts[key];
+													break;
+												case "parentNode":
+													opts[key].appendChild(d);
+													break;
+												case "listen":
+													for (const evt in opts[key]) {
+														if (typeof opts[key][evt] == "function") d[evt] = opts[key][evt];
+													}
+													break;
+												case "style":
+													for (const s in opts[key]) d.style[s] = opts[key][s];
+													break;
+												case "children":
+													opts[key].forEach(v => d.appendChild(v));
+													break;
+												case "insertBefore":
+													opts[key][0].insertBefore(d, opts[key][1]);
+													break;
+											}
+										}
+										return d;
+									}
+									cards.forEach(c => {
+										createElement("div", {
+											class: ["handcard"],
+											innerHTML: lib.translate[c.name].slice(0, 2),
+											parentNode: player.node.showCards,
+										});
+									});
 								},
 							},
 							content: {
@@ -2919,6 +3094,16 @@ export default async function () {
 							player2.seat = player2.getSeatNum();
 							if (player2.node.seat) player2.node.seat.innerHTML = get.cnNumber(player2.seat, true);
 						},
+						addGlobalSkill() {
+							const result = base.game.addGlobalSkill.apply(this, arguments);
+							[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
+							return result;
+						},
+						removeGlobalSkill() {
+							const result = base.game.removeGlobalSkill.apply(this, arguments);
+							[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
+							return result;
+						},
 						addOverDialog(dialog, result) {
 							var sprite = decadeUI.backgroundAnimation.current;
 							if (!(sprite && sprite.name == "skin_xiaosha_default")) return;
@@ -3113,6 +3298,7 @@ export default async function () {
 					};
 
 					game.swapPlayer = function (player, player2) {
+						const list = [game.me, player];
 						var result = swapPlayerFunction.call(this, player, player2);
 						/*-----------------分割线-----------------*/
 						// 单独装备栏
@@ -3125,7 +3311,8 @@ export default async function () {
 								game.me.$syncExpand();
 							}
 						}
-
+						// 可见手牌显示
+						list.forEach(i => i.decadeUI_updateShowCards());
 						return result;
 					};
 
@@ -3147,6 +3334,8 @@ export default async function () {
 						if (ui.equipSolts && player && typeof player.$handleEquipChange === "function") {
 							player.$handleEquipChange();
 						}
+						// 可见手牌显示
+						player.decadeUI_updateShowCards();
 						return result;
 					};
 
@@ -4676,6 +4865,7 @@ export default async function () {
 								if (!(!info || info.nopop || !get.translation(skill + "_info") || !lib.translate[skill + "_info"])) this.node.gainSkill.gain(skill);
 							}
 						}
+						[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 						return skill;
 					};
 
@@ -4686,6 +4876,7 @@ export default async function () {
 								this.node.gainSkill.lose(skill);
 							}
 						}
+						[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 						return skill;
 					};
 
@@ -10499,9 +10690,8 @@ export default async function () {
 					if (lib.config["extension_十周年UI_chupaizhishi"] == "random") {
 						var i = ["shousha", "shoushaX", "jiangjun", "weijiangjun", "cheqijiangjun", "biaoqijiangjun", "dajiangjun", "dasima"].randomGet();
 						if (window.decadeUI) decadeUI.config.chupaizhishi = i;
-					}
-					else if (window.decadeUI) ui.arena.dataset.chupaizhishi = lib.config["extension_十周年UI_chupaizhishi"];
-				}
+					} else if (window.decadeUI) ui.arena.dataset.chupaizhishi = lib.config["extension_十周年UI_chupaizhishi"];
+				},
 			},
 			//菜单美化
 			meanPrettify: {
@@ -11084,7 +11274,6 @@ export default async function () {
 					"那一天的八哥，修复起来",
 					"那一天的界面，调整起来",
 					"那一天的函数，跟进起来",
-					"",
 					"连同着迷🥺这个炎炎🔥夏日🥵万般滋味👄那个你",
 				];
 				return `<a href="javascript:void(0)" onclick="navigator.clipboard.writeText('https://github.com/diandian157/decadeUI').then(() => alert('已成功复制，粘贴到浏览器打开，部分进不去需要翻墙'))">点击复制十周年UIGithub仓库地址</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;})(pack);

@@ -403,7 +403,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			if (_status.connectMode || (lib.config.mode == "single" && _status.mode != "wuxianhuoli") || (lib.config.mode == "doudizhu" && _status.mode == "online") || (lib.config.mode != "identity" && lib.config.mode != "guozhan" && lib.config.mode != "doudizhu" && lib.config.mode != "single")) {
 				event.changeCard = "disabled";
 			}
-			("step 1");
+			"step 1";
 			if (event.changeCard != "disabled" && !_status.auto && game.me.countCards("h")) {
 				function getRandomInt(min, max) {
 					min = Math.ceil(min);
@@ -422,7 +422,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			} else {
 				event.finish();
 			}
-			("step 2");
+			"step 2";
 			if (event.changeCard == "once") {
 				event.changeCard = "disabled";
 			} else if (event.changeCard == "twice") {
@@ -437,7 +437,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.resume();
 			};
 			game.pause();
-			("step 3");
+			"step 3";
 			_status.imchoosing = false;
 			if (event.bool) {
 				if (game.changeCoin) {
@@ -491,7 +491,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.me._start_cards = game.me.getCards("h");
 				event.finish();
 			}
-			("step 4");
+			"step 4";
 			setTimeout(decadeUI.effect.gameStart, 51);
 		};
 	}
@@ -1597,16 +1597,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						}
 					}
 
-					// 禁用changeSeat技能
-					for (let i in lib.skill) {
-						if (lib.skill[i].changeSeat) {
-							lib.skill[i] = {};
-							if (lib.translate[i + "_info"]) {
-								lib.translate[i + "_info"] = "此模式下不可用";
-							}
-						}
-					}
-
 					// 随机分配side
 					const bool = Math.random() < 0.5;
 					const bool2 = Math.random() < 0.5;
@@ -1793,7 +1783,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						if (!ui.cheat2 && get.config("free_choose")) ui.create.cheat2();
 					}
 
-					("step 1");
+					"step 1";
 					if (ui.cheat) {
 						ui.cheat.close();
 						delete ui.cheat;
@@ -1866,137 +1856,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		versus();
 	}
 
-	//可见手牌
-	lib.skill._handdisplay = {
-		ruleSkill: true,
-		direct: true,
-		charlotte: true,
-		forceDie: true,
-		mode:['versus','doudizhu'],
-		trigger: {
-			global: ["loseAfter", "die", "equipAfter", "addJudgeAfter", "gainAfter", "loseAsyncAfter", "addToExpansionAfter", "phaseBefore", "enterGame", "addShownCardsAfter"],
-		},
-		content: function () {
-			function createElement(tag, opts = {}) {
-				const d = document.createElement(tag);
-				for (const key in opts) {
-					if (!Object.hasOwnProperty.call(opts, key)) continue;
-					switch (key) {
-						case "class":
-							opts[key].forEach(v => d.classList.add(v));
-							break;
-						case "id":
-							d.id = opts[key];
-							break;
-						case "innerHTML":
-						case "innerText":
-							d[key] = opts[key];
-							break;
-						case "parentNode":
-							opts[key].appendChild(d);
-							break;
-						case "listen":
-							for (const evt in opts[key]) {
-								if (typeof opts[key][evt] == "function") d[evt] = opts[key][evt];
-							}
-							break;
-						case "style":
-							for (const s in opts[key]) d.style[s] = opts[key][s];
-							break;
-						case "children":
-							opts[key].forEach(v => d.appendChild(v));
-							break;
-						case "insertBefore":
-							opts[key][0].insertBefore(d, opts[key][1]);
-							break;
-					}
-				}
-				return d;
-			}
-			if (!player.node.showCards) {
-				player.node.showCards = createElement("div", {
-					class: ["handdisplays"],
-					parentNode: player,
-				}).hide();
-			}
-			// 自动检测武将牌位置，决定显示区域左右
-			(function adjustShowCardsPosition() {
-				const rect = player.getBoundingClientRect();
-				const winWidth = window.innerWidth || document.documentElement.clientWidth;
-				const showCards = player.node.showCards;
-				// 默认宽度，可根据实际调整
-				const offset = 10;
-				const showWidth = 120; // 预估显示区宽度
-				if (rect.left < winWidth / 2) {
-					// 靠左，显示在右侧
-					showCards.style.left = player.offsetWidth + offset + "px";
-					showCards.style.right = "";
-				} else {
-					// 靠右，显示在左侧
-					showCards.style.left = "";
-					showCards.style.right = player.offsetWidth + offset + "px";
-				}
-				showCards.style.top = "90px";
-			})();
-			player.node.showCards.onclick = function () {
-				const cards = player.getCards("h", c => get.is.shownCard(c) || player.isUnderControl() || (game.me && game.me.hasSkillTag("viewHandcard", null, player, true)));
-				if (cards.length > 0) {
-					const Fool_popup = ui.create.div(".popup-container", ui.window);
-					const handdisplay = ui.create.dialog(get.translation(player) + "的手牌", cards);
-					handdisplay.static = true;
-					Fool_popup.addEventListener("click", () => {
-						Fool_popup.delete();
-						handdisplay.close();
-						handdisplay.delete();
-					});
-				}
-			};
-			// 边界修正
-			const _rect = player.node.showCards.getBoundingClientRect();
-			if (_rect.left <= 10 && !player.node.showCards.classList.contains("hidden")) {
-				const left = lib.config.extension_十周年UI_enable && lib.config.extension_十周年UI_newDecadeStyle == "on" ? player.offsetWidth + 10 : player.offsetWidth + 5;
-				player.node.showCards.style.left = left + "px";
-				player.node.showCards.style.top = "90px";
-			}
-			// 鼠标悬停/触摸事件
-			player.node.showCards.onmouseover = player.node.showCards.ontouchend = function (e) {
-				const cards = player.getCards("h");
-				if (!cards.length) return;
-				cards.forEach(c => {
-					c.copy()._customintro = c._customintro;
-				});
-				if (e.type == "mouseover") {
-					player.node.showCards.onmouseleave = function () {};
-				} else {
-					ui.window.addEventListener("touchend", function touch() {}, { once: true });
-				}
-			};
-			// 自己或已死亡不显示
-			if (player == game.me || player.isDead()) {
-				player.node.showCards.hide();
-				while (player.node.showCards.hasChildNodes()) player.node.showCards.removeChild(player.node.showCards.firstChild);
-				return;
-			}
-			// 只在游戏开始后且可点击时显示
-			if (!player.noclick && _status.gameStarted) {
-				const cards = player.getCards("h", c => get.is.shownCard(c) || player.isUnderControl() || (game.me && game.me.hasSkillTag("viewHandcard", null, player, true)));
-				if (!cards.length) {
-					player.node.showCards.hide();
-					return;
-				}
-				player.node.showCards.show();
-				while (player.node.showCards.hasChildNodes()) player.node.showCards.removeChild(player.node.showCards.firstChild);
-				cards.forEach(c => {
-					createElement("div", {
-						class: ["handcard"],
-						innerHTML: lib.translate[c.name].slice(0, 2),
-						parentNode: player.node.showCards,
-					});
-				});
-			}
-		},
-	};
-
 	//选择装备时候装备复制进入手牌区
 	const _copyEquips = function (cards) {
 		const result = [];
@@ -2048,9 +1907,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						delete trigger.onresult;
 					}
 				}
-				("step 1");
+				"step 1";
 				player.lose(event.cards, ui.special)._triggered = null;
-				("step 2");
+				"step 2";
 				for (var i of event.cards) {
 					i.destroyed = true;
 				}
@@ -2080,7 +1939,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				for (var i of event.cards) {
 					_styleEquipGaintag(i);
 				}
-				("step 1");
+				"step 1";
 				var evt = trigger;
 				var onresult = false;
 				if (evt.onresult) {
