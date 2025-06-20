@@ -1872,6 +1872,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		direct: true,
 		charlotte: true,
 		forceDie: true,
+		mode:['versus','doudizhu'],
 		trigger: {
 			global: ["loseAfter", "die", "equipAfter", "addJudgeAfter", "gainAfter", "loseAsyncAfter", "addToExpansionAfter", "phaseBefore", "enterGame", "addShownCardsAfter"],
 		},
@@ -1995,4 +1996,204 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			}
 		},
 	};
+
+	//选择装备时候装备复制进入手牌区
+	const _copyEquips = function (cards) {
+		const result = [];
+		for (const i of cards) {
+			const card = ui.create.card(ui.special);
+			card.init([i.suit, i.number, i.name, i.nature]);
+			card.cardid = i.cardid;
+			card.wunature = i.wunature;
+			card.storage = i.storage;
+			card.relatedCard = i;
+			card.owner = get.owner(i);
+			result.push(card);
+		}
+		return result;
+	};
+	const _styleEquipGaintag = function (card) {
+		if (card.node.gaintag) {
+			card.node.gaintag.style.display = "none";
+		}
+	};
+	const _sortCards = function (a, b) {
+		if (a.name !== b.name) return lib.sort.card(a.name, b.name);
+		if (a.suit !== b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
+		return a.number - b.number;
+	};
+	if (!lib.hooks || !lib.hooks.checkBegin || !lib.hooks.uncheckBegin) {
+		lib.skill._Equipmentselection = {
+			trigger: {
+				player: ["chooseToDiscardBegin", "chooseToUseBegin", "chooseToRespondBegin", "chooseCardBegin"],
+			},
+			charlotte: true,
+			ruleSkill: true,
+			forced: true,
+			popup: false,
+			lastDo: true,
+			filter: function (event, player) {
+				if (!event.position || typeof event.position != "string" || !event.position.includes("e") || !player.countCards("e")) return false;
+				if (event.parent.name == "phaseDiscard") return false;
+				if (event.responded || event.skill) return false;
+				return true;
+			},
+			mod: {},
+			copy: _copyEquips,
+			contentx: function () {
+				"step 0";
+				if (trigger.result.bool) {
+					if (trigger.onresult) {
+						trigger.onresult(trigger.result);
+						delete trigger.onresult;
+					}
+				}
+				("step 1");
+				player.lose(event.cards, ui.special)._triggered = null;
+				("step 2");
+				for (var i of event.cards) {
+					i.destroyed = true;
+				}
+			},
+			content: function () {
+				"step 0";
+				var Equipmentselection_filterCard = trigger.filterCard;
+				if (!trigger.position.includes("s")) {
+					trigger.position += "s";
+					trigger.filterCard = function (card, player, target) {
+						let relatedCard = card.relatedCard ? card.relatedCard : card;
+						if (get.position(card) == "e") return false;
+						if (get.position(card) == "s" && get.itemtype(card) == "card" && !card.hasGaintag("已装备")) return false;
+						return Equipmentselection_filterCard(relatedCard, player, target);
+					};
+				} else {
+					trigger.filterCard = function (card, player, target) {
+						let relatedCard = card.relatedCard ? card.relatedCard : card;
+						if (get.position(card) == "e") return false;
+						return Equipmentselection_filterCard(relatedCard, player, target);
+					};
+				}
+				var cards = player.getCards("e");
+				event.cards = lib.skill._Equipmentselection.copy(cards);
+				player.directgains(event.cards, null, "已装备");
+				event.cards.sort(_sortCards);
+				for (var i of event.cards) {
+					_styleEquipGaintag(i);
+				}
+				("step 1");
+				var evt = trigger;
+				var onresult = false;
+				if (evt.onresult) {
+					onresult = evt.onresult;
+				}
+				var next2 = game.createEvent("_Equipmentselection_clear", false);
+				next2.cards = event.cards;
+				next2.player = player;
+				next2._trigger = evt;
+				next2.setContent(lib.skill._Equipmentselection.contentx);
+				event.next.remove(next2);
+				evt.after.push(next2);
+				evt.onresult = function (result) {
+					if (evt.after.includes(next2)) {
+						evt.after.remove(next2);
+						evt.next.push(next2);
+					}
+					if (result.cards && result.cards.length && event.cards.includes(result.cards[0])) {
+						var card2 = result.cards[0];
+						result.cards[0] = result.cards[0].relatedCard;
+						var cardx = result.cards[0];
+						result.card = {
+							name: get.name(card2),
+							suit: get.suit(card2),
+							number: get.number(card2),
+							nature: get.nature(card2),
+							isCard: true,
+							cardid: cardx.cardid,
+							wunature: cardx.wunature,
+							storage: cardx.storage,
+							cards: [cardx],
+						};
+						game.cardsDiscard(result.cards);
+					}
+					if (onresult) onresult.apply(evt, arguments);
+					delete evt.onresult;
+				};
+				game.delay(1);
+			},
+			_priority: 0,
+		};
+	} else {
+		lib.hooks.checkBegin.add(function (event) {
+			let player = event.player;
+			if (event.position && typeof event.position == "string" && event.position.includes("e") && player.countCards("e") && !event.copyCards && ["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard"].includes(event.name)) {
+				event.copyCards = true;
+				var eventFilterCard;
+				if (!event.position.includes("s")) {
+					event.position += "s";
+				}
+				if (event.filterCard) {
+					var chooseCard_filterCard = event.filterCard;
+					eventFilterCard = function (card, player, target) {
+						let relatedCard = card.relatedCard || card;
+						if (get.position(card) == "e") return false;
+						if (get.position(card) == "s" && get.itemtype(card) == "card" && !card.hasGaintag("已装备")) return false;
+						return chooseCard_filterCard(relatedCard, player, target);
+					};
+				}
+
+				let cards = player.getCards("e");
+				let cardx = _copyEquips(cards);
+				let cardsToGain = [];
+
+				if (chooseCard_filterCard) {
+					const cardxF = cardx.filter(j => chooseCard_filterCard(j.relatedCard, player, event.target));
+					if (typeof event.selectCard === "object" || event.selectCard > 1) {
+						const cardxF2 = [...cardxF];
+						for (const cardF of player.getCards("he", j => {
+							if (!event.position.includes(get.position(j))) return false;
+							return chooseCard_filterCard(j, player, event.target);
+						})) {
+							if (!ui.selected.cards) ui.selected.cards = [];
+							ui.selected.cards.add(cardF);
+							cardxF2.addArray(
+								cardx.filter(j => {
+									if (cardxF2.includes(j)) return false;
+									return chooseCard_filterCard(j.relatedCard, player, event.target);
+								})
+							);
+							ui.selected.cards.remove(cardF);
+						}
+						cardsToGain = cardxF2;
+					} else {
+						cardsToGain = cardxF;
+					}
+				} else {
+					cardsToGain = cardx;
+				}
+
+				if (cardsToGain.length) {
+					player.directgains(cardsToGain, null, "已装备");
+					if (eventFilterCard) event.filterCard = eventFilterCard;
+					cardsToGain.forEach(_styleEquipGaintag);
+				}
+				cardx.sort(_sortCards);
+			}
+		});
+		lib.hooks.uncheckBegin.add(function (event, args) {
+			let player = event.player;
+			if (args.includes("card") && event.copyCards && (event.result || (["chooseToUse", "chooseToRespond"].includes(event.name) && !event.skill && !event.result))) {
+				let cards = event.result?.cards;
+				if (cards) {
+					for (let i = 0; i < cards.length; i++) {
+						if (cards[i].hasGaintag("已装备")) {
+							const realCard = player.getCards("e", card => card.cardid == cards[i].cardid)[0];
+							if (realCard) cards[i] = realCard;
+						}
+					}
+				}
+				if (player) player.getCards("s", card => card.hasGaintag("已装备")).forEach(card => card.delete());
+				event.copyCards = false;
+			}
+		});
+	}
 });
