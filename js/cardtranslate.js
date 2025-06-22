@@ -69,7 +69,7 @@
 	 * @param {number} scale - 缩放比例
 	 */
 	TenYearUI.setCardTransform = function (card, tx, ty, scale) {
-		if (!card || typeof tx !== 'number' || typeof ty !== 'number') return;
+		if (!card || typeof tx !== "number" || typeof ty !== "number") return;
 		card.tx = tx;
 		card.ty = ty;
 		const transformValue = `translate(${tx}px, ${ty}px) scale(${scale})`;
@@ -157,31 +157,31 @@
 			}
 		}
 	};
-	
+
 	/**
 	 * 交换两张卡牌的位置
 	 * @param {HTMLElement} sourceCard - 被拖拽的卡牌
 	 * @param {HTMLElement} targetCard - 目标位置的卡牌
 	 */
-	TenYearUI.swapCardPosition = function(sourceCard, targetCard) {
+	TenYearUI.swapCardPosition = function (sourceCard, targetCard) {
 		const handContainer = ui.handcards1;
 		const children = Array.from(handContainer.childNodes);
 		const sourceIndex = children.indexOf(sourceCard);
 		const targetIndex = children.indexOf(targetCard);
-	
+
 		if (sourceIndex === -1 || targetIndex === -1) return;
-	
+
 		const cardScale = (window.dui && dui.boundsCaches && dui.boundsCaches.hand && dui.boundsCaches.hand.cardScale) || 1;
 		const isMovingLeft = sourceIndex > targetIndex;
-	
+
 		// 在DOM中移动节点
 		handContainer.insertBefore(sourceCard, isMovingLeft ? targetCard : targetCard.nextSibling);
-	
+
 		// 更新卡牌的逻辑位置 (tx, ty) 和样式
 		const sourceTx = sourceCard.tx;
 		TenYearUI.setCardTransform(sourceCard, targetCard.tx, sourceCard.initialTranslateY, cardScale);
 		TenYearUI.setCardTransform(targetCard, sourceTx, targetCard.ty, cardScale);
-	
+
 		// 更新中间卡牌的位置
 		const start = isMovingLeft ? targetIndex + 1 : sourceIndex;
 		const end = isMovingLeft ? sourceIndex : targetIndex - 1;
@@ -189,7 +189,7 @@
 
 		for (let i = start; i <= end; i++) {
 			const card = updatedChildren[i];
-			if (card && card !== sourceCard && typeof card.tx !== 'undefined') {
+			if (card && card !== sourceCard && typeof card.tx !== "undefined") {
 				// 找到它在原始数组中的位置以获取正确的相邻卡牌
 				const originalIdx = children.indexOf(card);
 				const neighborIdx = isMovingLeft ? originalIdx - 1 : originalIdx + 1;
@@ -273,20 +273,20 @@
 		TenYearUI.ensureCardPositions();
 		console.log("卡牌拖拽交换位置功能已初始化（仅限水平移动）");
 	};
-	
+
 	// --- 启动与集成 ---
 
 	function onReady() {
 		// 延迟执行，确保游戏UI和其他脚本已完全加载
 		setTimeout(TenYearUI.init, 1000);
 	}
-	
+
 	if (document.readyState === "complete") {
 		onReady();
 	} else {
 		window.addEventListener("load", onReady);
 	}
-	
+
 	// 如果十周年UI存在，则集成到其初始化流程中
 	if (typeof decadeUI !== "undefined" && decadeUI.init) {
 		const originalInit = decadeUI.init;
