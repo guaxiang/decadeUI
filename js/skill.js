@@ -14,29 +14,23 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			firstDo: true,
 			content() {
 				game.removeGlobalSkill("mx_start");
-				if (lib.config.extension_十周年UI_newDecadeStyle != "othersOn" || lib.config.extension_十周年UI_newDecadeStyle != "off") {
-					game.playAudio("../extension", decadeUI.extensionName, "audio/game_start.mp3");
-					var animation = decadeUI.animation;
-					var bounds = animation.getSpineBounds("effect_youxikaishi");
-					if (bounds == null) return;
-					var sz = bounds.size;
-					var scale = Math.min(animation.canvas.width / sz.x, animation.canvas.height / sz.y) * 0.76;
-					animation.playSpine({
-						name: "effect_youxikaishi",
-						scale: scale,
-					});
-				} else {
-					game.playAudio("../extension", decadeUI.extensionName, "audio/game_start_shousha.mp3");
-					var animation = decadeUI.animation;
-					var bounds = animation.getSpineBounds("effect_youxikaishi_shousha");
-					if (bounds == null) return;
-					var sz = bounds.size;
-					var scale = Math.min(animation.canvas.width / sz.x, animation.canvas.height / sz.y) * 1.5;
-					animation.playSpine({
-						name: "effect_youxikaishi_shousha",
-						scale: scale,
-					});
-				}
+				const style = lib.config.extension_十周年UI_newDecadeStyle;
+				const isShousha = style === "othersOn" || style === "off";
+				const effectName = isShousha ? "effect_youxikaishi_shousha" : "effect_youxikaishi";
+				const audio = isShousha ? "audio/game_start_shousha.mp3" : "audio/game_start.mp3";
+				const scaleFactor = isShousha ? 1.5 : 0.76;
+
+				game.playAudio("../extension", decadeUI.extensionName, audio);
+				const animation = decadeUI.animation;
+				const bounds = animation.getSpineBounds(effectName);
+				if (!bounds) return;
+
+				const sz = bounds.size;
+				const scale = Math.min(animation.canvas.width / sz.x, animation.canvas.height / sz.y) * scaleFactor;
+				animation.playSpine({
+					name: effectName,
+					scale: scale,
+				});
 			},
 		},
 		//龙头
@@ -47,88 +41,57 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			silent: true,
 			forced: true,
 			filter(event, player) {
-				return lib.config.extension_十周年UI_longLevel == "sex" || lib.config.extension_十周年UI_longLevel == "seven";
+				return ["sex", "seven"].includes(lib.config.extension_十周年UI_longLevel);
 			},
 			content: function () {
 				game.removeGlobalSkill("mx_longLevel");
+				const longLevel = lib.config.extension_十周年UI_longLevel;
+				const createAndAppendDragon = (target, src, styles) => {
+					const img = document.createElement("img");
+					img.src = src;
+					Object.assign(img.style, {
+						pointerEvents: "none",
+						position: "absolute",
+						display: "block",
+						...styles,
+					});
+					target.appendChild(img);
+				};
+				const dragonData = {
+					yan: {
+						src: `${decadeUIPath}/assets/image/long1_yan.png`,
+						style: { top: "-88px", left: "-23px", height: "213%", width: "160%", zIndex: "98" },
+					},
+					yu: {
+						src: `${decadeUIPath}/assets/image/long1_yu.png`,
+						style: { top: "-40px", left: "-25px", height: "139%", width: "156%", zIndex: "85" },
+					},
+				};
 				game.players.forEach(target => {
 					let rarity;
-					if (lib.config.extension_十周年UI_longLevel == "seven") {
-						const rarityList = ["silver", "gold", "yu", "yan"];
-						switch (game.getRarity(player.name)) {
-							case "junk":
-								rarity = rarityList[0];
-								break;
-							case "common":
-								rarity = rarityList[1];
-								break;
-							case "rare":
-								rarity = rarityList[2];
-								break;
-							case "epic":
-								rarity = rarityList[3];
-								break;
-							case "legend":
-								rarity = rarityList[4];
-								break;
-							default:
-								break;
-						}
-					}
-					if (lib.config.extension_十周年UI_longLevel == "sex") {
+					if (longLevel === "seven") {
+						const rarityMap = {
+							junk: "silver",
+							common: "gold",
+							rare: "yu",
+							epic: "yan",
+						};
+						rarity = rarityMap[game.getRarity(target.name)];
+					} else if (longLevel === "sex") {
 						const rarityList = ["gold", "yu", "yan"];
 						rarity = rarityList[Math.floor(Math.random() * rarityList.length)];
 					}
-					let longtou;
-					let longwei;
-					if (rarity === "yan") {
-						const wholeYanDragon = document.createElement("img");
-						wholeYanDragon.src = decadeUIPath + "/assets/image/long1_yan.png";
-						wholeYanDragon.style.cssText = "pointer-events:none";
-						wholeYanDragon.style.position = "absolute";
-						wholeYanDragon.style.display = "block";
-						wholeYanDragon.style.top = "-88px";
-						wholeYanDragon.style.left = "-23px";
-						wholeYanDragon.style.height = "213%";
-						wholeYanDragon.style.width = "160%";
-						wholeYanDragon.style.zIndex = "98";
-						target.appendChild(wholeYanDragon);
-					} else if (rarity === "yu") {
-						const wholeYuDragon = document.createElement("img");
-						wholeYuDragon.src = decadeUIPath + "/assets/image/long1_yu.png";
-						wholeYuDragon.style.cssText = "pointer-events:none";
-						wholeYuDragon.style.position = "absolute";
-						wholeYuDragon.style.display = "block";
-						wholeYuDragon.style.top = "-40px";
-						wholeYuDragon.style.left = "-25px";
-						wholeYuDragon.style.height = "139%";
-						wholeYuDragon.style.width = "156%";
-						wholeYuDragon.style.zIndex = "85";
-						target.appendChild(wholeYuDragon);
+					if (dragonData[rarity]) {
+						const data = dragonData[rarity];
+						createAndAppendDragon(target, data.src, data.style);
 					} else {
-						longtou = document.createElement("img");
-						longtou.src = decadeUIPath + "/assets/image/long_" + rarity + "1.png";
-						longtou.style.cssText = "pointer-events:none";
-						longtou.style.position = "absolute";
-						longtou.style.display = "block";
-						longtou.style.top = "-36px";
-						longtou.style.right = "-26px";
-						longtou.style.height = "133px";
-						longtou.style.width = "80px";
-						longtou.style.zIndex = "80";
-						target.appendChild(longtou);
+						const src1 = `${decadeUIPath}/assets/image/long_${rarity}1.png`;
+						const styles1 = { top: "-36px", right: "-26px", height: "133px", width: "80px", zIndex: "80" };
+						createAndAppendDragon(target, src1, styles1);
 
-						longwei = document.createElement("img");
-						longwei.src = decadeUIPath + "/assets/image/long_" + rarity + "2.png";
-						longwei.style.cssText = "pointer-events:none";
-						longwei.style.position = "absolute";
-						longwei.style.display = "block";
-						longwei.style.bottom = "-10px";
-						longwei.style.right = "-13px";
-						longwei.style.height = "40px";
-						longwei.style.width = "92px";
-						longwei.style.zIndex = "99";
-						target.appendChild(longwei);
+						const src2 = `${decadeUIPath}/assets/image/long_${rarity}2.png`;
+						const styles2 = { bottom: "-10px", right: "-13px", height: "40px", width: "92px", zIndex: "99" };
+						createAndAppendDragon(target, src2, styles2);
 					}
 				});
 			},
