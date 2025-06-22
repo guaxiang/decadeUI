@@ -5,343 +5,299 @@
 	// 创建命名空间
 	window.TenYearUI = window.TenYearUI || {};
 
-	// 添加拖拽阈值
-	TenYearUI.dragThreshold = 5; // 像素
+	// --- 配置与状态管理 ---
+	TenYearUI.dragThreshold = 5; // 拖拽阈值 (像素)
+	TenYearUI.cardMargin = 8; // 卡牌间距
+	TenYearUI.isDragging = false;
+	TenYearUI.sourceNode = null;
+	TenYearUI.movedNode = null;
+	TenYearUI.originalPointerEvents = null;
+	TenYearUI.isMobileDevice = navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad|Mobile)/i);
+	TenYearUI.evts = TenYearUI.isMobileDevice ? ["touchstart", "touchmove", "touchend"] : ["mousedown", "mousemove", "mouseup"];
 
-	// 初始化公共功能
+	// --- 初始化 ---
 	TenYearUI.init = function () {
-		// 确保decadeUI存在
 		if (typeof decadeUI === "undefined") {
 			console.error("十周年UI (decadeUI) 未加载，卡牌拖拽功能无法使用");
 			return false;
 		}
-
-		// 初始化卡牌拖拽功能
 		TenYearUI.initCardDragSwap();
 		return true;
 	};
 
-	// 卡牌拖拽交换位置功能
+	// --- 辅助函数 ---
 
-	// 检测是否为移动设备
-	TenYearUI.isMobile = function () {
-		return navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad|Mobile)/i);
-	};
-
-	// 根据设备类型设置事件类型
-	TenYearUI.evts = TenYearUI.isMobile() ? ["touchstart", "touchmove", "touchend"] : ["mousedown", "mousemove", "mouseup"];
-
-	// 设置卡牌间距
-	TenYearUI.cardMargin = 8;
-
-	// 获取元素的transform值
+	/**
+	 * 获取元素的transform值
+	 * @param {HTMLElement} element
+	 * @returns {{translateX: number, translateY: number, scale: number}}
+	 */
 	TenYearUI.getTransformValues = function (element) {
 		try {
 			const style = window.getComputedStyle(element);
 			const matrix = new DOMMatrixReadOnly(style.transform);
-			return {
-				translateX: matrix.m41,
-				translateY: matrix.m42,
-				scale: matrix.m11,
-			};
+			return { translateX: matrix.m41, translateY: matrix.m42, scale: matrix.m11 };
 		} catch (e) {
 			console.error("获取transform值失败:", e);
 			return { translateX: 0, translateY: 0, scale: 1 };
 		}
 	};
 
-	// 判断是否为相邻索引
-	TenYearUI.isSimple = function (sourceIndex, targetIndex) {
-		return Math.abs(sourceIndex - targetIndex) === 1;
-	};
-
-	// 更新手牌布局，确保在拖拽时也能触发展开效果
+	/**
+	 * 更新手牌布局，以触发展开/折叠效果
+	 */
 	TenYearUI.updateHandLayout = function () {
-		if (typeof dui !== "undefined" && dui.layout && typeof dui.layout.updateHand === "function") {
+		if (window.dui && dui.layout && typeof dui.layout.updateHand === "function") {
 			dui.layout.updateHand();
 		}
 	};
 
-	// 检查元素是否为有效的卡牌
-	TenYearUI.isValidCard = function (element) {
-		// 检查元素是否存在且为卡牌元素
-		return element && element.classList && (element.classList.contains("card") || (element.parentNode && element.parentNode.classList && element.parentNode.classList.contains("card")));
+	/**
+	 * 从事件对象中获取父级卡牌元素
+	 * @param {EventTarget} target
+	 * @returns {HTMLElement|null}
+	 */
+	TenYearUI.getCardElement = function (target) {
+		return target ? target.closest(".card") : null;
 	};
 
-	// 获取卡牌元素（如果点击的是卡牌内部元素，获取其父卡牌）
-	TenYearUI.getCardElement = function (element) {
-		if (!element) return null;
-
-		if (element.classList && element.classList.contains("card")) {
-			return element;
-		} else if (element.parentNode && element.parentNode.classList && element.parentNode.classList.contains("card")) {
-			return element.parentNode;
-		}
-
-		return null;
+	/**
+	 * 设置卡牌的 transform 样式并缓存
+	 * @param {HTMLElement} card - 卡牌元素
+	 * @param {number} tx - X轴偏移
+	 * @param {number} ty - Y轴偏移
+	 * @param {number} scale - 缩放比例
+	 */
+	TenYearUI.setCardTransform = function (card, tx, ty, scale) {
+		if (!card || typeof tx !== 'number' || typeof ty !== 'number') return;
+		card.tx = tx;
+		card.ty = ty;
+		const transformValue = `translate(${tx}px, ${ty}px) scale(${scale})`;
+		card.style.transform = transformValue;
+		card._transform = transformValue; // 缓存transform值，供其他逻辑使用
 	};
 
-	// 卡牌拖拽开始
+	// --- 核心拖拽逻辑 ---
+
+	/**
+	 * 卡牌拖拽开始
+	 * @param {MouseEvent|TouchEvent} e
+	 */
 	TenYearUI.dragCardStart = function (e) {
-		if (e.button === 2) return; // 右键不触发拖拽
+		if (e.button === 2) return; // 忽略右键
 
-		const target = e.target || e.srcElement;
-		if (!target) return;
-
-		// 获取卡牌元素（可能是点击了卡牌内部元素）
-		const cardElement = TenYearUI.getCardElement(target);
+		const cardElement = TenYearUI.getCardElement(e.target);
 		if (!cardElement) return;
 
-		// 获取起始位置
-		const startX = e.clientX ? e.clientX : e.touches && e.touches[0] ? e.touches[0].clientX : 0;
-		const startY = e.clientY ? e.clientY : e.touches && e.touches[0] ? e.touches[0].clientY : 0;
+		const touch = e.touches ? e.touches[0] : e;
+		const startX = touch.clientX;
+		const startY = touch.clientY;
 
-		// 保存初始状态和位置
-		TenYearUI.sourceNode = cardElement;
-		TenYearUI.sourceNode.startX = startX;
-		TenYearUI.sourceNode.startY = startY;
-		TenYearUI.isDragging = false;
-
-		// 获取transform值
 		const transformValues = TenYearUI.getTransformValues(cardElement);
-		TenYearUI.sourceNode.initialTranslateX = transformValues.translateX;
-		TenYearUI.sourceNode.initialTranslateY = transformValues.translateY;
-		TenYearUI.sourceNode.scale = transformValues.scale;
 
-		// 存储原始pointer-events值
+		TenYearUI.sourceNode = cardElement;
+		Object.assign(cardElement, {
+			startX: startX,
+			startY: startY,
+			initialTranslateX: transformValues.translateX,
+			initialTranslateY: transformValues.translateY,
+			scale: transformValues.scale,
+		});
+
+		TenYearUI.isDragging = false;
 		TenYearUI.originalPointerEvents = getComputedStyle(cardElement).pointerEvents;
 
-		// 添加鼠标移动和松开事件
 		document.addEventListener(TenYearUI.evts[1], TenYearUI.dragCardMove, { passive: false });
 		document.addEventListener(TenYearUI.evts[2], TenYearUI.dragCardEnd, { passive: false });
 	};
 
-	// 卡牌拖动过程
+	/**
+	 * 卡牌拖动过程
+	 * @param {MouseEvent|TouchEvent} e
+	 */
 	TenYearUI.dragCardMove = function (e) {
-		if (!TenYearUI.sourceNode) return;
+		const sourceCard = TenYearUI.sourceNode;
+		if (!sourceCard) return;
 
-		const currentX = e.clientX ? e.clientX : e.touches && e.touches[0] ? e.touches[0].clientX : 0;
-		const currentY = e.clientY ? e.clientY : e.touches && e.touches[0] ? e.touches[0].clientY : 0;
-		const dx = currentX - TenYearUI.sourceNode.startX;
-		const dy = currentY - TenYearUI.sourceNode.startY;
-		const distance = Math.sqrt(dx * dx + dy * dy);
+		const touch = e.touches ? e.touches[0] : e;
+		const currentX = touch.clientX;
+		const currentY = touch.clientY;
 
-		// 如果移动距离超过阈值，则认为是拖拽
-		if (!TenYearUI.isDragging && distance > TenYearUI.dragThreshold) {
-			TenYearUI.isDragging = true;
-			e.preventDefault(); // 只在确认为拖拽时阻止默认行为
-			e.stopPropagation(); // 阻止事件冒泡
+		const dx = currentX - sourceCard.startX;
+		const dy = currentY - sourceCard.startY;
 
-			TenYearUI.sourceNode.style.pointerEvents = "none";
-			TenYearUI.sourceNode.style.transition = "none";
-			TenYearUI.sourceNode.style.opacity = 0.5;
-			TenYearUI.sourceNode.style.zIndex = 99; // 确保拖拽的卡牌在最上层
+		if (!TenYearUI.isDragging) {
+			const distance = Math.sqrt(dx * dx + dy * dy);
+			if (distance > TenYearUI.dragThreshold) {
+				TenYearUI.isDragging = true;
+				e.preventDefault();
+				e.stopPropagation();
+
+				Object.assign(sourceCard.style, {
+					pointerEvents: "none",
+					transition: "none",
+					opacity: "0.5",
+					zIndex: "99",
+				});
+			}
 		}
 
 		if (TenYearUI.isDragging) {
-			// 应用缩放系数
-			let zoomFactor = typeof game !== "undefined" && game.documentZoom ? game.documentZoom : 1;
-			let newTranslateX = TenYearUI.sourceNode.initialTranslateX + dx / zoomFactor;
-			// 保持初始Y值不变，只允许水平移动
-			let newTranslateY = TenYearUI.sourceNode.initialTranslateY;
+			const zoomFactor = (window.game && game.documentZoom) || 1;
+			const newTranslateX = sourceCard.initialTranslateX + dx / zoomFactor;
+			// 保持Y轴位置不变，仅水平拖动
+			sourceCard.style.transform = `translate(${newTranslateX}px, ${sourceCard.initialTranslateY}px) scale(${sourceCard.scale})`;
 
-			TenYearUI.sourceNode.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px) scale(${TenYearUI.sourceNode.scale})`;
+			const pointElement = document.elementFromPoint(touch.pageX, touch.pageY);
+			const targetCard = TenYearUI.getCardElement(pointElement);
 
-			// 获取当前指向的元素
-			const x = e.pageX ? e.pageX : e.touches && e.touches[0] ? e.touches[0].pageX : 0;
-			const y = e.pageY ? e.pageY : e.touches && e.touches[0] ? e.touches[0].pageY : 0;
-			const pointElement = document.elementFromPoint(x, y);
-
-			// 获取可能的卡牌元素
-			const currentElement = TenYearUI.getCardElement(pointElement);
-
-			// 检查是否正在拖动到另一张卡牌上
-			if (currentElement && currentElement !== TenYearUI.sourceNode && currentElement.parentNode === ui.handcards1) {
-				// 如果鼠标下的卡牌变了，则更新要交换的卡牌
-				if (TenYearUI.movedNode !== currentElement) {
-					TenYearUI.movedNode = currentElement;
-
-					// 获取两张卡牌的索引
-					const children = Array.from(ui.handcards1.childNodes);
-					const sourceIndex = children.indexOf(TenYearUI.sourceNode);
-					const targetIndex = children.indexOf(currentElement);
-
-					// 获取卡牌缩放比例
-					let cardScale = 1;
-					if (typeof dui !== "undefined" && dui.boundsCaches && dui.boundsCaches.hand) {
-						cardScale = dui.boundsCaches.hand.cardScale;
-					}
-
-					if (sourceIndex > targetIndex) {
-						// 向左移动
-						ui.handcards1.insertBefore(TenYearUI.sourceNode, currentElement);
-						if (TenYearUI.isSimple(sourceIndex, targetIndex)) {
-							// 简单交换位置（相邻卡牌）
-							let currentElementX = currentElement.tx;
-							currentElement.tx = TenYearUI.sourceNode.tx;
-							currentElement.style.transform = "translate(" + currentElement.tx + "px," + currentElement.ty + "px) scale(" + cardScale + ")";
-							currentElement._transform = currentElement.style.transform;
-							TenYearUI.sourceNode.tx = currentElementX;
-							TenYearUI.sourceNode._transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.ty + "px) scale(" + cardScale + ")";
-						} else {
-							// 多张卡牌位置调整
-							let startIndex = targetIndex;
-							let endIndex = sourceIndex - 1;
-							let targetX = currentElement.tx;
-							for (let i = startIndex; i <= endIndex; i++) {
-								let card = children[i];
-								if (!card || typeof card.tx === "undefined") continue;
-								card.tx += TenYearUI.cardMargin;
-								card.style.transform = "translate(" + card.tx + "px," + card.ty + "px) scale(" + cardScale + ")";
-								card._transform = card.style.transform;
-							}
-							TenYearUI.sourceNode.tx = targetX;
-							TenYearUI.sourceNode._transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.ty + "px) scale(" + cardScale + ")";
-						}
-					} else {
-						// 向右移动
-						ui.handcards1.insertBefore(TenYearUI.sourceNode, currentElement.nextSibling);
-						if (TenYearUI.isSimple(sourceIndex, targetIndex)) {
-							// 简单交换位置（相邻卡牌）
-							let tx = currentElement.tx;
-							currentElement.tx = TenYearUI.sourceNode.tx;
-							currentElement.style.transform = "translate(" + currentElement.tx + "px," + currentElement.ty + "px) scale(" + cardScale + ")";
-							currentElement._transform = currentElement.style.transform;
-							TenYearUI.sourceNode.tx = tx;
-							TenYearUI.sourceNode._transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.ty + "px) scale(" + cardScale + ")";
-						} else {
-							// 多张卡牌位置调整
-							let startIndex = sourceIndex + 1;
-							let endIndex = targetIndex;
-							let targetX = currentElement.tx;
-							for (let i = startIndex; i <= endIndex; i++) {
-								let card = children[i];
-								if (!card || card === TenYearUI.sourceNode || typeof card.tx === "undefined") continue;
-								card.tx -= TenYearUI.cardMargin;
-								card.style.transform = "translate(" + card.tx + "px," + card.ty + "px) scale(" + cardScale + ")";
-								card._transform = card.style.transform;
-							}
-							TenYearUI.sourceNode.tx = targetX;
-							TenYearUI.sourceNode._transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.ty + "px) scale(" + cardScale + ")";
-						}
-					}
-
-					console.log("交换位置:", sourceIndex, "=>", targetIndex);
-
-					// 更新手牌布局，确保展开效果正确
-					TenYearUI.updateHandLayout();
-				}
+			if (targetCard && targetCard !== sourceCard && targetCard.parentNode === ui.handcards1 && TenYearUI.movedNode !== targetCard) {
+				TenYearUI.movedNode = targetCard;
+				TenYearUI.swapCardPosition(sourceCard, targetCard);
 			}
 		}
 	};
+	
+	/**
+	 * 交换两张卡牌的位置
+	 * @param {HTMLElement} sourceCard - 被拖拽的卡牌
+	 * @param {HTMLElement} targetCard - 目标位置的卡牌
+	 */
+	TenYearUI.swapCardPosition = function(sourceCard, targetCard) {
+		const handContainer = ui.handcards1;
+		const children = Array.from(handContainer.childNodes);
+		const sourceIndex = children.indexOf(sourceCard);
+		const targetIndex = children.indexOf(targetCard);
+	
+		if (sourceIndex === -1 || targetIndex === -1) return;
+	
+		const cardScale = (window.dui && dui.boundsCaches && dui.boundsCaches.hand && dui.boundsCaches.hand.cardScale) || 1;
+		const isMovingLeft = sourceIndex > targetIndex;
+	
+		// 在DOM中移动节点
+		handContainer.insertBefore(sourceCard, isMovingLeft ? targetCard : targetCard.nextSibling);
+	
+		// 更新卡牌的逻辑位置 (tx, ty) 和样式
+		const sourceTx = sourceCard.tx;
+		TenYearUI.setCardTransform(sourceCard, targetCard.tx, sourceCard.initialTranslateY, cardScale);
+		TenYearUI.setCardTransform(targetCard, sourceTx, targetCard.ty, cardScale);
+	
+		// 更新中间卡牌的位置
+		const start = isMovingLeft ? targetIndex + 1 : sourceIndex;
+		const end = isMovingLeft ? sourceIndex : targetIndex - 1;
+		const updatedChildren = Array.from(handContainer.childNodes);
 
-	// 卡牌拖动结束
+		for (let i = start; i <= end; i++) {
+			const card = updatedChildren[i];
+			if (card && card !== sourceCard && typeof card.tx !== 'undefined') {
+				// 找到它在原始数组中的位置以获取正确的相邻卡牌
+				const originalIdx = children.indexOf(card);
+				const neighborIdx = isMovingLeft ? originalIdx - 1 : originalIdx + 1;
+				const neighborCard = children[neighborIdx];
+				if (neighborCard) {
+					TenYearUI.setCardTransform(card, neighborCard.tx, card.ty, cardScale);
+				}
+			}
+		}
+
+		console.log("交换位置:", sourceIndex, "=>", targetIndex);
+		TenYearUI.updateHandLayout();
+	};
+
+	/**
+	 * 卡牌拖动结束
+	 * @param {MouseEvent|TouchEvent} e
+	 */
 	TenYearUI.dragCardEnd = function (e) {
-		if (!TenYearUI.sourceNode) return;
+		const sourceCard = TenYearUI.sourceNode;
+		if (!sourceCard) return;
 
 		if (TenYearUI.isDragging) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (TenYearUI.movedNode) {
-				// 获取卡牌缩放比例
-				let cardScale = 1;
-				if (typeof dui !== "undefined" && dui.boundsCaches && dui.boundsCaches.hand) {
-					cardScale = dui.boundsCaches.hand.cardScale;
-				}
-
-				TenYearUI.sourceNode.style.transform = "translate(" + TenYearUI.sourceNode.tx + "px," + TenYearUI.sourceNode.initialTranslateY + "px) scale(" + cardScale + ")";
-				TenYearUI.movedNode = null;
-			} else {
-				// 恢复到原始位置
-				TenYearUI.sourceNode.style.transform = "translate(" + TenYearUI.sourceNode.initialTranslateX + "px," + TenYearUI.sourceNode.initialTranslateY + "px) scale(" + TenYearUI.sourceNode.scale + ")";
+			// 如果没有移动到新的位置，则恢复原始位置
+			if (!TenYearUI.movedNode) {
+				sourceCard.style.transform = `translate(${sourceCard.initialTranslateX}px, ${sourceCard.initialTranslateY}px) scale(${sourceCard.scale})`;
 			}
 		}
 
-		// 清理状态
-		if (TenYearUI.sourceNode) {
-			TenYearUI.sourceNode.style.transition = null;
-			TenYearUI.sourceNode.style.pointerEvents = TenYearUI.originalPointerEvents;
-			TenYearUI.sourceNode.style.opacity = 1;
-			TenYearUI.sourceNode.style.zIndex = null;
-		}
+		// 清理状态和样式
+		Object.assign(sourceCard.style, {
+			transition: "",
+			pointerEvents: TenYearUI.originalPointerEvents || "",
+			opacity: "1",
+			zIndex: "",
+		});
 
 		document.removeEventListener(TenYearUI.evts[1], TenYearUI.dragCardMove);
 		document.removeEventListener(TenYearUI.evts[2], TenYearUI.dragCardEnd);
 
 		TenYearUI.sourceNode = null;
+		TenYearUI.movedNode = null;
 		TenYearUI.isDragging = false;
 
 		// 拖拽结束后更新手牌布局
 		TenYearUI.updateHandLayout();
 	};
 
-	// 确保卡牌元素有tx和ty属性
+	/**
+	 * 确保所有卡牌都具有初始的 tx 和 ty 位置属性
+	 */
 	TenYearUI.ensureCardPositions = function () {
 		if (!ui || !ui.handcards1) return;
-
-		const cards = ui.handcards1.querySelectorAll(".card");
-		cards.forEach((card, index) => {
+		ui.handcards1.querySelectorAll(".card").forEach(card => {
 			if (typeof card.tx === "undefined" || typeof card.ty === "undefined") {
-				let transformValues = TenYearUI.getTransformValues(card);
-				card.tx = transformValues.translateX;
-				card.ty = transformValues.translateY;
+				const { translateX, translateY } = TenYearUI.getTransformValues(card);
+				card.tx = translateX;
+				card.ty = translateY;
 			}
 		});
 	};
 
-	// 初始化卡牌拖拽功能
+	/**
+	 * 初始化卡牌拖拽交换功能
+	 */
 	TenYearUI.initCardDragSwap = function () {
-		// 重置状态变量
-		TenYearUI.sourceNode = null;
-		TenYearUI.movedNode = null;
-		TenYearUI.originalPointerEvents = null;
-		TenYearUI.isDragging = false;
-
-		// 确保ui.handcards1存在
 		if (!ui || !ui.handcards1) {
-			console.error("ui.handcards1不存在，延迟初始化");
+			console.error("ui.handcards1不存在，1秒后重试");
 			setTimeout(TenYearUI.initCardDragSwap, 1000);
 			return;
 		}
 
-		// 移除可能已存在的事件监听器，防止重复绑定
-		ui.handcards1.removeEventListener(TenYearUI.evts[0], TenYearUI.dragCardStart);
+		// 为手牌区容器添加事件监听器 (事件委托)
+		const handContainer = ui.handcards1;
+		handContainer.removeEventListener(TenYearUI.evts[0], TenYearUI.dragCardStart);
+		handContainer.addEventListener(TenYearUI.evts[0], TenYearUI.dragCardStart, { passive: false });
 
-		// 确保卡牌有正确的位置属性
 		TenYearUI.ensureCardPositions();
-
-		// 为手牌区添加事件监听器
-		ui.handcards1.addEventListener(TenYearUI.evts[0], TenYearUI.dragCardStart, {
-			passive: false,
-		});
-
 		console.log("卡牌拖拽交换位置功能已初始化（仅限水平移动）");
 	};
+	
+	// --- 启动与集成 ---
 
-	// 游戏加载完成后初始化功能
-	if (document.readyState === "complete") {
-		// 延迟执行，确保游戏UI已加载
+	function onReady() {
+		// 延迟执行，确保游戏UI和其他脚本已完全加载
 		setTimeout(TenYearUI.init, 1000);
-	} else {
-		window.addEventListener("load", function () {
-			// 延迟执行，确保游戏UI已加载
-			setTimeout(TenYearUI.init, 1000);
-		});
 	}
-
-	// 如果十周年UI加载了，我们需要集成到它的生命周期中
-	if (typeof decadeUI !== "undefined") {
+	
+	if (document.readyState === "complete") {
+		onReady();
+	} else {
+		window.addEventListener("load", onReady);
+	}
+	
+	// 如果十周年UI存在，则集成到其初始化流程中
+	if (typeof decadeUI !== "undefined" && decadeUI.init) {
 		const originalInit = decadeUI.init;
-		decadeUI.init = function () {
-			const result = originalInit.apply(this, arguments);
-			// 初始化卡牌拖拽功能
-			setTimeout(TenYearUI.init, 1000);
+		decadeUI.init = function (...args) {
+			const result = originalInit.apply(this, args);
+			onReady(); // 在十周年UI初始化后再次确保我们的功能被初始化
 			return result;
 		};
 	}
 
-	// 提供接口便于其他模块调用
+	// 提供全局接口，便于其他模块调用
 	window.initCardDragSwap = TenYearUI.initCardDragSwap;
 
 	console.log("十周年UI卡牌拖拽交换位置功能模块已加载");
