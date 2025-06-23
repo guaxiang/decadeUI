@@ -5,11 +5,14 @@
 ![十周年UI](https://img.shields.io/badge/十周年UI-界面美化扩展-blue?style=for-the-badge)
 ![版本](https://img.shields.io/badge/版本-最新-green?style=for-the-badge)
 ![许可证](https://img.shields.io/badge/许可证-GPL--3.0-orange?style=for-the-badge)
+![状态](https://img.shields.io/badge/状态-活跃维护中-brightgreen?style=for-the-badge)
 
 **为《无名杀》游戏提供现代化界面美化的扩展**
 
 [![GitHub stars](https://img.shields.io/github/stars/diandian157/decadeUI?style=social)](https://github.com/diandian157/decadeUI)
 [![GitHub forks](https://img.shields.io/github/forks/diandian157/decadeUI?style=social)](https://github.com/diandian157/decadeUI)
+[![GitHub issues](https://img.shields.io/github/issues/diandian157/decadeUI)](https://github.com/diandian157/decadeUI/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/diandian157/decadeUI)](https://github.com/diandian157/decadeUI/pulls)
 
 </div>
 
@@ -75,6 +78,15 @@ cp -r decadeUI/ 无名杀安装目录/extension/十周年UI/
 3. 打开游戏设置里的自动导入扩展开关
 4. 解压后将整个 `十周年UI` 文件夹复制到无名杀的 `extension` 目录下
 5. 重启无名杀游戏
+
+````
+
+### ✅ 安装验证
+
+安装完成后，您应该能够：
+- 在游戏扩展列表中看到"十周年UI"
+- 在布局设置中看到新的布局选项
+- 在扩展设置中看到相关配置项
 
 ---
 
@@ -177,6 +189,44 @@ cp -r decadeUI/ 无名杀安装目录/extension/十周年UI/
 
 </details>
 
+<details>
+<summary><strong>Q: 如何更新到最新版本？</strong></summary>
+
+**A:** 建议定期检查 GitHub 仓库获取最新版本。
+
+**更新步骤：**
+1. 备份当前的扩展文件夹
+2. 下载最新版本并替换原文件夹
+3. 清除浏览器缓存
+4. 重启游戏
+
+</details>
+
+<details>
+<summary><strong>Q: 扩展设置在哪里？</strong></summary>
+
+**A:** 在游戏主界面可以找到扩展设置选项。
+
+**设置位置：**
+- 游戏主界面 → 扩展 → 十周年UI → 设置
+- 或者：游戏选项 → 扩展 → 十周年UI
+
+</details>
+
+<details>
+<summary><strong>Q: 支持哪些浏览器？</strong></summary>
+
+**A:** 推荐使用现代浏览器以获得最佳体验。
+
+**浏览器支持：**
+- ✅ Chrome 91+（推荐）
+- ✅ Edge 91+
+- ✅ Firefox 89+
+- ⚠️ Safari 14+（部分功能可能受限）
+- ❌ 不支持 IE 浏览器
+
+</details>
+
 ---
 
 ## 🤝 贡献指南
@@ -190,7 +240,7 @@ graph LR
     C --> D[发起 PR]
     D --> E[代码审查]
     E --> F[合并代码]
-```
+````
 
 1. **Fork 本仓库**
 2. **创建功能分支**：`git checkout -b feature/新功能`
@@ -225,7 +275,41 @@ graph LR
 
 ---
 
-## 🙏 致谢
+## 🙏 致谢人员
+
+<div align="center">
+
+**排名不分先后，感谢所有为十周年 UI 做出贡献的朋友们！**
+
+</div>
+
+### 🌟 贡献者名单
+
+<div align="center">
+
+感谢以下朋友为十周年 UI 项目做出的贡献：
+
+<br>
+
+**@mengxinzxz** • **@xizifu** • **U** • **小爱莉** • **扶苏** • **小曦** • **@yx-lingmeng** • **无名** • **@rebirth-of-I-am**
+
+<br>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0;">
+
+![贡献者](https://img.shields.io/badge/贡献者-@mengxinzxz-blue?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-@xizifu-green?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-U-orange?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-小爱莉-purple?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-扶苏-red?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-小曦-cyan?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-@yx--lingmeng-yellow?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-无名-pink?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-@rebirth--of--I--am-indigo?style=flat-square)
+
+</div>
+
+</div>
 
 ### 👨‍💻 原作者
 
@@ -243,7 +327,13 @@ graph LR
 
 ### 🌟 社区贡献
 
+<div align="center">
+
 感谢所有为无名杀社区做出贡献的开发者们！
+
+**💝 特别感谢每一位使用和支持十周年 UI 的玩家！**
+
+</div>
 
 ---
 
@@ -251,11 +341,10 @@ graph LR
 
 <div align="center">
 
-| 项目          | 链接                                                                           | 描述       |
-| ------------- | ------------------------------------------------------------------------------ | ---------- |
-| **十周年 UI** | [GitHub 仓库](https://github.com/diandian157/decadeUI)                         | 本项目主页 |
-| **无名杀**    | [GitHub 仓库](https://github.com/libnoname/noname/tree/master)                 | 游戏本体   |
-| **客户端**    | [下载地址](https://github.com/libnoname/noname/releases/tag/chromium91-client) | 官方客户端 |
+| 项目       | 链接                                                                           | 描述       |
+| ---------- | ------------------------------------------------------------------------------ | ---------- |
+| **无名杀** | [GitHub 仓库](https://github.com/libnoname/noname/tree/master)                 | 游戏本体   |
+| **客户端** | [下载地址](https://github.com/libnoname/noname/releases/tag/chromium91-client) | 官方客户端 |
 
 </div>
 
