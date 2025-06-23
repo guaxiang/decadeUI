@@ -209,11 +209,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var node = self.querySelector('[data-id="' + item.id + '"]');
 					if (node) return;
 					if (item.type === "enable") {
-						let skillName = get.translation(item.name);
-						// 如果是装备技能，只显示前两个字符
-						if (eSkills && eSkills.includes(item.id)) {
-							skillName = skillName.slice(0, 2);
-						}
+						let skillName = get.translation(item.name).slice(0, 2);
 						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable, skillName);
 						node.dataset.id = item.id;
 						node.addEventListener("click", function () {
@@ -225,7 +221,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!item.info) return;
 					if (!item.translation) return;
 					if (eSkills && eSkills.includes(item.id)) return;
-					node = ui.create.div(".skillitem", self.node[get.is.phoneLayout() ? "trigger" : "enable"], item.name);
+					node = ui.create.div(".skillitem", self.node[get.is.phoneLayout() ? "trigger" : "enable"], get.translation(item.name).slice(0, 2));
 					node.dataset.id = item.id;
 				});
 				return this;

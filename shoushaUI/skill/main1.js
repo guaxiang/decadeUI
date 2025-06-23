@@ -300,7 +300,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var node = self.querySelector('[data-id="' + item.id + '"]');
 					if (node) return;
 					if (item.type === "enable") {
-						let name = get.translation(item.name); /*.slice(0, 4)*/
+						let name = get.translation(item.name).slice(0, 2);
 						//修改司马徽技能单独分离
 						if (item.id.indexOf("jianjie_huoji") != -1) {
 							node = ui.create.div(".skillitem_smh_huoji", self.node.enable, name);
@@ -312,7 +312,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							//    if (item.info && item.info.limited) {
 							//    node = ui.create.div('.skillitemxianding.skillitem', self.node.enable, get.translation(item.name).slice(0, 4));
 							//    } else {
-							node = ui.create.div(".skillitem", self.node.enable, get.translation(item.name) /*.slice(0, 4)*/);
+							node = ui.create.div(".skillitem", self.node.enable, name);
 							//}
 						}
 						//--------0---------//
@@ -380,7 +380,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!item.translation) return;
 					if (item.id == "jiu") return false; //--------改酒
 					if (eSkills && eSkills.includes(item.id)) return;
-					node = ui.create.div(".skillitem", self.node.trigger, item.name /*.slice(0, 4)*/);
+					var skillName = get.translation(item.name).slice(0, 2);
+					node = ui.create.div(".skillitem", self.node.trigger, skillName);
 
 					if (item.id) {
 						//这里修改5{//这是被动技能的上锁和按钮切换
@@ -433,7 +434,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					} //这里修改5}
 
 					//------skill的main1.js----需要添加-----------------//
-					ui.create.div(".skillitem-child", node, item.name);
+					ui.create.div(".skillitem-child", node, skillName);
 					node.dataset.id = item.id;
 				});
 				return this;
@@ -524,7 +525,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var info = lib.skill[k];
 				var item = node.querySelector('[data-id="' + k + '"]');
 				if (!item) {
-					if (!info.zhuanhuanji) item = ui.create.div(".skillMarkItem.xiandingji", node, get.skillTranslation(k, player));
+					if (!info.zhuanhuanji) item = ui.create.div(".skillMarkItem.xiandingji", node, get.skillTranslation(k, player).slice(0, 2));
 					//如果不是转换技就调用限定技的标记
 					else {
 						//判断图片存在，不存在就用底图
@@ -543,12 +544,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								item = ui.create.div(".skillMarkItem.zhuanhuanji", node, "");
 								item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/" + k + "_yang.png");
 							} else {
-								item = ui.create.div(".skillMarkItem.zhuanhuanji", node, get.skillTranslation(k, player));
+								item = ui.create.div(".skillMarkItem.zhuanhuanji", node, get.skillTranslation(k, player).slice(0, 2));
 								item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png");
 								item.style.setProperty("--w", "42px");
 							}
 						} catch (err) {
-							item = ui.create.div(".skillMarkItem.zhuanhuanji", node, get.skillTranslation(k, player));
+							item = ui.create.div(".skillMarkItem.zhuanhuanji", node, get.skillTranslation(k, player).slice(0, 2));
 							item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png");
 							item.style.setProperty("--w", "42px");
 						}
@@ -572,8 +573,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (node.querySelector('[data-id="' + k + '"]')) continue;
 				var item;
 				if (info.dutySkill) {
-					item = ui.create.div(".skillMarkItem.duty", node, get.skillTranslation(k, player));
-				} else item = ui.create.div(".skillMarkItem.juexingji", node, get.skillTranslation(k, player));
+					item = ui.create.div(".skillMarkItem.duty", node, get.skillTranslation(k, player).slice(0, 2));
+				} else item = ui.create.div(".skillMarkItem.juexingji", node, get.skillTranslation(k, player).slice(0, 2));
 				item.dataset.id = k;
 			}
 			//这里结束4}
