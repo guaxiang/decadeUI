@@ -72,14 +72,12 @@ cp -r decadeUI/ 无名杀安装目录/extension/十周年UI/
 ```
 
 ### 方法二：手动下载
-
+```bash
 1. 访问 [GitHub 仓库](https://github.com/diandian157/decadeUI)
 2. 点击 `Releases` → `Source code`
 3. 打开游戏设置里的自动导入扩展开关
 4. 解压后将整个 `十周年UI` 文件夹复制到无名杀的 `extension` 目录下
 5. 重启无名杀游戏
-
-````
 
 ### ✅ 安装验证
 
@@ -88,7 +86,7 @@ cp -r decadeUI/ 无名杀安装目录/extension/十周年UI/
 - 在布局设置中看到新的布局选项
 - 在扩展设置中看到相关配置项
 
----
+```
 
 ## ⚙️ 配置选项
 
