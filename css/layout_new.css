@@ -594,7 +594,8 @@ body > .background {
 }
 
 .touchinfo.left {
-	left: 2%;
+	left: 84%;
+	top: 15%;
 }
 
 .touchinfo.right {
