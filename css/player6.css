@@ -367,7 +367,6 @@
 	height: auto !important;
 	font-size: 13px;
 	line-height: 15px;
-	letter-spacing: 5px;
 	text-shadow: none;
 	z-index: 79;
 	font-weight: 700;
@@ -536,7 +535,6 @@
 	width: 18px;
 	height: 96px;
 	font-size: 16px;
-	letter-spacing: 5px;
 	text-shadow: none;
 	color: #ffffff;
 	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/

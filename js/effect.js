@@ -1,309 +1,659 @@
 "use strict";
 decadeModule.import(function (lib, game, ui, get, ai, _status) {
+	// ==================== 常量定义 ====================
+	const CONSTANTS = {
+		// 动画相关
+		ANIMATION: {
+			SPEED: 0.07,
+			FRAME_RATE: 17,
+			LINE_COLOR: "rgb(250,220,140)",
+			LINE_WIDTH: 2.6,
+		},
+
+		// 特效持续时间
+		DURATION: {
+			EFFECT: 2180,
+			KILL_DELAY: 2000,
+			KILL_CLOSE: 3000,
+		},
+
+		// 击杀特效
+		KILL: {
+			LIGHT_COUNT: 10,
+			SCALE_FACTOR: 1.2,
+			MAX_SCALE: 1.0,
+			MIN_SCALE: 0.1,
+		},
+
+		// 技能特效
+		SKILL: {
+			MAX_WIDTH: 288,
+			MAX_HEIGHT: 378,
+			NAME_OFFSET_Y: 165,
+			GENERAL_OFFSET_X: 200,
+			GENERAL_OFFSET_Y: 160,
+		},
+
+		// 样式相关
+		STYLES: {
+			EFFECT_WINDOW: {
+				backgroundColor: "rgba(0,0,0,0.7)",
+				transition: "all 4s",
+				zIndex: 7,
+			},
+			GENERAL_NAME: {
+				position: "absolute",
+				writingMode: "vertical-lr",
+				textOrientation: "upright",
+				fontFamily: "yuanli",
+				color: "rgb(215, 234, 67)",
+				fontSize: "25px",
+				textShadow: "0 0 5px black, 0 0 10px black",
+				pointerEvents: "none",
+				letterSpacing: "5px",
+				zIndex: 17,
+			},
+		},
+	};
+
+	// ==================== 工具函数 ====================
+	const utils = {
+		/**
+		 * 获取玩家头像元素
+		 * @param {Object} player - 玩家对象
+		 * @param {boolean} isUnseen - 是否为不可见状态
+		 * @returns {HTMLElement} 头像元素
+		 */
+		getPlayerAvatar(player, isUnseen = false) {
+			return isUnseen ? player.node.avatar2 : player.node.avatar;
+		},
+
+		/**
+		 * 解析CSS URL字符串
+		 * @param {string} url - CSS URL字符串
+		 * @returns {string} 解析后的URL
+		 */
+		parseCssUrl(url) {
+			if (url.indexOf('url("') === 0) {
+				return url.slice(5, url.indexOf('")'));
+			} else if (url.indexOf("url('") === 0) {
+				return url.slice(5, url.indexOf("')"));
+			}
+			return url;
+		},
+
+		/**
+		 * 创建DOM元素并设置样式
+		 * @param {string} className - CSS类名
+		 * @param {HTMLElement} parent - 父元素
+		 * @param {Object} styles - 样式对象
+		 * @returns {HTMLElement} 创建的元素
+		 */
+		createElement(className, parent = null, styles = {}) {
+			const element = decadeUI.dialog.create(className, parent);
+			Object.assign(element.style, styles);
+			return element;
+		},
+
+		/**
+		 * 安全地移除子元素
+		 * @param {HTMLElement} parent - 父元素
+		 * @param {HTMLElement} child - 子元素
+		 */
+		removeChildSafely(parent, child) {
+			if (parent && child && parent.contains(child)) {
+				parent.removeChild(child);
+			}
+		},
+
+		/**
+		 * 验证玩家对象
+		 * @param {Object} player - 玩家对象
+		 * @param {string} paramName - 参数名称
+		 * @returns {boolean} 验证结果
+		 */
+		validatePlayer(player, paramName = "player") {
+			if (get.itemtype(player) !== "player") {
+				console.error(`Invalid ${paramName}: expected player object`);
+				return false;
+			}
+			return true;
+		},
+
+		/**
+		 * 检查图片是否存在
+		 * @param {string} url - 图片URL
+		 * @returns {Promise<boolean>} 是否存在
+		 */
+		async checkImageExists(url) {
+			return new Promise(resolve => {
+				const img = new Image();
+				img.onload = () => resolve(true);
+				img.onerror = () => resolve(false);
+				img.src = url;
+			});
+		},
+
+		/**
+		 * 获取最优图片路径
+		 * @param {string} originalUrl - 原始URL
+		 * @param {Object} player - 玩家对象
+		 * @returns {Promise<string>} 最优路径
+		 */
+		async getOptimalImagePath(originalUrl, player) {
+			const parsedUrl = this.parseCssUrl(originalUrl);
+
+			// 如果已经是lihui路径，直接返回
+			if (parsedUrl.includes("image/lihui")) {
+				return parsedUrl;
+			}
+
+			// 尝试从character路径转换为lihui路径
+			if (parsedUrl.includes("image/character")) {
+				const lihuiPath = parsedUrl.replace(/image\/character/, "image/lihui");
+
+				// 检查lihui路径是否存在
+				const lihuiExists = await this.checkImageExists(lihuiPath);
+				if (lihuiExists) {
+					return lihuiPath;
+				}
+			}
+
+			// 如果lihui不存在，返回原始路径
+			return parsedUrl;
+		},
+
+		/**
+		 * 获取默认头像路径
+		 * @param {Object} player - 玩家对象
+		 * @returns {string} 默认头像路径
+		 */
+		getDefaultAvatarPath(player) {
+			const gender = player.sex === "female" ? "female" : "male";
+			return lib.assetURL + "image/character/default_silhouette_" + gender + ".jpg";
+		},
+
+		/**
+		 * 生成随机位置和缩放
+		 * @param {number} height - 容器高度
+		 * @returns {Object} 随机位置和缩放
+		 */
+		generateRandomPosition(height) {
+			const x = (decadeUI.getRandom(0, 1) === 1 ? "" : "-") + decadeUI.getRandom(0, 100) + "px";
+			const y = (decadeUI.getRandom(0, 1) === 1 ? "" : "-") + decadeUI.getRandom(0, height / 4) + "px";
+			const scale = decadeUI.getRandom(1, 10) / 10;
+
+			return { x, y, scale };
+		},
+	};
+
+	// ==================== 主模块定义 ====================
 	decadeUI.effect = {
+		// ==================== 对话框相关 ====================
 		dialog: {
+			/**
+			 * 创建对话框
+			 * @param {string} titleText - 标题文本
+			 * @returns {HTMLElement} 对话框元素
+			 */
 			create(titleText) {
 				return decadeUI.dialog.create("effect-dialog dui-dialog");
 			},
+
+			/**
+			 * 创建比较对话框
+			 * @param {Object} source - 源玩家
+			 * @param {Object} target - 目标玩家
+			 * @returns {Object} 对话框对象
+			 */
 			compare(source, target) {
-				var dialog = this.create();
+				const dialog = this.create();
 
-				dialog.characters = [decadeUI.dialog.create("player1 character", dialog), decadeUI.dialog.create("player2 character", dialog)];
+				// 创建角色容器
+				dialog.characters = [utils.createElement("player1 character", dialog), utils.createElement("player2 character", dialog)];
 
-				decadeUI.dialog.create("back", dialog.characters[0]), decadeUI.dialog.create("back", dialog.characters[1]), (dialog.content = decadeUI.dialog.create("content", dialog)), (dialog.buttons = decadeUI.dialog.create("buttons", dialog.content));
+				// 为每个角色添加背景
+				dialog.characters.forEach(char => {
+					utils.createElement("back", char);
+				});
 
-				dialog.cards = [decadeUI.dialog.create("player1 card", dialog.buttons), decadeUI.dialog.create("player2 card", dialog.buttons)];
+				// 创建内容和按钮容器
+				dialog.content = utils.createElement("content", dialog);
+				dialog.buttons = utils.createElement("buttons", dialog.content);
 
-				dialog.names = [decadeUI.dialog.create("player1 name", dialog.buttons), decadeUI.dialog.create("player2 name", dialog.buttons)];
+				// 创建卡片和名称容器
+				dialog.cards = [utils.createElement("player1 card", dialog.buttons), utils.createElement("player2 card", dialog.buttons)];
 
-				dialog.buttons.vs = decadeUI.dialog.create("vs", dialog.buttons);
+				dialog.names = [utils.createElement("player1 name", dialog.buttons), utils.createElement("player2 name", dialog.buttons)];
+
+				// 创建VS标识
+				dialog.buttons.vs = utils.createElement("vs", dialog.buttons);
+
+				// 设置初始名称
 				dialog.names[0].innerHTML = get.translation(source) + "发起";
 				dialog.names[1].innerHTML = get.translation(target);
 
-				(dialog.set = function (attr, value) {
+				// 设置方法
+				dialog.set = function (attr, value) {
+					const playerIndex = attr === "player1" || attr === "source" ? 0 : 1;
+					const isSource = playerIndex === 0;
+					const suffix = isSource ? "发起" : "";
+
 					switch (attr) {
 						case "player1":
 						case "source":
-							if (get.itemtype(value) != "player" || value.isUnseen()) {
-								dialog.characters[0].firstChild.style.backgroundImage = "";
-								dialog.names[0].innerHTML = get.translation(value) + "发起";
-								return false;
-							}
-
-							var avatar = value.isUnseen(0) ? value.node.avatar2 : value.node.avatar;
-							dialog.characters[0].firstChild.style.backgroundImage = avatar.style.backgroundImage;
-							dialog.names[0].innerHTML = get.translation(value) + "发起";
-							break;
-
 						case "player2":
 						case "target":
-							if (get.itemtype(value) != "player" || value.isUnseen()) {
-								dialog.characters[1].firstChild.style.backgroundImage = "";
-								dialog.names[1].innerHTML = get.translation(value);
+							if (get.itemtype(value) !== "player" || value.isUnseen()) {
+								dialog.characters[playerIndex].firstChild.style.backgroundImage = "";
+								dialog.names[playerIndex].innerHTML = get.translation(value) + suffix;
 								return false;
 							}
 
-							var avatar = value.isUnseen(0) ? value.node.avatar2 : value.node.avatar;
-							dialog.characters[1].firstChild.style.backgroundImage = avatar.style.backgroundImage;
-							dialog.names[1].innerHTML = get.translation(value);
+							const avatar = utils.getPlayerAvatar(value, value.isUnseen(0));
+							dialog.characters[playerIndex].firstChild.style.backgroundImage = avatar.style.backgroundImage;
+							dialog.names[playerIndex].innerHTML = get.translation(value) + suffix;
 							break;
 
 						case "card1":
 						case "sourceCard":
-							if (dialog.cards[0].firstChild) dialog.cards[0].removeChild(dialog.cards[0].firstChild);
-							dialog.cards[0].appendChild(value);
-							break;
-
 						case "card2":
 						case "targetCard":
-							if (dialog.cards[1].firstChild) dialog.cards[1].removeChild(dialog.cards[1].firstChild);
-							dialog.cards[1].appendChild(value);
+							const cardIndex = attr === "card1" || attr === "sourceCard" ? 0 : 1;
+							utils.removeChildSafely(dialog.cards[cardIndex], dialog.cards[cardIndex].firstChild);
+							dialog.cards[cardIndex].appendChild(value);
 							break;
 
 						default:
 							return false;
 					}
-
 					return true;
-				}),
-					dialog.set("source", source);
+				};
+
+				// 初始化设置
+				dialog.set("source", source);
 				dialog.set("target", target);
 				return dialog;
 			},
 		},
+
+		// ==================== 线条动画 ====================
+		/**
+		 * 创建线条动画效果
+		 * @param {Array} dots - 坐标点数组 [x1, y1, x2, y2]
+		 */
 		line(dots) {
 			decadeUI.animate.add(
 				function (source, target, e) {
-					var ctx = e.context;
+					const ctx = e.context;
 					ctx.shadowColor = "yellow";
 					ctx.shadowBlur = 1;
 
+					// 初始化动画状态
 					if (!this.head) this.head = 0;
 					if (!this.tail) this.tail = -1;
 
-					this.head += 0.07 * (e.deltaTime / 17);
+					// 更新动画进度
+					const speed = CONSTANTS.ANIMATION.SPEED * (e.deltaTime / CONSTANTS.ANIMATION.FRAME_RATE);
+					this.head += speed;
+
 					if (this.head >= 1) {
 						this.head = 1;
-						this.tail += 0.07 * (e.deltaTime / 17);
+						this.tail += speed;
 					}
 
-					var tail = this.tail < 0 ? 0 : this.tail;
-					var head = this.head;
+					const tail = this.tail < 0 ? 0 : this.tail;
+					const head = this.head;
+
 					if (this.tail <= 1) {
-						var x1 = decadeUI.get.lerp(source.x, target.x, tail);
-						var y1 = decadeUI.get.lerp(source.y, target.y, tail);
-						var x2 = decadeUI.get.lerp(source.x, target.x, head);
-						var y2 = decadeUI.get.lerp(source.y, target.y, head);
-						e.drawLine(x1, y1, x2, y2, "rgb(250,220,140)", 2.6);
+						const x1 = decadeUI.get.lerp(source.x, target.x, tail);
+						const y1 = decadeUI.get.lerp(source.y, target.y, tail);
+						const x2 = decadeUI.get.lerp(source.x, target.x, head);
+						const y2 = decadeUI.get.lerp(source.y, target.y, head);
+
+						e.drawLine(x1, y1, x2, y2, CONSTANTS.ANIMATION.LINE_COLOR, CONSTANTS.ANIMATION.LINE_WIDTH);
 						return false;
-					} else {
-						return true;
 					}
+
+					return true;
 				},
 				true,
-				{
-					x: dots[0],
-					y: dots[1],
-				},
-				{
-					x: dots[2],
-					y: dots[3],
-				}
+				{ x: dots[0], y: dots[1] },
+				{ x: dots[2], y: dots[3] }
 			);
 		},
 
+		// ==================== 击杀特效 ====================
+		/**
+		 * 创建击杀特效
+		 * @param {Object} source - 击杀者
+		 * @param {Object} target - 被击杀者
+		 */
 		kill(source, target) {
-			if (get.itemtype(source) != "player" || get.itemtype(target) != "player") throw "arguments";
-			if (source == target) return;
+			// 参数验证
+			if (!utils.validatePlayer(source, "source") || !utils.validatePlayer(target, "target")) {
+				throw new Error("Invalid arguments: source and target must be valid players");
+			}
 
+			if (source === target) return;
 			if (source.isUnseen() || target.isUnseen()) return;
 
-			var sourceAvatar = source.isUnseen(0) ? source.node.avatar2 : source.node.avatar;
-			var targetAvatar = target.isUnseen(0) ? target.node.avatar2 : target.node.avatar;
+			// 获取头像
+			const sourceAvatar = utils.getPlayerAvatar(source, source.isUnseen(0));
+			const targetAvatar = utils.getPlayerAvatar(target, target.isUnseen(0));
 
-			var effect = decadeUI.dialog.create("effect-window");
-			var killerWarpper = decadeUI.dialog.create("killer-warpper", effect);
-			killerWarpper.killer = decadeUI.dialog.create("killer", killerWarpper);
-			killerWarpper.killer.style.backgroundImage = sourceAvatar.style.backgroundImage;
+			// 创建效果窗口
+			const effect = utils.createElement("effect-window", null, CONSTANTS.STYLES.EFFECT_WINDOW);
 
-			var victim = decadeUI.dialog.create("victim", effect);
-			victim.back = decadeUI.dialog.create("back", victim);
-			victim.back.part1 = decadeUI.dialog.create("part1", victim.back);
-			victim.back.part2 = decadeUI.dialog.create("part2", victim.back);
-			victim.back.part1.style.backgroundImage = targetAvatar.style.backgroundImage;
-			victim.back.part2.style.backgroundImage = targetAvatar.style.backgroundImage;
+			// 创建击杀者元素
+			const killerWrapper = utils.createElement("killer-warpper", effect);
+			killerWrapper.killer = utils.createElement("killer", killerWrapper);
+			killerWrapper.killer.style.backgroundImage = sourceAvatar.style.backgroundImage;
 
-			effect.style.backgroundColor = "rgba(0,0,0,0.7)";
-			effect.style.transition = "all 4s";
-			effect.style.zIndex = 7;
+			// 创建受害者元素
+			const victim = utils.createElement("victim", effect);
+			victim.back = utils.createElement("back", victim);
+			victim.back.part1 = utils.createElement("part1", victim.back);
+			victim.back.part2 = utils.createElement("part2", victim.back);
 
-			var anim = decadeUI.animation;
-			var bounds = anim.getSpineBounds("effect_jisha1");
+			const victimImage = targetAvatar.style.backgroundImage;
+			victim.back.part1.style.backgroundImage = victimImage;
+			victim.back.part2.style.backgroundImage = victimImage;
 
+			// 播放音效
 			game.playAudio("../extension", decadeUI.extensionName, "audio/kill_effect_sound.mp3");
-			if (bounds == void 0) {
-				var lightLarge = decadeUI.dialog.create("li-big", effect);
-				victim.rout = decadeUI.dialog.create("rout", victim);
-				victim.rout2 = decadeUI.dialog.create("rout", victim);
-				victim.rout.innerHTML = "破敌";
-				victim.rout2.innerHTML = "破敌";
-				victim.rout2.classList.add("shadow");
-				ui.window.appendChild(effect);
-				var height = ui.window.offsetHeight;
-				var x, y, scale;
-				for (var i = 0; i < 10; i++) {
-					x = decadeUI.getRandom(0, 100) + "px";
-					y = decadeUI.getRandom(0, height / 4) + "px";
-					x = decadeUI.getRandom(0, 1) == 1 ? x : "-" + x;
-					y = decadeUI.getRandom(0, 1) == 1 ? y : "-" + y;
-					scale = decadeUI.getRandom(1, 10) / 10;
 
-					setTimeout(
-						function (mx, my, mscale, meffect) {
-							var light = decadeUI.dialog.create("li", meffect);
-							light.style.transform = "translate(" + mx + ", " + my + ")" + "scale(" + mscale + ")";
-						},
-						decadeUI.getRandom(50, 300),
-						x,
-						y,
-						scale,
-						effect
-					);
-				}
+			// 检查是否有Spine动画
+			const anim = decadeUI.animation;
+			const bounds = anim.getSpineBounds("effect_jisha1");
+
+			if (bounds === undefined) {
+				this._createFallbackKillEffect(effect, victim);
 			} else {
-				var sz = bounds.size;
-				var scale = (anim.canvas.width / sz.x) * 1.2;
-				anim.playSpine("effect_jisha1", {
-					scale: scale,
-				});
-				ui.window.appendChild(effect);
-				ui.refresh(effect);
+				this._createSpineKillEffect(anim, bounds, effect);
 			}
 
-			decadeUI.delay(2000);
+			// 延迟清理
+			decadeUI.delay(CONSTANTS.DURATION.KILL_DELAY);
 			effect.style.backgroundColor = "rgba(0,0,0,0)";
-			effect.close(3000);
-			effect = null;
+			effect.close(CONSTANTS.DURATION.KILL_CLOSE);
 		},
 
+		// ==================== 技能特效 ====================
+		/**
+		 * 创建技能特效
+		 * @param {Object} player - 玩家对象
+		 * @param {string} skillName - 技能名称
+		 * @param {string} vice - 副将标识
+		 */
 		skill(player, skillName, vice) {
-			if (get.itemtype(player) != "player") return console.error("player");
+			if (!utils.validatePlayer(player)) return;
 
-			var animation = decadeUI.animation;
-			var asset = animation.spine.assets["effect_xianding"];
-			if (!asset) return console.error("[effect_xianding]特效未加载");
-			if (!asset.ready) animation.prepSpine("effect_xianding");
+			const animation = decadeUI.animation;
+			const asset = animation.spine.assets["effect_xianding"];
 
-			var camp = player.group;
-			var playerName, playerAvatar;
-			if (vice === "vice") {
-				playerName = get.translation(player.name2);
-				playerAvatar = player.node.avatar2;
-			} else {
-				playerName = get.translation(player.name);
-				playerAvatar = player.node.avatar;
+			if (!asset) {
+				console.error("[effect_xianding]特效未加载");
+				return;
 			}
 
-			var url = getComputedStyle(playerAvatar).backgroundImage;
-			var image = new Image();
-			var bgImage = new Image();
+			if (!asset.ready) {
+				animation.prepSpine("effect_xianding");
+			}
 
-			image.onload = function () {
-				bgImage.onload = function () {
-					var animation = decadeUI.animation;
-					var sprite = animation.playSpine("effect_xianding");
-					var skeleton = sprite.skeleton;
-					var slot = skeleton.findSlot("shilidipan");
-					var attachment = slot.getAttachment();
-					var region;
+			// 获取玩家信息
+			const camp = player.group;
+			const playerName = vice === "vice" ? get.translation(player.name2) : get.translation(player.name);
+			const playerAvatar = utils.getPlayerAvatar(player, vice === "vice");
 
-					if (attachment.camp !== camp) {
-						if (!attachment.cached) attachment.cached = {};
+			// 异步加载图片
+			this._loadSkillImages(playerAvatar, camp, player, skillName, playerName).catch(error => {
+				console.error("技能特效图片加载失败:", error);
+			});
+		},
 
-						if (!attachment.cached[camp]) {
-							region = animation.createTextureRegion(bgImage);
-							attachment.cached[camp] = region;
-						} else {
-							region = attachment.cached[camp];
-						}
+		// ==================== 私有方法 ====================
 
-						attachment.width = region.width;
-						attachment.height = region.height;
-						attachment.setRegion(region);
-						attachment.updateOffset();
-						attachment.camp = camp;
-					}
+		/**
+		 * 创建备用击杀效果
+		 * @param {HTMLElement} effect - 效果容器
+		 * @param {Object} victim - 受害者元素
+		 * @private
+		 */
+		_createFallbackKillEffect(effect, victim) {
+			utils.createElement("li-big", effect);
 
-					slot = skeleton.findSlot("wujiang");
-					attachment = slot.getAttachment();
-					region = animation.createTextureRegion(image);
+			// 创建"破敌"文字
+			victim.rout = utils.createElement("rout", victim);
+			victim.rout2 = utils.createElement("rout", victim);
+			victim.rout.innerHTML = "破敌";
+			victim.rout2.innerHTML = "破敌";
+			victim.rout2.classList.add("shadow");
 
-					var scale = Math.min(288 / region.width, 378 / region.height);
-					attachment.width = region.width * scale;
-					attachment.height = region.height * scale;
-					attachment.setRegion(region);
-					attachment.updateOffset();
+			ui.window.appendChild(effect);
 
-					var size = skeleton.bounds.size;
-					sprite.scale = Math.max(animation.canvas.width / size.x, animation.canvas.height / size.y);
+			// 创建随机光效
+			const height = ui.window.offsetHeight;
+			for (let i = 0; i < CONSTANTS.KILL.LIGHT_COUNT; i++) {
+				const { x, y, scale } = utils.generateRandomPosition(height);
 
-					var effect = decadeUI.element.create("skill-name"); // 限定/觉醒特效技能文本显示，如需取消，将 'skill-name' 改为 null
-					effect.innerHTML = skillName;
-					effect.style.top = "calc(50% + " + 165 * sprite.scale + "px)";
+				setTimeout(
+					(mx, my, mscale, meffect) => {
+						const light = utils.createElement("li", meffect);
+						light.style.transform = `translate(${mx}, ${my}) scale(${mscale})`;
+					},
+					decadeUI.getRandom(50, 300),
+					x,
+					y,
+					scale,
+					effect
+				);
+			}
+		},
 
-					var effect = decadeUI.element.create("skill-name");
-					effect.innerHTML = skillName;
-					effect.style.top = "calc(50% + " + 165 * sprite.scale + "px)";
-					var nameEffect = decadeUI.element.create("general-name");
-					nameEffect.innerHTML = playerName;
-					nameEffect.style.cssText = `
-					position: absolute;
-					right: calc(50% - ${200 * sprite.scale}px);
-					top: calc(50% - ${160 * sprite.scale}px);
-					writing-mode: vertical-lr;
-					text-orientation: upright;
-					font-family: yuanli;
-					color: rgb(215, 234, 67);
-					font-size: 25px;
-					text-shadow: 0 0 5px black, 0 0 10px black;
-					pointer-events: none;
-					letter-spacing: 5px;
-					z-index: 17;
-					`;
+		/**
+		 * 创建Spine击杀效果
+		 * @param {Object} anim - 动画对象
+		 * @param {Object} bounds - 边界对象
+		 * @param {HTMLElement} effect - 效果容器
+		 * @private
+		 */
+		_createSpineKillEffect(anim, bounds, effect) {
+			const size = bounds.size;
+			const scale = (anim.canvas.width / size.x) * CONSTANTS.KILL.SCALE_FACTOR;
 
-					ui.arena.appendChild(effect);
-					ui.arena.appendChild(nameEffect);
-					effect.removeSelf(2180);
-					nameEffect.removeSelf(2180);
+			anim.playSpine("effect_jisha1", { scale });
+			ui.window.appendChild(effect);
+			ui.refresh(effect);
+		},
+
+		/**
+		 * 加载技能图片
+		 * @param {HTMLElement} playerAvatar - 玩家头像
+		 * @param {string} camp - 阵营
+		 * @param {Object} player - 玩家对象
+		 * @param {string} skillName - 技能名称
+		 * @param {string} playerName - 玩家名称
+		 * @private
+		 */
+		async _loadSkillImages(playerAvatar, camp, player, skillName, playerName) {
+			const url = getComputedStyle(playerAvatar).backgroundImage;
+			const image = new Image();
+			const bgImage = new Image();
+
+			// 设置图片加载成功回调
+			image.onload = () => {
+				bgImage.onload = () => {
+					this._createSkillEffect(image, bgImage, camp, skillName, playerName);
 				};
 
-				bgImage.onerror = function () {
-					bgImage.onerror = void 0;
+				bgImage.onerror = () => {
+					bgImage.onerror = undefined;
 					bgImage.src = decadeUIPath + "assets/image/bg_xianding_qun.png";
 				};
 
 				bgImage.src = decadeUIPath + "assets/image/bg_xianding_" + camp + ".png";
 			};
 
-			image.onerror = function () {
-				image.onerror = void 0;
-				if (image.src.includes("image/lihui")) {
-					if (url.indexOf('url("') == 0) {
-						image.src = url.slice(5, url.indexOf('")'));
-					} else if (url.indexOf("url('") == 0) {
-						image.src = url.slice(5, url.indexOf("')"));
-					}
-				} else {
-					image.src = lib.assetURL + "image/character/default_silhouette_" + (player.sex == "female" ? "female" : "male") + ".jpg";
-				}
+			// 设置图片加载失败回调
+			image.onerror = () => {
+				image.onerror = undefined;
+				this._handleImageError(image, url, player);
 			};
-			if (url.indexOf('url("') == 0) {
-				let originalPath = url.slice(5, url.indexOf('")'));
-				image.src = originalPath.replace(/image\/character/, "image/lihui");
-			} else if (url.indexOf("url('") == 0) {
-				let originalPath = url.slice(5, url.indexOf("')"));
-				image.src = originalPath.replace(/image\/character/, "image/lihui");
+
+			// 异步获取最优图片路径并设置
+			try {
+				const optimalPath = await utils.getOptimalImagePath(url, player);
+				image.src = optimalPath;
+			} catch (error) {
+				console.warn("获取图片路径失败，使用默认路径:", error);
+				image.src = utils.getDefaultAvatarPath(player);
 			}
+		},
+
+		/**
+		 * 创建技能效果
+		 * @param {HTMLImageElement} image - 武将图片
+		 * @param {HTMLImageElement} bgImage - 背景图片
+		 * @param {string} camp - 阵营
+		 * @param {string} skillName - 技能名称
+		 * @param {string} playerName - 玩家名称
+		 * @private
+		 */
+		_createSkillEffect(image, bgImage, camp, skillName, playerName) {
+			const animation = decadeUI.animation;
+			const sprite = animation.playSpine("effect_xianding");
+			const skeleton = sprite.skeleton;
+
+			// 设置背景
+			this._setupBackgroundAttachment(skeleton, bgImage, camp, animation);
+
+			// 设置武将头像
+			this._setupGeneralAttachment(skeleton, image, animation);
+
+			// 计算缩放
+			const size = skeleton.bounds.size;
+			sprite.scale = Math.max(animation.canvas.width / size.x, animation.canvas.height / size.y);
+
+			// 创建UI元素
+			this._createSkillUI(skillName, playerName, sprite.scale);
+		},
+
+		/**
+		 * 设置背景附件
+		 * @param {Object} skeleton - 骨骼对象
+		 * @param {HTMLImageElement} bgImage - 背景图片
+		 * @param {string} camp - 阵营
+		 * @param {Object} animation - 动画对象
+		 * @private
+		 */
+		_setupBackgroundAttachment(skeleton, bgImage, camp, animation) {
+			const slot = skeleton.findSlot("shilidipan");
+			const attachment = slot.getAttachment();
+
+			if (attachment.camp !== camp) {
+				if (!attachment.cached) attachment.cached = {};
+
+				if (!attachment.cached[camp]) {
+					const region = animation.createTextureRegion(bgImage);
+					attachment.cached[camp] = region;
+				}
+
+				const region = attachment.cached[camp];
+				attachment.width = region.width;
+				attachment.height = region.height;
+				attachment.setRegion(region);
+				attachment.updateOffset();
+				attachment.camp = camp;
+			}
+		},
+
+		/**
+		 * 设置武将附件
+		 * @param {Object} skeleton - 骨骼对象
+		 * @param {HTMLImageElement} image - 武将图片
+		 * @param {Object} animation - 动画对象
+		 * @private
+		 */
+		_setupGeneralAttachment(skeleton, image, animation) {
+			const slot = skeleton.findSlot("wujiang");
+			const attachment = slot.getAttachment();
+			const region = animation.createTextureRegion(image);
+
+			const scale = Math.min(CONSTANTS.SKILL.MAX_WIDTH / region.width, CONSTANTS.SKILL.MAX_HEIGHT / region.height);
+			attachment.width = region.width * scale;
+			attachment.height = region.height * scale;
+			attachment.setRegion(region);
+			attachment.updateOffset();
+		},
+
+		/**
+		 * 创建技能UI
+		 * @param {string} skillName - 技能名称
+		 * @param {string} playerName - 玩家名称
+		 * @param {number} spriteScale - 精灵缩放
+		 * @private
+		 */
+		_createSkillUI(skillName, playerName, spriteScale) {
+			// 创建技能名称效果
+			const effect = decadeUI.element.create("skill-name");
+			effect.innerHTML = skillName;
+			effect.style.top = `calc(50% + ${CONSTANTS.SKILL.NAME_OFFSET_Y * spriteScale}px)`;
+
+			// 创建武将名称效果
+			const nameEffect = decadeUI.element.create("general-name");
+			nameEffect.innerHTML = playerName;
+
+			// 设置武将名称样式
+			const generalStyles = {
+				...CONSTANTS.STYLES.GENERAL_NAME,
+				right: `calc(50% - ${CONSTANTS.SKILL.GENERAL_OFFSET_X * spriteScale}px)`,
+				top: `calc(50% - ${CONSTANTS.SKILL.GENERAL_OFFSET_Y * spriteScale}px)`,
+			};
+
+			nameEffect.style.cssText = Object.entries(generalStyles)
+				.map(([key, value]) => {
+					const kebabKey = key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
+					return `${kebabKey}: ${value}`;
+				})
+				.join("; ");
+
+			// 添加到界面并设置自动移除
+			ui.arena.appendChild(effect);
+			ui.arena.appendChild(nameEffect);
+			effect.removeSelf(CONSTANTS.DURATION.EFFECT);
+			nameEffect.removeSelf(CONSTANTS.DURATION.EFFECT);
+		},
+
+		/**
+		 * 处理图片加载错误
+		 * @param {HTMLImageElement} image - 图片元素
+		 * @param {string} url - 原始URL
+		 * @param {Object} player - 玩家对象
+		 * @private
+		 */
+		async _handleImageError(image, url, player) {
+			// 如果当前已经是lihui路径但加载失败，尝试原始character路径
+			if (image.src.includes("image/lihui")) {
+				const originalUrl = utils.parseCssUrl(url);
+				if (originalUrl !== image.src) {
+					image.src = originalUrl;
+					return;
+				}
+			}
+
+			// 如果当前是character路径但加载失败，尝试lihui路径
+			if (image.src.includes("image/character")) {
+				const lihuiPath = image.src.replace(/image\/character/, "image/lihui");
+				const lihuiExists = await utils.checkImageExists(lihuiPath);
+				if (lihuiExists) {
+					image.src = lihuiPath;
+					return;
+				}
+			}
+
+			// 最后回退到默认头像
+			image.src = utils.getDefaultAvatarPath(player);
 		},
 	};
 });

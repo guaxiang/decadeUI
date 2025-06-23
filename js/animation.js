@@ -1257,7 +1257,6 @@ var duilib;
 
 		return DynamicPlayer;
 	})();
-
 	function caesarCipher(str, shift) {
 		return str
 			.split("")
@@ -2446,3 +2445,4 @@ if (decadeModule)
 		window.ui = ui;
 		window._status = _status;
 	});
+
