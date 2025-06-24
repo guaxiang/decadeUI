@@ -52,8 +52,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				updateSkillControl(player, clear) {
 					var eSkills = player.getSkills("e", true, false).slice(0);
 					var skills = app.get.playerSkills(player, true); /*国战隐匿技能*/
+					var gSkills;
 					if (ui.skills2 && ui.skills2.skills.length) {
-						var gSkills = ui.skills2.skills;
+						gSkills = ui.skills2.skills;
 					}
 
 					for (var i = 0; i < skills.length; i++) {
