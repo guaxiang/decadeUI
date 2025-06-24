@@ -4,38 +4,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		var identityShowx = game.ui_identityShowx; /*图层2 在图层1下面*/
 		var str = "";
 		if (lib.config.mode == "guozhan" || (lib.config.mode == "versus" && get.config("versus_mode") == "siguo") || (lib.config.mode == "versus" && get.config("versus_mode") == "jiange")) {
-			var unknown = game.countPlayer(function (current) {
-				return current.identity == "unknown";
+			const identities = [
+				{ key: "unknown", color: "#FFFFDE" },
+				{ key: "wei", color: "#0075FF" },
+				{ key: "shu", color: "#ff0000" },
+				{ key: "wu", color: "#00ff00" },
+				{ key: "qun", color: "#ffff00" },
+				{ key: "jin", color: "#9e00ff" },
+				{ key: "ye", color: "#9e00ff" },
+				{ key: "key", color: "#9e00ff" },
+			];
+			identities.forEach(({ key, color }) => {
+				const count = game.countPlayer(current => current.identity === key);
+				if (count > 0) str += `<font color="${color}">${get.translation(key)}</font> x ${count}  `;
 			});
-			var wei = game.countPlayer(function (current) {
-				return current.identity == "wei";
-			});
-			var shu = game.countPlayer(function (current) {
-				return current.identity == "shu";
-			});
-			var wu = game.countPlayer(function (current) {
-				return current.identity == "wu";
-			});
-			var qun = game.countPlayer(function (current) {
-				return current.identity == "qun";
-			});
-			var jin = game.countPlayer(function (current) {
-				return current.identity == "jin";
-			});
-			var ye = game.countPlayer(function (current) {
-				return current.identity == "ye";
-			});
-			var key = game.countPlayer(function (current) {
-				return current.identity == "key";
-			});
-			if (unknown > 0) str += '<font color="#FFFFDE">' + get.translation("unknown") + "</font> x " + unknown + "  ";
-			if (wei > 0) str += '<font color="#0075FF">' + get.translation("wei") + "</font> x " + wei + "  ";
-			if (shu > 0) str += '<font color="#ff0000">' + get.translation("shu") + "</font> x " + shu + "  ";
-			if (wu > 0) str += '<font color="#00ff00">' + get.translation("wu") + "</font> x " + wu + "  ";
-			if (qun > 0) str += '<font color="#ffff00">' + get.translation("qun") + "</font> x " + qun + "  ";
-			if (jin > 0) str += '<font color="#9e00ff">' + get.translation("jin") + "</font> x " + jin + "  ";
-			if (ye > 0) str += '<font color="#9e00ff">' + get.translation("ye") + "</font> x " + ye + "  ";
-			if (key > 0) str += '<font color="#9e00ff">' + get.translation("key") + "</font> x " + key + "  ";
 		} else if (lib.config.mode == "versus" && get.config("versus_mode") == "two") {
 			var enemy = game.countPlayer(function (current) {
 				return current.isEnemyOf(game.me);
@@ -230,7 +212,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				lib.translate[i + "_win_option"] = translate[i];
 			}
 			game.ui_identityShow_init();
-			setInterval(function () {
+			setInterval(() => {
 				game.ui_identityShow_update();
 			}, 1000);
 		}
@@ -629,7 +611,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						cardNumber: cardNumber,
 					});
 				};
-				node.node.cardNumber.interval = setInterval(function () {
+				node.node.cardNumber.interval = setInterval(() => {
 					ui.handcardNumber.updateCardnumber();
 				}, 1000);
 				//    game.addVideo('createCardRoundTime');
@@ -671,7 +653,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							else item._num++;
 							item.innerHTML = "<span>" + item._num + "</span>";
 							if (item._num !== num) {
-								item.interval = setTimeout(function () {
+								item.interval = setTimeout(() => {
 									node.setNumberAnimation(num, step);
 								}, step);
 							}
@@ -681,7 +663,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 				ui.time4 = node.node.time;
 				ui.time4.starttime = get.utc();
-				ui.time4.interval = setInterval(function () {
+				ui.time4.interval = setInterval(() => {
 					var num = Math.round((get.utc() - ui.time4.starttime) / 1000);
 					if (num >= 3600) {
 						var num1 = Math.floor(num / 3600);
