@@ -713,11 +713,11 @@
 #arena[data-layout="nova"][data-new-decade-style="onlineUI"][data-number="3"]>.player[data-position="1"] {
 	left: auto;
 	top: 9px;
-	right: calc(32.5% - (var(--w) / 2));
+	right: calc(40% - (var(--w) / 2));
 }
 
 #arena[data-layout="nova"][data-new-decade-style="onlineUI"][data-number="3"]>.player[data-position="2"] {
-	left: calc(32.5% - (var(--w) / 2));
+	left: calc(40% - (var(--w) / 2));
 	top: 9px;
 }
 
@@ -1196,6 +1196,18 @@
 }
 
 #arena[data-layout="nova"][data-new-decade-style="babysha"][data-number="3"]>.player[data-position="2"] {
+	left: calc(40% - (var(--w) / 2));
+	top: 0px;
+}
+
+/*3人座*/
+#arena[data-layout="nova"][data-new-decade-style="on"][data-number="3"]>.player[data-position="1"] {
+	left: auto;
+	top: 0px;
+	right: calc(40% - (var(--w) / 2));
+}
+
+#arena[data-layout="nova"][data-new-decade-style="on"][data-number="3"]>.player[data-position="2"] {
 	left: calc(40% - (var(--w) / 2));
 	top: 0px;
 }
