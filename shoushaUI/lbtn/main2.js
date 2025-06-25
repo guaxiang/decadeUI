@@ -150,7 +150,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		document.body.appendChild(shadow);
 
 		// 菜单按钮
-		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: 10px;right: 55px;background-color: transparent;z-index:10");
+		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: 10px;right: 55px;background-color: transparent;z-index:5");
 		document.body.appendChild(menuBtn);
 
 		let menuPopup = null;
