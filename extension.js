@@ -9484,51 +9484,51 @@ export default async function () {
 			};
 			//-----AI进度条框架----//
 			game.JindutiaoAIplayer = function () {
+				// 清理已有定时器和进度条
 				if (window.timerai) {
 					clearInterval(window.timerai);
 					delete window.timerai;
 				}
-				if (document.getElementById("jindutiaoAI")) {
-					document.getElementById("jindutiaoAI").remove();
-				}
-				window.boxContentAI = document.createElement("div");
-				window.boxTimeAI = document.createElement("div");
-				window.boxContentAI.setAttribute("id", "jindutiaoAI");
-				if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
-					//--------手杀样式-------------//
-					window.boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;";
-					window.boxTimeAI.data = 125;
-					window.boxTimeAI.style.cssText = "z-index:92;--w: 33px;--h: calc(var(--w) * 4/120);width: var(--w);height: var(--h);margin:1px;background-color: #dd9900;position: absolute;top: 0px;";
-					window.boxContentAI.appendChild(boxTimeAI);
+				var oldBar = document.getElementById("jindutiaoAI");
+				if (oldBar) oldBar.remove();
 
-					var imgBg = document.createElement("img");
-					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png";
-					imgBg.style.cssText = "position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;";
-					boxContentAI.appendChild(imgBg);
+				// 创建进度条容器和时间条
+				var boxContentAI = document.createElement("div");
+				var boxTimeAI = document.createElement("div");
+				boxContentAI.id = "jindutiaoAI";
+				let isShousha = lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 
-					//-------------------------//
+				// 样式与图片路径
+				if (isShousha) {
+					boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);left:3.5px;bottom:-6.2px;";
+					boxTimeAI.data = 125;
+					boxTimeAI.style.cssText = "z-index:92;--w:33px;--h:calc(var(--w)*4/120);width:var(--w);height:var(--h);margin:1px;background-color:#dd9900;position:absolute;top:0px;";
 				} else {
-					//----------十周年样式--------//
-					window.boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;";
-					window.boxTimeAI.data = 120;
-					window.boxTimeAI.style.cssText = "z-index:91;width: 115px;height: 3.3px;margin:1px;background-color: #f2c84b;position: absolute;top: 0px;border-radius: 3px;";
-					window.boxContentAI.appendChild(boxTimeAI);
-
-					var imgBg = document.createElement("img");
-					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png";
-					imgBg.style.cssText = "position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;";
-					window.boxContentAI.appendChild(imgBg);
-					//--------------------//
+					boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);left:1.5px;bottom:-8.2px;";
+					boxTimeAI.data = 120;
+					boxTimeAI.style.cssText = "z-index:91;width:115px;height:3.3px;margin:1px;background-color:#f2c84b;position:absolute;top:0px;border-radius:3px;";
 				}
-				window.timerai = setInterval(() => {
-					window.boxTimeAI.data--;
-					window.boxTimeAI.style.width = boxTimeAI.data + "px";
-					if (window.boxTimeAI.data == 0) {
+				boxContentAI.appendChild(boxTimeAI);
+
+				// 背景图片
+				var imgBg = document.createElement("img");
+				imgBg.src = lib.assetURL + (isShousha ? "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png" : "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png");
+				imgBg.style.cssText = isShousha ? "position:absolute;z-index:91;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);top:0;" : "position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);top:0;";
+				boxContentAI.appendChild(imgBg);
+
+				// 添加到页面
+				document.body.appendChild(boxContentAI);
+
+				// 进度条动画
+				window.timerai = setInterval(function () {
+					boxTimeAI.data--;
+					boxTimeAI.style.width = boxTimeAI.data + "px";
+					if (boxTimeAI.data === 0) {
 						clearInterval(window.timerai);
 						delete window.timerai;
-						window.boxContentAI.remove();
+						boxContentAI.remove();
 					}
-				}, 150); //进度条时间
+				}, 150);
 			};
 			if (!window.chatRecord) window.chatRecord = [];
 			game.addChatWord = function (strx) {
