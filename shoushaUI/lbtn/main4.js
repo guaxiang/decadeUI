@@ -682,7 +682,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			for (let i in GIFT_CONFIG) {
 				let gift = ui.create.div(".gift", giftes, function (event) {
 					giftbg.hide();
-					createGiftSelection(container, GIFT_CONFIG[i]);
+					createGiftSelection(container, GIFT_CONFIG[i], giftbg);
 				});
 				gift.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/gift/" + GIFT_CONFIG[i].image);
 				ui.create.div(".giftname", GIFT_CONFIG[i].name, gift);
@@ -690,7 +690,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		}
 
-		function createGiftSelection(container, giftType) {
+		function createGiftSelection(container, giftType, giftbg) {
 			let container2 = ui.create.div(".popup-container", ui.window, function (e) {
 				if (e.target === container2) {
 					container2.hide();
