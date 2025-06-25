@@ -9493,7 +9493,7 @@ export default async function () {
 				if (oldBar) oldBar.remove();
 
 				// 创建进度条容器和时间条
-				var boxContentAI = document.createElement("div");
+				window.boxContentAI = document.createElement("div");
 				var boxTimeAI = document.createElement("div");
 				boxContentAI.id = "jindutiaoAI";
 				let isShousha = lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
