@@ -206,9 +206,10 @@ export default async function () {
 												tags.push(i);
 											}
 										}
-										if (tags.length) {
+										const uniqueTags = [...new Set(tags)];
+										if (uniqueTags.length) {
 											let tagstr = ' <span class="cardtag">';
-											tags.forEach(tag => {
+											uniqueTags.forEach(tag => {
 												_status.cardtag[tag] = _status.cardtag[tag] || [];
 												if (!_status.cardtag[tag].includes(this.cardid)) {
 													_status.cardtag[tag].push(this.cardid);
