@@ -4110,7 +4110,10 @@ export default async function () {
 
 					lib.element.content.chooseToCompare = function () {
 						"step 0";
-						if ((!event.fixedResult?.[player.playerid] && !player.countCards("h")) || (!event.fixedResult?.[target.playerid] && !target.countCards("h"))) {
+						if (!event.position || typeof event.position != "string") {
+							event.position = "h";
+						}
+						if (((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards(event.position) == 0) || ((!event.fixedResult || !event.fixedResult[target.playerid]) && target.countCards(event.position) == 0)) {
 							event.result = { cancelled: true, bool: false };
 							event.finish();
 							return;
@@ -4143,7 +4146,7 @@ export default async function () {
 						("step 1");
 						event.list = [player, target].filter(current => !event.fixedResult?.[current.playerid]);
 						if (event.list.length) {
-							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
+							player.chooseCardOL(event.list, "请选择拼点牌", true, event.position).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
 								var hs = target.getCards("h");
 								var event = _status.event;
 								event.player = target;
