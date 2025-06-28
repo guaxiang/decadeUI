@@ -1057,7 +1057,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 		// 显示单个技能
 		function showSkillInList(avatar, skill, index) {
-			const skillName = getSkillName(skill);
+			const skillName = getSkillName(skill).slice(0, 2);
 			const skillList = createSkillList(avatar, index);
 			createSkillBox(skillList, skill, skillName);
 		}
