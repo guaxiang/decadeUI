@@ -949,18 +949,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 		function createSortCardFunction() {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
-			let cards = game.me.getCards("hs");
-			let sort2 = function (b, a) {
-				if (a.name !== b.name) return lib.sort.card(a.name, b.name);
-				else if (a.suit !== b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
-				return a.number - b.number;
+
+			var cards = game.me.getCards("hs");
+			var sort2 = function (b, a) {
+				if (a.name != b.name) return lib.sort.card(a.name, b.name);
+				else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
+				else return a.number - b.number;
 			};
+
 			if (cards.length > 1) {
-				let num = [1, 2].randomGet();
-				if (num == 1) cards.sort(sort2);
-				else cards.sort();
-				cards.forEach((card, index) => {
-					game.me.node.handcards1.insertBefore(card, game.me.node.handcards1.firstChild);
+				cards.sort(sort2);
+				cards.forEach(function (i, j) {
+					game.me.node.handcards1.insertBefore(cards[j], game.me.node.handcards1.firstChild);
 				});
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			}
