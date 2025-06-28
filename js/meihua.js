@@ -1039,7 +1039,18 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			existingLists.forEach(list => list.remove());
 
 			const skillArray = playerSkillArrays.get(player) || [];
-			skillArray.forEach((skill, index) => {
+
+			// 根据翻译名称去重，确保翻译相同的技能只显示一个
+			const uniqueSkillMap = new Map();
+			skillArray.forEach(skill => {
+				const skillName = getSkillName(skill);
+				if (!uniqueSkillMap.has(skillName)) {
+					uniqueSkillMap.set(skillName, skill);
+				}
+			});
+
+			// 显示去重后的技能
+			Array.from(uniqueSkillMap.values()).forEach((skill, index) => {
 				showSkillInList(avatar, skill, index);
 			});
 		}
