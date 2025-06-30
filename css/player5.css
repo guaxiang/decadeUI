@@ -1605,9 +1605,10 @@
 }
 
 .player .tipContainer {
-	width: 93% !important;
+	width: 83% !important;
 	right: 0;
 	z-index: 87;
+	font-size: 15px;
 }
 
 /* 主玩家判定区位置调整 */
