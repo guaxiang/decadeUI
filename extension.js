@@ -3293,6 +3293,13 @@ export default async function () {
 						}
 						// 可见手牌显示
 						list.forEach(i => i.decadeUI_updateShowCards());
+						if (lib.refreshPlayerSkills) {
+							list.forEach(i => lib.refreshPlayerSkills(i));
+						}
+						if (lib.clearAllSkillDisplay) lib.clearAllSkillDisplay();
+						if (lib.refreshPlayerSkills) {
+							game.players.concat(game.dead || []).forEach(i => lib.refreshPlayerSkills(i));
+						}
 						return result;
 					};
 
@@ -3316,6 +3323,14 @@ export default async function () {
 						}
 						// 可见手牌显示
 						player.decadeUI_updateShowCards();
+						if (lib.refreshPlayerSkills) {
+							lib.refreshPlayerSkills(player);
+							if (game.me) lib.refreshPlayerSkills(game.me);
+						}
+						if (lib.clearAllSkillDisplay) lib.clearAllSkillDisplay();
+						if (lib.refreshPlayerSkills) {
+							game.players.concat(game.dead || []).forEach(i => lib.refreshPlayerSkills(i));
+						}
 						return result;
 					};
 

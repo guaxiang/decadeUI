@@ -983,162 +983,94 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 	// 技能外显-仅在babysha样式下且斗地主/对决模式生效
 	if (lib.config.extension_十周年UI_newDecadeStyle === "babysha" && (get.mode() === "doudizhu" || get.mode() === "versus")) {
-		// 玩家技能数组管理
-		const playerSkillArrays = new Map();
-
-		// 缓存原有并重写技能添加/移除方法
-		const originalAddSkill = lib.element.player.addSkill;
-		const originalRemoveSkill = lib.element.player.removeSkill;
-
-		lib.element.player.addSkill = function (skill, ...args) {
-			const result = originalAddSkill.apply(this, [skill, ...args]);
-			requestAnimationFrame(() => addSkillToArray(this, skill));
-			return result;
-		};
-
-		lib.element.player.removeSkill = function (skill, ...args) {
-			const result = originalRemoveSkill.apply(this, [skill, ...args]);
-			requestAnimationFrame(() => removeSkillFromArray(this, skill));
-			return result;
-		};
-
-		// 添加技能到数组
-		function addSkillToArray(player, skill) {
-			if (player === game.me || !isOtherSkill(skill)) return;
-
-			if (!playerSkillArrays.has(player)) {
-				playerSkillArrays.set(player, []);
-			}
-			const skillArray = playerSkillArrays.get(player);
-
-			if (!skillArray.includes(skill)) {
-				skillArray.push(skill);
-				updateSkillDisplay(player);
-			}
-		}
-
-		// 从数组移除技能
-		function removeSkillFromArray(player, skill) {
-			if (!playerSkillArrays.has(player)) return;
-
-			const skillArray = playerSkillArrays.get(player);
-			const index = skillArray.indexOf(skill);
-
-			if (index > -1) {
-				skillArray.splice(index, 1);
-				updateSkillDisplay(player);
-			}
-		}
-
-		// 更新技能显示
-		function updateSkillDisplay(player) {
-			const avatar = player.node.avatar;
-			if (!avatar) return;
-
-			const existingLists = avatar.parentNode.querySelectorAll(".baby_skill");
-			existingLists.forEach(list => list.remove());
-
-			const skillArray = playerSkillArrays.get(player) || [];
-
-			// 根据翻译名称去重，确保翻译相同的技能只显示一个
-			const uniqueSkillMap = new Map();
-			skillArray.forEach(skill => {
-				const skillName = getSkillName(skill);
-				if (!uniqueSkillMap.has(skillName)) {
-					uniqueSkillMap.set(skillName, skill);
+		const skillDisplayManager = (() => {
+			const playerSkillArrays = new Map();
+			const isOtherSkill = skill => !!lib.translate?.[skill];
+			const getSkillName = skill => lib.translate?.[skill] || skill;
+			const updateSkillDisplay = player => {
+				const avatar = player.node.avatar;
+				if (!avatar) return;
+				avatar.parentNode.querySelectorAll(".baby_skill").forEach(list => list.remove());
+				const skillArray = playerSkillArrays.get(player) || [];
+				const uniqueSkills = [];
+				const seen = new Set();
+				for (const skill of skillArray) {
+					const name = getSkillName(skill);
+					if (!seen.has(name)) {
+						seen.add(name);
+						uniqueSkills.push(skill);
+					}
 				}
-			});
-
-			// 显示去重后的技能
-			Array.from(uniqueSkillMap.values()).forEach((skill, index) => {
-				showSkillInList(avatar, skill, index);
-			});
-		}
-
-		// 显示单个技能
-		function showSkillInList(avatar, skill, index) {
-			const skillName = getSkillName(skill).slice(0, 2);
-			const skillList = createSkillList(avatar, index);
-			createSkillBox(skillList, skill, skillName);
-		}
-
-		// 创建技能列表容器
-		function createSkillList(avatar, index) {
-			const skillList = document.createElement("div");
-			Object.assign(skillList.style, {
-				position: "absolute",
-				bottom: `${index * 40 + 30}px`,
-				zIndex: "102",
-			});
-			skillList.className = "baby_skill";
-			setSkillListPosition(skillList, avatar);
-			avatar.parentNode.appendChild(skillList);
-
-			return skillList;
-		}
-
-		// 设置列表位置，让步手牌可见
-		function setSkillListPosition(skillList, avatar) {
-			const avatarRect = avatar.getBoundingClientRect();
-			const isLeftSide = avatarRect.left < window.innerWidth / 2;
-			Object.assign(skillList.style, {
-				right: isLeftSide ? `${avatar.offsetWidth + 75}px` : "",
-				left: isLeftSide ? "" : `${avatar.offsetWidth + 10}px`,
-			});
-		}
-
-		// 创建技能框
-		function createSkillBox(skillList, skill, skillName) {
-			const skillBox = document.createElement("div");
-			skillBox.className = "baby_skill_box";
-			skillBox.setAttribute("data-skill", skill);
-			skillBox.textContent = skillName;
-			skillList.appendChild(skillBox);
-		}
-
-		// 检查是否为其他玩家技能
-		function isOtherSkill(skill) {
-			return !!lib.translate?.[skill];
-		}
-
-		// 获取技能名称
-		function getSkillName(skill) {
-			return lib.translate?.[skill] || skill;
-		}
-
-		// 刷新玩家技能
-		function refreshPlayerSkills(player) {
-			const avatar = player.node.avatar;
-			if (!avatar) return;
-
-			playerSkillArrays.delete(player);
-
-			if (player.skills?.length) {
-				player.skills.forEach(skill => addSkillToArray(player, skill));
-			}
-			if (player.additionalSkills) {
-				Object.keys(player.additionalSkills).forEach(skill => {
-					addSkillToArray(player, skill);
+				uniqueSkills.forEach((skill, idx) => {
+					const skillList = document.createElement("div");
+					Object.assign(skillList.style, {
+						position: "absolute",
+						bottom: `${idx * 40 + 30}px`,
+						zIndex: "102",
+					});
+					skillList.className = "baby_skill";
+					const rect = avatar.getBoundingClientRect();
+					const isLeft = rect.left < window.innerWidth / 2;
+					Object.assign(skillList.style, {
+						right: isLeft ? `${avatar.offsetWidth + 75}px` : "",
+						left: isLeft ? "" : `${avatar.offsetWidth + 10}px`,
+					});
+					const skillBox = document.createElement("div");
+					skillBox.className = "baby_skill_box";
+					skillBox.setAttribute("data-skill", skill);
+					skillBox.textContent = getSkillName(skill).slice(0, 2);
+					skillList.appendChild(skillBox);
+					avatar.parentNode.appendChild(skillList);
 				});
-			}
-		}
-
-		// 监听角色事件
-		const eventNames = ["showCharacterEnd", "hideCharacter", "changeCharacter", "removeCharacter"];
-		eventNames.forEach(eventName => {
-			if (!lib.element.player[eventName]) return;
-			const oldHandler = lib.element.player[eventName];
-			lib.element.player[eventName] = function (...args) {
-				if (typeof oldHandler === "function") {
-					oldHandler.apply(this, args);
-				}
-				refreshPlayerSkills(this);
 			};
-		});
+			const updateSkillArray = (player, skill, add = true) => {
+				if (player === game.me || !isOtherSkill(skill)) return;
+				if (!playerSkillArrays.has(player)) playerSkillArrays.set(player, []);
+				const arr = playerSkillArrays.get(player);
+				const idx = arr.indexOf(skill);
+				if (add && idx === -1) arr.push(skill);
+				if (!add && idx > -1) arr.splice(idx, 1);
+				updateSkillDisplay(player);
+			};
+			const refreshPlayerSkills = player => {
+				const avatar = player.node.avatar;
+				if (!avatar) return;
+				playerSkillArrays.delete(player);
+				[...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])].forEach(skill => updateSkillArray(player, skill, true));
+			};
+			["showCharacterEnd", "hideCharacter", "changeCharacter", "removeCharacter"].forEach(eventName => {
+				const oldHandler = lib.element.player[eventName];
+				if (!oldHandler) return;
+				lib.element.player[eventName] = function (...args) {
+					if (typeof oldHandler === "function") oldHandler.apply(this, args);
+					refreshPlayerSkills(this);
+				};
+			});
+			const origAdd = lib.element.player.addSkill;
+			const origRemove = lib.element.player.removeSkill;
+			lib.element.player.addSkill = function (skill, ...args) {
+				const res = origAdd.apply(this, [skill, ...args]);
+				requestAnimationFrame(() => updateSkillArray(this, skill, true));
+				return res;
+			};
+			lib.element.player.removeSkill = function (skill, ...args) {
+				const res = origRemove.apply(this, [skill, ...args]);
+				requestAnimationFrame(() => updateSkillArray(this, skill, false));
+				return res;
+			};
+			lib.onover.push(() => playerSkillArrays.clear());
+			return { refreshPlayerSkills };
+		})();
+		lib.refreshPlayerSkills = skillDisplayManager.refreshPlayerSkills;
+	}
 
-		// 游戏结束时清理
-		lib.onover.push(function () {
-			playerSkillArrays.clear();
+	// 清理所有技能外显
+	function clearAllSkillDisplay() {
+		[...game.players, ...(game.dead || [])].forEach(player => {
+			const avatar = player.node.avatar;
+			if (!avatar) return;
+			avatar.parentNode.querySelectorAll(".baby_skill").forEach(list => list.remove());
 		});
 	}
+	lib.clearAllSkillDisplay = clearAllSkillDisplay;
 });
