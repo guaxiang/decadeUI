@@ -829,42 +829,24 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		};
 	}
 
-	// 伤害恢复优化
+	// 数字特效
 	if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff" || lib.config.extension_十周年UI_newDecadeStyle === "on") {
-		window._WJMHHUIFUSHUZITEXIAO = {
-			shuzi2: {
-				name: "../../../十周年UI/assets/animation/globaltexiao/huifushuzi/shuzi2",
-			},
-		};
-		window._WJMHXUNISHUZITEXIAO = {
-			SS_PaiJu_xunishanghai: {
-				name: "../../../十周年UI/assets/animation/globaltexiao/xunishuzi/SS_PaiJu_xunishanghai",
-			},
-		};
-		window._WJMHSHANGHAISHUZITEXIAO = {
-			SZN_shuzi: {
-				name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi",
-			},
-		};
+		window._WJMHHUIFUSHUZITEXIAO = { shuzi2: { name: "../../../十周年UI/assets/animation/globaltexiao/huifushuzi/shuzi2" } };
+		window._WJMHXUNISHUZITEXIAO = { SS_PaiJu_xunishanghai: { name: "../../../十周年UI/assets/animation/globaltexiao/xunishuzi/SS_PaiJu_xunishanghai" } };
+		window._WJMHSHANGHAISHUZITEXIAO = { SZN_shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi" } };
 		lib.skill._wjmh_huifushuzi_ = {
 			priority: 10,
 			forced: true,
-			trigger: {
-				player: "recoverBegin",
-			},
-			filter(event, player) {
+			trigger: { player: "recoverBegin" },
+			filter(event) {
 				return event.num && event.num > 0 && event.num <= 9;
 			},
 			content() {
-				var action = trigger.num.toString();
+				const action = trigger.num.toString();
 				if (action) {
-					dcdAnim.loadSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2.name, "skel", function () {
+					dcdAnim.loadSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2.name, "skel", () => {
 						window._WJMHHUIFUSHUZITEXIAO.shuzi2.action = action;
-						dcdAnim.playSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2, {
-							speed: 0.6,
-							scale: 0.5,
-							parent: player,
-						});
+						dcdAnim.playSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2, { speed: 0.6, scale: 0.5, parent: player });
 					});
 				}
 			},
@@ -872,23 +854,16 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		lib.skill._wjmh_xunishuzi_ = {
 			priority: 10,
 			forced: true,
-			trigger: {
-				player: "damage",
-			},
-			filter(event, player) {
-				if ((event.num != 0 && !event.num) || (event.num < 0 && event.num > 9)) return false;
-				return event.unreal; // 判断是否是虚拟伤害
+			trigger: { player: "damage" },
+			filter(event) {
+				return event.num >= 0 && event.num <= 9 && event.unreal;
 			},
 			content() {
-				var action = "play" + trigger.num.toString();
+				const action = "play" + trigger.num.toString();
 				if (action) {
-					dcdAnim.loadSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.name, "skel", function () {
+					dcdAnim.loadSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.name, "skel", () => {
 						window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.action = action;
-						dcdAnim.playSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai, {
-							speed: 0.6,
-							scale: 0.5,
-							parent: player,
-						});
+						dcdAnim.playSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai, { speed: 0.6, scale: 0.5, parent: player });
 					});
 				}
 			},
@@ -896,22 +871,16 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		lib.skill._wjmh_shanghaishuzi_ = {
 			priority: 210,
 			forced: true,
-			trigger: {
-				player: "damageBegin4",
-			},
-			filter(event, player) {
+			trigger: { player: "damageBegin4" },
+			filter(event) {
 				return event.num && event.num > 1 && event.num <= 9;
 			},
 			content() {
-				var action = trigger.num.toString();
+				const action = trigger.num.toString();
 				if (action) {
-					dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.name, "skel", function () {
+					dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.name, "skel", () => {
 						window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.action = action;
-						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi, {
-							speed: 0.6,
-							scale: 0.5,
-							parent: player,
-						});
+						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi, { speed: 0.6, scale: 0.5, parent: player });
 					});
 				}
 			},
@@ -921,73 +890,83 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	//目标指示特效
 	lib.element.player.inits = [].concat(lib.element.player.inits || []).concat(player => {
 		if (player.ChupaizhishiXObserver) return;
-		const ChupaizhishiX = {
-			attributes: true,
-			attributeFilter: ["class"],
+		const ANIMATION_CONFIG = {
+			jiangjun: { name: "SF_xuanzhong_eff_jiangjun", scale: 0.6 },
+			weijiangjun: { name: "SF_xuanzhong_eff_weijiangjun", scale: 0.6 },
+			cheqijiangjun: { name: "SF_xuanzhong_eff_cheqijiangjun", scale: 0.6 },
+			biaoqijiangjun: { name: "SF_xuanzhong_eff_biaoqijiangjun", scale: 0.5 },
+			dajiangjun: { name: "SF_xuanzhong_eff_dajiangjun", scale: 0.6 },
+			dasima: { name: "SF_xuanzhong_eff_dasima", scale: 0.6 },
+			shoushaX: { name: "aar_chupaizhishiX", scale: 0.6 },
+			shousha: { name: "aar_chupaizhishi", scale: 0.6 },
 		};
+		const DELAY_TIME = 300;
 		let timer = null;
-		const animations = {
-			jiangjun: "SF_xuanzhong_eff_jiangjun",
-			weijiangjun: "SF_xuanzhong_eff_weijiangjun",
-			cheqijiangjun: "SF_xuanzhong_eff_cheqijiangjun",
-			biaoqijiangjun: "SF_xuanzhong_eff_biaoqijiangjun",
-			dajiangjun: "SF_xuanzhong_eff_dajiangjun",
-			dasima: "SF_xuanzhong_eff_dasima",
-			shoushaX: "aar_chupaizhishiX",
-			shousha: "aar_chupaizhishi",
+		const startAnimation = element => {
+			if (element.ChupaizhishiXid || timer) return;
+
+			if (!window.chupaiload) {
+				window.chupaiload = true;
+			}
+			timer = setTimeout(() => {
+				const config = decadeUI.config.chupaizhishi;
+				const animationConfig = ANIMATION_CONFIG[config];
+
+				if (config !== "off" && animationConfig) {
+					element.ChupaizhishiXid = dcdAnim.playSpine(
+						{
+							name: animationConfig.name,
+							loop: true,
+						},
+						{
+							parent: element,
+							scale: animationConfig.scale,
+						}
+					);
+				}
+				timer = null;
+			}, DELAY_TIME);
 		};
-		const ChupaizhishiXObserver = new globalThis.MutationObserver(mutationRecords => {
-			for (let mutationRecord of mutationRecords) {
-				if (mutationRecord.attributeName !== "class") continue;
-				const targetElement = mutationRecord.target;
+		const stopAnimation = element => {
+			if (element.ChupaizhishiXid) {
+				dcdAnim.stopSpine(element.ChupaizhishiXid);
+				delete element.ChupaizhishiXid;
+			}
+			if (timer) {
+				clearTimeout(timer);
+				timer = null;
+			}
+		};
+		const observer = new globalThis.MutationObserver(mutations => {
+			for (const mutation of mutations) {
+				if (mutation.attributeName !== "class") continue;
 
-				if (targetElement.classList.contains("selectable")) {
-					if (!targetElement.ChupaizhishiXid) {
-						if (!window.chupaiload) {
-							window.chupaiload = true;
-						}
-						if (timer) return;
+				const target = mutation.target;
+				const isSelectable = target.classList.contains("selectable");
 
-						timer = setTimeout(() => {
-							const config = decadeUI.config.chupaizhishi;
-							if (config !== "off" && animations[config]) {
-								targetElement.ChupaizhishiXid = dcdAnim.playSpine(
-									{
-										name: animations[config],
-										loop: true,
-									},
-									{
-										parent: targetElement,
-										scale: config === "biaoqijiangjun" ? 0.5 : 0.6,
-									}
-								);
-							}
-							timer = null;
-						}, 300);
-					}
+				if (isSelectable) {
+					startAnimation(target);
 				} else {
-					if (targetElement.ChupaizhishiXid) {
-						dcdAnim.stopSpine(targetElement.ChupaizhishiXid);
-						delete targetElement.ChupaizhishiXid;
-						if (timer) {
-							clearTimeout(timer);
-							timer = null;
-						}
-					}
+					stopAnimation(target);
 				}
 			}
 		});
-		ChupaizhishiXObserver.observe(player, ChupaizhishiX);
-		player.ChupaizhishiXObserver = ChupaizhishiXObserver;
+		observer.observe(player, {
+			attributes: true,
+			attributeFilter: ["class"],
+		});
+		player.ChupaizhishiXObserver = observer;
 	});
 
-	// 技能外显-仅在babysha样式下且斗地主/对决模式生效
-	if (lib.config.extension_十周年UI_newDecadeStyle === "babysha" && (get.mode() === "doudizhu" || get.mode() === "versus")) {
+	// 技能外显-仅在babysha样式下且场上人物小于5人时生效
+	if (lib.config.extension_十周年UI_newDecadeStyle === "babysha" && game.players.length < 5) {
+		const getAllPlayersCount = () => game.players.length + (game.dead ? game.dead.length : 0);
 		const skillDisplayManager = (() => {
 			const playerSkillArrays = new Map();
 			const isOtherSkill = skill => !!lib.translate?.[skill];
 			const getSkillName = skill => lib.translate?.[skill] || skill;
 			const updateSkillDisplay = player => {
+				if (getAllPlayersCount() >= 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
 				avatar.parentNode.querySelectorAll(".baby_skill").forEach(list => list.remove());
@@ -1024,6 +1003,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				});
 			};
 			const updateSkillArray = (player, skill, add = true) => {
+				if (getAllPlayersCount() >= 5) return;
 				if (player === game.me || !isOtherSkill(skill)) return;
 				if (!playerSkillArrays.has(player)) playerSkillArrays.set(player, []);
 				const arr = playerSkillArrays.get(player);
@@ -1033,6 +1013,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				updateSkillDisplay(player);
 			};
 			const refreshPlayerSkills = player => {
+				if (getAllPlayersCount() >= 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
 				playerSkillArrays.delete(player);
