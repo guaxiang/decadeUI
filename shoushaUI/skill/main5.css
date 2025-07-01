@@ -132,8 +132,8 @@
 
 .skillMarks>.skillMarkItem {
 	--h: 19px;
-	width: 23px !important;
-	height: 23px !important;
+	width: 21px !important;
+	height: 21px !important;
 	right: 0px;
 	line-height: -10px;
 	text-align: center;
@@ -164,7 +164,7 @@
 }
 
 .skillMarkItem+.skillMarkItem {
-	margin-top: -6.5px;
+	margin-top: 1px;
 }
 
 .skillMarkItem.juexingji {
