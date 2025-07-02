@@ -24,8 +24,8 @@
 
 .skill-control>div {
 	display: flex;
-	flex-wrap: wrap-reverse;
-	flex-direction: row-reverse;
+	flex-wrap: wrap;
+	flex-direction: row;
 }
 
 .skill-control>div::after {
@@ -38,7 +38,7 @@
 .skill-control .enable {
 	height: auto;
 	width: auto;
-	justify-content: right;
+	justify-content: left;
 	/*自动向右对齐*/
 }
 
@@ -112,6 +112,20 @@
 	background-image: url("./shizhounian/btnnxn4.png");
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
+}
+
+/* 调整单个技能的显示（最后一行为单个技能时） */
+.skill-control>.enable>.xiandingji:last-child:nth-child(odd) {
+	flex: 0 0 95px !important;
+	background-image: url("./shizhounian/btnnx8.png");
+	background-size: 100% 100%;
+}
+
+.skill-control>.enable>.skillitem:last-child:nth-child(odd),
+.skill-control>.trigger>.skillitem:last-child:nth-child(odd) {
+	flex: 0 0 95px !important;
+	background-image: url("./shizhounian/btnnx7.png");
+	background-size: 100% 100%;
 }
 
 .skillMarks {
