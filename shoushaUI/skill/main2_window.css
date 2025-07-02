@@ -119,6 +119,14 @@
 	-webkit-filter: grayscale(100%);
 }
 
+.skill-control>.enable>.zhuanhuanji:not(.usable):not(.select) {
+	/*技能按钮不可用时变灰*/
+	background-image: url("./shizhounian/btnnx3.png");
+	background-size: 100% 100%;
+	filter: grayscale(100%);
+	-webkit-filter: grayscale(100%);
+}
+
 .skill-control>.enable>.xiandingji:not(.usable):not(.select) {
 	/*限定技按钮不可用时变灰*/
 	filter: grayscale(100%);

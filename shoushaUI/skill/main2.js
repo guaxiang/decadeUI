@@ -233,6 +233,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var targetNode = get.is.phoneLayout() ? "trigger" : "enable";
 					node = ui.create.div(".skillitem", self.node[targetNode], get.translation(item.name).slice(0, 2));
 					node.dataset.id = item.id;
+					if (lib.skill[item.id].zhuanhuanji) {
+						node.classList.add("zhuanhuanji");
+					}
 				});
 
 				return this;
