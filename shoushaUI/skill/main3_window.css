@@ -1,6 +1,6 @@
 .skill-control {
 	/*技能按钮*/
-	max-width: 200px;
+	max-width: 220px;
 	/*同列技能可容纳最大宽度，建议别调*/
 	bottom: 45px;
 	/*整体上移，建议别调*/
@@ -56,7 +56,7 @@
 	position: relative;
 	/* 定位参照 */
 	padding: 3px 7px;
-	margin: 2px 0px;
+	margin: 2px 3px;
 	color: rbg(190, 142, 99);
 	font-family: "yuanli";
 	font-size: 18px;
@@ -65,15 +65,15 @@
 
 .skill-control>.enable>.skillitem {
 	margin: 2px 2px;
-	--w: 82.8px;
-	--h: 44.1px;
+	--w: 70px;
+	--h: 35px;
 	width: var(--w);
 	height: var(--h);
-	line-height: 42px;
+	line-height: 37px;
 	text-align: center;
 	font-family: "xingkai";
 	font-weight: 500;
-	font-size: 27px;
+	font-size: 23px;
 	color: #f7f5e7;
 	background-image: url("./yijiang/new_btnn1.png");
 	background-size: 100% 100%;
@@ -82,17 +82,17 @@
 .skill-control>.enable>.xiandingji {
 	/*限定技按钮*/
 	margin: 2px 2px;
-	--w: 82.8px;
-	--h: 44.1px;
+	--w: 70px;
+	--h: 35px;
 	width: var(--w);
 	height: var(--h);
-	line-height: 42px;
+	line-height: 37px;
 	text-align: center;
 	font-family: "xingkai";
 	font-weight: 500;
 	/*å­—ç²—ç»†*/
 	color: #f7f5e7;
-	font-size: 27px;
+	font-size: 23px;
 	background-image: url("./yijiang/new_btnn4.png");
 	background-size: 100% 100%;
 }
