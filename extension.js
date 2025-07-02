@@ -5721,9 +5721,11 @@ export default async function () {
 						} else {
 							/*-----------------分割线-----------------*/
 							// 手牌折叠方式
-							// xStart += (limitW - totalW) / 2; //居中
-							// xStart += (limitW - totalW) / 1; //靠右
-							xStart += 0; //靠左
+							if (get.is && typeof get.is.phoneLayout === 'function' && get.is.phoneLayout()) {
+								xStart += 0; // 触屏模式靠左
+							} else {
+								xStart += (limitW - totalW) / 1.45; // 非触屏模式居中
+							}
 						}
 
 						var card;

@@ -119,7 +119,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	// 创建手牌整理按钮
 	function createSortButton() {
 		const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
-		const sortBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/zhengli.png", isRightLayout ? utils.getButtonStyle(88, "81/247", "calc(100% - 33px)", "calc(100% - 376.2px)", 7) : utils.getButtonStyle(88, "81/247", "calc(100% - 33px)", "right: calc(100% - 367.2px)", 4));
+		const isTouch = lib.config.phonelayout;
+		const sortImg = isTouch ? "zhengli.png" : "zhenglix.png";
+		let sortBtnStyle;
+		if (isTouch) {
+			sortBtnStyle = isRightLayout ? utils.getButtonStyle(88, "81/247", "calc(100% - 35px)", "calc(100% - 380px)", 7) : utils.getButtonStyle(120, "81/247", "calc(100% - 50px)", "right: calc(100% - 400px)", 4);
+		} else {
+			sortBtnStyle = isRightLayout ? utils.getButtonStyle(45, "110/170", "calc(100% - 45px)", "calc(100% - 290px)", 7) : utils.getButtonStyle(88, "81/247", "calc(100% - 33px)", "right: calc(100% - 367.2px)", 4);
+		}
+		const sortBtn = utils.createImage(`extension/十周年UI/shoushaUI/lbtn/images/uibutton/${sortImg}`, sortBtnStyle);
 
 		sortBtn.onclick = function () {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
