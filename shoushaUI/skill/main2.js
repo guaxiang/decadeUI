@@ -217,6 +217,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						var className = lib.skill[item.id].limited ? ".xiandingji" : ".skillitem";
 						node = ui.create.div(className, self.node.enable, skillName);
 						node.dataset.id = item.id;
+						if (lib.skill[item.id].zhuanhuanji) {
+							node.classList.add("zhuanhuanji");
+						}
 						node.addEventListener("click", function () {
 							game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 						});

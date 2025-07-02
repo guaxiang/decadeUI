@@ -63,6 +63,27 @@
 	/*border: 1px solid rgb(3,4,5);/*调试用*/
 }
 
+.skill-control>.enable>.zhuanhuanji {
+	margin: 1px 2px;
+	--w: 45px;
+	--h: calc(var(--w) * 91 / 200);
+	width: var(--w);
+	height: var(--h);
+	line-height: 20px;
+	/* padding-left: 18px; */
+	text-indent: 9px;
+	text-align: center;
+	font-family: "yuanli";
+	font-weight: 500;
+	font-size: 11px;
+	color: #f7f5e7;
+	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
+	background-image: url("./shizhounian/btnnx3.png");
+	background-size: 100% 100%;
+	/*border: 1px solid rgb(3,4,5);/*调试用*/
+}
+
 .skill-control>.enable>.xiandingji {
 	/*限定技按钮*/
 	margin: 1px 2px;
@@ -118,6 +139,12 @@
 .skill-control>.enable>.xiandingji:last-child:nth-child(odd) {
 	flex: 0 0 95px !important;
 	background-image: url("./shizhounian/btnnx8.png");
+	background-size: 100% 100%;
+}
+
+.skill-control>.enable>.zhuanhuanji:last-child:nth-child(odd) {
+	flex: 0 0 95px !important;
+	background-image: url("./shizhounian/btnnx6.png");
 	background-size: 100% 100%;
 }
 
