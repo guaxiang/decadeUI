@@ -64,7 +64,7 @@
 }
 
 .skill-control>.enable>.skillitem {
-	margin: 2px 2px;
+	margin: 3px 3px;
 	--w: 70px;
 	--h: 35px;
 	width: var(--w);
@@ -81,7 +81,7 @@
 
 .skill-control>.enable>.xiandingji {
 	/*限定技按钮*/
-	margin: 2px 2px;
+	margin: 3px 3px;
 	--w: 70px;
 	--h: 35px;
 	width: var(--w);
