@@ -2903,7 +2903,7 @@ export default async function () {
 								}
 								game.check();
 
-								if (lib.config.popequip && get.is.phoneLayout() && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
+								if (lib.config.popequip && lib.config.phonelayout && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
 									var rect = this.getBoundingClientRect();
 									ui.click.touchpop();
 									ui.click.intro.call(this.parentNode, {
@@ -4084,7 +4084,7 @@ export default async function () {
 
 						var relayout = function () {
 							ui.arena.dataset.layout = game.layout;
-							if (get.is.phoneLayout()) {
+							if (lib.config.phonelayout) {
 								ui.css.phone.href = lib.assetURL + "layout/default/phone.css";
 								ui.arena.classList.add("phone");
 							} else {
@@ -5728,7 +5728,7 @@ export default async function () {
 						} else {
 							/*-----------------分割线-----------------*/
 							// 手牌折叠方式
-							if (get.is && typeof get.is.phoneLayout === "function" && get.is.phoneLayout()) {
+							if (get.is && typeof get.is.phoneLayout === "function" && lib.config.phonelayout) {
 								xStart += 0; // 触屏模式靠左
 							} else {
 								xStart += (limitW - totalW) / 1.7; // 非触屏模式居中
@@ -9243,7 +9243,7 @@ export default async function () {
 					if (pack === "character") {
 						lib.init.css(layoutPath + pack + "/main" + listmap + ".css");
 					} else {
-						lib.init.css(layoutPath + pack + "/main" + listmap + (get.is.phoneLayout() ? "" : "_window") + ".css");
+						lib.init.css(layoutPath + pack + "/main" + listmap + (lib.config.phonelayout ? "" : "_window") + ".css");
 					}
 				});
 			}

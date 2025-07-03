@@ -249,7 +249,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!item.info) return;
 					if (!item.translation) return;
 					if (eSkills && eSkills.includes(item.id)) return;
-					node = ui.create.div(".skillitem", self.node[get.is.phoneLayout() ? "trigger" : "enable"], finalName);
+					node = ui.create.div(".skillitem", self.node[lib.config.phonelayout ? "trigger" : "enable"], finalName);
 					node.dataset.id = item.id;
 					// 不是当前武将原生技能才加小黄点（这里也要用nativeSkills判断！）
 					if (lib.skill[item.id] && nativeSkills.indexOf(item.id) === -1 && node) {
