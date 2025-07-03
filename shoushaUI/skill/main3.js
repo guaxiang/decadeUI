@@ -248,7 +248,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (eSkills && eSkills.includes(item.id)) return;
 
 				const skillName = get.translation(item.name).slice(0, 2);
-				const targetNode = get.is.phoneLayout() ? this.node.trigger : this.node.enable;
+				const targetNode = lib.config.phonelayout ? this.node.trigger : this.node.enable;
 				const node = ui.create.div(".skillitem", targetNode, skillName);
 				node.dataset.id = item.id;
 			},

@@ -42,6 +42,7 @@
 	/*自动向右对齐*/
 }
 
+/*技能按钮*/
 .skill-control>.enable>.skillitem {
 	margin: 1px 2px;
 	--w: 45px;
@@ -85,7 +86,6 @@
 }
 
 .skill-control>.enable>.xiandingji {
-	/*限定技按钮*/
 	margin: 1px 2px;
 	--w: 45px;
 	--h: calc(var(--w) * 91 / 200);
@@ -107,20 +107,44 @@
 	/*border: 1px solid rgb(3,4,5);/*调试用*/
 }
 
+.skill-control>.enable>.locked {
+	margin: 1px 2px;
+	--w: 45px;
+	--h: calc(var(--w) * 91 / 200);
+	width: var(--w);
+	height: var(--h);
+	line-height: 20px;
+	/* padding-left: 18px; */
+	text-indent: 9px;
+	text-align: center;
+	font-family: "yuanli";
+	font-weight: 500;
+	font-size: 11px;
+	color: #f7f5e7;
+	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
+	background-image: url("./shizhounian/btnnx2.png");
+	background-size: 100% 100%;
+	/*border: 1px solid rgb(3,4,5);/*调试用*/
+}
+
 .skill-control>.enable>.skillitem.select {
 	background-image: url("./shizhounian/btnnx1.png");
 }
 
+.skill-control>.enable>.xiandingji.select {
+	background-image: url("./shizhounian/btnnx4.png");
+}
+
+/*技能按钮不可用时变灰*/
 .skill-control>.enable>.skillitem:not(.usable):not(.select) {
-	/*技能按钮不可用时变灰*/
-	background-image: url("./shizhounian/btnnx2.png");
+	background-image: url("./shizhounian/btnnx1.png");
 	background-size: 100% 100%;
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 }
 
 .skill-control>.enable>.zhuanhuanji:not(.usable):not(.select) {
-	/*技能按钮不可用时变灰*/
 	background-image: url("./shizhounian/btnnx3.png");
 	background-size: 100% 100%;
 	filter: grayscale(100%);
@@ -128,25 +152,22 @@
 }
 
 .skill-control>.enable>.xiandingji:not(.usable):not(.select) {
-	/*限定技按钮不可用时变灰*/
+	background-image: url("./shizhounian/btnnxn4.png");
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(90%);
 }
 
-.skill-control>.enable>.xiandingji.select {
-	background-image: url("./shizhounian/btnnx4.png");
-}
-
-.skill-control>.enable>.xiandingji:not(.usable):not(.select) {
-	background-image: url("./shizhounian/btnnxn4.png");
+.skill-control>.enable>.locked:not(.usable):not(.select) {
+	background-image: url("./shizhounian/btnnx2.png");
+	background-size: 100% 100%;
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 }
 
-/* 调整单个技能的显示（最后一行为单个技能时） */
-.skill-control>.enable>.xiandingji:last-child:nth-child(odd) {
+/*单行单技能按钮*/
+.skill-control>.enable>.skillitem:last-child:nth-child(odd) {
 	flex: 0 0 95px !important;
-	background-image: url("./shizhounian/btnnx8.png");
+	background-image: url("./shizhounian/btnnx9.png");
 	background-size: 100% 100%;
 	margin-right: 65px;
 }
@@ -157,9 +178,14 @@
 	background-size: 100% 100%;
 	margin-right: 65px;
 }
+.skill-control>.enable>.xiandingji:last-child:nth-child(odd) {
+	flex: 0 0 95px !important;
+	background-image: url("./shizhounian/btnnx8.png");
+	background-size: 100% 100%;
+	margin-right: 65px;
+}
 
-.skill-control>.enable>.skillitem:last-child:nth-child(odd),
-.skill-control>.trigger>.skillitem:last-child:nth-child(odd) {
+.skill-control>.enable>.locked:last-child:nth-child(odd) {
 	flex: 0 0 95px !important;
 	background-image: url("./shizhounian/btnnx7.png");
 	background-size: 100% 100%;

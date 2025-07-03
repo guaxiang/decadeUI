@@ -217,10 +217,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						var className = lib.skill[item.id].limited ? ".xiandingji" : ".skillitem";
 						node = ui.create.div(className, self.node.enable, skillName);
 						node.dataset.id = item.id;
-						if (lib.skill[item.id].zhuanhuanji) {
-							node.classList.add("zhuanhuanji");
-						}
-						node.addEventListener("click", function () {
+						if (lib.skill[item.id]?.zhuanhuanji) node.classList.add("zhuanhuanji");
+						if (get.is.locked(item.id, game.me)) node.classList.add("locked");
+						node.addEventListener(lib.config.touchscreen ? "touchend" : "click", function () {
 							game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 						});
 						app.listen(node, plugin.clickSkill);
@@ -228,16 +227,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 
 					if (!item.info || !item.translation) return;
-					if (eSkills && eSkills.includes(item.id)) return;
+					if (eSkills?.includes(item.id)) return;
 
-					var targetNode = get.is.phoneLayout() ? "trigger" : "enable";
+					var targetNode = lib.config.phonelayout ? "trigger" : "enable";
 					node = ui.create.div(".skillitem", self.node[targetNode], get.translation(item.name).slice(0, 2));
 					node.dataset.id = item.id;
-					if (lib.skill[item.id].zhuanhuanji) {
-						node.classList.add("zhuanhuanji");
-					}
+					if (lib.skill[item.id]?.zhuanhuanji) node.classList.add("zhuanhuanji");
+					if (get.is.locked(item.id, game.me)) node.classList.add("locked");
 				});
-
 				return this;
 			},
 			update() {
@@ -247,17 +244,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
 
 				Array.from(this.node.enable.childNodes).forEach(function (item) {
-					if (skills.includes(item.dataset.id)) {
-						item.classList.add("usable");
-					} else {
-						item.classList.remove("usable");
-					}
-
-					if (_status.event.skill === item.dataset.id) {
-						item.classList.add("select");
-					} else {
-						item.classList.remove("select");
-					}
+					item.classList[skills.includes(item.dataset.id) ? "add" : "remove"]("usable");
+					item.classList[_status.event.skill === item.dataset.id ? "add" : "remove"]("select");
 				});
 
 				var level1 = Math.min(4, this.node.trigger.childNodes.length);
