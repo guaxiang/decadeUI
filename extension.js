@@ -1157,11 +1157,11 @@ export default async function () {
 
 										if (gaintag) card.addGaintag(gaintag);
 
-										fragment.insertBefore(card, fragment.firstChild);
+										fragment.appendChild(card);
 									}
 
 									if (player == game.me) {
-										dui.layoutHandDraws(cards.reverse());
+										dui.layoutHandDraws(cards);
 										dui.queueNextFrameTick(dui.layoutHand, dui);
 									}
 
@@ -1923,7 +1923,7 @@ export default async function () {
 											gaintag.forEach(tag => card.addGaintag(tag));
 											if (event.knowers) card.addKnower(event.knowers);
 
-											fragment.insertBefore(card, fragment.firstChild);
+											fragment.appendChild(card);
 											if (_status.discarded) _status.discarded.remove(card);
 
 											for (var j = 0; j < card.vanishtag.length; j++) {
@@ -1933,7 +1933,7 @@ export default async function () {
 										var gainTo = function (cards, nodelay) {
 											cards.duiMod = event.source;
 											if (player == game.me) {
-												dui.layoutHandDraws(cards.reverse());
+												dui.layoutHandDraws(cards);
 												dui.queueNextFrameTick(dui.layoutHand, dui);
 												game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
 											}
@@ -2049,7 +2049,7 @@ export default async function () {
 									game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[0]);
 									game.delay(2);
 									if (!event.noJudgeTrigger) event.trigger("judge");
-									("step 1");
+									"step 1";
 									event.result = {
 										card: player.judging[0],
 										name: player.judging[0].name,
@@ -4158,7 +4158,7 @@ export default async function () {
 							event.compareName,
 							event.compareId
 						);
-						("step 1");
+						"step 1";
 						event.list = [player, target].filter(current => !event.fixedResult?.[current.playerid]);
 						if (event.list.length) {
 							player.chooseCardOL(event.list, "请选择拼点牌", true, event.position).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
@@ -4175,7 +4175,7 @@ export default async function () {
 								};
 							};
 						}
-						("step 2");
+						"step 2";
 						const lose_list = [];
 						if (event.fixedResult && event.fixedResult[player.playerid]) {
 							lose_list.push([player, [event.fixedResult[player.playerid]]]);
@@ -4213,17 +4213,17 @@ export default async function () {
 							dialog.$playerCard.classList.add("infoflip");
 						}, event.compareId);
 						event.lose_list = lose_list;
-						("step 3");
+						"step 3";
 						if (event.card2.number >= 10 || event.card2.number <= 4) {
 							if (target.countCards("h") > 2) event.addToAI = true;
 						}
-						("step 4");
+						"step 4";
 						if (event.lose_list.length) {
 							game.loseAsync({
 								lose_list: event.lose_list,
 							}).setContent("chooseToCompareLose");
 						}
-						("step 5");
+						"step 5";
 						if (event.isDelay) {
 							let cards = [];
 							for (let current of event.lose_list) {
@@ -4262,7 +4262,7 @@ export default async function () {
 						} else {
 							event.trigger("compareCardShowBefore");
 						}
-						("step 6");
+						"step 6";
 						// 更新拼点框
 						game.broadcastAll(
 							function (eventName, player, target, playerCard, targetCard) {
@@ -4295,7 +4295,7 @@ export default async function () {
 						event.num2 = getNum(event.card2);
 						event.trigger("compare");
 						decadeUI.delay(400);
-						("step 7");
+						"step 7";
 						event.result = {
 							player: event.card1,
 							target: event.card2,
@@ -4303,7 +4303,7 @@ export default async function () {
 							num2: event.num2,
 						};
 						event.trigger("compareFixing");
-						("step 8");
+						"step 8";
 						var str;
 						if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
 							event.result.bool = true;
@@ -4364,7 +4364,7 @@ export default async function () {
 							event.result.bool
 						);
 						decadeUI.delay(1800);
-						("step 9");
+						"step 9";
 						if (typeof event.target.ai.shown == "number" && event.target.ai.shown <= 0.85 && event.addToAI) {
 							event.target.ai.shown += 0.1;
 						}
@@ -4426,7 +4426,7 @@ export default async function () {
 							event.compareName,
 							event.compareId
 						);
-						("step 1");
+						"step 1";
 						event._result = [];
 						event.list = targets.filter(current => !event.fixedResult?.[current.playerid]);
 						if (event.list.length || !event.fixedResult?.[player.playerid]) {
@@ -4445,7 +4445,7 @@ export default async function () {
 								};
 							};
 						}
-						("step 2");
+						"step 2";
 						var cards = [];
 						var lose_list = [];
 						event.lose_list = lose_list;
@@ -4497,9 +4497,9 @@ export default async function () {
 							num1: [],
 							num2: [],
 						};
-						("step 3");
+						"step 3";
 						event.trigger("compareCardShowBefore");
-						("step 4");
+						"step 4";
 						game.log(player, "的拼点牌为", event.card1);
 						// 更新拼点框
 						game.broadcastAll(
@@ -4511,7 +4511,7 @@ export default async function () {
 							event.compareId,
 							event.card1
 						);
-						("step 5");
+						"step 5";
 						if (event.iwhile < targets.length) {
 							event.target = targets[event.iwhile];
 							event.card2 = event.cardlist[event.iwhile];
@@ -4554,11 +4554,11 @@ export default async function () {
 							}, event.compareId);
 							event.goto(10);
 						}
-						("step 6");
+						"step 6";
 						event.iiwhile = event.iwhile;
 						delete event.iwhile;
 						event.trigger("compareFixing");
-						("step 7");
+						"step 7";
 						event.result.num1[event.iiwhile] = event.num1;
 						event.result.num2[event.iiwhile] = event.num2;
 						var str, result;
@@ -4619,7 +4619,7 @@ export default async function () {
 							result
 						);
 						decadeUI.delay(1800);
-						("step 8");
+						"step 8";
 						if (event.callback) {
 							game.broadcastAll(
 								function (card1, card2) {
@@ -4642,12 +4642,12 @@ export default async function () {
 							next.setContent(event.callback);
 							event.compareMultiple = true;
 						}
-						("step 9");
+						"step 9";
 						delete event.winner;
 						delete event.forceWinner;
 						event.iwhile = event.iiwhile + 1;
 						event.goto(5);
-						("step 10");
+						"step 10";
 						game.broadcastAll(ui.clear);
 						event.cards.add(event.card1);
 					};
@@ -4800,7 +4800,7 @@ export default async function () {
 									time += 500;
 								}
 							}
-							("step 1");
+							"step 1";
 							var [top, bottom] = [event.cards1, event.cards2];
 							event.result = {
 								bool: true,
@@ -4810,6 +4810,13 @@ export default async function () {
 							game.addCardKnower(bottom, player);
 							player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
 							game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
+							top.reverse();
+							for (var i = 0; i < top.length; i++) {
+								ui.cardPile.insertBefore(top[i], ui.cardPile.firstChild);
+							}
+							for (i = 0; i < bottom.length; i++) {
+								ui.cardPile.appendChild(bottom[i]);
+							}
 							game.updateRoundNumber();
 						};
 					}
@@ -5721,7 +5728,7 @@ export default async function () {
 						} else {
 							/*-----------------分割线-----------------*/
 							// 手牌折叠方式
-							if (get.is && typeof get.is.phoneLayout === 'function' && get.is.phoneLayout()) {
+							if (get.is && typeof get.is.phoneLayout === "function" && get.is.phoneLayout()) {
 								xStart += 0; // 触屏模式靠左
 							} else {
 								xStart += (limitW - totalW) / 1.45; // 非触屏模式居中
@@ -7765,7 +7772,7 @@ export default async function () {
 				} else {
 					event.result = "ai";
 				}
-				("step 1");
+				"step 1";
 				if (event.result == "ai") {
 					event.result = {};
 					if (event.ai) {
@@ -11127,7 +11134,8 @@ export default async function () {
 					"那一天的函数，跟进起来",
 					"连同着迷🥺这个炎炎🔥夏日🥵万般滋味👄那个你",
 				];
-				return `<a href="javascript:void(0)" onclick="navigator.clipboard.writeText('https://github.com/diandian157/decadeUI').then(() => alert('已成功复制，粘贴到浏览器打开，部分进不去需要翻墙'))">点击复制十周年UIGithub仓库地址</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;})(pack);
+				return `<a href="javascript:void(0)" onclick="navigator.clipboard.writeText('https://github.com/diandian157/decadeUI').then(() => alert('已成功复制，粘贴到浏览器打开，部分进不去需要翻墙'))">点击复制十周年UIGithub仓库地址</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
+			})(pack);
 			return pack;
 		})(),
 		files: {
