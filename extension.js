@@ -5731,7 +5731,7 @@ export default async function () {
 							if (get.is && typeof get.is.phoneLayout === "function" && get.is.phoneLayout()) {
 								xStart += 0; // 触屏模式靠左
 							} else {
-								xStart += (limitW - totalW) / 1.45; // 非触屏模式居中
+								xStart += (limitW - totalW) / 1.7; // 非触屏模式居中
 							}
 						}
 

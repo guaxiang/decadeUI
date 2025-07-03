@@ -148,12 +148,14 @@
 	flex: 0 0 95px !important;
 	background-image: url("./shizhounian/btnnx8.png");
 	background-size: 100% 100%;
+	margin-right: 65px;
 }
 
 .skill-control>.enable>.zhuanhuanji:last-child:nth-child(odd) {
 	flex: 0 0 95px !important;
 	background-image: url("./shizhounian/btnnx6.png");
 	background-size: 100% 100%;
+	margin-right: 65px;
 }
 
 .skill-control>.enable>.skillitem:last-child:nth-child(odd),
@@ -161,6 +163,7 @@
 	flex: 0 0 95px !important;
 	background-image: url("./shizhounian/btnnx7.png");
 	background-size: 100% 100%;
+	margin-right: 65px;
 }
 
 .skillMarks {
