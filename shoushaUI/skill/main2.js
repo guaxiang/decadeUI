@@ -245,7 +245,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 				Array.from(this.node.enable.childNodes).forEach(function (item) {
 					item.classList[skills.includes(item.dataset.id) ? "add" : "remove"]("usable");
-					item.classList[_status.event.skill === item.dataset.id ? "add" : "remove"]("usable");
+					item.classList[_status.event.skill === item.dataset.id ? "add" : "remove"]("select");
 				});
 
 				var level1 = Math.min(4, this.node.trigger.childNodes.length);
