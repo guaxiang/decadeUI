@@ -98,7 +98,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					lib.config.longpress_info = this.originalLongpressInfo;
 
 					[0, 1].forEach(arrayIndex => {
-						const cards = this.cards[arrayIndex];
+						let cards = this.cards[arrayIndex];
+						if (arrayIndex === 0) cards.reverse();
 						cards.forEach(card => {
 							cleanupCard(card);
 							if (!this.callback) {
@@ -110,6 +111,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							}
 						});
 					});
+					game.updateRoundNumber();
 					_status.event.cards1 = this.cards[0];
 					_status.event.cards2 = this.cards[1];
 					_status.event.num1 = this.cards[0].length;

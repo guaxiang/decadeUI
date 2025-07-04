@@ -4810,14 +4810,6 @@ export default async function () {
 							game.addCardKnower(bottom, player);
 							player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
 							game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
-							top.reverse();
-							for (var i = 0; i < top.length; i++) {
-								ui.cardPile.insertBefore(top[i], ui.cardPile.firstChild);
-							}
-							for (i = 0; i < bottom.length; i++) {
-								ui.cardPile.appendChild(bottom[i]);
-							}
-							game.updateRoundNumber();
 						};
 					}
 					lib.element.player.setIdentity = function (identity) {
