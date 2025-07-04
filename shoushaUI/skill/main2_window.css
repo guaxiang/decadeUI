@@ -128,12 +128,21 @@
 	/*border: 1px solid rgb(3,4,5);/*调试用*/
 }
 
+/*技能按钮选中时*/
 .skill-control>.enable>.skillitem.select {
 	background-image: url("./shizhounian/btnnx1.png");
 }
 
+.skill-control>.enable>.zhuanhuanji.select {
+	background-image: url("./shizhounian/btnnx3.png");
+}
+
 .skill-control>.enable>.xiandingji.select {
 	background-image: url("./shizhounian/btnnx4.png");
+}
+
+.skill-control>.enable>.locked.select {
+	background-image: url("./shizhounian/btnnx2.png");
 }
 
 /*技能按钮不可用时变灰*/
