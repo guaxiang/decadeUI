@@ -76,7 +76,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 					var juexingji = {};
 					var xiandingji = {};
-					app.get.playerSkills(player).forEach(function (skill) {
+					[].concat(player.skills, player.invisibleSkills).forEach(function (skill) {
 						var info = get.info(skill);
 						if (!info) return;
 						if (get.is.zhuanhuanji(skill, player) || info.limited || (info.intro && info.intro.content === "limited")) {

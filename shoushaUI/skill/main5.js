@@ -99,7 +99,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			const xiandingji = {};
 			const juexingji = {};
 
-			app.get.playerSkills(player).forEach(skill => {
+			[].concat(player.skills, player.invisibleSkills).forEach(function (skill) {
 				const info = get.info(skill);
 				if (!info) return;
 
