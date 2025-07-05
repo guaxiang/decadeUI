@@ -51,7 +51,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			Object.assign(ui, {
 				updateSkillControl(player, clear) {
 					var eSkills = player.getSkills("e", true, false).slice(0);
-					var skills = app.get.playerSkills(player, true); /*国战隐匿技能*/
+					var skills = player.getSkills("invisible", null, false); /*国战隐匿技能*/
 					var gSkills;
 					if (ui.skills2 && ui.skills2.skills.length) {
 						gSkills = ui.skills2.skills;
@@ -81,7 +81,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 					var juexingji = {};
 					var xiandingji = {};
-					[].concat(player.skills, player.invisibleSkills).forEach(function (skill) {
+					player.getSkills("invisible", null, false).forEach(function (skill) {
 						var info = get.info(skill);
 						if (!info) return;
 						if (get.is.zhuanhuanji(skill, player) || info.limited || (info.intro && info.intro.content === "limited")) {
