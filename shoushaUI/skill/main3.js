@@ -61,7 +61,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			Object.assign(ui, {
 				updateSkillControl(player, clear) {
 					const eSkills = player.getSkills("e", true, false).slice(0);
-					let skills = app.get.playerSkills(player, true);
+					let skills = player.getSkills("invisible", null, false);
 					let gSkills = null;
 
 					if (ui.skills2 && ui.skills2.skills.length) {
@@ -98,7 +98,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			const juexingji = {};
 			const xiandingji = {};
 
-			[].concat(player.skills, player.invisibleSkills).forEach(function (skill) {
+			player.getSkills("invisible", null, false).forEach(function (skill) {
 				const info = get.info(skill);
 				if (!info) return;
 
