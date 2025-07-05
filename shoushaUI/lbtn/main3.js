@@ -100,7 +100,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		sortButton._interval = setInterval(function () {
 			if (!game.me) return;
 			var num = game.me.getCards("hs").length;
-			sortButton.style.display = num > 4 ? "block" : "none";
+			sortButton.style.display = num >= 4 ? "block" : "none";
 		}, 1000);
 
 		document.body.appendChild(sortButton);

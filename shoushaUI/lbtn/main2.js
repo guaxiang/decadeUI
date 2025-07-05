@@ -148,7 +148,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		};
 
+		// 定时检测手牌数，动态显示/隐藏整理按钮
+		sortBtn.style.display = "none";
 		document.body.appendChild(sortBtn);
+		function updateSortButtonVisibility() {
+			sortBtn.style.display = game.me && game.me.getCards("hs").length >= 4 ? "block" : "none";
+		}
+		setInterval(updateSortButtonVisibility, 1000);
+		updateSortButtonVisibility();
 	}
 
 	// 创建右上角菜单
