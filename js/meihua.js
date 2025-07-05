@@ -271,13 +271,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						ui.create.confirm("oc");
 						event.custom.replace.confirm = function (ok) {
 							dialog.close();
-							ui.confirm.close();
+							if (ui.confirm && ui.confirm.close) ui.confirm.close();
 							game.resume();
 							resolve({ bool: ok });
 						};
 						event.switchToAuto = function () {
 							dialog.close();
-							ui.confirm.close();
+							if (ui.confirm && ui.confirm.close) ui.confirm.close();
 							game.resume();
 							resolve({ bool: false });
 						};
