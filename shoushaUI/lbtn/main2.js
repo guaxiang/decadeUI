@@ -83,7 +83,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 	// 创建问号按钮
 	function createQuestionButton() {
-		const questionBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/wenhao.png", "display: block;width: 40px;height: 29px;position: absolute;bottom: calc(100% - 55px);left: calc(100% - 159.5px);background-color: transparent;z-index:3");
+		const isTouch = lib.config.phonelayout;
+		const bottomOffset = isTouch ? "calc(100% - 55px)" : "calc(100% - 105px)"; // 非触屏布局往下移动20px
+		const questionBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/wenhao.png", `display: block;width: 40px;height: 29px;position: absolute;bottom: ${bottomOffset};left: calc(100% - 159.5px);background-color: transparent;z-index:3`);
 
 		questionBtn.onclick = function () {
 			const popupContainer = ui.create.div(".popup-container", ui.window);
@@ -160,12 +162,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 	// 创建右上角菜单
 	function createTopRightMenu() {
+		const isTouch = lib.config.phonelayout;
+		const topOffset = isTouch ? "10px" : "60px"; // 非触屏布局往下移动50px
+
 		// 背景阴影
 		const shadow = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png", "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-4");
 		document.body.appendChild(shadow);
 
 		// 菜单按钮
-		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: 10px;right: 55px;background-color: transparent;z-index:5");
+		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", `display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: ${topOffset};right: 55px;background-color: transparent;z-index:5`);
 		document.body.appendChild(menuBtn);
 
 		let menuPopup = null;

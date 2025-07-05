@@ -11,16 +11,16 @@
 	z-index: 3;
 }
 
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
+#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #mebg,
+#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #me {
 	left: 40px !important;
 }
 
-.lbtn-controls~#me #handcards1 {
+.lbtn-controls ~ #me #handcards1 {
 	--lessw: 40px;
 }
 
-.lbtn-controls>div {
+.lbtn-controls > div {
 	display: block;
 	position: relative;
 }
@@ -32,7 +32,7 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	top: 0%;
+	top: 7%;
 	left: calc(100% - 119px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/HOME.png");
@@ -47,7 +47,7 @@
 	--h: calc(var(--w) * 73 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 373px);
+	bottom: calc(100% - 423px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/SZ.png");
@@ -61,7 +61,7 @@
 	--h: calc(var(--w) * 73 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 248px);
+	bottom: calc(100% - 298px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/LK.png");
@@ -75,7 +75,7 @@
 	--h: calc(var(--w) * 73 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 310px);
+	bottom: calc(100% - 360px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/BJ.png");
@@ -89,7 +89,7 @@
 	--h: calc(var(--w) * 73 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 187px);
+	bottom: calc(100% - 237px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/TX.png");
@@ -103,7 +103,7 @@
 	--h: calc(var(--w) * 74 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 126px);
+	bottom: calc(100% - 178px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/TG.png");
@@ -213,7 +213,7 @@
 	padding: 0;
 }
 
-.control>div {
+.control > div {
 	/*选将按钮，提示之类*/
 	/*height: var(--h) !important;
 	width: calc(var(--h)*90/32) !important;*/
@@ -241,13 +241,13 @@
 }
 
 /*无懈按钮位置*/
-#arena>#dui-controls>.control.stayleft {
+#arena > #dui-controls > .control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: -1px !important;
 	order: 3;
 }
 
-.control>div.primary2 {
+.control > div.primary2 {
 	/*(取消/结束)按钮*/
 	/*width: 100px;
 	--p: calc(var(--h) * 11 / 75);*/
@@ -277,7 +277,7 @@
 	transition: none;
 }
 
-.control>div.primary {
+.control > div.primary {
 	/*确认按钮*/
 	/*width: 100px;
 	--p: calc(var(--h) * 11 / 75);*/
@@ -304,16 +304,16 @@
 	background-image: url("./images/uibutton/btnn2.png");
 }
 
-.control>div.disabled:not([data-type="endButton"]) {
+.control > div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 }
 
-.control>div.disabled:not([data-type="endButton"]) {
+.control > div.disabled:not([data-type="endButton"]) {
 	/*-webkit-filter: grayscale(100%);*/
 	-webkit-filter: brightness(70%);
 }
 
-.lbtn-confirm[data-skill]>[data-type="skill2"] {
+.lbtn-confirm[data-skill] > [data-type="skill2"] {
 	display: none;
 }
 
@@ -327,7 +327,7 @@
 	z-index: 1;
 }
 
-.handcardNumber>.cardPicture {
+.handcardNumber > .cardPicture {
 	left: 90px;
 	bottom: 0px;
 	width: 60px;
@@ -339,7 +339,7 @@
 }
 
 /*手牌数参数*/
-.handcardNumber>.cardNumber {
+.handcardNumber > .cardNumber {
 	left: 103px;
 	bottom: 25px;
 	height: 8px;
@@ -358,7 +358,7 @@
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;
 }
 
-.cardRoundNumber>.cardPileNumber {
+.cardRoundNumber > .cardPileNumber {
 	top: -15px;
 	--w: 65px;
 	--h: calc(var(--w) * 173 / 127);
@@ -371,7 +371,7 @@
 	z-index: 2;
 }
 
-.cardRoundNumber>.cardPileNumber>span {
+.cardRoundNumber > .cardPileNumber > span {
 	left: 13px;
 	/*牌堆数右移，越大越靠右*/
 	top: 12px;
@@ -386,8 +386,8 @@
 	/*字体加粗*/
 }
 
-.cardRoundNumber>.roundNumber,
-.cardRoundNumber>.time {
+.cardRoundNumber > .roundNumber,
+.cardRoundNumber > .time {
 	/*游戏时间*/
 	left: 10px;
 	/*牌堆数/时间右移，越大越靠右*/
@@ -401,7 +401,7 @@
 	font-weight: bold;
 }
 
-.cardRoundNumber>.time {
+.cardRoundNumber > .time {
 	/*游戏时间*/
 	top: 48px;
 	/*高度*/
@@ -413,7 +413,7 @@
 
 /*托管中图片（）*/
 
-#autonode>div:last-child {
+#autonode > div:last-child {
 	z-index: 10;
 	top: calc(100% - 160px);
 	left: calc(50% - 650px);
@@ -446,7 +446,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务忠臣*/
@@ -462,7 +462,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务反贼*/
@@ -478,7 +478,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务内奸*/
@@ -494,7 +494,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务地主*/
@@ -510,7 +510,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务农民*/
@@ -526,7 +526,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务虎队*/
@@ -542,7 +542,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务魏国*/
@@ -558,7 +558,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务蜀国*/
@@ -574,7 +574,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务吴国*/
@@ -590,7 +590,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务晋国*/
@@ -606,7 +606,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务野心家*/
@@ -622,7 +622,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务群雄*/
@@ -638,7 +638,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*身份任务未选择*/
@@ -654,7 +654,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*容错选项*/
@@ -670,7 +670,7 @@
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*左手模式*/
@@ -769,7 +769,7 @@
 	z-index: 1;
 }
 
-.handcardNumber1>.cardPicture {
+.handcardNumber1 > .cardPicture {
 	left: 130px;
 	bottom: -6px;
 	--w: 130px;
@@ -785,7 +785,7 @@
 }
 
 /*手牌数参数*/
-.handcardNumber1>.cardNumber {
+.handcardNumber1 > .cardNumber {
 	left: 160px;
 	bottom: 18px;
 	height: 8px;
