@@ -9148,17 +9148,6 @@ export default async function () {
 					},
 				},
 				get: {
-					playerSkills(node, arg1, arg2) {
-						const skills = node.getSkills(arg1, arg2).slice();
-						if (typeof skills.addArray === "function") {
-							skills.addArray(Object.keys(node.forbiddenSkills));
-							skills.addArray(Object.keys(node.disabledSkills).filter(k => !node.hiddenSkills.includes(k) && node.disabledSkills[k].length && node.disabledSkills[k][0] === k + "_awake"));
-						} else {
-							skills.push(...Object.keys(node.forbiddenSkills));
-							skills.push(...Object.keys(node.disabledSkills).filter(k => !node.hiddenSkills.includes(k) && node.disabledSkills[k].length && node.disabledSkills[k][0] === k + "_awake"));
-						}
-						return skills;
-					},
 					skillInfo(skill, node) {
 						const obj = { id: skill };
 						if (lib.translate[skill + "_ab"]) {
