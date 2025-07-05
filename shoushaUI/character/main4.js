@@ -424,19 +424,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				sjright.onclick = event => {
 					event.stopPropagation();
 					sjright.style.display = "none";
-					if (rightPane.firstChild) {
-						while (rightPane.firstChild.firstChild) {
-							rightPane.firstChild.removeChild(rightPane.firstChild.firstChild);
-						}
-					}
 					namestyle.innerHTML = nametext2;
-					this.show(playerx, "name2", false);
+					this.createRightPanel(dialog, rightPane, playerx, "name2");
 					leftPane.setBackground(name2, "character");
 					Utils.createBiankuangColor(biankuang3, name2 === "unknown" ? playerx.group : lib.character[name2][1]);
 					biankuang4.setBackgroundImage(`${CONSTANTS.IMAGE_PATH_PREFIX}ols_${name2 === "unknown" ? playerx.group : lib.character[name2][1]}.png`);
-
 					if (!sjleft) {
-						sjleft = this.createLeftSwitchButton(leftPane, sjright, rightPane, namestyle, nametext, playerx, name, biankuang3, biankuang4);
+						sjleft = this.createLeftSwitchButton(leftPane, sjright, rightPane, namestyle, nametext, playerx, name, biankuang3, biankuang4, dialog);
 					} else {
 						sjleft.style.display = "block";
 					}
@@ -451,19 +445,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 
 		// 创建左侧切换按钮
-		createLeftSwitchButton(leftPane, sjright, rightPane, namestyle, nametext, playerx, name, biankuang3, biankuang4) {
+		createLeftSwitchButton(leftPane, sjright, rightPane, namestyle, nametext, playerx, name, biankuang3, biankuang4, dialog) {
 			const sjleft = ui.create.div(".sjleft", leftPane);
 			sjleft.onclick = event => {
 				event.stopPropagation();
 				sjleft.style.display = "none";
 				sjright.style.display = "block";
-				if (rightPane.firstChild) {
-					while (rightPane.firstChild.firstChild) {
-						rightPane.firstChild.removeChild(rightPane.firstChild.firstChild);
-					}
-				}
 				namestyle.innerHTML = nametext;
-				this.show(playerx, "name1", false);
+				this.createRightPanel(dialog, rightPane, playerx, "name1");
 				leftPane.setBackground(name, "character");
 				Utils.createBiankuangColor(biankuang3, name === "unknown" ? playerx.group : lib.character[name][1]);
 				biankuang4.setBackgroundImage(`${CONSTANTS.IMAGE_PATH_PREFIX}ols_${name === "unknown" ? playerx.group : lib.character[name][1]}.png`);
@@ -478,7 +467,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			lib.setScroll(rightPane.firstChild);
 
 			// 获取技能列表
-			const oSkills = this.getSkillsList(player);
+			const oSkills = this.getSkillsList(player, nametype);
 
 			// 创建技能区域
 			this.createSkillsSection(rightPane.firstChild, oSkills, player, nametype);
@@ -494,21 +483,29 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 
 		// 获取技能列表
-		getSkillsList(player) {
-			const oSkills = player
-				.getSkills(null, false, false)
-				.slice(0)
-				.filter(function (skill) {
-					if (!lib.skill[skill] || skill == "jiu") return false;
-					if (lib.skill[skill].nopop || lib.skill[skill].equipSkill) return false;
-					return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] != "";
-				});
+		getSkillsList(player, nametype) {
+			let skills;
+			if (player.name2 && nametype) {
+				// 只显示主将/副将技能
+				if (nametype == "name1") {
+					skills = lib.character[player.name1][3].slice(0);
+				} else if (nametype == "name2") {
+					skills = lib.character[player.name2][3].slice(0);
+				}
+			} else {
+				skills = player.getSkills(null, false, false).slice(0);
+			}
+			skills = skills.filter(function (skill) {
+				if (!lib.skill[skill] || skill == "jiu") return false;
+				if (lib.skill[skill].nopop || lib.skill[skill].equipSkill) return false;
+				return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] != "";
+			});
 
-			if (player == game.me && player.hiddenSkills.length) {
-				oSkills.addArray(player.hiddenSkills);
+			if (player == game.me && player.hiddenSkills && player.hiddenSkills.length && !nametype) {
+				skills.addArray(player.hiddenSkills);
 			}
 
-			return oSkills;
+			return skills;
 		}
 
 		// 创建技能区域
