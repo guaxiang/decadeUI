@@ -4876,15 +4876,13 @@ export default async function () {
 								if (!group) return;
 								this._group = group;
 								this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
-								if (!decadeUI.config.campIdentityImageMode) {
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-									else {
-										const name = get.translation(this._finalGroup),
-											str = get.plainText(name);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
-									}
-									return;
+								if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+								else {
+									const name = get.translation(this._finalGroup),
+										str = get.plainText(name);
+									console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
+									if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+									else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
 								}
 								// 手杀样式使用图片
 								if (decadeUI.config.newDecadeStyle == "off") {
@@ -4896,6 +4894,7 @@ export default async function () {
 										else {
 											const name = get.translation(this._finalGroup),
 												str = get.plainText(name);
+											console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
 											if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
 											else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
 										}
@@ -4912,6 +4911,7 @@ export default async function () {
 									else {
 										const name = get.translation(this._finalGroup),
 											str = get.plainText(name);
+										console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
 										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
 										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
 									}
