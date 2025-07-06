@@ -191,7 +191,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (game.me) {
 					if (get.mode() == "guozhan") {
 						// 国战模式下，获取所有原生技能
-						nativeSkills = app.get.playerSkills(game.me, false);
+						nativeSkills = game.me.getSkills("invisible", null, false);
 					} else {
 						let info1 = game.me.name && lib.character[game.me.name];
 						let info2 = game.me.name2 && lib.character[game.me.name2];
