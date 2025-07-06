@@ -4876,34 +4876,14 @@ export default async function () {
 								if (!group) return;
 								this._group = group;
 								this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
-								if (!decadeUI.config.campIdentityImageMode) {
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-									else {
-										const name = get.translation(this._finalGroup),
-											str = get.plainText(name);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
-									}
-									return;
-								}
-								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
-								const create = () => {
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-									else {
-										const name = get.translation(this._finalGroup),
-											str = get.plainText(name);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
-									}
-								};
-								image.onerror = () => {
-									create();
-								};
-								if (decadeUI.config.newDecadeStyle != "onlineUI") this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
-								else create();
-								image.src = url;
+								if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+								else {
+									const name = get.translation(this._finalGroup),
+										str = get.plainText(name);
+									if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+									else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+								}
 							},
 						},
 					});
