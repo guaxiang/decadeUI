@@ -219,7 +219,8 @@
 	white-space: normal;
 	/* 允许多行显示 */
 	top: 65px;
-	left: 32.5px;
+	left: 4.5%;
+	right: auto;
 	width: 18px;
 	font-family: yuanli;
 	text-shadow: (to top, rgb(35, 83, 123), rgb(15, 35, 68));
