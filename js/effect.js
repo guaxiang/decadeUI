@@ -1,6 +1,6 @@
 "use strict";
 decadeModule.import(function (lib, game, ui, get, ai, _status) {
-	// ==================== 常量定义 ====================
+	// 常量定义
 	const CONSTANTS = {
 		// 动画相关
 		ANIMATION: {
@@ -56,23 +56,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		},
 	};
 
-	// ==================== 工具函数 ====================
+	// 工具函数
 	const utils = {
-		/**
-		 * 获取玩家头像元素
-		 * @param {Object} player - 玩家对象
-		 * @param {boolean} isUnseen - 是否为不可见状态
-		 * @returns {HTMLElement} 头像元素
-		 */
+		// 获取玩家头像元素
 		getPlayerAvatar(player, isUnseen = false) {
 			return isUnseen ? player.node.avatar2 : player.node.avatar;
 		},
 
-		/**
-		 * 解析CSS URL字符串
-		 * @param {string} url - CSS URL字符串
-		 * @returns {string} 解析后的URL
-		 */
+		// 解析CSS URL字符串
 		parseCssUrl(url) {
 			if (url.indexOf('url("') === 0) {
 				return url.slice(5, url.indexOf('")'));
@@ -82,36 +73,21 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			return url;
 		},
 
-		/**
-		 * 创建DOM元素并设置样式
-		 * @param {string} className - CSS类名
-		 * @param {HTMLElement} parent - 父元素
-		 * @param {Object} styles - 样式对象
-		 * @returns {HTMLElement} 创建的元素
-		 */
+		// 创建DOM元素并设置样式
 		createElement(className, parent = null, styles = {}) {
 			const element = decadeUI.dialog.create(className, parent);
 			Object.assign(element.style, styles);
 			return element;
 		},
 
-		/**
-		 * 安全地移除子元素
-		 * @param {HTMLElement} parent - 父元素
-		 * @param {HTMLElement} child - 子元素
-		 */
+		// 安全地移除子元素
 		removeChildSafely(parent, child) {
 			if (parent && child && parent.contains(child)) {
 				parent.removeChild(child);
 			}
 		},
 
-		/**
-		 * 验证玩家对象
-		 * @param {Object} player - 玩家对象
-		 * @param {string} paramName - 参数名称
-		 * @returns {boolean} 验证结果
-		 */
+		// 验证玩家对象
 		validatePlayer(player, paramName = "player") {
 			if (get.itemtype(player) !== "player") {
 				console.error(`Invalid ${paramName}: expected player object`);
@@ -120,11 +96,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			return true;
 		},
 
-		/**
-		 * 检查图片是否存在
-		 * @param {string} url - 图片URL
-		 * @returns {Promise<boolean>} 是否存在
-		 */
+		// 检查图片是否存在
 		async checkImageExists(url) {
 			return new Promise(resolve => {
 				const img = new Image();
@@ -134,50 +106,32 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			});
 		},
 
-		/**
-		 * 获取最优图片路径
-		 * @param {string} originalUrl - 原始URL
-		 * @param {Object} player - 玩家对象
-		 * @returns {Promise<string>} 最优路径
-		 */
+		// 获取最优图片路径
 		async getOptimalImagePath(originalUrl, player) {
 			const parsedUrl = this.parseCssUrl(originalUrl);
 
-			// 如果已经是lihui路径，直接返回
 			if (parsedUrl.includes("image/lihui")) {
 				return parsedUrl;
 			}
 
-			// 尝试从character路径转换为lihui路径
 			if (parsedUrl.includes("image/character")) {
 				const lihuiPath = parsedUrl.replace(/image\/character/, "image/lihui");
-
-				// 检查lihui路径是否存在
 				const lihuiExists = await this.checkImageExists(lihuiPath);
 				if (lihuiExists) {
 					return lihuiPath;
 				}
 			}
 
-			// 如果lihui不存在，返回原始路径
 			return parsedUrl;
 		},
 
-		/**
-		 * 获取默认头像路径
-		 * @param {Object} player - 玩家对象
-		 * @returns {string} 默认头像路径
-		 */
+		// 获取默认头像路径
 		getDefaultAvatarPath(player) {
 			const gender = player.sex === "female" ? "female" : "male";
 			return lib.assetURL + "image/character/default_silhouette_" + gender + ".jpg";
 		},
 
-		/**
-		 * 生成随机位置和缩放
-		 * @param {number} height - 容器高度
-		 * @returns {Object} 随机位置和缩放
-		 */
+		// 生成随机位置和缩放
 		generateRandomPosition(height) {
 			const x = (decadeUI.getRandom(0, 1) === 1 ? "" : "-") + decadeUI.getRandom(0, 100) + "px";
 			const y = (decadeUI.getRandom(0, 1) === 1 ? "" : "-") + decadeUI.getRandom(0, height / 4) + "px";
@@ -187,25 +141,16 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		},
 	};
 
-	// ==================== 主模块定义 ====================
+	// 主模块定义
 	decadeUI.effect = {
-		// ==================== 对话框相关 ====================
+		// 对话框相关
 		dialog: {
-			/**
-			 * 创建对话框
-			 * @param {string} titleText - 标题文本
-			 * @returns {HTMLElement} 对话框元素
-			 */
+			// 创建对话框
 			create(titleText) {
 				return decadeUI.dialog.create("effect-dialog dui-dialog");
 			},
 
-			/**
-			 * 创建比较对话框
-			 * @param {Object} source - 源玩家
-			 * @param {Object} target - 目标玩家
-			 * @returns {Object} 对话框对象
-			 */
+			// 创建比较对话框
 			compare(source, target) {
 				const dialog = this.create();
 
@@ -277,11 +222,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 
-		// ==================== 线条动画 ====================
-		/**
-		 * 创建线条动画效果
-		 * @param {Array} dots - 坐标点数组 [x1, y1, x2, y2]
-		 */
+		// 线条动画
 		line(dots) {
 			decadeUI.animate.add(
 				function (source, target, e) {
@@ -323,12 +264,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			);
 		},
 
-		// ==================== 击杀特效 ====================
-		/**
-		 * 创建击杀特效
-		 * @param {Object} source - 击杀者
-		 * @param {Object} target - 被击杀者
-		 */
+		// 击杀特效
 		kill(source, target) {
 			// 参数验证
 			if (!utils.validatePlayer(source, "source") || !utils.validatePlayer(target, "target")) {
@@ -379,13 +315,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			effect.close(CONSTANTS.DURATION.KILL_CLOSE);
 		},
 
-		// ==================== 技能特效 ====================
-		/**
-		 * 创建技能特效
-		 * @param {Object} player - 玩家对象
-		 * @param {string} skillName - 技能名称
-		 * @param {string} vice - 副将标识
-		 */
+		// 技能特效
 		skill(player, skillName, vice) {
 			if (!utils.validatePlayer(player)) return;
 
@@ -412,14 +342,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			});
 		},
 
-		// ==================== 私有方法 ====================
+		// 私有方法
 
-		/**
-		 * 创建备用击杀效果
-		 * @param {HTMLElement} effect - 效果容器
-		 * @param {Object} victim - 受害者元素
-		 * @private
-		 */
+		// 创建备用击杀效果
 		_createFallbackKillEffect(effect, victim) {
 			utils.createElement("li-big", effect);
 
@@ -451,13 +376,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			}
 		},
 
-		/**
-		 * 创建Spine击杀效果
-		 * @param {Object} anim - 动画对象
-		 * @param {Object} bounds - 边界对象
-		 * @param {HTMLElement} effect - 效果容器
-		 * @private
-		 */
+		// 创建Spine击杀效果
 		_createSpineKillEffect(anim, bounds, effect) {
 			const size = bounds.size;
 			const scale = (anim.canvas.width / size.x) * CONSTANTS.KILL.SCALE_FACTOR;
@@ -467,15 +386,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			ui.refresh(effect);
 		},
 
-		/**
-		 * 加载技能图片
-		 * @param {HTMLElement} playerAvatar - 玩家头像
-		 * @param {string} camp - 阵营
-		 * @param {Object} player - 玩家对象
-		 * @param {string} skillName - 技能名称
-		 * @param {string} playerName - 玩家名称
-		 * @private
-		 */
+		// 加载技能图片
 		async _loadSkillImages(playerAvatar, camp, player, skillName, playerName) {
 			const url = getComputedStyle(playerAvatar).backgroundImage;
 			const image = new Image();
@@ -511,15 +422,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			}
 		},
 
-		/**
-		 * 创建技能效果
-		 * @param {HTMLImageElement} image - 武将图片
-		 * @param {HTMLImageElement} bgImage - 背景图片
-		 * @param {string} camp - 阵营
-		 * @param {string} skillName - 技能名称
-		 * @param {string} playerName - 玩家名称
-		 * @private
-		 */
+		// 创建技能效果
 		_createSkillEffect(image, bgImage, camp, skillName, playerName) {
 			const animation = decadeUI.animation;
 			const sprite = animation.playSpine("effect_xianding");
@@ -539,14 +442,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			this._createSkillUI(skillName, playerName, sprite.scale);
 		},
 
-		/**
-		 * 设置背景附件
-		 * @param {Object} skeleton - 骨骼对象
-		 * @param {HTMLImageElement} bgImage - 背景图片
-		 * @param {string} camp - 阵营
-		 * @param {Object} animation - 动画对象
-		 * @private
-		 */
+		// 设置背景附件
 		_setupBackgroundAttachment(skeleton, bgImage, camp, animation) {
 			const slot = skeleton.findSlot("shilidipan");
 			const attachment = slot.getAttachment();
@@ -568,13 +464,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			}
 		},
 
-		/**
-		 * 设置武将附件
-		 * @param {Object} skeleton - 骨骼对象
-		 * @param {HTMLImageElement} image - 武将图片
-		 * @param {Object} animation - 动画对象
-		 * @private
-		 */
+		// 设置武将附件
 		_setupGeneralAttachment(skeleton, image, animation) {
 			const slot = skeleton.findSlot("wujiang");
 			const attachment = slot.getAttachment();
@@ -587,13 +477,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			attachment.updateOffset();
 		},
 
-		/**
-		 * 创建技能UI
-		 * @param {string} skillName - 技能名称
-		 * @param {string} playerName - 玩家名称
-		 * @param {number} spriteScale - 精灵缩放
-		 * @private
-		 */
+		// 创建技能UI
 		_createSkillUI(skillName, playerName, spriteScale) {
 			// 创建技能名称效果
 			const effect = decadeUI.element.create("skill-name");
@@ -625,13 +509,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			nameEffect.removeSelf(CONSTANTS.DURATION.EFFECT);
 		},
 
-		/**
-		 * 处理图片加载错误
-		 * @param {HTMLImageElement} image - 图片元素
-		 * @param {string} url - 原始URL
-		 * @param {Object} player - 玩家对象
-		 * @private
-		 */
+		// 处理图片加载错误
 		async _handleImageError(image, url, player) {
 			// 如果当前已经是lihui路径但加载失败，尝试原始character路径
 			if (image.src.includes("image/lihui")) {
