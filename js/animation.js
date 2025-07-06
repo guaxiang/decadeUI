@@ -738,7 +738,6 @@ var duilib;
 		};
 
 		AnimationPlayer.prototype.playSpine = function (sprite, position) {
-			if (self.duicfg && !self.duicfg.gameAnimationEffect) return;
 			if (sprite == undefined) return console.error("playSpine: parameter undefined");
 			if (typeof sprite == "string")
 				sprite = {

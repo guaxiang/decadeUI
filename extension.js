@@ -782,10 +782,7 @@ export default async function () {
 									if (!config.dynamicSkin_dieAfter) this.stopDynamic();
 									this.node.gainSkill.innerHTML = null;
 
-									if (!decadeUI.config.playerDieEffect) {
-										if (base.lib.element.player.$dieAfter) base.lib.element.player.$dieAfter.apply(this, arguments);
-										return;
-									}
+									if (base.lib.element.player.$dieAfter) base.lib.element.player.$dieAfter.apply(this, arguments);
 
 									if (!this.node.dieidentity) this.node.dieidentity = ui.create.div("died-identity", this);
 									this.node.dieidentity.classList.add("died-identity");
@@ -845,7 +842,6 @@ export default async function () {
 								},
 
 								$skill(name, type, color, avatar) {
-									if (!decadeUI.config.gameAnimationEffect || !decadeUI.animation.gl) return base.lib.element.player.$skill.apply(this, arguments);
 									var _this = this;
 									if (typeof type != "string") type = "legend";
 
@@ -5099,10 +5095,6 @@ export default async function () {
 						}
 					};
 
-					lib.element.player.$dieflip = function () {
-						if (!decadeUI.config.playerDieEffect && playerDieFlipFunction) playerDieFlipFunction.apply(this, arguments);
-					};
-
 					lib.element.player.$compare = function (card1, target, card2) {
 						game.broadcast(
 							function (player, target, card1, card2) {
@@ -6246,7 +6238,7 @@ export default async function () {
 							if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
 								dui.cardTempSuitNum(card, cardsuit, cardnumber);
 							}
-							if (duicfg.cardUseEffect && event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
+							if (event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
 								var name = event.card.name,
 									nature = event.card.nature;
 
@@ -6400,14 +6392,12 @@ export default async function () {
 								event.apcard = undefined;
 								tagNode.innerHTML = get.translation(event.judgestr) + tagText;
 							});
-							if (duicfg.cardUseEffect) {
-								decadeUI.animation.cap.playSpineTo(card, {
-									name: "effect_panding",
-									action: "play",
-									loop: true,
-								});
-								event.apcard = card;
-							}
+							decadeUI.animation.cap.playSpineTo(card, {
+								name: "effect_panding",
+								action: "play",
+								loop: true,
+							});
+							event.apcard = card;
 							break;
 						default:
 							tagText = get.cardsetion(player);
@@ -7866,7 +7856,7 @@ export default async function () {
 						player: ["phaseZhunbeiBegin", "phaseBegin", "phaseJudgeBegin", "phaseDrawBegin", "useCardAfter", "phaseDiscardBegin", "useSkillBefore", "loseAfter"],
 					},
 					filter(event, player) {
-						if (document.querySelector("#jindutiaoAI") && lib.config.extension_十周年UI_jindutiaoaiUpdata == false) return false;
+						if (document.querySelector("#jindutiaoAI") == false) return false;
 						return player != game.me && _status.currentPhase == player;
 					},
 					forced: true,
@@ -7912,7 +7902,7 @@ export default async function () {
 					forced: true,
 					charlotte: true,
 					filter(event, player) {
-						if (document.querySelector("#jindutiaoAI") && lib.config.extension_十周年UI_jindutiaoaiUpdata == false) return false;
+						if (document.querySelector("#jindutiaoAI") == false) return false;
 						return _status.currentPhase != player && player != game.me;
 					},
 					content() {
@@ -8626,7 +8616,7 @@ export default async function () {
 					},
 					silent: true,
 					filter(event, player) {
-						if (document.querySelector("#jindutiaopl") && lib.config.extension_十周年UI_jindutiaoUpdata == false) return false;
+						if (document.querySelector("#jindutiaopl") == false) return false;
 						return player == game.me && _status.currentPhase == player;
 					},
 					forced: true,
@@ -8671,7 +8661,7 @@ export default async function () {
 					forced: true,
 					charlotte: true,
 					filter(event, player) {
-						if (document.querySelector("#jindutiaopl") && lib.config.extension_十周年UI_jindutiaoUpdata == false) return false;
+						if (document.querySelector("#jindutiaopl")== false) return false;
 						if (event.name == "gameStart" && lib.config["extension_无名补丁_enable"]) return false;
 						return _status.currentPhase != player && player == game.me;
 					},
@@ -10639,34 +10629,6 @@ export default async function () {
 					if (window.decadeUI) ui.window.dataset.cardAlternateNameVisible = lib.config["extension_十周年UI_cardAlternateNameVisible"] ? "on" : "off";
 				},
 			},
-			playerKillEffect: {
-				name: "击杀特效",
-				init: true,
-				onclick(value) {
-					game.saveConfig("extension_十周年UI_playerKillEffect", value);
-					if (window.decadeUI) decadeUI.config.playerKillEffect = value;
-				},
-			},
-			gameAnimationEffect: {
-				name: "动画特效",
-				init: true,
-			},
-			playerDieEffect: {
-				name: "阵亡特效",
-				init: true,
-				onclick(value) {
-					game.saveConfig("extension_十周年UI_playerDieEffect", value);
-					if (window.decadeUI) decadeUI.config.playerDieEffect = value;
-				},
-			},
-			cardUseEffect: {
-				name: "卡牌特效",
-				init: true,
-				onclick(value) {
-					game.saveConfig("extension_十周年UI_cardUseEffect", value);
-					if (window.decadeUI) decadeUI.config.cardUseEffect = value;
-				},
-			},
 			showTemp: {
 				name: "卡牌显示",
 				init: false,
@@ -10916,16 +10878,6 @@ export default async function () {
 				name: "托管效果",
 				init: false,
 				intro: "开启进度条的情况下，开启此选项后，当玩家的进度条时间走完时，将自动托管。",
-			},
-			jindutiaoUpdata: {
-				name: "玩家进度条刷新",
-				init: false,
-				intro: "开启进度条的情况下，开启此选项后，玩家进度条将会进行刷新",
-			},
-			jindutiaoaiUpdata: {
-				name: "人机进度条刷新",
-				init: false,
-				intro: "开启进度条的情况下，开启此选项后，ai的进度条将会进行刷新",
 			},
 			JDTSYangshi: {
 				name: "阶段提示",

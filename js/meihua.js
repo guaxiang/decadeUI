@@ -846,7 +846,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				if (action) {
 					dcdAnim.loadSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2.name, "skel", () => {
 						window._WJMHHUIFUSHUZITEXIAO.shuzi2.action = action;
-						dcdAnim.playSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2, { speed: 0.6, scale: 0.5, parent: player });
+						dcdAnim.playSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2, { speed: 0.6, scale: 0.5, parent: player, y: 20 });
 					});
 				}
 			},
@@ -863,7 +863,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				if (action) {
 					dcdAnim.loadSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.name, "skel", () => {
 						window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.action = action;
-						dcdAnim.playSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai, { speed: 0.6, scale: 0.5, parent: player });
+						dcdAnim.playSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai, { speed: 0.6, scale: 0.5, parent: player, y: 20 });
 					});
 				}
 			},
@@ -880,7 +880,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				if (action) {
 					dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.name, "skel", () => {
 						window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.action = action;
-						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi, { speed: 0.6, scale: 0.5, parent: player });
+						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi, { speed: 0.6, scale: 0.5, parent: player, y: 20 });
 					});
 				}
 			},
