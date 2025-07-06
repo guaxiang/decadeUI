@@ -3869,29 +3869,25 @@ export default async function () {
 									}
 
 									this.innerText = value;
-									if (decadeUI.config.campIdentityImageMode) {
-										this.style.visibility = "hidden";
-										var image = new Image();
-										image.node = this;
-										image.onerror = function () {
-											this.node.style.visibility = "";
-										};
+									this.style.visibility = "hidden";
+									var image = new Image();
+									image.node = this;
+									image.onerror = function () {
+										this.node.style.visibility = "";
+									};
 
-										// -----------------分割线-----------------
-										// 不同样式身份标记
-										var style = lib.config.extension_十周年UI_newDecadeStyle;
-										var srcMap = {
-											onlineUI: "image/decorationo/identity2_",
-											babysha: "image/decorationh/identity3_",
-											on: "image/decoration/identity_",
-											othersOff: "image/decoration/identity_",
-										};
-										var srcPrefix = srcMap[style] || "image/decorations/identity2_";
-										image.src = decadeUIPath + srcPrefix + filename + ".png";
-										this.parentNode.style.backgroundImage = 'url("' + image.src + '")';
-									} else {
-										this.style.visibility = "";
-									}
+									// -----------------分割线-----------------
+									// 不同样式身份标记
+									var style = lib.config.extension_十周年UI_newDecadeStyle;
+									var srcMap = {
+										onlineUI: "image/decorationo/identity2_",
+										babysha: "image/decorationh/identity3_",
+										on: "image/decoration/identity_",
+										othersOff: "image/decoration/identity_",
+									};
+									var srcPrefix = srcMap[style] || "image/decorations/identity2_";
+									image.src = decadeUIPath + srcPrefix + filename + ".png";
+									this.parentNode.style.backgroundImage = 'url("' + image.src + '")';
 								},
 							},
 						});
@@ -10642,10 +10638,6 @@ export default async function () {
 				update() {
 					if (window.decadeUI) ui.window.dataset.cardAlternateNameVisible = lib.config["extension_十周年UI_cardAlternateNameVisible"] ? "on" : "off";
 				},
-			},
-			campIdentityImageMode: {
-				name: "身份美化",
-				init: true,
 			},
 			playerKillEffect: {
 				name: "击杀特效",
