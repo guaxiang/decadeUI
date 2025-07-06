@@ -10820,6 +10820,11 @@ export default async function () {
 					if (window.decadeUI) ui.arena.dataset.gainSkillsVisible = lib.config["extension_十周年UI_gainSkillsVisible"];
 				},
 			},
+			viewInformationPause: {
+				name: "查看武将资料页不暂停",
+				intro: "打开此选项后，单机模式下查看本扩展设计的武将资料页时游戏不会暂停",
+				init: false,
+			},
 			loadingStyle: {
 				name: "更换光标+loading框",
 				intro: "可以更换局内选项框以及光标",
