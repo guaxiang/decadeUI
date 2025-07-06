@@ -657,7 +657,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					}
 					container.classList.remove("hidden");
-					game.pause2();
 				};
 
 				plugin.characterDialog = container;

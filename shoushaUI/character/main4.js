@@ -379,7 +379,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				this.createRightPanel(dialog, rightPane, player, nametype);
 
 				container.classList.remove("hidden");
-				game.pause2();
 			}
 		}
 
