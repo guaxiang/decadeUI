@@ -528,6 +528,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					plugin.createSkillInfo(rightPane, player);
 
 					container.classList.remove("hidden");
+					if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();
 				};
 
 				plugin.characterDialog = container;
