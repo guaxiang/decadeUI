@@ -13,9 +13,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		if (["identity", "doudizhu", "guozhan", "versus", "single", "martial"].includes(lib.config.mode)) {
 			var wenhao = ui.create.node("img");
 			wenhao.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_wenhao.png";
-			wenhao.style.cssText = "display: block;width: 40px;height: 29px;position: absolute;bottom: calc(100% - 55px);left: calc(100% - 200px);background-color: transparent;z-index:3";
-
-			// 为特定模式添加点击事件
+			const isTouch = lib.config.phonelayout;
+			const bottomOffset = isTouch ? "calc(100% - 55px)" : "calc(100% - 105px)";
+			wenhao.style.cssText = "display: block;width: 40px;height: 29px;position: absolute;bottom: " + bottomOffset + ";left: calc(100% - 200px);background-color: transparent;z-index:3";
 			if (["identity", "doudizhu", "versus", "guozhan"].includes(lib.config.mode)) {
 				wenhao.onclick = function () {
 					var popuperContainer = ui.create.div(".popup-container", ui.window);
@@ -51,7 +51,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		// 创建主按钮背景
 		var mainButtonBg = ui.create.node("img");
 		mainButtonBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_button3.png";
-		mainButtonBg.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 69px);left: calc(100% - 150px);background-color: transparent;z-index:1";
+		const isTouchBg = lib.config.phonelayout;
+		const bottomOffsetBg = isTouchBg ? "calc(100% - 69px)" : "calc(100% - 129px)";
+		mainButtonBg.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: " + bottomOffsetBg + ";left: calc(100% - 150px);background-color: transparent;z-index:1";
 		mainButtonBg.onclick = function () {
 			mainButtonBg.style.transform = "scale(0.95)";
 		};
@@ -59,7 +61,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 		// 创建主按钮点击区域
 		var mainButton = ui.create.node("div");
-		mainButton.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 69px);left: calc(100% - 150px);background-color: transparent;z-index:1";
+		const isTouchBtn = lib.config.phonelayout;
+		const bottomOffsetBtn = isTouchBtn ? "calc(100% - 69px)" : "calc(100% - 129px)";
+		mainButton.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: " + bottomOffsetBtn + ";left: calc(100% - 150px);background-color: transparent;z-index:1";
 		mainButton.onclick = function () {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
 			createMainMenu();
