@@ -11058,12 +11058,12 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`十周年UI 当前版本号${pack.version}`,
-					"适配本体：v1.10.17.3",
-					"让自己变得更加快乐🥳那件礼物🎁",
-					"那一天的八哥，修复起来",
-					"那一天的界面，调整起来",
-					"那一天的函数，跟进起来",
-					"连同着迷🥺这个炎炎🔥夏日🥵万般滋味👄那个你",
+					"适配本体：v1.10.17.4 待定",
+					"bugfix",
+					"函数跟进 待定",
+					"UI界面调整 待定",
+					"特效类功能设置为强开启，移除开关",
+					"",
 				];
 				return `<a href="javascript:void(0)" onclick="navigator.clipboard.writeText('https://github.com/diandian157/decadeUI').then(() => alert('已成功复制，粘贴到浏览器打开，部分进不去需要翻墙'))">点击复制十周年UIGithub仓库地址</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);
