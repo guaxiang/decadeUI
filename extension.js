@@ -10419,7 +10419,7 @@ export default async function () {
 			newDecadeStyle: {
 				name: "切换样式",
 				intro: "切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置",
-				init: "off",
+				init: "on",
 				item: {
 					on: "十周年",
 					off: "新手杀",
@@ -10472,7 +10472,7 @@ export default async function () {
 			},
 			cardPrettify: {
 				name: "卡牌美化",
-				init: "webp",
+				init: "png",
 				item: {
 					off: "关闭",
 					jpg: "OL卡牌",
@@ -10620,7 +10620,7 @@ export default async function () {
 			},
 			showTemp: {
 				name: "卡牌显示",
-				init: false,
+				init: true,
 				intro: "开启此选项后，视为卡牌显示将会替换为十周年UI内置替换显示",
 				onclick(bool) {
 					game.saveConfig("extension_十周年UI_showTemp", bool);
@@ -10707,6 +10707,11 @@ export default async function () {
 						}
 					}
 				},
+			},
+			viewInformationPause: {
+				name: "查看武将资料页不暂停",
+				intro: "打开此选项后，单机模式下查看本扩展设计的武将资料页时游戏不会暂停",
+				init: false,
 			},
 			outcropSkin: {
 				name: "露头样式",
@@ -10809,11 +10814,6 @@ export default async function () {
 					if (window.decadeUI) ui.arena.dataset.gainSkillsVisible = lib.config["extension_十周年UI_gainSkillsVisible"];
 				},
 			},
-			viewInformationPause: {
-				name: "查看武将资料页不暂停",
-				intro: "打开此选项后，单机模式下查看本扩展设计的武将资料页时游戏不会暂停",
-				init: false,
-			},
 			loadingStyle: {
 				name: "更换光标+loading框",
 				intro: "可以更换局内选项框以及光标",
@@ -10859,12 +10859,12 @@ export default async function () {
 			},
 			/*-----进度条-------*/
 			jindutiao: {
-				init: false,
+				init: true,
 				intro: "自己回合内显示进度条带素材",
 				name: "进度条",
 			},
 			JDTS: {
-				init: false,
+				init: true,
 				intro: "自己回合内显示对应阶段图片提示",
 				name: "阶段提示",
 			},
@@ -10875,7 +10875,7 @@ export default async function () {
 			},
 			JDTSYangshi: {
 				name: "阶段提示",
-				init: "1",
+				init: "2",
 				intro: "切换阶段提示样式，可根据个人喜好切换",
 				item: {
 					1: "手杀阶段提示",
@@ -10886,7 +10886,7 @@ export default async function () {
 			},
 			jindutiaoYangshi: {
 				name: "进度条样式",
-				init: "1",
+				init: "3",
 				intro: "切换进度条样式，可根据个人喜好切换手杀进度条或十周年进度条，切换后重启生效",
 				item: {
 					1: "手杀进度条",
@@ -10912,7 +10912,7 @@ export default async function () {
 			},
 			jindutiaoSet: {
 				name: "进度条高度",
-				init: "20",
+				init: "22",
 				intro: "<li>设置玩家进度条的高度百分比。",
 				item: {
 					10: "10%",
