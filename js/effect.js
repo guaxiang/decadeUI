@@ -426,6 +426,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		_createSkillEffect(image, bgImage, camp, skillName, playerName) {
 			const animation = decadeUI.animation;
 			const sprite = animation.playSpine("effect_xianding");
+			if (!sprite || !sprite.skeleton) {
+				console.error("Spine动画未正确加载，sprite或skeleton为undefined");
+				return;
+			}
 			const skeleton = sprite.skeleton;
 
 			// 设置背景

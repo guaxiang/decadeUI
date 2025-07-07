@@ -782,8 +782,6 @@ export default async function () {
 									if (!config.dynamicSkin_dieAfter) this.stopDynamic();
 									this.node.gainSkill.innerHTML = null;
 
-									if (base.lib.element.player.$dieAfter) base.lib.element.player.$dieAfter.apply(this, arguments);
-
 									if (!this.node.dieidentity) this.node.dieidentity = ui.create.div("died-identity", this);
 									this.node.dieidentity.classList.add("died-identity");
 
