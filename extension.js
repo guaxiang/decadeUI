@@ -1719,7 +1719,7 @@ export default async function () {
 										if (a.tx == undefined && b.tx == undefined) return 0;
 										if (a.tx == undefined) return duicfg.rightLayout ? -1 : 1;
 										if (b.tx == undefined) return duicfg.rightLayout ? 1 : -1;
-										return b.tx - a.tx;
+										return a.tx - b.tx;
 									});
 									for (var i = 0; i < cards.length; i++) {
 										(function (card, i) {
@@ -1771,21 +1771,12 @@ export default async function () {
 
 									if (card.fixed) return ui.arena.appendChild(card);
 
-									var before;
-									for (var i = 0; i < ui.thrown; i++) {
-										if (ui.thrown[i].parentNode == ui.arena) {
-											before = ui.thrown[i];
-											break;
-										}
-									}
-
 									var tagNode = card.querySelector(".used-info");
 									if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
 
 									card.$usedtag = tagNode;
-									ui.thrown.unshift(card);
-									if (before) ui.arena.insertBefore(before, card);
-									else ui.arena.appendChild(card);
+									ui.thrown.push(card);
+									ui.arena.appendChild(card);
 
 									dui.tryAddPlayerCardUseTag(card, this, _status.event);
 									dui.queueNextFrameTick(dui.layoutDiscard, dui);
