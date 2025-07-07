@@ -314,15 +314,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 				// 根据布局创建按钮
 				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-					if (lib.config.extension_十周年UI_XPJ == "on") {
-						huanfuButton = ui.create.div(".huanfuButton", ui.arena, plugin.click.huanfu);
-						jiluButton = ui.create.div(".jiluButton", ui.arena, ui.click.pause);
-					} else {
-						huanfuButton = ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
-						jiluButton = ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
-						meiguiButton = ui.create.div(".meiguiButton_new", ui.arena);
-						xiaolianButton = ui.create.div(".xiaolianButton_new", ui.arena);
-					}
+					huanfuButton = ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
+					jiluButton = ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
+					meiguiButton = ui.create.div(".meiguiButton_new", ui.arena);
+					xiaolianButton = ui.create.div(".xiaolianButton_new", ui.arena);
 				} else {
 					huanfuButton = ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
 					jiluButton = ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
