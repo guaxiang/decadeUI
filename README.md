@@ -293,7 +293,7 @@ graph LR
 
 <br>
 
-**@mengxinzxz** • **@xizifu** • **U** • **小爱莉** • **扶苏** • **小曦** • **@yx-lingmeng** • **无名** • **@rebirth-of-I-am**
+**@mengxinzxz** • **@xizifu** • **U** • **小爱莉** • **扶苏** • **小曦** • **@yx-lingmeng** • **无名** • **@rebirth-of-I-am** • **柴油鹿鹿**
 
 <br>
 
@@ -308,6 +308,7 @@ graph LR
 ![贡献者](https://img.shields.io/badge/贡献者-@yx--lingmeng-yellow?style=flat-square)
 ![贡献者](https://img.shields.io/badge/贡献者-无名-pink?style=flat-square)
 ![贡献者](https://img.shields.io/badge/贡献者-@rebirth--of--I--am-indigo?style=flat-square)
+![贡献者](https://img.shields.io/badge/贡献者-柴油鹿鹿-pink?style=flat-square)
 
 </div>
 

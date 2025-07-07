@@ -231,29 +231,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			addSkillLocksAndButtons(node, skillId) {
 				const player = game.me;
 
-				if (player.hasSkill("baiban")) {
-					const baibanSkillBlocker = player.getSkills(null, false, false).filter(skill => lib.skill.baiban.skillBlocker(skill, player));
-
-					if (baibanSkillBlocker.includes(skillId)) {
-						var img = ui.create.div(".suo1.baibansuo", node, "");
-						img.style.position = "absolute";
-						node.style["-webkit-text-fill-color"] = "silver";
-						node.style["-webkit-text-stroke"] = "0.8px rgba(0,0,0,0.55)";
-						return;
-					}
+				//鹿鹿修改 失效锁开始
+				if (this.skshixiaoSkillBlocker.includes(skillId)) {
+					node.classList.add("shixiao");
+					var img = ui.create.div(".suo1.fengyinsuo", node, "");
+					img.style.position = "absolute";
+					node.style["-webkit-text-fill-color"] = "silver";
+					node.style["-webkit-text-stroke"] = "0.8px rgba(0,0,0,0.55)";
 				}
-
-				if (player.hasSkill("fengyin")) {
-					const fengyinSkillBlocker = player.getSkills(null, false, false).filter(skill => lib.skill.fengyin.skillBlocker(skill, player));
-
-					if (fengyinSkillBlocker.includes(skillId)) {
-						var img = ui.create.div(".suo1.fengyinsuo", node, "");
-						img.style.position = "absolute";
-						node.style["-webkit-text-fill-color"] = "silver";
-						node.style["-webkit-text-stroke"] = "0.8px rgba(0,0,0,0.55)";
-						return;
-					}
-				}
+				//失效锁修改结束
 
 				const skillInfo = get.info(skillId);
 				if (skillInfo && skillInfo.zhuanhuanji) {
@@ -267,6 +253,51 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			},
 			add(skill, eSkills) {
+				//鹿鹿修改 显示失效技能
+				var self = this;
+				self.skshixiaoSkillBlocker = game.me.getSkills(null, false, false).filter(skillx => {
+					if (game.me.getStorage("skill_blocker")) {
+						for (var i of game.me.getStorage("skill_blocker")) {
+							if (lib.skill[i] && lib.skill[i].skillBlocker && lib.skill[i].skillBlocker(skillx, game.me)) {
+								return true;
+							}
+						}
+					}
+					if (game.me.disabledSkills) {
+						if (game.me.disabledSkills[skillx] && game.me.disabledSkills[skillx].length > 0 && game.me.disabledSkills[skillx].some(sbawk => sbawk != skillx + "_awake")) {
+							return true;
+						}
+					}
+					if (game.me.shixiaoedSkills) {
+						if (game.me.shixiaoedSkills.includes(skillx)) {
+							return true;
+						}
+					}
+					if (game.me.isTempBanned(skillx)) {
+						return true;
+					}
+					return false;
+				});
+				for (var i of self.skshixiaoSkillBlocker) {
+					if (lib.skill[i] && lib.skill[i].group) {
+						var shabizjn = lib.skill[i].group;
+						if (Array.isArray(shabizjn)) {
+							self.skshixiaoSkillBlocker.add(...shabizjn);
+						} else if (typeof shabizjn == "string") {
+							self.skshixiaoSkillBlocker.add(shabizjn);
+						}
+					}
+				}
+				self.skshixiaoSkillBlocker.forEach(function (item) {
+					if (Array.isArray(skill) && !skill.includes(item)) {
+						skill.add(item);
+					}
+				});
+				if (Array.isArray(skill)) {
+					var sortlist = game.me.getSkills(null, false, false);
+					skill.sort((a, b) => sortlist.indexOf(a) - sortlist.indexOf(b));
+				}
+				//修改结束
 				if (Array.isArray(skill)) {
 					var node = this;
 					skill.forEach(function (item) {

@@ -628,6 +628,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 
 				confirm.update = function () {
+					//鹿鹿修改 限定技专属按钮开始
+					var skisxdj = function () {
+						if (_status.event?.skill && get.info(_status.event.skill)?.limited && _status.event.player == game.me) {
+							return true;
+						}
+						if (_status.event?.getParent(2)?.skill && get.info(_status.event.getParent(2).skill)?.limited && _status.event.getParent(2).player == game.me) {
+							return true;
+						}
+						if (_status.event?.getParent()?.skill && get.info(_status.event.getParent().skill)?.limited && _status.event.getParent().player == game.me) {
+							return true;
+						}
+						return false;
+					};
+					if (skisxdj() == true && !confirm.node.ok.classList.contains("xiandingji")) {
+						confirm.node.ok.classList.add("xiandingji");
+					}
+					if (skisxdj() != true && confirm.node.ok.classList.contains("xiandingji")) {
+						confirm.node.ok.classList.remove("xiandingji");
+					}
+					//鹿鹿修改 限定技专属按钮结束
 					if (confirm.skills2) {
 						if (_status.event.skill && _status.event.skill !== confirm.dataset.skill) {
 							confirm.dataset.skill = _status.event.skill;

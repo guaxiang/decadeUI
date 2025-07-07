@@ -215,6 +215,8 @@
 	-webkit-filter: grayscale(100%);*/
 }
 
+/*鹿鹿修改 技能失效按钮变灰*/
+.skill-control>.enable>.skillitem.shixiao::before,
 .skill-control>.enable>.skillitem:not(.usable):not(.select)::before {
 	background-image: url("./shousha/btn2.png");
 	/*filter: grayscale(100%);
