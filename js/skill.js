@@ -72,6 +72,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							common: "gold",
 							rare: "yu",
 							epic: "yan",
+							legend: "yan",
 						};
 						rarity = rarityMap[game.getRarity(target.name)];
 					} else if (longLevel === "sex") {
