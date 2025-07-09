@@ -11,6 +11,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				return;
 			}
 			const guanXing = decadeUI.dialog.create("confirm-box guan-xing");
+			guanXing.style.zIndex = 99999;
 			const originalLongpressInfo = lib.config.longpress_info;
 			const playButtonAudio = () => {
 				game.playAudio("../extension/十周年UI/audio/gxbtn");
@@ -36,7 +37,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					height: 4%;
 					width: 7%;
 					z-index: 114514;
-					left: 10%;
+					left: 7.5%;
 					right: auto;
 					top: 75%;
 				`;
