@@ -4863,8 +4863,8 @@ export default async function () {
 										const name = get.translation(this._finalGroup),
 											str = get.plainText(name);
 										console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+										if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
+										else this.node.campWrap.node.campName.innerHTML = str[0];
 									}
 									if (decadeUI.config.newDecadeStyle == "off") {
 										var image = new Image();
@@ -4876,8 +4876,8 @@ export default async function () {
 												const name = get.translation(this._finalGroup),
 													str = get.plainText(name);
 												console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
-												if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-												else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+												if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
+												else this.node.campWrap.node.campName.innerHTML = str[0];
 											}
 										};
 										image.onerror = () => {
@@ -4892,8 +4892,8 @@ export default async function () {
 											const name = get.translation(this._finalGroup),
 												str = get.plainText(name);
 											console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
-											if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-											else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+											if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
+											else this.node.campWrap.node.campName.innerHTML = str[0];
 										}
 									}
 								} else if (lib.config.extension_十周年UI_forcestyle == "2") {
