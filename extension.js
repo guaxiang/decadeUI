@@ -1801,7 +1801,7 @@ export default async function () {
 										while (player.node.showCards.hasChildNodes()) player.node.showCards.removeChild(player.node.showCards.firstChild);
 										return;
 									}
-									const cards = player.getCards("h", c => get.is.shownCard(c) || player.isUnderControl(true) || game.me?.hasSkillTag("viewHandcard", null, player, true));
+									const cards = player.getCards("h", c => get.is.shownCard(c) || (typeof game.me !== 'undefined' && player.isUnderControl(true)) || (game.me && game.me.hasSkillTag("viewHandcard", null, player, true)));
 									if (!cards.length) {
 										player.node.showCards.hide();
 										return;
