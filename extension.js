@@ -66,6 +66,30 @@ export default async function () {
 					);
 
 					this.initOverride();
+					if (window.get && typeof window.get.cardsetion === "function") {
+						const oldCardsetion = window.get.cardsetion;
+						window.get.cardsetion = function (...args) {
+							try {
+								return oldCardsetion.apply(this, args);
+							} catch (e) {
+								if (e && e.message && e.message.indexOf("indexOf") !== -1) {
+									return "";
+								}
+								throw e;
+							}
+						};
+					}
+					if (window.get && typeof window.get.getPlayerIdentity === "function") {
+						const oldGetPlayerIdentity = window.get.getPlayerIdentity;
+						window.get.getPlayerIdentity = function (player, identity, chinese, isMark) {
+							if (!identity) identity = player.identity;
+							if (typeof identity !== "string") identity = "";
+							if (player && typeof player.special_identity !== "undefined" && typeof player.special_identity !== "string") {
+								player.special_identity = "";
+							}
+							return oldGetPlayerIdentity.apply(this, arguments);
+						};
+					}
 					return this;
 				},
 				initOverride() {
@@ -6518,7 +6542,7 @@ export default async function () {
 						switch (mode) {
 							case "identity":
 								if (!player.isAlive() || player.identityShown || player == game.me) {
-									identity = (player.special_identity ? player.special_identity : identity).replace(/identity_/, "");
+									identity = ((player.special_identity ? player.special_identity : identity) || "").replace(/identity_/, "");
 								}
 
 								break;
@@ -6579,7 +6603,7 @@ export default async function () {
 					} else {
 						switch (mode) {
 							case "identity":
-								if (identity.indexOf("cai") < 0) {
+								if ((identity || "").indexOf("cai") < 0) {
 									if (isMark) {
 										if (player.special_identity) identity = player.special_identity + "_bg";
 									} else {
