@@ -744,7 +744,7 @@ export default async function () {
 									if (lib.skill[name] && lib.skill[name].intro && !lib.skill[name].intro.nocount && (this.storage[name] || lib.skill[name].intro.markcount)) {
 										var num = 0;
 										if (typeof lib.skill[name].intro.markcount == "function") {
-											num = lib.skill[name].intro.markcount(this.storage[name], this);
+											num = lib.skill[name].intro.markcount(this.storage[name], this, name);
 											/*-----------------分割线-----------------*/
 										} else if (lib.skill[name].intro.markcount == "expansion") {
 											num = this.countCards("x", card => card.hasGaintag(name));
@@ -4857,7 +4857,41 @@ export default async function () {
 								if (!group) return;
 								this._group = group;
 								this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
-								if (lib.config.extension_十周年UI_forcestyle == "1") {
+								if (lib.config.extension_十周年UI_forcestyle == "2") {
+									this._group = group;
+									this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
+
+									if (!decadeUI.config.campIdentityImageMode) {
+										if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+										else {
+											const name = get.translation(this._finalGroup),
+												str = get.plainText(name);
+											if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+											else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+										}
+									} else {
+										this.node.campWrap.node.campName.innerHTML = "";
+										this.node.campWrap.node.campName.style.backgroundImage = "";
+										var image = new Image();
+										var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
+										this._finalGroup = group;
+										const create = () => {
+											if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+											else {
+												const name = get.translation(this._finalGroup),
+													str = get.plainText(name);
+												if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+												else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+											}
+										};
+										image.onerror = () => {
+											create();
+										};
+										if (decadeUI.config.newDecadeStyle != "onlineUI") this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
+										else create();
+										image.src = url;
+									}
+								} else {
 									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
 									else {
 										const name = get.translation(this._finalGroup),
@@ -4895,37 +4929,6 @@ export default async function () {
 											if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
 											else this.node.campWrap.node.campName.innerHTML = str[0];
 										}
-									}
-								} else if (lib.config.extension_十周年UI_forcestyle == "2") {
-									this._group = group;
-									this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
-									if (!decadeUI.config.campIdentityImageMode) {
-										if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-										else {
-											const name = get.translation(this._finalGroup),
-												str = get.plainText(name);
-											if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-											else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
-										}
-									} else {
-										var image = new Image();
-										var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
-										this._finalGroup = group;
-										const create = () => {
-											if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-											else {
-												const name = get.translation(this._finalGroup),
-													str = get.plainText(name);
-												if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-												else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
-											}
-										};
-										image.onerror = () => {
-											create();
-										};
-										if (decadeUI.config.newDecadeStyle != "onlineUI") this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
-										else create();
-										image.src = url;
 									}
 								}
 							},
