@@ -4842,15 +4842,15 @@ export default async function () {
 						return skill;
 					};
 
-                    lib.element.player.awakenSkill = function(skill, nounmark) {
-                		const result = playerAwakenSkillFunction.apply(this, arguments);
-                		ui.updateSkillControl(this);
-                		const fname = _status.event.getParent()?.skill;
-                		if (fname?.endsWith("_fail") && fname?.slice(0, -5) == skill) {
-                            this.failSkill(skill);
-                        }
-                		return result;
-                	};
+					lib.element.player.awakenSkill = function (skill, nounmark) {
+						const result = playerAwakenSkillFunction.apply(this, arguments);
+						ui.updateSkillControl(this);
+						const fname = _status.event.getParent()?.skill;
+						if (fname?.endsWith("_fail") && fname?.slice(0, -5) == skill) {
+							this.failSkill(skill);
+						}
+						return result;
+					};
 
 					lib.element.player.getState = function () {
 						var state = base.lib.element.player.getState.apply(this, arguments);
@@ -7563,11 +7563,11 @@ export default async function () {
 			};
 			lib.element.player.$yangSkill = function (skill) {
 				if (!this.yangedSkills) {
-    				this.yangedSkills = [];
+					this.yangedSkills = [];
 				}
 				this.yangedSkills.add(skill);
 				if (!this.yingedSkills) {
-    				this.yingedSkills = [];
+					this.yingedSkills = [];
 				}
 				this.yingedSkills.remove(skill);
 			};
@@ -7584,11 +7584,11 @@ export default async function () {
 			};
 			lib.element.player.$yingSkill = function (skill) {
 				if (!this.yingedSkills) {
-    				this.yingedSkills = [];
+					this.yingedSkills = [];
 				}
 				this.yingedSkills.add(skill);
 				if (!this.yangedSkills) {
-    				this.yangedSkills = [];
+					this.yangedSkills = [];
 				}
 				this.yangedSkills.remove(skill);
 			};
@@ -8713,7 +8713,7 @@ export default async function () {
 					forced: true,
 					charlotte: true,
 					filter(event, player) {
-						if (document.querySelector("#jindutiaopl")== false) return false;
+						if (document.querySelector("#jindutiaopl") == false) return false;
 						if (event.name == "gameStart" && lib.config["extension_无名补丁_enable"]) return false;
 						return _status.currentPhase != player && player == game.me;
 					},
@@ -10747,7 +10747,7 @@ export default async function () {
 				item: {
 					1: "文字样式",
 					2: "图片样式",
-			    },
+				},
 				update() {
 					if (window.decadeUI) ui.arena.dataset.forcestyle = lib.config["extension_十周年UI_forcestyle"];
 				},
