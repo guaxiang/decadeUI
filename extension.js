@@ -4857,20 +4857,36 @@ export default async function () {
 								if (!group) return;
 								this._group = group;
 								this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
-								if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-								else {
-									const name = get.translation(this._finalGroup),
-										str = get.plainText(name);
-									console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
-									if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-									else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
-								}
-								// 手杀样式使用图片
-								if (decadeUI.config.newDecadeStyle == "off") {
-									var image = new Image();
-									var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
-									this._finalGroup = group;
-									const create = () => {
+								if (lib.config.extension_十周年UI_forcestyle == "1") {
+									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+									else {
+										const name = get.translation(this._finalGroup),
+											str = get.plainText(name);
+										console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
+										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+									}
+									if (decadeUI.config.newDecadeStyle == "off") {
+										var image = new Image();
+										var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
+										this._finalGroup = group;
+										const create = () => {
+											if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+											else {
+												const name = get.translation(this._finalGroup),
+													str = get.plainText(name);
+												console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
+												if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+												else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+											}
+										};
+										image.onerror = () => {
+											create();
+										};
+										this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
+										image.src = url;
+									} else {
+										this._finalGroup = group;
 										if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
 										else {
 											const name = get.translation(this._finalGroup),
@@ -4879,22 +4895,37 @@ export default async function () {
 											if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
 											else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
 										}
-									};
-									image.onerror = () => {
-										create();
-									};
-									this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
-									image.src = url;
-								} else {
-									// 其他样式直接显示文字
-									this._finalGroup = group;
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-									else {
-										const name = get.translation(this._finalGroup),
-											str = get.plainText(name);
-										console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+									}
+								} else if (lib.config.extension_十周年UI_forcestyle == "2") {
+									this._group = group;
+									this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
+									if (!decadeUI.config.campIdentityImageMode) {
+										if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+										else {
+											const name = get.translation(this._finalGroup),
+												str = get.plainText(name);
+											if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+											else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+										}
+									} else {
+										var image = new Image();
+										var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
+										this._finalGroup = group;
+										const create = () => {
+											if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+											else {
+												const name = get.translation(this._finalGroup),
+													str = get.plainText(name);
+												if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+												else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+											}
+										};
+										image.onerror = () => {
+											create();
+										};
+										if (decadeUI.config.newDecadeStyle != "onlineUI") this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
+										else create();
+										image.src = url;
 									}
 								}
 							},
@@ -7308,6 +7339,9 @@ export default async function () {
 			};
 
 			decadeUI.config = config;
+			if (decadeUI.config.campIdentityImageMode === undefined) {
+				decadeUI.config.campIdentityImageMode = true;
+			}
 			duicfg.update = function () {
 				var menu = lib.extensionMenu["extension_" + decadeUIName];
 				for (var key in menu) {
@@ -10677,6 +10711,17 @@ export default async function () {
 				name: "官方势力",
 				init: false,
 				intro: "开启后，非魏蜀吴群晋势力的角色将会重新选择势力",
+			},
+			forcestyle: {
+				name: "势力样式",
+				init: "1",
+				item: {
+					1: "文字样式",
+					2: "图片样式",
+			    },
+				update() {
+					if (window.decadeUI) ui.arena.dataset.forcestyle = lib.config["extension_十周年UI_forcestyle"];
+				},
 			},
 			shouqikamh: {
 				name: "手气卡美化",
