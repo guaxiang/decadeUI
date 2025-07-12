@@ -142,6 +142,7 @@ export default async function () {
 									setSeatNum: lib.element.player.setSeatNum,
 									$update: lib.element.player.$update,
 									useCard: lib.element.player.useCard,
+									respond: lib.element.player.respond,
 									lose: lib.element.player.lose,
 									$draw: lib.element.player.$draw,
 									$handleEquipChange: lib.element.player.$handleEquipChange,
@@ -1286,30 +1287,32 @@ export default async function () {
 								},
 								useCard() {
 									var event = base.lib.element.player.useCard.apply(this, arguments);
+									event.throw = false;
+									const finish = event.finish;
 									event.finish = function () {
-										this.finished = true;
-										var targets = this.targets;
-										for (var i = 0; i < targets.length; i++) {
-											targets[i].classList.remove("target");
-										}
+										if(typeof finish === "function") finish.apply(this, arguments);
+										const targets = this.targets;
+										if (Array.isArray(targets)) targets.forEach(target => target.classList.remove("target"));
 									};
 									event.pushHandler("decadeUI_LineAnimation", (event, option) => {
 										if (event.step === 1 && option.state === "begin" && !event.hideTargets) {
-											const player = event.player;
-											for (var i = 0; i < targets.length; i++) {
-												if (targets[i] != player) targets[i].classList.add("target");
-											}
+											const targets = event.targets;
+											if (Array.isArray(targets)) targets.forEach(target => target.classList.add("target"));
 										}
 									});
+									return event;
+								},
+								respond() {
+									var event = base.lib.element.player.respond.apply(this, arguments);
+									event.throw = false;
 									return event;
 								},
 								lose() {
 									var next = base.lib.element.player.lose.apply(this, arguments);
 									var event = _status.event;
-									if (event.name == "useCard") {
+									if (event.name == "useCard" || event.name === "respond") {
 										next.animate = true;
 										next.blameEvent = event;
-										if (next.cards.length) event.throw = false;
 									}
 									return next;
 								},
