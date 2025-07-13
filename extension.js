@@ -4911,7 +4911,7 @@ export default async function () {
 						if (fname?.endsWith("_fail") && fname?.slice(0, -5) == skill) {
 							this.failSkill(skill);
 							const that = this;
-							game.expandSkills(skill).forEach(taofen => that.shixiaoSkill(taofen));
+							game.expandSkills([skill]).forEach(taofen => that.shixiaoSkill(taofen));
 						}
 						return result;
 					};
