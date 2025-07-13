@@ -123,7 +123,6 @@ export default async function () {
 							swapSeat: game.swapSeat,
 							addGlobalSkill: game.addGlobalSkill,
 							removeGlobalSkill: game.removeGlobalSkill,
-							cardsGotoOrdering: game.cardsGotoOrdering,
 						},
 						lib: {
 							element: {
@@ -143,7 +142,6 @@ export default async function () {
 									setSeatNum: lib.element.player.setSeatNum,
 									$update: lib.element.player.$update,
 									useCard: lib.element.player.useCard,
-									respond: lib.element.player.respond,
 									lose: lib.element.player.lose,
 									$draw: lib.element.player.$draw,
 									$handleEquipChange: lib.element.player.$handleEquipChange,
@@ -1288,10 +1286,9 @@ export default async function () {
 								},
 								useCard() {
 									var event = base.lib.element.player.useCard.apply(this, arguments);
-									event.throw = false;
 									const finish = event.finish;
 									event.finish = function () {
-										if(typeof finish === "function") finish.apply(this, arguments);
+										if (typeof finish === "function") finish.apply(this, arguments);
 										const targets = this.targets;
 										if (Array.isArray(targets)) targets.forEach(target => target.classList.remove("target"));
 									};
@@ -1303,17 +1300,14 @@ export default async function () {
 									});
 									return event;
 								},
-								respond() {
-									var event = base.lib.element.player.respond.apply(this, arguments);
-									event.throw = false;
-									return event;
-								},
 								lose() {
 									var next = base.lib.element.player.lose.apply(this, arguments);
 									var event = _status.event;
+									if (event.name === "loseAsync") event = event.getParent();
 									if (event.name == "useCard" || event.name === "respond") {
 										next.animate = true;
 										next.blameEvent = event;
+										if (Object.keys(event.lose_map).some(item => item !== "noowner" && event.lose_map[item].length)) event.throw = false;
 									}
 									return next;
 								},
@@ -1829,7 +1823,7 @@ export default async function () {
 										while (player.node.showCards.hasChildNodes()) player.node.showCards.removeChild(player.node.showCards.firstChild);
 										return;
 									}
-									const cards = player.getCards("h", c => get.is.shownCard(c) || (typeof game.me !== 'undefined' && player.isUnderControl(true)) || (game.me && game.me.hasSkillTag("viewHandcard", null, player, true)));
+									const cards = player.getCards("h", c => get.is.shownCard(c) || (typeof game.me !== "undefined" && player.isUnderControl(true)) || (game.me && game.me.hasSkillTag("viewHandcard", null, player, true)));
 									if (!cards.length) {
 										player.node.showCards.hide();
 										return;
@@ -3098,40 +3092,6 @@ export default async function () {
 							const result = base.game.removeGlobalSkill.apply(this, arguments);
 							[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 							return result;
-						},
-						cardsGotoOrdering() {
-							const next = base.game.cardsGotoOrdering.apply(this, arguments);
-							if (next?.cards?.length) {
-								const event = _status.event;
-								if ((event.name === "useCard" || event.name === "respond") && event.animate != false && event.step === 0) {
-									const cards = next.cards.filter(card => event.lose_map?.noowner?.includes(card));
-									if (cards.length) {
-										const videoId = event.discardid || event.videoId || lib.status.videoId++;
-										const player = next.player || event.player || game.me;
-										//player.$throw(cards, 1000);
-										for (const card of cards) {
-											game.addVideo("judge1", player, [get.cardInfo(card), null, videoId]);
-											game.broadcastAll(
-												function (player, card, cardid) {
-													const event = game.online ? {} : _status.event;
-													if (game.chess) event.node = card.copy("thrown", "center", ui.arena).animate("start");
-													else event.node = player.$throwordered2(card.copy(), true);
-													if (lib.cardOL) lib.cardOL[cardid] = event.node;
-													event.node.cardid = cardid;
-													if (!window.decadeUI) {
-														ui.arena.classList.add("thrownhighlight");
-														event.node.classList.add("thrownhighlight");
-													}
-												},
-												player,
-												card,
-												get.id()
-											);
-										}
-									}
-								}
-								return next;
-							}
 						},
 						addOverDialog(dialog, result) {
 							var sprite = decadeUI.backgroundAnimation.current;
