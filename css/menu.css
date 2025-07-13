@@ -190,3 +190,12 @@
 .config.config.toggle > div > div {
 	visibility: hidden;
 }
+
+.menu.main > .menu-content > div > .left.pane > div img {
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 90% !important;
+    max-height: 40px !important;
+    margin-top: -13px !important;
+}
