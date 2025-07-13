@@ -334,9 +334,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		const borderImageUrl = `${lib.assetURL}extension/十周年UI/assets/image/${borderImageName}.png`;
 		const commonBorderStyles = `
 				border: 1px solid;
-				border-radius: 6px;
+				border-radius: 10px;
 				border-image-source: url('${borderImageUrl}');
-				border-image-slice: 20 20 20 20;
+				border-image-slice: 17 17 17 17;
 			`;
 		const handCardStyles = `
 				.hand-cards > .handcards > .card {
