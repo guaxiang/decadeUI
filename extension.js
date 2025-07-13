@@ -123,6 +123,7 @@ export default async function () {
 							swapSeat: game.swapSeat,
 							addGlobalSkill: game.addGlobalSkill,
 							removeGlobalSkill: game.removeGlobalSkill,
+							cardsGotoOrdering: game.cardsGotoOrdering,
 						},
 						lib: {
 							element: {
@@ -1256,8 +1257,8 @@ export default async function () {
 													}
 												};
 											}
-											const suit = get.translation(cardx.suit),
-												number = get.strNumber(cardx.number);
+											//const suit = get.translation(cardx.suit);
+											//const number = get.strNumber(cardx.number);
 											cardx.classList.add("drawinghidden");
 											if (isViewAsCard) {
 												cardx.cards = cards || [];
@@ -2117,7 +2118,7 @@ export default async function () {
 											if (event.blameEvent == undefined) event.animate = false;
 										} else {
 											if (evt.delay === false) event.delay = false;
-											if (event.blameEvent && event.animate == undefined) event.animate = evt.animate;
+											if (event.animate == undefined) event.animate = evt.animate;
 										}
 									},
 									async (event, trigger, player) => {
@@ -3097,6 +3098,40 @@ export default async function () {
 							const result = base.game.removeGlobalSkill.apply(this, arguments);
 							[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 							return result;
+						},
+						cardsGotoOrdering() {
+							const next = base.game.cardsGotoOrdering.apply(this, arguments);
+							if (next?.cards?.length) {
+								const event = _status.event;
+								if ((event.name === "useCard" || event.name === "respond") && event.animate != false && event.step === 0) {
+									const cards = next.cards.filter(card => event.lose_map?.noowner?.includes(card));
+									if (cards.length) {
+										const videoId = event.discardid || event.videoId || lib.status.videoId++;
+										const player = next.player || event.player || game.me;
+										//player.$throw(cards, 1000);
+										for (const card of cards) {
+											game.addVideo("judge1", player, [get.cardInfo(card), null, videoId]);
+											game.broadcastAll(
+												function (player, card, cardid) {
+													const event = game.online ? {} : _status.event;
+													if (game.chess) event.node = card.copy("thrown", "center", ui.arena).animate("start");
+													else event.node = player.$throwordered2(card.copy(), true);
+													if (lib.cardOL) lib.cardOL[cardid] = event.node;
+													event.node.cardid = cardid;
+													if (!window.decadeUI) {
+														ui.arena.classList.add("thrownhighlight");
+														event.node.classList.add("thrownhighlight");
+													}
+												},
+												player,
+												card,
+												get.id()
+											);
+										}
+									}
+								}
+								return next;
+							}
 						},
 						addOverDialog(dialog, result) {
 							var sprite = decadeUI.backgroundAnimation.current;
