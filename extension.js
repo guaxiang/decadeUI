@@ -4870,6 +4870,8 @@ export default async function () {
 						const fname = _status.event.getParent()?.skill;
 						if (fname?.endsWith("_fail") && fname?.slice(0, -5) == skill) {
 							this.failSkill(skill);
+							const that = this;
+							game.expandSkills([skill]).forEach(taofen => that.shixiaoSkill(taofen));
 						}
 						return result;
 					};
@@ -11156,7 +11158,7 @@ export default async function () {
 					`十周年UI 当前版本号${pack.version}`,
 					"适配本体：v1.10.17.4 待定",
 					"bugfix",
-					"函数跟进 待定",
+					"函数跟进",
 					"UI界面调整",
 					"特效类功能设置为强开启，移除开关",
 					"",
