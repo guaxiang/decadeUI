@@ -4910,6 +4910,8 @@ export default async function () {
 						const fname = _status.event.getParent()?.skill;
 						if (fname?.endsWith("_fail") && fname?.slice(0, -5) == skill) {
 							this.failSkill(skill);
+							const that = this;
+							game.expandSkills(skill).forEach(taofen => that.shixiaoSkill(taofen));
 						}
 						return result;
 					};
