@@ -4659,7 +4659,7 @@ export default async function () {
 					if (!_status.connectMode) {
 						lib.element.content.chooseToGuanxing = function () {
 							"step 0";
-							if (player.isUnderControl()) game.modeSwapPlayer(player);
+							if (player.isUnderControl()) game.swapPlayer(player);
 							var cards = get.cards(num);
 							var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
 							guanxing.caption = event.getParent() && event.getParent().name && get.translation(event.getParent().name) != event.getParent().name ? "【" + get.translation(event.getParent().name) + "】" : "请按顺序排列牌";
