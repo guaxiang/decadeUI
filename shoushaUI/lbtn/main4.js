@@ -967,9 +967,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 
 		// 创建按钮容器
-		if (lib.config.extension_十周年UI_XPJ != "on") {
-			ui.anniubuttons = ui.create.div(lib.config["extension_十周年UI_rightLayout"] == "on" ? ".leftbuttons" : ".rightbuttons", ui.window);
-		}
+		ui.anniubuttons = ui.create.div(lib.config["extension_十周年UI_rightLayout"] == "on" ? ".leftbuttons" : ".rightbuttons", ui.window);
 
 		// 创建按钮
 		for (let [buttonName, config] of Object.entries(buttonConfigs)) {
