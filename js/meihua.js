@@ -139,33 +139,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 	}
 
-	// 全选按钮功能 by奇妙工具做修改
-	lib.hooks.checkBegin.add("Selectall", () => {
-		const event = get.event();
-		const needMultiSelect = event.selectCard?.[1] > 1 && event.player == game.me;
-		const isDiscardPhase = event.name === "phaseDiscard" || event.parent?.name === "phaseDiscard";
-		if (needMultiSelect && !ui.Selectall && !isDiscardPhase) {
-			ui.Selectall = ui.create.control("全选", () => {
-				ai.basic.chooseCard(card => (get.position(card) === "h" ? 114514 : 0));
-				event.custom?.add?.card?.();
-				ui.selected.cards?.forEach(card => card.updateTransform(true));
-			});
-		} else if (!needMultiSelect || isDiscardPhase) {
-			removeCardQX();
-		}
-	});
-	lib.hooks.uncheckBegin.add("Selectall", () => {
-		if (get.event().result?.bool) {
-			removeCardQX();
-		}
-	});
-	const removeCardQX = () => {
-		if (ui.Selectall) {
-			ui.Selectall.remove();
-			delete ui.Selectall;
-		}
-	};
-
 	// 局内交互优化
 	if (lib.config["extension_十周年UI_jiaohuyinxiao"]) {
 		lib.skill._useCardAudio = {
