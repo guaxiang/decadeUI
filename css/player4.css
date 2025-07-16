@@ -294,10 +294,6 @@
 	background-image: url("../image/decoration/new_border_camp4.png");
 }
 
-#arena.decadeUI[data-border-level="five"] .player>.camp-wrap>.camp-border {
-	background-image: url("../image/decoration/new_border_camp4.png");
-}
-
 .player>.camp-wrap>.avatar-name,
 /*主将名，根据部分群友需要，添加定位代码*/
 #arena>.player:not(.minskin)>.name.name {
