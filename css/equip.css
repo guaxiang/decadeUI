@@ -7,9 +7,17 @@
 	top: auto;
 }
 
-#arena[data-right-layout="on"]>.equips-wrap {
-	/*右手布局*/
+#arena[data-right-layout="on"][data-phonelayout="on"]>.equips-wrap {
 	left: 90px;
+	right: auto;
+}
+
+#arena[data-right-layout="on"][data-phonelayout="off"]>.equips-wrap {
+	left: 0px;
+	right: auto;
+}
+
+#arena[data-right-layout="on"]>.equips-wrap {
 	right: auto;
 }
 

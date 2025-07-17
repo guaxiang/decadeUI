@@ -3572,6 +3572,12 @@ export default async function () {
 						ui.arena.classList.add("decadeUI");
 						ui.control.id = "dui-controls";
 
+						if (lib.config.phonelayout) {
+							ui.arena.setAttribute('data-phonelayout', 'on');
+						} else {
+							ui.arena.setAttribute('data-phonelayout', 'off');
+						}
+
 						decadeUI.config.update();
 						return result;
 					};
@@ -4091,9 +4097,11 @@ export default async function () {
 							if (lib.config.phonelayout) {
 								ui.css.phone.href = lib.assetURL + "layout/default/phone.css";
 								ui.arena.classList.add("phone");
+								ui.arena.setAttribute('data-phonelayout', 'on'); // 新增
 							} else {
 								ui.css.phone.href = "";
 								ui.arena.classList.remove("phone");
+								ui.arena.setAttribute('data-phonelayout', 'off'); // 新增
 							}
 
 							for (var i = 0; i < game.players.length; i++) {
