@@ -4939,7 +4939,6 @@ export default async function () {
 									else {
 										const name = get.translation(this._finalGroup),
 											str = get.plainText(name);
-										console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
 										if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
 										else this.node.campWrap.node.campName.innerHTML = str[0];
 									}
@@ -4952,7 +4951,6 @@ export default async function () {
 											else {
 												const name = get.translation(this._finalGroup),
 													str = get.plainText(name);
-												console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
 												if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
 												else this.node.campWrap.node.campName.innerHTML = str[0];
 											}
@@ -4968,7 +4966,6 @@ export default async function () {
 										else {
 											const name = get.translation(this._finalGroup),
 												str = get.plainText(name);
-											console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
 											if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
 											else this.node.campWrap.node.campName.innerHTML = str[0];
 										}
