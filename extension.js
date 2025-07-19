@@ -1307,7 +1307,7 @@ export default async function () {
 									if (event.name == "useCard" || event.name === "respond") {
 										next.animate = true;
 										next.blameEvent = event;
-										if (Object.keys(event.lose_map).some(item => item !== "noowner" && event.lose_map[item].length)) event.throw = false;
+										if (event.lose_map && Object.keys(event.lose_map).some(item => item !== "noowner" && event.lose_map[item].length)) event.throw = false;
 									}
 									return next;
 								},
