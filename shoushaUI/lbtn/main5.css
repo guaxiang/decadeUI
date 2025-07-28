@@ -64,13 +64,14 @@
 /*---------新版小配件--------*/
 .jiluButton_new {
 	display: block;
-	--w: 50px;
-	--h: 50px;
+	--w: 47px;
+	--h: 47px;
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
 	bottom: 2%;
-	left: 4%;
+	left: 45px;
+	right: auto;
 	background-image: url("./images/uibutton/jiaoliuhs.png");
 	background-size: 100% 100%;
 	z-index: 3;

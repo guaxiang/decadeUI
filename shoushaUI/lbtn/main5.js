@@ -62,13 +62,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		newButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_buttonhs3.png";
 		newButton.style.cssText = `
 			display: block;
-			--w: 53px;
-			--h: calc(var(--w) * 74/71);
+			--w: 50px;
+	        --h: 50px;
 			width: var(--w);
-			height: var(--h);
+	        height: var(--h);
 			position: absolute;
 			bottom: 13%;
-			left: 80px;
+			left: 75px;
 			right: auto;
 			background-color: transparent;
 			z-index: 1;
