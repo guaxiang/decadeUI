@@ -7950,6 +7950,7 @@ export async function content(config, pack) {
 						return player != game.me && _status.currentPhase == player;
 					},
 					forced: true,
+					popup:false
 					charlotte: true,
 					content() {
 						if (window.timerai) {
@@ -7989,6 +7990,7 @@ export async function content(config, pack) {
 						player: ["useCardEnd", "respondEnd", "dieBegin"],
 					},
 					forced: true,
+					silent: true,
 					charlotte: true,
 					filter(event, player) {
 						return player != game.me && _status.currentPhase != player;
@@ -8069,6 +8071,7 @@ export async function content(config, pack) {
 						return event.respondix > 0;
 					},
 					forced: true,
+					silent:true
 					priority: -1,
 					charlotte: true,
 					content() {
@@ -8143,6 +8146,7 @@ export async function content(config, pack) {
 						return false;
 					},
 					forced: true,
+					silent:true
 					priority: -1,
 					charlotte: true,
 					content() {
@@ -8746,6 +8750,7 @@ export async function content(config, pack) {
 						global: ["useCardAfter", "useCardBefore", "phaseBefore", "loseEnd", "phaseBegin", "phaseDradBegin", "phaseUseBegin", "phaseUseEnd", "phaseEnd", "phaseDiscardAfter", "phaseDiscardBegin", "useSkillBefore", "judgeAfter"],
 					},
 					forced: true,
+					silent:true
 					charlotte: true,
 					filter(event, player) {
 						if (document.querySelector("#jindutiaopl")) return _status.currentPhase != game.me;
