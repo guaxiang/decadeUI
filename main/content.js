@@ -136,6 +136,8 @@ export async function content(config, pack) {
 							$draw: lib.element.player.$draw,
 							$handleEquipChange: lib.element.player.$handleEquipChange,
 							removeVirtualEquip: lib.element.player.removeVirtualEquip,
+							useCardAnimateBefore: lib.element.player.useCardAnimateBefore,
+							respondAnimateBefore: lib.element.player.respondAnimateBefore,
 						},
 						content: {
 							lose: lib.element.content.lose,
@@ -1297,9 +1299,16 @@ export async function content(config, pack) {
 							if (event.name == "useCard" || event.name === "respond") {
 								next.animate = true;
 								next.blameEvent = event;
-								if (event.lose_map && Object.keys(event.lose_map).some(item => item !== "noowner" && event.lose_map[item].length)) event.throw = false;
 							}
 							return next;
+						},
+						useCardAnimateBefore(event) {
+							base.lib.element.player.useCardAnimateBefore?.apply(this, arguments);
+							if (event.lose_map && Object.keys(event.lose_map).some(item => item !== "noowner" && event.lose_map[item].length)) event.throw = false;
+						},
+						respondAnimateBefore(event) {
+							base.lib.element.player.respondAnimateBefore?.apply(this, arguments);
+							if (event.lose_map && Object.keys(event.lose_map).some(item => item !== "noowner" && event.lose_map[item].length)) event.throw = false;
 						},
 						line(target, config) {
 							if (get.itemtype(target) == "players") {
