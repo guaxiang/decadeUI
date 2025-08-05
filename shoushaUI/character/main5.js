@@ -400,6 +400,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				intronode.link = player;
 				intronode.func = lib.skill[skillName].clickable;
 				intronode.classList.add("pointerdiv");
+				intronode.listen(() => container.hide());
 				intronode.listen(ui.click.skillbutton);
 			}
 		},

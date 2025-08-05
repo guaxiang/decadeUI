@@ -598,7 +598,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 		// 创建可点击技能项
 		createClickableSkillItem(container, name, player, typeText) {
-			ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>', typeText), container);
+			const intronode = ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>', typeText), container);
+			if (!_status.gameStarted || (lib.skill[name].clickableFilter && !lib.skill[name].clickableFilter(player))) {
+				intronode.classList.add("disabled");
+				intronode.style.opacity = 0.5;
+			} else {
+				intronode.link = player;
+				intronode.func = lib.skill[name].clickable;
+				intronode.classList.add("pointerdiv");
+				intronode.listen(() => uiintro.close());
+				intronode.listen(ui.click.skillbutton);
+			}
 		}
 
 		// 创建衍生技能

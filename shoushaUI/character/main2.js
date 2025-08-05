@@ -99,7 +99,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter: function () {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content: function (next) { },
+		content: function (next) {},
 		precontent: function () {
 			app.reWriteFunction(lib, {
 				setIntro: [
@@ -243,6 +243,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 										skillButton.link = this;
 										skillButton.func = lib.skill[skillName].clickable;
 										skillButton.classList.add("pointerdiv");
+										skillButton.listen(() => container.hide());
 										skillButton.listen(ui.click.skillbutton);
 									}
 								}

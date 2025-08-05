@@ -353,6 +353,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 									intronode.link = player;
 									intronode.func = lib.skill[name].clickable;
 									intronode.classList.add("pointerdiv");
+									intronode.listen(() => container.hide());
 									intronode.listen(ui.click.skillbutton);
 								}
 							} else {
