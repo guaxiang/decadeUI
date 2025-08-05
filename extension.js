@@ -44,7 +44,7 @@ export default async function () {
 					"函数跟进",
 					"UI界面调整",
 					"特效类功能设置为强开启，移除开关",
-					"",
+					"补充不完整的资料页clickable属性",
 				];
 				return `<a href="javascript:void(0)" onclick="navigator.clipboard.writeText('https://github.com/diandian157/decadeUI').then(() => alert('已成功复制，粘贴到浏览器打开，部分进不去需要翻墙'))">点击复制十周年UIGithub仓库地址</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);

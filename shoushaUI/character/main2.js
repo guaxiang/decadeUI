@@ -243,7 +243,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 										skillButton.link = this;
 										skillButton.func = lib.skill[skillName].clickable;
 										skillButton.classList.add("pointerdiv");
-										skillButton.listen(() => container.hide());
+										skillButton.listen(() => {
+											container.hide();
+											game.resume2();
+										});
 										skillButton.listen(ui.click.skillbutton);
 									}
 								}

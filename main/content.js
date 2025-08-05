@@ -165,16 +165,16 @@ export async function content(config, pack) {
 									ui.update();
 									return this;
 								}
-								if (ui.dialogs[i].static) ui.dialogs[i].unfocus();
-								else ui.dialogs[i].hide();
+								if (!this.peaceDialog) {
+									if (ui.dialogs[i].static) ui.dialogs[i].unfocus();
+									else ui.dialogs[i].hide();
+								}
 							}
 							ui.dialog = this;
 							ui.arena.appendChild(this);
 							ui.dialogs.unshift(this);
 							ui.update();
-							if (!this.classList.contains("prompt")) {
-								this.style.animation = "open-dialog 0.5s";
-							}
+							if (!this.classList.contains("prompt")) this.style.animation = "open-dialog 0.5s";
 							return this;
 						},
 						close() {
@@ -2530,10 +2530,12 @@ export async function content(config, pack) {
 						return control;
 					},
 
-					dialog() {
+					dialog(...args) {
 						var hidden = false;
 						var notouchscroll = false;
 						var forcebutton = false;
+						var forcebutton = false;
+						let peaceDialog = false;
 						var dialog = decadeUI.element.create("dialog");
 						dialog.supportsPagination = false;
 						dialog.paginationMap = new Map();
@@ -2541,14 +2543,14 @@ export async function content(config, pack) {
 						dialog.contentContainer = decadeUI.element.create("content-container", dialog);
 						dialog.content = decadeUI.element.create("content", dialog.contentContainer);
 						dialog.buttons = [];
-						//for (let i in lib.element.dialog) dialog[i] = lib.element.dialog[i];
 						Object.setPrototypeOf(dialog, lib.element.Dialog.prototype);
-						for (let i = 0; i < arguments.length; i++) {
-							if (typeof arguments[i] == "boolean") dialog.static = arguments[i];
-							else if (arguments[i] == "hidden") hidden = true;
-							else if (arguments[i] == "notouchscroll") notouchscroll = true;
-							else if (arguments[i] == "forcebutton") forcebutton = true;
-							else dialog.add(arguments[i]);
+						for (let i = 0; i < args.length; i++) {
+							if (typeof args[i] == "boolean") dialog.static = args[i];
+							else if (args[i] == "hidden") hidden = true;
+							else if (args[i] == "notouchscroll") notouchscroll = true;
+							else if (args[i] == "forcebutton") forcebutton = true;
+							else if (args[i] == "peaceDialog") peaceDialog = true;
+							else dialog.add(args[i]);
 						}
 						if (!hidden) dialog.open();
 						if (!lib.config.touchscreen) dialog.contentContainer.onscroll = ui.update;
@@ -2558,11 +2560,11 @@ export async function content(config, pack) {
 							dialog.contentContainer.style.WebkitOverflowScrolling = "touch";
 							dialog.ontouchstart = ui.click.dragtouchdialog;
 						}
-
 						if (forcebutton) {
 							dialog.forcebutton = true;
 							dialog.classList.add("forcebutton");
 						}
+						if (peaceDialog) dialog.peaceDialog = true;
 						return dialog;
 					},
 
