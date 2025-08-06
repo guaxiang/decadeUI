@@ -135,7 +135,6 @@ export async function content(config, pack) {
 							lose: lib.element.player.lose,
 							$draw: lib.element.player.$draw,
 							$handleEquipChange: lib.element.player.$handleEquipChange,
-							removeVirtualEquip: lib.element.player.removeVirtualEquip,
 							useCardAnimateBefore: lib.element.player.useCardAnimateBefore,
 							respondAnimateBefore: lib.element.player.respondAnimateBefore,
 						},
@@ -1651,10 +1650,6 @@ export async function content(config, pack) {
 								}
 							}
 						},
-						removeVirtualEquip() {
-							base.lib.element.player.removeVirtualEquip.apply(this, arguments);
-							if (!lib.config.equip_span) this.$handleEquipChange();
-						},
 						$damage(source) {
 							if (get.itemtype(source) == "player") {
 								game.addVideo("damage", this, source.dataset.position);
@@ -2055,7 +2050,7 @@ export async function content(config, pack) {
 							game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[0]);
 							game.delay(2);
 							if (!event.noJudgeTrigger) event.trigger("judge");
-							("step 1");
+							"step 1";
 							event.result = {
 								card: player.judging[0],
 								name: player.judging[0].name,
@@ -3741,7 +3736,6 @@ export async function content(config, pack) {
 				var realIdentity = ui.create.div(player.node.identity);
 				realIdentity.player = player;
 
-				//if (lib.config.equip_span) {
 				let observer = new MutationObserver(mutationsList => {
 					for (let mutation of mutationsList) {
 						if (mutation.type === "childList") {
@@ -3757,7 +3751,6 @@ export async function content(config, pack) {
 					childList: true,
 				};
 				observer.observe(playerExtend.node.equips, config);
-				//}
 
 				Object.defineProperties(realIdentity, {
 					innerHTML: {
@@ -4171,7 +4164,7 @@ export async function content(config, pack) {
 					event.compareName,
 					event.compareId
 				);
-				("step 1");
+				"step 1";
 				event.list = [player, target].filter(current => !event.fixedResult?.[current.playerid]);
 				if (event.list.length) {
 					player.chooseCardOL(event.list, "请选择拼点牌", true, event.position).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
@@ -4188,7 +4181,7 @@ export async function content(config, pack) {
 						};
 					};
 				}
-				("step 2");
+				"step 2";
 				const lose_list = [];
 				if (event.fixedResult && event.fixedResult[player.playerid]) {
 					lose_list.push([player, [event.fixedResult[player.playerid]]]);
@@ -4226,17 +4219,17 @@ export async function content(config, pack) {
 					dialog.$playerCard.classList.add("infoflip");
 				}, event.compareId);
 				event.lose_list = lose_list;
-				("step 3");
+				"step 3";
 				if (event.card2.number >= 10 || event.card2.number <= 4) {
 					if (target.countCards("h") > 2) event.addToAI = true;
 				}
-				("step 4");
+				"step 4";
 				if (event.lose_list.length) {
 					game.loseAsync({
 						lose_list: event.lose_list,
 					}).setContent("chooseToCompareLose");
 				}
-				("step 5");
+				"step 5";
 				if (event.isDelay) {
 					let cards = [];
 					for (let current of event.lose_list) {
@@ -4275,7 +4268,7 @@ export async function content(config, pack) {
 				} else {
 					event.trigger("compareCardShowBefore");
 				}
-				("step 6");
+				"step 6";
 				// 更新拼点框
 				game.broadcastAll(
 					function (eventName, player, target, playerCard, targetCard) {
@@ -4308,7 +4301,7 @@ export async function content(config, pack) {
 				event.num2 = getNum(event.card2);
 				event.trigger("compare");
 				decadeUI.delay(400);
-				("step 7");
+				"step 7";
 				event.result = {
 					player: event.card1,
 					target: event.card2,
@@ -4316,7 +4309,7 @@ export async function content(config, pack) {
 					num2: event.num2,
 				};
 				event.trigger("compareFixing");
-				("step 8");
+				"step 8";
 				var str;
 				if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
 					event.result.bool = true;
@@ -4377,7 +4370,7 @@ export async function content(config, pack) {
 					event.result.bool
 				);
 				decadeUI.delay(1800);
-				("step 9");
+				"step 9";
 				if (typeof event.target.ai.shown == "number" && event.target.ai.shown <= 0.85 && event.addToAI) {
 					event.target.ai.shown += 0.1;
 				}
@@ -4439,7 +4432,7 @@ export async function content(config, pack) {
 					event.compareName,
 					event.compareId
 				);
-				("step 1");
+				"step 1";
 				event._result = [];
 				event.list = targets.filter(current => !event.fixedResult?.[current.playerid]);
 				if (event.list.length || !event.fixedResult?.[player.playerid]) {
@@ -4458,7 +4451,7 @@ export async function content(config, pack) {
 						};
 					};
 				}
-				("step 2");
+				"step 2";
 				var cards = [];
 				var lose_list = [];
 				event.lose_list = lose_list;
@@ -4510,9 +4503,9 @@ export async function content(config, pack) {
 					num1: [],
 					num2: [],
 				};
-				("step 3");
+				"step 3";
 				event.trigger("compareCardShowBefore");
-				("step 4");
+				"step 4";
 				game.log(player, "的拼点牌为", event.card1);
 				// 更新拼点框
 				game.broadcastAll(
@@ -4524,7 +4517,7 @@ export async function content(config, pack) {
 					event.compareId,
 					event.card1
 				);
-				("step 5");
+				"step 5";
 				if (event.iwhile < targets.length) {
 					event.target = targets[event.iwhile];
 					event.card2 = event.cardlist[event.iwhile];
@@ -4567,11 +4560,11 @@ export async function content(config, pack) {
 					}, event.compareId);
 					event.goto(10);
 				}
-				("step 6");
+				"step 6";
 				event.iiwhile = event.iwhile;
 				delete event.iwhile;
 				event.trigger("compareFixing");
-				("step 7");
+				"step 7";
 				event.result.num1[event.iiwhile] = event.num1;
 				event.result.num2[event.iiwhile] = event.num2;
 				var str, result;
@@ -4632,7 +4625,7 @@ export async function content(config, pack) {
 					result
 				);
 				decadeUI.delay(1800);
-				("step 8");
+				"step 8";
 				if (event.callback) {
 					game.broadcastAll(
 						function (card1, card2) {
@@ -4655,12 +4648,12 @@ export async function content(config, pack) {
 					next.setContent(event.callback);
 					event.compareMultiple = true;
 				}
-				("step 9");
+				"step 9";
 				delete event.winner;
 				delete event.forceWinner;
 				event.iwhile = event.iiwhile + 1;
 				event.goto(5);
-				("step 10");
+				"step 10";
 				game.broadcastAll(ui.clear);
 				event.cards.add(event.card1);
 			};
@@ -4813,7 +4806,7 @@ export async function content(config, pack) {
 							time += 500;
 						}
 					}
-					("step 1");
+					"step 1";
 					var [top, bottom] = [event.cards1, event.cards2];
 					event.result = {
 						bool: true,
@@ -7844,7 +7837,7 @@ export async function content(config, pack) {
 		} else {
 			event.result = "ai";
 		}
-		("step 1");
+		"step 1";
 		if (event.result == "ai") {
 			event.result = {};
 			if (event.ai) {
