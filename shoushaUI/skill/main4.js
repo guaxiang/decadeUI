@@ -4,7 +4,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			// 添加小黄点样式
 			if (!document.getElementById("skill-yellow-dot-style")) {
@@ -331,10 +331,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			return node;
 		},
 		updateSkillMarks(player, skills1, skills2) {
+			if (player.classList.contains("unseen") && player !== game.me) {
+				var node = player.node.xSkillMarks;
+				if (node) {
+					node.style.display = "none";
+				}
+				return;
+			}
+
 			var node = player.node.xSkillMarks;
 			if (!node) {
 				node = player.node.xSkillMarks = ui.create.div(".skillMarks", player);
 			}
+
+			node.style.display = "";
 
 			Array.from(node.childNodes).forEach(function (item) {
 				if (skills1.hasOwnProperty(item.dataset.id)) return;

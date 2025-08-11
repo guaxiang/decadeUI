@@ -4,7 +4,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			this.initCreateMethods();
 			this.initUpdateMethods();
@@ -313,10 +313,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			return true;
 		},
 		updateSkillMarks(player, xiandingji, juexingji) {
+			if (player.classList.contains("unseen") && player !== game.me) {
+				let node = player.node.xSkillMarks;
+				if (node) {
+					node.style.display = "none";
+				}
+				return;
+			}
+
 			let node = player.node.xSkillMarks;
 			if (!node) {
 				node = player.node.xSkillMarks = ui.create.div(".skillMarks", player);
 			}
+
+			node.style.display = "";
 
 			this.cleanupSkillMarks(node, xiandingji, juexingji);
 			this.createSkillMarks(node, xiandingji, juexingji);

@@ -7524,6 +7524,7 @@ export async function content(config, pack) {
 	lib.element.player.$changeZhuanhuanji = function (skill) {
 		originchangeZhuanhuanji.apply(this, arguments);
 		if (!get.is.zhuanhuanji(skill, this)) return;
+		if (this.classList.contains("unseen") && this !== game.me) return;
 		var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
 		var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
 
@@ -7628,6 +7629,7 @@ export async function content(config, pack) {
 		);
 	};
 	lib.element.player.$failSkill = function (skill) {
+		if (this.classList.contains("unseen") && this !== game.me) return;
 		var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
 		if (mark) mark.classList.add("fail");
 	};
