@@ -173,7 +173,6 @@ export let config = {
         },
         update() {
             if (!window.decadeUI) return;
-
             var item = lib.config["extension_十周年UI_dynamicBackground"];
             if (!item || item == "off") {
                 decadeUI.backgroundAnimation.stopSpineAll();

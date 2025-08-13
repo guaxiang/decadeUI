@@ -20,7 +20,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const hideBtn = ui.create.div(".closeDialog", document.body, () => {
 					playButtonAudio();
 					const isActive = guanXing.classList.contains("active");
-
 					if (isActive) {
 						guanXing.classList.remove("active");
 						guanXing.style.transform = "scale(1)";
@@ -41,10 +40,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					right: auto;
 					top: 75%;
 				`;
-
 				return hideBtn;
 			};
-
 			const hideBtn = createHideButton();
 			const cleanupCard = card => {
 				card.removeEventListener("click", guanXing._click);
@@ -57,7 +54,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					card.classList.remove("drag-over");
 				});
 			};
-
 			const properties = {
 				caption: undefined,
 				tip: undefined,
@@ -78,7 +74,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				finishTime(time) {
 					if (this.finishing || this.finished) return;
 					if (typeof time !== "number") throw time;
-
 					this.finishing = true;
 					setTimeout(() => {
 						this.finishing = false;
@@ -88,16 +83,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				finish() {
 					if (this.finishing || this.finished) return;
 					this.finishing = true;
-
 					if (this.callback) {
 						this.confirmed = this.callback.call(this);
 					}
 					if (hideBtn?.parentNode) {
 						document.body.removeChild(hideBtn);
 					}
-
 					lib.config.longpress_info = this.originalLongpressInfo;
-
 					[0, 1].forEach(arrayIndex => {
 						let cards = this.cards[arrayIndex];
 						if (arrayIndex === 0) cards.reverse();
@@ -139,7 +131,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 								const aIndex = this.orderCardsList[arrayIndex].indexOf(a);
 								const bIndex = this.orderCardsList[arrayIndex].indexOf(b);
 								const fallbackIndex = this.orderCardsList[arrayIndex].length;
-
 								return (aIndex >= 0 ? aIndex : fallbackIndex) - (bIndex >= 0 ? bIndex : fallbackIndex);
 							});
 						}
@@ -150,7 +141,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						});
 					});
 				},
-
 				swap(source, target) {
 					game.broadcast(
 						(source, target) => {
@@ -164,7 +154,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					const targetIndex1 = this.cardToIndex(target, 1);
 					const sourceIndex1 = this.cardToIndex(source, 1);
 					const targetIndex0 = this.cardToIndex(target, 0);
-
 					if (sourceIndex0 >= 0 && targetIndex1 >= 0) {
 						[this.cards[0][sourceIndex0], this.cards[1][targetIndex1]] = [target, source];
 					} else if (sourceIndex1 >= 0 && targetIndex0 >= 0) {
@@ -187,7 +176,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					this.update();
 					this.onMoved();
 				},
-
 				switch(card) {
 					game.broadcast(card => {
 						if (!window.decadeUI && decadeUI.eventDialog) return;
@@ -196,7 +184,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					const index0 = this.cardToIndex(card, 0);
 					if (index0 >= 0) {
 						if (this.cards[1].length >= this.movables[1]) return;
-
 						const movedCard = this.cards[0][index0];
 						this.cards[0].remove(movedCard);
 						this.cards[1].push(movedCard);
@@ -214,7 +201,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					this.update();
 					this.onMoved();
 				},
-
 				move(card, indexTo, moveDown) {
 					const dim = moveDown ? 1 : 0;
 					let index = this.cardToIndex(card, dim);
@@ -238,7 +224,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				},
 				cardToIndex(card, cardArrayIndex) {
 					if (!card?.cardid) return -1;
-
 					const id = card.cardid;
 					const cards = this.cards[cardArrayIndex ?? 0];
 					return cards.findIndex(c => c.cardid === id);
@@ -268,7 +253,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				},
 				_click(e) {
 					if (this.finishing || this.finished) return;
-
 					switch (this.objectType) {
 						case "content":
 							guanXing.selected = null;
@@ -289,34 +273,28 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					}
 					e.stopPropagation();
 				},
-
 				_dragStart(e) {
 					if (this.finishing || this.finished || game.me !== player) return;
-
 					this.draggedCard = e.target;
 					this.draggedCard.classList.add("dragging");
 					e.dataTransfer.effectAllowed = "move";
 					e.dataTransfer.setData("text/plain", e.target.cardid);
 				},
-
 				_dragOver(e) {
 					e.preventDefault();
 					e.dataTransfer.dropEffect = "move";
 				},
-
 				_dragEnter(e) {
 					e.preventDefault();
 					if (e.target.classList.contains("card")) {
 						e.target.classList.add("drag-over");
 					}
 				},
-
 				_dragLeave(e) {
 					if (e.target.classList.contains("card")) {
 						e.target.classList.remove("drag-over");
 					}
 				},
-
 				_drop(e) {
 					e.preventDefault();
 					if (this.finishing || this.finished || game.me !== player) return;
@@ -328,7 +306,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					} else {
 						const fromIndex = this.getCardArrayIndex(draggedCard);
 						const toIndex = fromIndex === 0 ? 1 : 0;
-
 						if (this.cards[toIndex].length < this.movables[toIndex]) {
 							this.cards[fromIndex].remove(draggedCard);
 							this.cards[toIndex].push(draggedCard);
@@ -342,7 +319,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					}
 					this.draggedCard = null;
 				},
-
 				_dragEnd(e) {
 					if (this.draggedCard) {
 						this.draggedCard.classList.remove("dragging");
@@ -350,7 +326,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					cleanupDragStyles();
 					this.draggedCard = null;
 				},
-
 				_selected: undefined,
 				_caption: decadeUI.dialog.create("caption", guanXing),
 				_content: decadeUI.dialog.create("content buttons", guanXing),
@@ -360,7 +335,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				_infohide: undefined,
 				_callback: undefined,
 			};
-
 			Object.assign(guanXing, properties);
 			Object.defineProperties(guanXing, {
 				selected: {
@@ -371,7 +345,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					set(value) {
 						if (this._selected === value) return;
 						if (this._selected) this._selected.classList.remove("selected");
-
 						this._selected = value;
 						if (value) {
 							value.classList.add("selected");
@@ -429,7 +402,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					set(value) {
 						if (this._infohide === value) return;
 						this._infohide = value;
-
 						this.cards.forEach(cardArray => {
 							cardArray.forEach(card => {
 								if (value) {
@@ -455,7 +427,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					},
 				},
 			});
-
 			// 设置事件监听器
 			const content = guanXing._content;
 			guanXing.addEventListener("click", guanXing._click, false);
@@ -474,7 +445,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					lib.config.longpress_info = originalLongpressInfo;
 				});
 			}
-
 			// 初始化卡牌
 			const size = decadeUI.getHandCardSize();
 			let height = 0;
@@ -510,13 +480,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						card.addEventListener("dragstart", guanXing._dragStart.bind(guanXing));
 						card.addEventListener("dragend", guanXing._dragEnd.bind(guanXing));
 					}
-
 					card.rawCssText = card.style.cssText;
 					card.fix();
 					content.appendChild(card);
 				});
 			});
-
 			content.addEventListener("dragover", guanXing._dragOver.bind(guanXing));
 			content.addEventListener("dragenter", guanXing._dragEnter.bind(guanXing));
 			content.addEventListener("dragleave", guanXing._dragLeave.bind(guanXing));
@@ -525,10 +493,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			guanXing.infohide = infohide ?? (game.me === player ? false : true);
 			guanXing.caption = `${get.translation(player)}正在发动【观星】`;
 			guanXing.tip = "单击卡牌可直接在牌堆顶和牌堆底之间切换位置，也可以拖拽卡牌交换位置";
-
 			// 禁用长按信息
 			lib.config.longpress_info = false;
-
 			// 添加CSS样式
 			const style = document.createElement("style");
 			style.textContent = `

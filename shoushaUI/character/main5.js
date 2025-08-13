@@ -22,7 +22,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				],
 			});
 		},
-
 		// 工具函数
 		utils: {
 			// 获取分包信息
@@ -37,11 +36,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 				return "暂无分包";
 			},
-
 			// 获取武将名文本
 			getCharacterNameText(name, name2) {
 				let nametext = "";
-
 				if (name && name2) {
 					nametext += this.getSingleName(name);
 					nametext += " / ";
@@ -49,22 +46,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				} else {
 					nametext += this.getSingleName(name);
 				}
-
 				return nametext;
 			},
-
 			// 获取单个武将名
 			getSingleName(name) {
 				if (name == "unknown") return "未知";
 				if (lib.translate[name + "_ab"]) return lib.translate[name + "_ab"];
 				return get.translation(name);
 			},
-
 			// 获取稀有度图片URL
 			getRarityImageUrl(name, extensionPath) {
 				var rarity = game.getRarity(name);
 				if (!rarity) rarity = "junk";
-
 				if (lib.config["extension_千幻聆音_enable"] && game.qhly_getSkin && game.qhly_getSkinLevel) {
 					var temp;
 					switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
@@ -96,13 +89,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 				return extensionPath + "character/images/pe_" + rarity + ".png";
 			},
-
 			// 创建武将按钮
 			createCharacterButton(name, parent) {
 				if (!name || !lib.character[name]) return;
 				return ui.create.button(name, "character", parent, true);
 			},
-
 			// 初始化玩家属性
 			initPlayerProperties(player) {
 				if (!player.guanjiejibie) {
@@ -120,7 +111,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			},
 		},
-
 		// 官阶翻译表
 		guanjieTranslation: {
 			1: ["骁卒", ["步卒", "伍长", "什长", "队率", "屯长", "部曲"]],
@@ -133,7 +123,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			8: ["国都护", ["都护", "左都护", "右都护", "中都护"]],
 			9: ["大将军", ["大将军"]],
 		},
-
 		// 创建UI组件
 		ui: {
 			// 创建基础对话框
@@ -145,16 +134,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				});
 				container.style.backgroundColor = "RGBA(0, 0, 0, 0.85)";
-
 				var dialog = ui.create.div(".character-dialog.popped", container);
 				var blackBg1 = ui.create.div(".blackBg.one", dialog);
 				var blackBg2 = ui.create.div(".blackBg.two", dialog);
 				var basicInfo = ui.create.div(".basicInfo", blackBg1);
 				var rightPane = ui.create.div(".right", blackBg2);
-
 				return { container, dialog, blackBg1, blackBg2, basicInfo, rightPane };
 			},
-
 			// 创建武将边框
 			createCharacterFrame(blackBg1, player) {
 				var biankuang;
@@ -163,7 +149,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				} else {
 					biankuang = ui.create.div(".biankuang2", blackBg1);
 				}
-
 				var leftPane;
 				if (lib.config.extension_十周年UI_ZLLT == true) {
 					leftPane = ui.create.div(".left", biankuang);
@@ -171,81 +156,61 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					leftPane = ui.create.div(".left2", biankuang);
 				}
 				leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
-
 				return { biankuang, leftPane };
 			},
-
 			// 创建装饰元素
 			createDecorations(blackBg1, player) {
 				// 边框
 				var biankuang3 = ui.create.div(".biankuang3", blackBg1);
 				biankuang3.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/baby_${player.group}.png`);
-
 				// 势力
 				var biankuang4 = ui.create.div(".biankuang4", blackBg1);
 				biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/babys_${player.group}.png`);
-
 				return { biankuang3, biankuang4 };
 			},
-
 			// 创建玩家信息区域
 			createPlayerInfo(biankuang4, player) {
 				// 玩家信息框
 				var wjxin = ui.create.div(".wjxin", biankuang4);
 				wjxin.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/geren.png");
-
 				// 三国秀及名称
 				var minixingxiang = ui.create.div(".minixingxiang", wjxin);
-
 				// 玩家头像vip框
 				let xvip = ui.create.div(".minikuang", minixingxiang);
 				xvip.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/vip" + player.xvipjibie + ".png");
-
 				let xvipName = ui.create.div(".viptp", xvip);
 				xvipName.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/level" + player.xvipjibie + ".png");
-
 				var nameX = ui.create.div(".nameX", player.nickname, minixingxiang);
 				var dengjiX = ui.create.div(".dengjiX", String(player.dengji), minixingxiang);
-
 				// 头像框
 				minixingxiang.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/xingxiang" + player.xingxiangIndex + ".png");
-
 				return { wjxin, minixingxiang, xvip, xvipName, nameX, dengjiX };
 			},
-
 			// 创建官阶信息
 			createGuanjieInfo(biankuang4, player) {
 				let guanjie = ui.create.div(".guanjie", biankuang4);
 				guanjie.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/vip_icon_" + player.guanjiejibie + ".png");
-
 				let guanjieName = ui.create.div(".guanjiewenzi", "<center>" + plugin.guanjieTranslation[player.guanjiejibie][0], biankuang4);
 				let guanjieNameX = ui.create.div(".guanjiewenziX", "<center>" + plugin.guanjieTranslation[player.guanjiejibie][1][0], biankuang4);
-
 				return { guanjie, guanjieName, guanjieNameX };
 			},
-
 			// 创建其他装饰元素
 			createOtherDecorations(biankuang4, player, name) {
 				// 星星
 				var rarity = game.getRarity(name) || "junk";
 				var xingxing = ui.create.div(".xingxing", biankuang4);
 				xingxing.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/" + rarity + ".png");
-
 				// 性别
 				let sex = lib.character[player.name].sex;
 				var xingbie = ui.create.div(".xingbie", biankuang4);
 				xingbie.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/" + sex + ".png");
-
 				// 官阶气泡框
 				var duihuak = ui.create.div(".duihuak", biankuang4);
 				duihuak.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/seatinfo.png`);
-
 				// 分包
 				ui.create.div(".pack", plugin.utils.getPack(name), biankuang4);
-
 				return { xingxing, xingbie, duihuak };
 			},
-
 			// 创建关闭按钮
 			createCloseButton(biankuang4, container) {
 				var diaozhui = ui.create.div(".diaozhui", biankuang4);
@@ -258,44 +223,35 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				return diaozhui;
 			},
 		},
-
 		// 创建技能信息
 		createSkillInfo(rightPane, player) {
 			rightPane.innerHTML = "<div></div>";
 			lib.setScroll(rightPane.firstChild);
-
 			var oSkills = player.getSkills(null, false, false).slice(0);
 			oSkills = oSkills.filter(function (skill) {
 				if (!lib.skill[skill] || skill == "jiu") return false;
 				if (lib.skill[skill].nopop || lib.skill[skill].equipSkill) return false;
 				return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] != "";
 			});
-
 			if (player == game.me && player.hiddenSkills.length) {
 				oSkills.addArray(player.hiddenSkills);
 			}
-
 			// 显示手牌信息
 			this.showHandCards(rightPane.firstChild, player);
-
 			// 显示技能信息
 			if (oSkills.length) {
 				ui.create.div(".xcaption", "武将技能", rightPane.firstChild);
 				oSkills.forEach(skill => this.createSkillElement(skill, player, rightPane.firstChild));
 			}
-
 			// 显示装备区域
 			this.showEquipmentArea(rightPane.firstChild, player);
-
 			// 显示判定区域
 			this.showJudgeArea(rightPane.firstChild, player);
 		},
-
 		// 显示手牌信息
 		showHandCards(container, player) {
 			var allShown = player.isUnderControl() || (!game.observe && game.me && game.me.hasSkillTag("viewHandcard", null, player, true));
 			var shownHs = player.getShownCards();
-
 			if (shownHs.length) {
 				ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区域", container);
 				shownHs.forEach(function (item) {
@@ -303,7 +259,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					card.style.zoom = "0.6";
 					container.appendChild(card);
 				});
-
 				if (allShown) {
 					var hs = player.getCards("h");
 					hs.removeArray(shownHs);
@@ -328,7 +283,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			}
 		},
-
 		// 创建技能元素
 		createSkillElement(skillName, player, container) {
 			if (player.forbiddenSkills[skillName]) {
@@ -349,7 +303,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player) + "</div>", container);
 			}
 		},
-
 		// 创建隐藏技能元素
 		createHiddenSkillElement(skillName, player, container) {
 			if (lib.skill[skillName].preHidden && get.mode() == "guozhan") {
@@ -363,13 +316,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player) + "</span>" + "</div>", container);
 			}
 		},
-
 		// 创建频繁技能元素
 		createFrequentSkillElement(skillName, player, container) {
 			var id = skillName + "_id";
 			id = ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>' + "</div>", container);
 			var underlinenode = id.querySelector(".underlinenode");
-
 			if (lib.skill[skillName].frequent) {
 				if (lib.config.autoskilllist.includes(skillName)) {
 					underlinenode.classList.remove("on");
@@ -386,13 +337,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			underlinenode.link = skillName;
 			underlinenode.listen(ui.click.autoskill2);
 		},
-
 		// 创建可点击技能元素
 		createClickableSkillElement(skillName, player, container) {
 			var id = skillName + "_idy";
 			id = ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", container);
 			var intronode = id.querySelector(".skillbutton");
-
 			if (!_status.gameStarted || (lib.skill[skillName].clickableFilter && !lib.skill[skillName].clickableFilter(player))) {
 				intronode.classList.add("disabled");
 				intronode.style.opacity = 0.5;
@@ -407,7 +356,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				intronode.listen(ui.click.skillbutton);
 			}
 		},
-
 		// 显示装备区域
 		showEquipmentArea(container, player) {
 			var eSkills = player.getVCards("e");
@@ -425,7 +373,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 			}
 		},
-
 		// 显示判定区域
 		showJudgeArea(container, player) {
 			var judges = player.getVCards("j");
@@ -443,13 +390,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 			}
 		},
-
 		click: {
 			identity(e) {
 				e.stopPropagation();
 				var player = this.parentNode;
 				if (!game.getIdentityList) return;
-
 				if (player.node.guessDialog) {
 					player.node.guessDialog.classList.toggle("hidden");
 				} else {
@@ -461,46 +406,36 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					player.node.guessDialog = guessDialog;
 				}
 			},
-
 			playerIntro(e) {
 				e.stopPropagation();
-
 				if (plugin.playerDialog) {
 					return plugin.playerDialog.show(this);
 				}
-
 				// 创建基础对话框
 				var { container, dialog, blackBg1, blackBg2, basicInfo, rightPane } = plugin.ui.createBaseDialog();
-
 				container.show = function (player) {
 					var name = player.name1 || player.name;
 					var name2 = player.name2;
-
 					if (player.classList.contains("unseen") && player !== game.me) {
 						name = "unknown";
 					}
 					if (player.classList.contains("unseen2") && player !== game.me) {
 						name2 = "unknown";
 					}
-
 					// 初始化玩家属性
 					plugin.utils.initPlayerProperties(player);
-
 					// 创建武将边框
 					var { biankuang, leftPane } = plugin.ui.createCharacterFrame(blackBg1, player);
 					plugin.utils.createCharacterButton(name, leftPane.firstChild);
 					plugin.utils.createCharacterButton(name2, leftPane.firstChild);
-
 					// 创建装饰元素
 					var { biankuang3, biankuang4 } = plugin.ui.createDecorations(blackBg1, player);
-
 					// 通过势力判断技能框的背景颜色
 					var extensionPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
 					var group = player.group;
 					if (group != "wei" && group != "shu" && group != "wu" && group != "qun" && group != "ye" && group != "jin" && group != "daqin" && group != "western" && group != "shen" && group != "key" && group != "Han" && group != "qin") {
 						group = "default";
 					}
-
 					// 创建武将名
 					var nametext = plugin.utils.getCharacterNameText(name, name2);
 					var namestyle = ui.create.div(".name", nametext, dialog);
@@ -509,37 +444,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						namestyle.style.fontSize = "20px";
 						namestyle.style.letterSpacing = "1px";
 					}
-
 					// 创建等阶
 					var pe = ui.create.div(".pe1", dialog);
 					var url = plugin.utils.getRarityImageUrl(name, extensionPath);
 					pe.style.backgroundImage = 'url("' + url + '")';
-
 					// 创建玩家信息
 					plugin.ui.createPlayerInfo(biankuang4, player);
-
 					// 创建官阶信息
 					plugin.ui.createGuanjieInfo(biankuang4, player);
-
 					// 创建其他装饰元素
 					plugin.ui.createOtherDecorations(biankuang4, player, name);
-
 					// 创建关闭按钮
 					plugin.ui.createCloseButton(biankuang4, container);
-
 					// 创建技能信息
 					dialog.classList.add("single");
 					plugin.createSkillInfo(rightPane, player);
-
 					container.classList.remove("hidden");
 					if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();
 				};
-
 				plugin.characterDialog = container;
 				container.show(this);
 			},
 		},
 	};
-
 	return plugin;
 });
