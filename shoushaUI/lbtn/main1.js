@@ -45,14 +45,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (fan > 0) str += '<font color="#87a671">' + get.translation("fan") + "</font> x " + fan + "  ";
 			if (nei > 0) str += '<font color="#9581c4">' + get.translation("nei") + "</font> x " + nei;
 		}
-
 		str += "<br>" + (game.me?.identity ? lib.translate[game.me.identity + "_win_option"] ?? "" : "");
-
 		/*尽量保持字体大小，行高一致，不然会产生偏移*/
 		identityShow.innerHTML = '<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #C1AD92;text-shadow:none;">' + str + "</span>"; /*图层1*/
 		identityShowx.innerHTML = '<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #2D241B; -webkit-text-stroke: 2.7px #322B20;text-shadow:none;">' + str + "</span>"; /*图层2*/
 	};
-
 	game.ui_identityShow_init = function () {
 		if (game.ui_identityShow == undefined) {
 			game.ui_identityShow = ui.create.div("", "身份加载中......");
@@ -73,14 +70,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		}
 	};
-
 	// 重写手牌自动整理逻辑，改为监听模式
 	lib.arenaReady.push(function () {
 		// 手牌自动整理监听器
 		var originalGain = game.gain;
 		game.gain = function (player, cards, from, to, reason, skill, log, noAnimation, noLog, noEvent, noGain, noLose, noDeprive, noVideo, noUpdate, noSort, noUpdateControl) {
 			var result = originalGain.apply(this, arguments);
-
 			// 检查是否需要自动整理手牌
 			if (window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard") && (to == "h" || to == "hs") && cards && cards.length > 1) {
 				// 延迟执行整理，确保卡牌已经添加到手牌中
@@ -99,7 +94,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							if (a.nature != b.nature) return b.nature - a.nature;
 							return parseInt(b.cardid) - parseInt(a.cardid);
 						});
-
 						if (window.dui && dui.queueNextFrameTick) {
 							handCards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
 							dui.queueNextFrameTick(dui.layoutHand, dui);
@@ -111,15 +105,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				}, 10);
 			}
-
 			return result;
 		};
-
 		// 监听失去手牌事件
 		var originalLose = game.lose;
 		game.lose = function (player, cards, from, to, reason, skill, log, noAnimation, noLog, noEvent, noGain, noLose, noDeprive, noVideo, noUpdate, noSort, noUpdateControl) {
 			var result = originalLose.apply(this, arguments);
-
 			// 检查是否需要自动整理手牌
 			if (window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard") && (from == "h" || from == "hs") && player.getCards && player.getCards("hs").length > 1) {
 				// 延迟执行整理，确保卡牌已经从手牌中移除
@@ -138,7 +129,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							if (a.nature != b.nature) return b.nature - a.nature;
 							return parseInt(b.cardid) - parseInt(a.cardid);
 						});
-
 						if (window.dui && dui.queueNextFrameTick) {
 							handCards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
 							dui.queueNextFrameTick(dui.layoutHand, dui);
@@ -150,11 +140,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				}, 10);
 			}
-
 			return result;
 		};
 	});
-
 	// 手牌区DOM变化自动整理
 	lib.arenaReady.push(function () {
 		var observer;
@@ -207,7 +195,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		};
 		tryObserve();
 	});
-
 	lib.arenaReady.push(function () {
 		//更新轮次
 		var originUpdateRoundNumber = game.updateRoundNumber;
@@ -235,7 +222,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			document.body.appendChild(liaotian);
 		}
 		/*---------------------*/
-
 		if (lib.config.mode == "identity" || lib.config.mode == "guozhan" || lib.config.mode == "versus" || lib.config.mode == "single" || lib.config.mode == "boss") {
 			var translate = {};
 			switch (lib.config.mode) {
@@ -318,7 +304,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/SSCD/button.png";
 		head.style.cssText = "display: block;--w: 130px;--h: calc(var(--w) * 1080/1434);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 98px);left: calc(100% - 126.2px);background-color: transparent;z-index:1";
 		document.body.appendChild(head);
-
 		var head = ui.create.node("div");
 		head.style.cssText = "display: block;width: 134px;height: 103px;position: absolute;top: 0px;right: -8px;background-color: transparent;z-index:1";
 		head.onclick = function () {
@@ -348,24 +333,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			var taopao = ui.create.div(".taopao", popuperContainer);
 			taopao.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3");
-
 				game.reload();
 			});
 			var touxiang = ui.create.div(".touxiang", popuperContainer);
 			touxiang.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3");
-
 				game.over();
 			});
 			var tuoguan = ui.create.div(".tuoguan", popuperContainer);
 			tuoguan.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3");
-
 				ui.click.auto();
 			});
 		};
 		document.body.appendChild(head);
-
 		if (lib.config.mode == "identity" || lib.config.mode == "doudizhu" || lib.config.mode == "versus" || lib.config.mode == "guozhan") {
 			/*左上角问号框*/
 			var tipshow = ui.create.node("img");
@@ -420,7 +401,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			document.body.appendChild(tipshow);
 		}
 	});
-
 	var plugin = {
 		name: "lbtn",
 		filter() {
@@ -506,7 +486,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			ui.create.confirm = function (str, func) {
 				if ((_status.mode == "huanle" && _status.event.parent.name == "chooseCharacter" && _status.event.parent.step == "6" && _status.event.name == "chooseButton") || (lib.config["extension_无名补丁_xindjun"] && get.playerNumber() == "8" && get.mode() == "identity" && _status.mode == "normal" && _status.event.parent.name == "chooseCharacter" && _status.event.parent.step == "1" && _status.event.name == "chooseButton")) {
 					var node = ui.dialog.querySelector(".selected");
@@ -535,7 +514,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					confirm.str = str;
 				}
-
 				if (func) {
 					confirm.custom = func;
 				}
@@ -552,7 +530,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				confirm.node = {
 					ok: confirm.firstChild,
 					cancel: confirm.lastChild,
-
 					//小改动
 					//cancel2: confirm.lastChild,
 				};
@@ -570,9 +547,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if ((_status.mode == "huanle" && _status.event.parent.step == "7") || (get.mode() == "identity" && _status.mode == "normal" && _status.event.parent.name == "chooseCharacter" && _status.event.parent.step == "2")) confirm.node.cancel.remove();
 				else confirm.node.cancel.classList.add("primary2");
 				confirm.node.cancel.innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
-
 				// confirm.node.cancel2.classList.add('primary2');
-
 				confirm.custom = plugin.click.confirm;
 				app.reWriteFunction(confirm, {
 					close: [
@@ -594,13 +569,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 							return;
 						}
-
 						if (this.parentNode.custom) {
 							this.parentNode.custom(this.link, this);
 						}
 					});
 				}
-
 				//添加重铸按钮素材
 				if (ui.skills2 && ui.skills2.skills.length) {
 					var skills = ui.skills2.skills;
@@ -608,25 +581,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					for (var i = 0; i < skills.length; i++) {
 						var item = document.createElement("div");
 						item.link = skills[i];
-
 						if (skills[i] == "_recasting") {
 							item.innerHTML = "<img style=width:70px height:15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/CZ.png>";
 						} else {
 							item.innerHTML = get.translation(skills[i]);
 						}
-
 						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
 							if (_status.event?.skill === "_recasting") return;
 							e.stopPropagation();
 							ui.click.skill(this.link);
 						});
-
 						item.dataset.type = "skill2"; /*
                          if(ui.updateSkillControl)   ui.updateSkillControl(game.me, true);*/
 						confirm.insertBefore(item, confirm.firstChild);
 					}
 				}
-
 				confirm.update = function () {
 					//鹿鹿修改 限定技专属按钮开始
 					var skisxdj = function () {
@@ -667,7 +636,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				};
 				return confirm;
 			},
-
 			handcardNumber() {
 				var node3 = ui.create.div(".settingButton", ui.arena, plugin.click.setting);
 				var node2 = ui.create.div(".lbtn-controls", ui.arena);
@@ -693,7 +661,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						window.paixuxx = false;
 					}
 				};
-
 				//-----------------//
 				//左手模式同上继续加一个显示手牌牌量新的按钮css
 				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
@@ -723,7 +690,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					this.node.cardNumber.innerHTML = "</span>" + "<font size=5.5 >" + cardNumber2 + "</font>" + '<font size=5 face="xinwei">' + "/" + "<font color=" + numbercolor + ' size=4 face="shousha">' + cardNumber + "</font>" + "</span>";
 					//      this.setNumberAnimation(cardNumber);
 					this.show();
-
 					game.addVideo("updateCardnumber", null, {
 						cardNumber: cardNumber,
 					});
@@ -744,7 +710,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					roundNumber: ui.create.div(".roundNumber", node),
 					time: ui.create.div(".time", node),
 				};
-
 				node.updateRoundCard = function () {
 					var cardNumber = ui.cardPile.childNodes.length || 0;
 					var roundNumber = Math.max(1, game.roundNumber || 1);
@@ -756,7 +721,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						roundNumber: roundNumber,
 					});
 				};
-
 				node.setNumberAnimation = function (num, step) {
 					var item = this.node.cardPileNumber;
 					clearTimeout(item.interval);
@@ -777,7 +741,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					}
 				};
-
 				ui.time4 = node.node.time;
 				ui.time4.starttime = get.utc();
 				ui.time4.interval = setInterval(() => {
@@ -825,7 +788,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					ui.system2.classList.remove("shown");
 				}
 			},
-
 			paixu() {
 				if (!game.me || game.me.hasSkillTag("noSortCard")) return;
 				var cards = game.me.getCards("hs");
@@ -846,7 +808,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			paidui() {
 				if (!_status.gameStarted) return;
 				game.pause2();
-
 				const cardsInfo = game.players
 					.map(item => item.get("h"))
 					.flat(window.Infinity)
@@ -909,12 +870,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							num: 0,
 							type: "点数",
 						};
-
 					if (ui.cardPile.contains(card.link)) {
 						cardStatistics[card.translate].num++;
 						cardStatistics[get.translation(card.suit)].num++;
 						cardStatistics[card.number].num++;
-
 						if (card.name === "sha") {
 							if (card.color === "black") {
 								cardStatistics["黑杀"].num++;
@@ -924,7 +883,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 						}
 					}
-
 					if (card.nature) {
 						if (!cardStatistics[card.nature + card.translate])
 							cardStatistics[card.nature + card.translate] = {
@@ -936,7 +894,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					}
 				}
-
 				let popupContainer = ui.create.div(
 					".popup-container",
 					ui.window,
@@ -952,12 +909,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				let statistics = ui.create.div(".card-statistics", "卡牌计数器", popupContainer);
 				let statisticsTitle = ui.create.div(".card-statistics-title", statistics);
 				let statisticsContent = ui.create.div(".card-statistics-content", statistics);
-
 				typeList.forEach(item => {
 					ui.create.div(statisticsTitle, "", item);
 					statisticsContent[item] = ui.create.div(statisticsContent, "");
 				});
-
 				for (let i in cardStatistics) {
 					let items = ui.create.div(".items");
 					let item = ui.create.div(".item", i, items);
@@ -965,7 +920,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					statisticsContent[cardStatistics[i].type].appendChild(items);
 				}
 			},
-
 			confirm(link, target) {
 				if (link === "ok") {
 					ui.click.ok(target);

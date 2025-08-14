@@ -9,32 +9,26 @@ export async function precontent() {
 			eruda.init();
 		};
 	}
-
 	if (window.require && !window.fs) window.fs = require("fs");
-
 	lib.configMenu.appearence.config.layout.visualMenu = (node, link) => {
 		node.className = `button character themebutton ${lib.config.theme}`;
 		node.classList.add(link);
 		if (node.created) return;
 		node.created = true;
 		node.style.overflow = "scroll";
-
 		const list = ["re_caocao", "re_liubei", "sp_zhangjiao", "sunquan"];
 		while (list.length) {
 			ui.create.div(".avatar", ui.create.div(".seat-player.fakeplayer", node)).setBackground(list.randomRemove(), "character");
 		}
 	};
-
 	window.decadeModule = (function (decadeModule) {
 		var version = lib.extensionPack.十周年UI.version;
 		if (ui.css.layout) {
 			if (!ui.css.layout.href || ui.css.layout.href.indexOf("long2") < 0) ui.css.layout.href = lib.assetURL + "layout/long2/layout.css";
 		}
-
 		decadeModule.init = function () {
 			// 基础CSS加载
 			["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"].forEach(path => this.css(decadeUIPath + path));
-
 			// newDecadeStyle相关CSS加载
 			const style = lib.config.extension_十周年UI_newDecadeStyle;
 			const styleIndex = ["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(style);
@@ -43,7 +37,6 @@ export async function precontent() {
 			} else {
 				this.css(decadeUIPath + "css/player2.css");
 			}
-
 			// equip与layout相关CSS加载
 			let equipCss = "css/equip_new.css",
 				layoutCss = "css/layout.css";
@@ -61,7 +54,6 @@ export async function precontent() {
 			}
 			this.css(decadeUIPath + equipCss);
 			this.css(decadeUIPath + layoutCss);
-
 			// 其他条件CSS
 			if (lib.config.extension_十周年UI_meanPrettify) {
 				this.css(decadeUIPath + "css/menu.css");
@@ -69,10 +61,8 @@ export async function precontent() {
 			if (lib.config["extension_十周年UI_choosecharboder"]) {
 				this.css(decadeUIPath + "css/style.css");
 			}
-
 			// JS加载
 			["js/spine.js", "js/component.js", "js/skill.js", "js/content.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"].forEach(path => this.js(decadeUIPath + path));
-
 			// 原手杀UI内容加载
 			if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
 			const layoutPath = decadeUIPath + "shoushaUI/";
@@ -85,7 +75,6 @@ export async function precontent() {
 					onlineUI: 4,
 					babysha: 5,
 				}[style] || 2;
-
 			if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode == "hs_hearthstone")) {
 				["character", "lbtn", "skill"].forEach(pack => {
 					// css加载
@@ -104,7 +93,6 @@ export async function precontent() {
 		};
 		decadeModule.js = function (path) {
 			if (!path) return console.error("path");
-
 			const script = document.createElement("script");
 			script.onload = function () {
 				this.remove();
@@ -132,7 +120,6 @@ export async function precontent() {
 		};
 		return decadeModule.init();
 	})({});
-
 	Object.defineProperties(_status, {
 		connectMode: {
 			configurable: true,
@@ -144,7 +131,6 @@ export async function precontent() {
 				if (!value || !lib.extensions) return;
 				const decadeExtension = lib.extensions.find(value => value[0] == decadeUIName);
 				if (!decadeExtension) return;
-
 				const startBeforeFunction = lib.init.startBefore;
 				lib.init.startBefore = function () {
 					try {
@@ -157,7 +143,6 @@ export async function precontent() {
 					} catch (e) {
 						console.log(e);
 					}
-
 					if (startBeforeFunction) startBeforeFunction.apply(this, arguments);
 				};
 			},
@@ -532,29 +517,22 @@ export async function precontent() {
 		// 清理之前的定时器和元素
 		_clearPreviousTimers();
 		_removePreviousElement();
-
 		// 创建进度条容器
 		var boxContent = _createProgressContainer();
-
 		// 根据配置选择样式
 		var styleConfig = _getStyleConfig();
 		_applyStyle(boxContent, styleConfig);
-
 		// 创建进度条元素
 		var progressElements = _createProgressElements(styleConfig);
 		_appendProgressElements(boxContent, progressElements);
-
 		// 添加到页面
 		document.body.appendChild(boxContent);
-
 		// 启动主定时器
 		_startMainTimer(progressElements.boxTime, boxContent);
-
 		// 启动特殊定时器（如果需要）
 		if (window.jindutiaoTeshu === true) {
 			_startSpecialTimer(progressElements.boxTime2, progressElements.imgBg3);
 		}
-
 		// 辅助函数
 		function _clearPreviousTimers() {
 			if (window.timer) {
@@ -566,20 +544,17 @@ export async function precontent() {
 				delete window.timer2;
 			}
 		}
-
 		function _removePreviousElement() {
 			var existingElement = document.getElementById("jindutiaopl");
 			if (existingElement) {
 				existingElement.remove();
 			}
 		}
-
 		function _createProgressContainer() {
 			var container = document.createElement("div");
 			container.setAttribute("id", "jindutiaopl");
 			return container;
 		}
-
 		function _getStyleConfig() {
 			var styleType = lib.config.extension_十周年UI_jindutiaoYangshi;
 			var configs = {
@@ -681,10 +656,8 @@ export async function precontent() {
 					clearSpecial: true,
 				},
 			};
-
 			return configs[styleType] || configs["1"];
 		}
-
 		function _applyStyle(container, config) {
 			if (config.clearSpecial && window.jindutiaoTeshu) {
 				delete window.jindutiaoTeshu;
@@ -696,7 +669,6 @@ export async function precontent() {
 				container.style[key] = config.container[key];
 			});
 		}
-
 		function _createProgressElements(config) {
 			var elements = {};
 			elements.boxTime = document.createElement("div");
@@ -719,28 +691,23 @@ export async function precontent() {
 			}
 			return elements;
 		}
-
 		function _createImageElement(imgConfig) {
 			var img = document.createElement("img");
 			img.src = lib.assetURL + imgConfig.src;
 			img.style.cssText = imgConfig.style;
 			return img;
 		}
-
 		function _appendProgressElements(container, elements) {
 			// 添加主进度条
 			container.appendChild(elements.boxTime);
-
 			// 添加次要进度条
 			if (elements.boxTime2) {
 				container.appendChild(elements.boxTime2);
 			}
-
 			// 添加单个背景图片
 			if (elements.imgBg) {
 				container.appendChild(elements.imgBg);
 			}
-
 			// 添加多个背景图片
 			if (elements.backgroundImages) {
 				elements.backgroundImages.forEach(function (img) {
@@ -748,37 +715,30 @@ export async function precontent() {
 				});
 			}
 		}
-
 		function _startMainTimer(progressBar, container) {
 			window.timer = setInterval(function () {
 				progressBar.style.width = progressBar.data + "px";
-
 				// 剩余三分之一变红色
 				if (progressBar.data <= 395 / 3) {
 					progressBar.style.backgroundColor = "rgba(230, 56, 65, 0.88)";
 				} else {
 					progressBar.style.backgroundColor = "rgb(230, 151, 91)";
 				}
-
 				progressBar.data--;
-
 				if (progressBar.data == 0) {
 					clearInterval(window.timer);
 					delete window.timer;
 					container.remove();
-
 					if (lib.config.extension_十周年UI_jindutiaotuoguan == true && _status.auto == false) {
 						ui.click.auto();
 					}
 				}
 			}, parseFloat(lib.config["extension_十周年UI_jindutiaoST"]));
 		}
-
 		function _startSpecialTimer(secondaryBar, backgroundImg) {
 			window.timer2 = setInterval(function () {
 				secondaryBar.data--;
 				secondaryBar.style.width = secondaryBar.data + "px";
-
 				if (secondaryBar.data == 0) {
 					clearInterval(window.timer2);
 					delete window.timer2;
@@ -798,13 +758,11 @@ export async function precontent() {
 		}
 		var oldBar = document.getElementById("jindutiaoAI");
 		if (oldBar) oldBar.remove();
-
 		// 创建进度条容器和时间条
 		window.boxContentAI = document.createElement("div");
 		var boxTimeAI = document.createElement("div");
 		boxContentAI.id = "jindutiaoAI";
 		let isShousha = lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
-
 		// 样式与图片路径
 		if (isShousha) {
 			boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);left:3.5px;bottom:-6.2px;";
@@ -816,16 +774,13 @@ export async function precontent() {
 			boxTimeAI.style.cssText = "z-index:91;width:115px;height:3.3px;margin:1px;background-color:#f2c84b;position:absolute;top:0px;border-radius:3px;";
 		}
 		boxContentAI.appendChild(boxTimeAI);
-
 		// 背景图片
 		var imgBg = document.createElement("img");
 		imgBg.src = lib.assetURL + (isShousha ? "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png" : "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png");
 		imgBg.style.cssText = isShousha ? "position:absolute;z-index:91;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);top:0;" : "position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);top:0;";
 		boxContentAI.appendChild(imgBg);
-
 		// 添加到页面
 		document.body.appendChild(boxContentAI);
-
 		// 进度条动画
 		window.timerai = setInterval(function () {
 			boxTimeAI.data--;
@@ -908,7 +863,6 @@ window.chatBg.style.opacity=1;*/
 window.chatBg.style.transition='all 0.5s';
 window.chatBg.style['box-shadow']='none';*/
 		ui.window.appendChild(window.chatBg);
-
 		var clickFK = function (div) {
 			div.style.transition = "opacity 0.5s";
 			div.addEventListener(lib.config.touchscreen ? "touchstart" : "mousedown", function () {
@@ -1017,7 +971,6 @@ window.chatBg.style['box-shadow']='none';*/
         window.chatButton1.style.transition='none';
         window.chatButton1.style.backgroundSize="100% 100%";*/
 		window.chatButton1.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/lifesay.png");
-
 		lib.setScroll(window.chatButton1);
 		window.chatBg.appendChild(window.chatButton1);
 		clickFK(window.chatButton1);
@@ -1063,7 +1016,6 @@ window.chatBg.style['box-shadow']='none';*/
 		};
 		window.meijiu = ui.create.div("hidden", "", game.open_meijiu);
 		window.meijiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:173px;transition:none;background-size:100% 100%";
-
 		window.meijiu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/meijiu.png");
 		//这里
 		window.meijiu.onclick = function () {
@@ -1086,7 +1038,6 @@ window.chatBg.style['box-shadow']='none';*/
 		};
 		window.xianhua = ui.create.div("hidden", "", game.open_xianhua);
 		window.xianhua.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:173px;transition:none;background-size:100% 100%";
-
 		window.xianhua.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xianhua.png");
 		//这里
 		window.xianhua.onclick = function () {
@@ -1126,17 +1077,14 @@ window.chatBg.style['box-shadow']='none';*/
 		};
 		window.tuoxie = ui.create.div("hidden", "", game.open_tuoxie);
 		window.tuoxie.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:105px;transition:none;background-size:100% 100%";
-
 		window.tuoxie.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/tuoxie.png");
 		//这里
 		window.tuoxie.onclick = function () {
 			window.tuoxie.thrownn = true;
 		};
-
 		window.chatBg.appendChild(window.tuoxie);
 		lib.setScroll(window.tuoxie);
 		clickFK(window.tuoxie);
-
 		game.open_jidan = function () {
 			//打开鸡蛋函数
 			//这里
@@ -1150,19 +1098,16 @@ window.chatBg.style['box-shadow']='none';*/
 				};
 			}
 		};
-
 		window.jidan = ui.create.div("hidden", "", game.open_jidan);
 		window.jidan.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:105px;transition:none;background-size:100% 100%";
 		window.jidan.onclick = function () {
 			window.jidan.thrownn = true;
 		};
-
 		//这里
 		window.jidan.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/jidan.png");
 		window.chatBg.appendChild(window.jidan);
 		lib.setScroll(window.jidan);
 		clickFK(window.jidan);
-
 		//-----5--菜篮-------//
 		game.open_cailan = function () {
 			//打开菜篮函数
@@ -1186,10 +1131,8 @@ window.chatBg.style['box-shadow']='none';*/
 				};
 			}
 		};
-
 		window.cailan = ui.create.div("hidden", "", game.open_cailan);
 		window.cailan.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:173px;transition:none;background-size:100% 100%";
-
 		window.cailan.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/cailan.png");
 		window.cailan.onclick = function () {
 			window.cailan.thrownn = true;
@@ -1220,12 +1163,9 @@ window.chatBg.style['box-shadow']='none';*/
 				};
 			}
 		};
-
 		window.qicai = ui.create.div("hidden", "", game.open_qicai);
 		window.qicai.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:105px;transition:none;background-size:100% 100%";
-
 		window.qicai.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/qicai.png");
-
 		window.qicai.onclick = function () {
 			window.qicai.thrownn = true;
 		};
@@ -1236,59 +1176,41 @@ window.chatBg.style['box-shadow']='none';*/
 		game.open_xiaojiu = function () {};
 		window.xiaojiu = ui.create.div("hidden", "", game.open_xiaojiu);
 		window.xiaojiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:36px;transition:none;background-size:100% 100%";
-
 		window.xiaojiu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xiaojiu.png");
 		window.chatBg.appendChild(window.xiaojiu);
 		lib.setScroll(window.xiaojiu);
 		clickFK(window.xiaojiu);
 		//-----8---雪球------//
-
 		game.open_xueqiu = function () {
 			//打开雪球函数
 		};
 		window.xueqiu = ui.create.div("hidden", "", game.open_xueqiu);
 		window.xueqiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:36px;transition:none;background-size:100% 100%";
-
 		window.xueqiu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xueqiu.png");
-
 		window.chatBg.appendChild(window.xueqiu);
 		lib.setScroll(window.xueqiu);
 		clickFK(window.xueqiu);
-
 		//-------------------//
-
 		//------9-虚无-------//
-
 		game.open_xuwu = function () {
 			//打开虚无函数
 		};
-
 		window.xuwu = ui.create.div("hidden", "", game.open_xuwu);
 		window.xuwu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:36px;transition:none;background-size:100% 100%";
-
 		window.xuwu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xuwu.png");
-
 		window.chatBg.appendChild(window.xuwu);
 		lib.setScroll(window.xuwu);
 		clickFK(window.xuwu);
-
 		//-------------------//
-
 		//--------菜篮子-------//
-
 		window.cailanzi = ui.create.div("hidden", "");
 		window.cailanzi.style.cssText = "display: block;--w: 100px;--h: calc(var(--w) * 59/150);width: var(--w);height: var(--h);left:-230px;bottom:250px;transition:none;background-size:100% 100%";
-
 		window.cailanzi.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/cailanzi.png");
-
 		window.chatBg.appendChild(window.cailanzi);
-
 		window.shuliang = ui.create.node("div");
 		window.shuliang.innerText = Math.floor(Math.random() * (999 - 100 + 1) + 100);
 		window.shuliang.style.cssText = "display: block;left:-180px;bottom:260px;font-family:'shousha';color:#97856a;font-weight: 900; text-shadow:none;transition:none;background-size:100% 100%";
-
 		window.chatBg.appendChild(window.shuliang);
-
 		game.open_emoji = function () {
 			//打开emoji函数
 			if (window.dialog_lifesay) {
@@ -1381,11 +1303,9 @@ window.chatBg.style['box-shadow']='none';*/
         window.chatButton2.style.transition='none';
         window.chatButton2.style.backgroundSize="100% 100%";*/
 		window.chatButton2.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/emoji.png");
-
 		lib.setScroll(window.chatButton2);
 		window.chatBg.appendChild(window.chatButton2);
 		clickFK(window.chatButton2);
-
 		game.open_jilu = function () {
 			//打开记录函数
 			game.showChatWord();
@@ -1399,11 +1319,9 @@ window.chatBg.style['box-shadow']='none';*/
         window.chatButton3.style.transition='none';
         window.chatButton3.style.backgroundSize="100% 100%";*/
 		window.chatButton3.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/jilu.png");
-
 		lib.setScroll(window.chatButton3);
 		window.chatBg.appendChild(window.chatButton3);
 		clickFK(window.chatButton3);
-
 		window.chatSendBottom = ui.create.div("", "", function () {
 			//发送按钮
 			if (!window.input) return;
@@ -1419,7 +1337,6 @@ window.chatBg.style['box-shadow']='none';*/
         window.chatSendBottom.style['text-align']='center';
         window.chatSendBottom.style.borderRadius='8px';
         window.chatSendBottom.style.backgroundSize="100% 100%";*/
-
 		window.chatSendBottom.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/buttonsend.png");
 		window.chatSendBottom.innerHTML = '<span style="color:white;font-size:22px;line-height:32px;font-weight:400;font-family:shousha">发送</span>';
 		window.chatBg.appendChild(window.chatSendBottom);
@@ -1428,7 +1345,6 @@ window.chatBg.style['box-shadow']='none';*/
 			window.chatBackground2.innerHTML = str;
 		};
 		game.addChatWord();
-
 		window.sendInfo = function (content) {
 			game.me.say(content);
 			window.input.value = "";
@@ -1443,7 +1359,6 @@ window.chatBg.style['box-shadow']='none';*/
         window.chatInputOut.style.transition='none';
         window.chatInputOut.style.backgroundSize="100% 100%";*/
 		window.chatInputOut.style.backgroundImage = "url('" + lib.assetURL + "extension/十周年UI/shoushaUI/sayplay/sayX.png')";
-
 		window.chatBg.appendChild(window.chatInputOut);
 		//输入框
 		window.chatInput = ui.create.dialog("hidden");
@@ -1485,7 +1400,6 @@ window.chatBg.style['box-shadow']='none';*/
 		};
 		window.chatInput.add(window.ipt);
 	};
-
 	//聊天记录栏
 	game.showChatWord = function () {
 		if (window.dialog_lifesay) {
@@ -1545,7 +1459,6 @@ window.chatBg.style['box-shadow']='none';*/
 		window.chatBackground.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景dialog设置为透明
 		window.chatBackground.style["box-shadow"] = "none";
 		ui.window.appendChild(window.chatBackground);
-
 		window.chatBackgroundPict = ui.create.div("hidden"); //外层div
 		window.chatBackgroundPict.style.height = "100%";
 		window.chatBackgroundPict.style.width = "100%";
@@ -1558,7 +1471,6 @@ window.chatBg.style['box-shadow']='none';*/
 		window.chatBackgroundPict.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/saydiv.png");
 		window.chatBackgroundPict.style["box-shadow"] = "none";
 		window.chatBackground.appendChild(window.chatBackgroundPict);
-
 		window.chatBackgroundColor = ui.create.div("hidden"); //内层div
 		window.chatBackgroundColor.style.height = "70%";
 		window.chatBackgroundColor.style.width = "80%";
@@ -1569,7 +1481,6 @@ window.chatBg.style['box-shadow']='none';*/
 		window.chatBackgroundColor.style.backgroundSize = "100% 100%";
 		window.chatBackgroundColor.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景设置为透明
 		window.chatBackground.appendChild(window.chatBackgroundColor);
-
 		window.chatBackground2 = ui.create.div("hidden");
 		window.chatBackground2.style.height = "100%";
 		window.chatBackground2.style.width = "100%";
@@ -1583,7 +1494,6 @@ window.chatBg.style['box-shadow']='none';*/
 		window.chatBackgroundColor.appendChild(window.chatBackground2);
 		game.addChatWord();
 	};
-
 	lib.skill._wmkzSayChange = {
 		trigger: {
 			global: ["gameStart", "phaseBegin", "phaseAfter", "useCardAfter"],
@@ -1627,20 +1537,16 @@ window.chatBg.style['box-shadow']='none';*/
 			_status.as_showText.remove();
 			delete _status.as_showText;
 		}
-
 		var div = ui.create.div("", str, ui.window);
 		div.style.cssText = "z-index:-3; pointer-events:none; font-family:" + font + "; font-size:" + size + "px; color:" + color + "; line-height:" + size * 1.2 + "px; text-align:center; left:" + (pos[0] + pos[2] / 2) + "%; top:" + pos[1] + "%; width:0%; height:" + pos[3] + "%; position:absolute; transition-property:all; transition-duration:1s";
 		_status.as_showText = div;
-
 		if (_status.as_showImage) {
 			_status.as_showImage.hide();
 		}
-
 		setTimeout(function () {
 			div.style.left = pos[0] + "%";
 			div.style.width = pos[2] + "%";
 		}, 1);
-
 		if (time === true) return true;
 		setTimeout(function () {
 			if (_status.as_showText) {
@@ -1651,7 +1557,6 @@ window.chatBg.style['box-shadow']='none';*/
 				_status.as_showImage.show();
 			}
 		}, time * 1000);
-
 		return true;
 	};
 	game.as_removeImage = function () {
@@ -1678,11 +1583,9 @@ window.chatBg.style['box-shadow']='none';*/
 				outdiv.remove();
 			}, 1000);
 		}
-
 		var div = ui.create.div("", "", ui.window);
 		div.style.cssText = "z-index:-1; pointer-events:none; left:" + pos[0] + "%; top:" + pos[1] + "%; width:8%; height:" + pos[3] + "%; position:absolute; background-size:100% 100%; background-position:center center; background-image:url(" + lib.assetURL + url + "); transition-property:all; transition-duration:1s";
 		_status.as_showImage = div;
-
 		if (_status.as_showText) {
 			_status.as_showImage.hide();
 		}
@@ -1693,10 +1596,8 @@ window.chatBg.style['box-shadow']='none';*/
 				delete _status.as_showImage;
 			}
 		}, time * 1000);
-
 		return true;
 	};
-
 	if (lib.config.dev) {
 		window.app = app;
 	}

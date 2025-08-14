@@ -16,29 +16,23 @@ export async function content(config, pack) {
 			alert("十周年UI提醒您，请使用<默认>、<手杀>、<新版>布局以获得良好体验（在选项-外观-布局中调整）。");
 			break;
 	}
-
 	console.time(decadeUIName);
-
 	window.duicfg = config;
 	window.dui = window.decadeUI = {
 		init() {
 			this.extensionName = decadeUIName;
-
 			const sensor = decadeUI.element.create("sensor", document.body);
 			sensor.id = "decadeUI-body-sensor";
 			this.bodySensor = new decadeUI.ResizeSensor(sensor);
-
 			const SVG_NS = "http://www.w3.org/2000/svg";
 			const svg = document.body.appendChild(document.createElementNS(SVG_NS, "svg"));
 			const defs = svg.appendChild(document.createElementNS(SVG_NS, "defs"));
-
 			const clipPaths = [
 				{ id: "solo-clip", d: "M0 0 H1 Q1 0.05 0.9 0.06 Q1 0.06 1 0.11 V1 H0 V0.11 Q0 0.06 0.1 0.06 Q0 0.05 0 0 Z" },
 				{ id: "duol-clip", d: "M1 0 H0 Q0 0.06 0.15 0.06 Q0 0.06 0 0.11 V1 H1 Z" },
 				{ id: "duor-clip", d: "M0 0 H1 Q1 0.06 0.85 0.06 Q1 0.06 1 0.11 V1 H0 Z" },
 				{ id: "dskin-clip", d: "M0 0 H1 Q1 0.1 0.94 0.1 Q0.985 0.1 1 0.13 V1 H0 V0.14 Q0 0.11 0.06 0.1 Q0 0.1 0 0 Z" },
 			];
-
 			clipPaths.forEach(({ id, d }) => {
 				const cp = defs.appendChild(document.createElementNS(SVG_NS, "clipPath"));
 				cp.id = id;
@@ -46,7 +40,6 @@ export async function content(config, pack) {
 				const path = cp.appendChild(document.createElementNS(SVG_NS, "path"));
 				path.setAttribute("d", d);
 			});
-
 			document.addEventListener(
 				"click",
 				function (e) {
@@ -54,7 +47,6 @@ export async function content(config, pack) {
 				},
 				true
 			);
-
 			this.initOverride();
 			if (window.get && typeof window.get.cardsetion === "function") {
 				const oldCardsetion = window.get.cardsetion;
@@ -148,7 +140,6 @@ export async function content(config, pack) {
 					},
 				},
 			};
-
 			const ride = {};
 			ride.lib = {
 				element: {
@@ -187,31 +178,25 @@ export async function content(config, pack) {
 					event: {
 						addMessageHook(message, callback) {
 							if (this._messages == undefined) this._messages = {};
-
 							message = message.toLowerCase();
 							if (this._messages[message] == undefined) this._messages[message] = [];
-
 							message = this._messages[message];
 							message.push(callback);
 						},
 						triggerMessage(message) {
 							if (this._messages == undefined) return;
-
 							message = message.toLowerCase();
 							if (this._messages[message] == undefined) return;
-
 							message = this._messages[message];
 							for (var i = 0; i < message.length; i++) {
 								if (typeof message[i] == "function") message[i].call(this);
 							}
-
 							this._messages[message] = [];
 						},
 					},
 					card: {
 						$init(card) {
 							base.lib.element.card.$init.apply(this, arguments);
-
 							this.node.range.innerHTML = "";
 							const tags = Array.isArray(card[4]) ? [...card[4]] : [];
 							if (this.cardid) {
@@ -235,13 +220,11 @@ export async function content(config, pack) {
 									this.node.range.innerHTML += tagstr;
 								}
 							}
-
 							const verticalName = this.$vertname;
 							this.$name.innerHTML = verticalName.innerHTML;
 							const cardNumber = this.number;
 							this.$suitnum.$num.innerHTML = (cardNumber !== 0 ? get.strNumber(cardNumber) : false) || cardNumber || "";
 							this.$suitnum.$suit.innerHTML = get.translation((this.dataset.suit = this.suit));
-
 							const equip = this.$equip;
 							const innerHTML = equip.innerHTML;
 							const spaceIdx = innerHTML.indexOf(" ");
@@ -251,34 +234,23 @@ export async function content(config, pack) {
 							const background = node.background;
 							node.judgeMark.node.judge.innerHTML = background.innerHTML;
 							const classList = background.classList;
-
 							if (classList.contains("tight")) classList.remove("tight");
-
 							const cardStyle = this.style;
-
 							if (cardStyle.color) cardStyle.removeProperty("color");
-
 							if (cardStyle.textShadow) cardStyle.removeProperty("text-shadow");
-
 							const info = node.info;
 							const infoStyle = info.style;
-
 							if (infoStyle.opacity) infoStyle.removeProperty("opacity");
-
 							const verticalNameStyle = verticalName.style;
-
 							if (verticalNameStyle.opacity) verticalNameStyle.removeProperty("opacity");
-
 							if (info.childElementCount)
 								while (info.firstChild) {
 									info.removeChild(info.lastChild);
 								}
-
 							if (equip.childElementCount)
 								while (equip.firstChild) {
 									equip.removeChild(equip.lastChild);
 								}
-
 							const imgFormat = decadeUI.config.cardPrettify;
 							if (imgFormat !== "off") {
 								let filename = card[2];
@@ -356,13 +328,11 @@ export async function content(config, pack) {
 							if (!player) return;
 							var arena = dui.boundsCaches.arena;
 							if (!arena.updated) arena.update();
-
 							player.checkBoundsCache();
 							this.fixed = true;
 							var x = Math.round((player.cacheWidth - arena.cardWidth) / 2 + player.cacheLeft);
 							var y = Math.round((player.cacheHeight - arena.cardHeight) / 2 + player.cacheTop);
 							var scale = arena.cardScale;
-
 							this.tx = x;
 							this.ty = y;
 							this.scaled = true;
@@ -381,7 +351,6 @@ export async function content(config, pack) {
 							);
 						},
 					},
-
 					control: {
 						add(item) {
 							var node = document.createElement("div");
@@ -391,13 +360,11 @@ export async function content(config, pack) {
 							this.appendChild(node);
 							this.updateLayout();
 						},
-
 						open() {
 							ui.control.insertBefore(this, _status.createControl || ui.confirm);
 							ui.controls.unshift(this);
 							return this;
 						},
-
 						close() {
 							this.remove();
 							ui.controls.remove(this);
@@ -406,20 +373,16 @@ export async function content(config, pack) {
 							if (ui.skills2 == this) ui.skills2 = null;
 							if (ui.skills3 == this) ui.skills3 = null;
 						},
-
 						replace() {
 							var items;
 							var index = 0;
 							var nodes = this.childNodes;
-
 							if (Array.isArray(arguments[0])) {
 								items = arguments[0];
 							} else {
 								items = arguments;
 							}
-
 							this.custom = undefined;
-
 							for (var i = 0; i < items.length; i++) {
 								if (typeof items[i] == "function") {
 									this.custom = items[i];
@@ -430,20 +393,16 @@ export async function content(config, pack) {
 									} else {
 										this.add(items[i]);
 									}
-
 									index++;
 								}
 							}
-
 							while (index < nodes.length) {
 								nodes[index].remove();
 							}
-
 							this.updateLayout();
 							ui.updatec();
 							return this;
 						},
-
 						updateLayout() {
 							var nodes = this.childNodes;
 							if (nodes.length >= 2) {
@@ -455,7 +414,6 @@ export async function content(config, pack) {
 							}
 						},
 					},
-
 					player: {
 						mark(item, info, skill) {
 							if (item && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
@@ -505,7 +463,6 @@ export async function content(config, pack) {
 								}
 								mark.text.innerHTML = markText;
 							}
-
 							mark.name = item;
 							mark.skill = skill || item;
 							if (typeof info == "object") {
@@ -513,7 +470,6 @@ export async function content(config, pack) {
 							} else if (typeof info == "string") {
 								mark.markidentifer = info;
 							}
-
 							mark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
 							if (!lib.config.touchscreen) {
 								if (lib.config.hover_all) {
@@ -523,7 +479,6 @@ export async function content(config, pack) {
 									mark.oncontextmenu = ui.click.rightplayer;
 								}
 							}
-
 							this.node.marks.appendChild(mark);
 							this.updateMarks();
 							ui.updatem(this);
@@ -545,14 +500,11 @@ export async function content(config, pack) {
 						},
 						markCharacter(name, info, learn, learn2) {
 							if (typeof name == "object") name = name.name;
-
 							var nodeMark = ui.create.div(".card.mark");
 							var nodeMarkText = ui.create.div(".mark-text", nodeMark);
-
 							if (!info) info = {};
 							if (!info.name) info.name = get.translation(name);
 							if (!info.content) info.content = get.skillintro(name, learn, learn2);
-
 							if (name.indexOf("unknown") == 0) {
 								nodeMarkText.innerHTML = get.translation(name)[0];
 							} else {
@@ -561,7 +513,6 @@ export async function content(config, pack) {
 								if (text.length == 2) nodeMarkText.classList.add("small-text");
 								nodeMarkText.innerHTML = text;
 							}
-
 							nodeMark.name = name + "_charactermark";
 							nodeMark.info = info;
 							nodeMark.text = nodeMarkText;
@@ -574,7 +525,6 @@ export async function content(config, pack) {
 									nodeMark.oncontextmenu = ui.click.rightplayer;
 								}
 							}
-
 							this.node.marks.appendChild(nodeMark);
 							ui.updatem(this);
 							return nodeMark;
@@ -640,7 +590,6 @@ export async function content(config, pack) {
 									dynamic.primary = null;
 								}
 							}
-
 							if (typeof animation == "string")
 								animation = {
 									name: animation,
@@ -656,7 +605,6 @@ export async function content(config, pack) {
 										animation.x = [animation.x, deputy ? 0.25 : -0.25];
 									}
 								}
-
 								animation.clip = {
 									x: [0, deputy ? 0.5 : 0],
 									y: 0,
@@ -665,9 +613,7 @@ export async function content(config, pack) {
 									clipParent: true,
 								};
 							}
-
 							if (this.$dynamicWrap.parentNode != this) this.appendChild(this.$dynamicWrap);
-
 							dynamic.outcropMask = duicfg.dynamicSkinOutcrop;
 							var avatar = dynamic.play(animation);
 							if (deputy === true) {
@@ -675,17 +621,13 @@ export async function content(config, pack) {
 							} else {
 								dynamic.primary = avatar;
 							}
-
 							this.classList.add(deputy ? "d-skin2" : "d-skin");
 						},
-
 						stopDynamic(primary, deputy) {
 							var dynamic = this.dynamic;
 							if (!dynamic) return;
-
 							primary = primary === true;
 							deputy = deputy === true;
-
 							if (primary && dynamic.primary) {
 								dynamic.stop(dynamic.primary);
 								dynamic.primary = null;
@@ -697,27 +639,22 @@ export async function content(config, pack) {
 								dynamic.primary = null;
 								dynamic.deputy = null;
 							}
-
 							if (!dynamic.primary && !dynamic.deputy) {
 								this.classList.remove("d-skin");
 								this.classList.remove("d-skin2");
 								this.$dynamicWrap.remove();
 							}
 						},
-
 						say(str) {
 							str = str.replace(/##assetURL##/g, lib.assetURL);
-
 							if (!this.$chatBubble) {
 								this.$chatBubble = decadeUI.element.create("chat-bubble");
 							}
-
 							var bubble = this.$chatBubble;
 							bubble.innerHTML = str;
 							if (this != bubble.parentNode) this.appendChild(bubble);
 							bubble.classList.remove("removing");
 							bubble.style.animation = "fade-in 0.3s";
-
 							if (bubble.timeout) clearTimeout(bubble.timeout);
 							bubble.timeout = setTimeout(
 								function (bubble) {
@@ -727,7 +664,6 @@ export async function content(config, pack) {
 								2000,
 								bubble
 							);
-
 							var name = get.translation(this.name);
 							var info = [name ? name + "[" + this.nickname + "]" : this.nickname, str];
 							lib.chatHistory.push(info);
@@ -742,7 +678,6 @@ export async function content(config, pack) {
 								game.playAudio("voice", this.sex == "female" ? "female" : "male", lib.quickVoice.indexOf(str));
 							}
 						},
-
 						/*-----------------分割线-----------------*/
 						updateMark(name, storage) {
 							if (!this.marks[name]) {
@@ -753,7 +688,6 @@ export async function content(config, pack) {
 									return this;
 								}
 							}
-
 							var mark = this.marks[name];
 							if (storage && this.storage[name]) this.syncStorage(name);
 							if (lib.skill[name] && lib.skill[name].intro && !lib.skill[name].intro.nocount && (this.storage[name] || lib.skill[name].intro.markcount)) {
@@ -784,28 +718,21 @@ export async function content(config, pack) {
 									mark.markcount.delete();
 									mark.markcount = undefined;
 								}
-
 								if (lib.skill[name].mark == "auto") {
 									this.unmarkSkill(name);
 								}
 							}
-
 							return this;
 						},
-
 						$dieAfter() {
 							if (!config.dynamicSkin_dieAfter) this.stopDynamic();
 							this.node.gainSkill.innerHTML = null;
-
 							if (!this.node.dieidentity) this.node.dieidentity = ui.create.div("died-identity", this);
 							this.node.dieidentity.classList.add("died-identity");
-
 							var that = this,
 								image = new Image(),
 								identity = decadeUI.getPlayerIdentity(this);
-
 							const goon = decadeUI.config.newDecadeStyle === "on" || decadeUI.config.newDecadeStyle === "othersOff";
-
 							// 为onlineUI样式设置单独的路径判断
 							var url;
 							if (decadeUI.config.newDecadeStyle === "onlineUI") {
@@ -816,11 +743,9 @@ export async function content(config, pack) {
 							} else {
 								url = decadeUIPath + "image/decoration" + (goon ? "/dead" : "s/dead2") + "_" + identity + ".png";
 							}
-
 							image.onerror = function () {
 								that.node.dieidentity.innerHTML = decadeUI.getPlayerIdentity(that, that.identity, true) + "<br>阵亡";
 							};
-
 							// 随机离开效果
 							if ((that._trueMe || that) != game.me && that != game.me && Math.random() < 0.5) {
 								if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
@@ -837,7 +762,6 @@ export async function content(config, pack) {
 							} else {
 								that.node.dieidentity.innerHTML = "";
 							}
-
 							that.node.dieidentity.style.backgroundImage = 'url("' + url + '")';
 							if (decadeUI.config.newDecadeStyle === "othersOff") {
 								that.node.dieidentity.style.backgroundSize = "80% 80%";
@@ -853,11 +777,9 @@ export async function content(config, pack) {
 								});
 							}, 250);
 						},
-
 						$skill(name, type, color, avatar) {
 							var _this = this;
 							if (typeof type != "string") type = "legend";
-
 							game.addVideo("skill", this, [name, type, color, avatar]);
 							game.broadcastAll(
 								function (player, type, name, color, avatar) {
@@ -866,7 +788,6 @@ export async function content(config, pack) {
 										if (name) player.$fullscreenpop(name, color, avatar);
 										return;
 									}
-
 									decadeUI.delay(2500);
 									if (name) decadeUI.effect.skill(player, name, avatar);
 								},
@@ -913,20 +834,17 @@ export async function content(config, pack) {
 						$init(character, character2) {
 							base.lib.element.player.$init.apply(this, arguments);
 							this.doubleAvatar = (character2 && lib.character[character2]) != undefined;
-
 							var CUR_DYNAMIC = decadeUI.CUR_DYNAMIC;
 							var MAX_DYNAMIC = decadeUI.MAX_DYNAMIC;
 							if (CUR_DYNAMIC == undefined) {
 								CUR_DYNAMIC = 0;
 								decadeUI.CUR_DYNAMIC = CUR_DYNAMIC;
 							}
-
 							if (MAX_DYNAMIC == undefined) {
 								MAX_DYNAMIC = decadeUI.isMobile() ? 2 : 10;
 								if (window.OffscreenCanvas) MAX_DYNAMIC += 8;
 								decadeUI.MAX_DYNAMIC = MAX_DYNAMIC;
 							}
-
 							if (this.dynamic) this.stopDynamic();
 							var showDynamic = (this.dynamic || CUR_DYNAMIC < MAX_DYNAMIC) && duicfg.dynamicSkin;
 							if (showDynamic && _status.mode != null) {
@@ -934,17 +852,14 @@ export async function content(config, pack) {
 								var dskins = decadeUI.dynamicSkin;
 								var avatars = this.doubleAvatar ? [character, character2] : [character];
 								var increased;
-
 								for (var i = 0; i < avatars.length; i++) {
 									skins = dskins[avatars[i]];
 									if (skins == undefined) continue;
-
 									var keys = Object.keys(skins);
 									if (keys.length == 0) {
 										console.error("player.init: " + avatars[i] + " 没有设置动皮参数");
 										continue;
 									}
-
 									var skin = skins[Object.keys(skins)[0]];
 									if (skin.speed == undefined) skin.speed = 1;
 									this.playDynamic(
@@ -970,7 +885,6 @@ export async function content(config, pack) {
 										},
 										i == 1
 									);
-
 									this.$dynamicWrap.style.backgroundImage = 'url("' + decadeUIPath + "assets/dynamic/" + skin.background + '")';
 									if (!increased) {
 										increased = true;
@@ -1154,7 +1068,6 @@ export async function content(config, pack) {
 							if (_status.event.name == "gameDraw") {
 								player.$draw(cards.length);
 							}
-
 							var card;
 							for (var i = 0; i < cards.length; i++) {
 								card = cards[i];
@@ -1163,26 +1076,20 @@ export async function content(config, pack) {
 									cards.splice(i--, 1);
 									continue;
 								}
-
 								if (gaintag) card.addGaintag(gaintag);
-
 								fragment.appendChild(card);
 							}
-
 							if (player == game.me) {
 								dui.layoutHandDraws(cards);
 								dui.queueNextFrameTick(dui.layoutHand, dui);
 							}
-
 							var s = player.getCards("s");
 							if (s.length) handcards.insertBefore(fragment, s[0]);
 							else handcards.appendChild(fragment);
-
 							if (!_status.video) {
 								game.addVideo("directgain", this, get.cardsInfo(cards));
 								this.update();
 							}
-
 							if (broadcast !== false) {
 								game.broadcast(
 									function (player, cards) {
@@ -1192,7 +1099,6 @@ export async function content(config, pack) {
 									cards
 								);
 							}
-
 							return this;
 						},
 						$addVirtualJudge(VCard, cards) {
@@ -1316,7 +1222,6 @@ export async function content(config, pack) {
 								}
 							} else if (get.itemtype(target) == "player") {
 								if (target == this) return;
-
 								var player = this;
 								game.broadcast(
 									function (player, target, config) {
@@ -1327,7 +1232,6 @@ export async function content(config, pack) {
 									config
 								);
 								game.addVideo("line", player, [target.dataset.position, config]);
-
 								player.checkBoundsCache(true);
 								target.checkBoundsCache(true);
 								var x1, y1;
@@ -1341,7 +1245,6 @@ export async function content(config, pack) {
 									x1 = player.cacheLeft + player.cacheWidth / 2;
 									y1 = player.cacheTop + player.cacheHeight / 2;
 								}
-
 								if (target == game.me) {
 									hand.check();
 									x2 = hand.x + hand.width / 2;
@@ -1350,7 +1253,6 @@ export async function content(config, pack) {
 									x2 = target.cacheLeft + target.cacheWidth / 2;
 									y2 = target.cacheTop + target.cacheHeight / 2;
 								}
-
 								game.linexy([x1, y1, x2, y2], config, true);
 							}
 						},
@@ -1358,14 +1260,11 @@ export async function content(config, pack) {
 							var update;
 							var refer = dui.boundsCaches.arena;
 							refer.check();
-
 							if (this.cacheReferW != refer.width || this.cacheReferH != refer.height || this.cachePosition != this.dataset.position) update = true;
-
 							this.cacheReferW = refer.width;
 							this.cacheReferH = refer.height;
 							this.cachePosition = this.dataset.position;
 							if (this.cacheLeft == null) update = true;
-
 							if (update || forceUpdate) {
 								this.cacheLeft = this.offsetLeft;
 								this.cacheTop = this.offsetTop;
@@ -1381,32 +1280,26 @@ export async function content(config, pack) {
 								this._cssanimations = animations;
 								this.addEventListener("animationend", function (e) {
 									if (this.style.animationName != e.animationName) return;
-
 									var current = this.style.animation;
 									var animations = this._cssanimations;
 									while (animations.length) {
 										this.style.animation = animations.shift();
 										if (this.style.animation != current) return;
-
 										animations.current = this.style.animation;
 									}
-
 									animations.current = "";
 									this.style.animation = "";
 								});
 							}
-
 							if (animations.current || animations.length) {
 								animations.push(animation);
 								return;
 							}
-
 							animations.current = animation;
 							this.style.animation = animation;
 						},
 						$draw(num, init, config) {
 							if (game.chess) return base.lib.element.player.$draw.call(this, num, init, config);
-
 							if (init !== false && init !== "nobroadcast") {
 								game.broadcast(
 									function (player, num, init, config) {
@@ -1418,7 +1311,6 @@ export async function content(config, pack) {
 									config
 								);
 							}
-
 							var cards;
 							var isDrawCard;
 							if (get.itemtype(num) == "cards") {
@@ -1432,7 +1324,6 @@ export async function content(config, pack) {
 							} else {
 								cards = new Array(1);
 							}
-
 							if (init !== false) {
 								if (isDrawCard) {
 									game.addVideo("drawCard", this, get.cardsInfo(cards));
@@ -1440,7 +1331,6 @@ export async function content(config, pack) {
 									game.addVideo("draw", this, num);
 								}
 							}
-
 							if (_status.event && _status.event.name) {
 								if (
 									(function (event) {
@@ -1449,21 +1339,17 @@ export async function content(config, pack) {
 								)
 									isDrawCard = true;
 							}
-
 							if (game.me == this && !isDrawCard) return;
-
 							var fragment = document.createDocumentFragment();
 							var card;
 							for (var i = 0; i < cards.length; i++) {
 								card = cards[i];
 								if (card == null) card = dui.element.create("card thrown drawingcard");
 								else card = card.copy("thrown", "drawingcard", false);
-
 								card.fixed = true;
 								cards[i] = card;
 								fragment.appendChild(card);
 							}
-
 							var player = this;
 							dui.layoutDrawCards(cards, player, true);
 							ui.arena.appendChild(fragment);
@@ -1488,7 +1374,6 @@ export async function content(config, pack) {
 									return;
 								}
 							}
-
 							if (record !== false) {
 								var cards2 = cards;
 								if (itemtype == "number") {
@@ -1497,7 +1382,6 @@ export async function content(config, pack) {
 								} else {
 									game.addVideo("giveCard", this, [get.cardsInfo(cards2), target.dataset.position]);
 								}
-
 								game.broadcast(
 									function (source, cards2, target, record) {
 										source.$give(cards2, target, false, record);
@@ -1508,23 +1392,18 @@ export async function content(config, pack) {
 									record
 								);
 							}
-
 							if (log != false) {
 								if (itemtype == "number") game.log(target, "从", this, "获得了" + get.cnNumber(cards.length) + "张牌");
 								else game.log(target, "从", this, "获得了", cards);
 							}
-
 							if (this.$givemod) {
 								this.$givemod(cards, target);
 								return;
 							}
-
 							if (duiMod) return;
-
 							var card;
 							var hand = dui.boundsCaches.hand;
 							hand.check();
-
 							var draws = [];
 							var player = this;
 							var fragment = document.createDocumentFragment();
@@ -1540,7 +1419,6 @@ export async function content(config, pack) {
 											hs = card.parentNode == player.node.handcards1;
 										}
 									}
-
 									if (hs) {
 										cp.tx = Math.round(hand.x + card.tx);
 										cp.ty = Math.round(hand.y + 30 + card.ty);
@@ -1554,14 +1432,11 @@ export async function content(config, pack) {
 									card = dui.element.create("card thrown gainingcard");
 									draws.push(card);
 								}
-
 								cards[i] = card;
 								cards[i].fixed = true;
 								fragment.appendChild(cards[i]);
 							}
-
 							if (draws.length) dui.layoutDrawCards(draws, player);
-
 							ui.arena.appendChild(fragment);
 							dui.queueNextFrameTick(function () {
 								dui.layoutDrawCards(cards, target);
@@ -1572,13 +1447,10 @@ export async function content(config, pack) {
 							var type = get.itemtype(cards);
 							if (type != "cards") {
 								if (type != "card") return;
-
 								type = "cards";
 								cards = [cards];
 							}
-
 							if (log === true) game.log(this, "获得了", cards);
-
 							game.broadcast(
 								function (player, cards) {
 									player.$gain2(cards);
@@ -1586,10 +1458,8 @@ export async function content(config, pack) {
 								this,
 								cards
 							);
-
 							var gains = [];
 							var draws = [];
-
 							var card;
 							var clone;
 							for (var i = 0; i < cards.length; i++) {
@@ -1604,20 +1474,14 @@ export async function content(config, pack) {
 									draws.push(card);
 								}
 							}
-
 							if (gains.length) game.addVideo("gain2", this, get.cardsInfo(gains));
-
 							if (draws.length) game.addVideo("drawCard", this, get.cardsInfo(draws));
-
 							if (cards.duiMod && this == game.me) return;
-
 							cards = gains.concat(draws);
 							dui.layoutDrawCards(draws, this, true);
-
 							var player = this;
 							var fragment = document.createDocumentFragment();
 							for (var i = 0; i < cards.length; i++) fragment.appendChild(cards[i]);
-
 							ui.arena.appendChild(fragment);
 							dui.queueNextFrameTick(function () {
 								dui.layoutDrawCards(cards, player);
@@ -1663,10 +1527,8 @@ export async function content(config, pack) {
 								this,
 								source
 							);
-
 							this.queueCssAnimation("player-hurt 0.3s");
 						},
-
 						$throw(cards, time, record, nosource) {
 							var itemtype;
 							var duiMod = cards.duiMod && game.me == this && !nosource;
@@ -1753,7 +1615,6 @@ export async function content(config, pack) {
 									}, i * 50);
 								})(cards[i], i);
 							}
-
 							if (game.chess) this.chessFocus();
 							return cards[cards.length - 1];
 						},
@@ -1763,7 +1624,6 @@ export async function content(config, pack) {
 								var x, y;
 								var bounds = dui.boundsCaches.arena;
 								if (!bounds.updated) bounds.update();
-
 								this.checkBoundsCache();
 								if (nosource) {
 									x = (bounds.width - bounds.cardWidth) / 2 - bounds.width * 0.08;
@@ -1772,10 +1632,8 @@ export async function content(config, pack) {
 									x = (this.cacheWidth - bounds.cardWidth) / 2 + this.cacheLeft;
 									y = (this.cacheHeight - bounds.cardHeight) / 2 + this.cacheTop;
 								}
-
 								x = Math.round(x);
 								y = Math.round(y);
-
 								card.tx = x;
 								card.ty = y;
 								card.scaled = true;
@@ -1784,16 +1642,12 @@ export async function content(config, pack) {
 							} else {
 								card.throwordered = undefined;
 							}
-
 							if (card.fixed) return ui.arena.appendChild(card);
-
 							var tagNode = card.querySelector(".used-info");
 							if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
-
 							card.$usedtag = tagNode;
 							ui.thrown.push(card);
 							ui.arena.appendChild(card);
-
 							dui.tryAddPlayerCardUseTag(card, this, _status.event);
 							dui.queueNextFrameTick(dui.layoutDiscard, dui);
 							return card;
@@ -1906,7 +1760,6 @@ export async function content(config, pack) {
 								let { cards, gaintag } = event;
 								var handcards = player.node.handcards1;
 								var fragment = document.createDocumentFragment();
-
 								for (var i = 0; i < cards.length; i++) {
 									var card = cards[i];
 									var sort = lib.config.sort_card(card);
@@ -1920,13 +1773,10 @@ export async function content(config, pack) {
 										cards.splice(i--, 1);
 										continue;
 									}
-
 									gaintag.forEach(tag => card.addGaintag(tag));
 									if (event.knowers) card.addKnower(event.knowers);
-
 									fragment.appendChild(card);
 									if (_status.discarded) _status.discarded.remove(card);
-
 									for (var j = 0; j < card.vanishtag.length; j++) {
 										if (card.vanishtag[j][0] != "_") card.vanishtag.splice(j--, 1);
 									}
@@ -1938,11 +1788,9 @@ export async function content(config, pack) {
 										dui.queueNextFrameTick(dui.layoutHand, dui);
 										game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
 									}
-
 									var s = player.getCards("s");
 									if (s.length) handcards.insertBefore(fragment, s[0]);
 									else handcards.appendChild(fragment);
-
 									game.broadcast(
 										function (player, cards, num, gaintag) {
 											player.directgain(cards, null, gaintag);
@@ -1953,7 +1801,6 @@ export async function content(config, pack) {
 										ui.cardPile.childNodes.length,
 										gaintag
 									);
-
 									if (nodelay !== true) {
 										setTimeout(
 											function (player) {
@@ -2033,7 +1880,6 @@ export async function content(config, pack) {
 									var event = game.online ? {} : _status.event;
 									if (game.chess) event.node = card.copy("thrown", "center", ui.arena).animate("start");
 									else event.node = player.$throwordered2(card.copy(), true);
-
 									if (lib.cardOL) lib.cardOL[cardid] = event.node;
 									event.node.cardid = cardid;
 									if (!window.decadeUI) {
@@ -2046,7 +1892,6 @@ export async function content(config, pack) {
 								event.videoId,
 								get.id()
 							);
-
 							game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[0]);
 							game.delay(2);
 							if (!event.noJudgeTrigger) event.trigger("judge");
@@ -2077,11 +1922,9 @@ export async function content(config, pack) {
 							if (event.clearArena != false) {
 								game.broadcastAll(ui.clear);
 							}
-
 							game.broadcast(function () {
 								if (!window.decadeUI) ui.arena.classList.remove("thrownhighlight");
 							});
-
 							game.addVideo("judge2", null, event.videoId);
 							game.log(player, "的判定结果为", event.result.card);
 							event.trigger("judgeFixing");
@@ -2209,12 +2052,10 @@ export async function content(config, pack) {
 											const tags = cardx[j].gaintag.filter(tag => !tag.startsWith("eternal_"));
 											tags.forEach(tag => cardx[j].removeGaintag(tag));
 										}
-
 										cardx[j].style.transform += " scale(0.2)";
 										cardx[j].classList.remove("glow");
 										cardx[j].classList.remove("glows");
 										cardx[j].recheck();
-
 										var info = lib.card[cardx[j].name];
 										if ("_destroy" in cardx[j]) {
 											if (cardx[j]._destroy) {
@@ -2379,7 +2220,6 @@ export async function content(config, pack) {
 					},
 				},
 			};
-
 			ride.ui = {
 				create: {
 					prebutton(item, type, position, noclick) {
@@ -2405,16 +2245,13 @@ export async function content(config, pack) {
 						} else if (!offsetLeft) {
 							offsetLeft = controls[i].offsetLeft;
 						}
-
 						if (stayleft && offsetLeft) break;
 					}
-
 					if (stayleft) {
 						if (ui.$stayleft != stayleft) {
 							stayleft._width = stayleft.offsetWidth;
 							ui.$stayleft = stayleft;
 						}
-
 						if (offsetLeft < stayleft._width) {
 							stayleft.style.position = "static";
 						} else {
@@ -2422,14 +2259,11 @@ export async function content(config, pack) {
 						}
 					}
 				},
-
 				updatehl() {
 					dui.queueNextFrameTick(dui.layoutHand, dui);
 				},
-
 				updatej(player) {
 					if (!player) return;
-
 					var judges = player.node.judges.childNodes;
 					for (var i = 0; i < judges.length; i++) {
 						if (judges[i].classList.contains("removing")) continue;
@@ -2440,9 +2274,7 @@ export async function content(config, pack) {
 						}
 					}
 				},
-
 				updatem(player) {},
-
 				updatez() {
 					window.documentZoom = game.documentZoom;
 					document.body.style.zoom = game.documentZoom;
@@ -2450,12 +2282,10 @@ export async function content(config, pack) {
 					document.body.style.height = "100%";
 					document.body.style.transform = "";
 				},
-
 				update() {
 					for (var i = 0; i < ui.updates.length; i++) ui.updates[i]();
 					if (ui.dialog == undefined || ui.dialog.classList.contains("noupdate")) return;
 					if (game.chess) return base.ui.update();
-
 					if ((!ui.dialog.buttons || !ui.dialog.buttons.length) && !ui.dialog.forcebutton && ui.dialog.classList.contains("fullheight") == false && get.mode() != "stone") {
 						ui.dialog.classList.add("prompt");
 					} else {
@@ -2463,10 +2293,8 @@ export async function content(config, pack) {
 						var height = ui.dialog.content.offsetHeight;
 						if (decadeUI.isMobile()) height = decadeUI.get.bodySize().height * 0.75 - 80;
 						else height = decadeUI.get.bodySize().height * 0.45;
-
 						ui.dialog.style.height = Math.min(height, ui.dialog.content.offsetHeight) + "px";
 					}
-
 					if (!ui.dialog.forcebutton && !ui.dialog._scrollset) {
 						ui.dialog.classList.remove("scroll1");
 						ui.dialog.classList.remove("scroll2");
@@ -2475,7 +2303,6 @@ export async function content(config, pack) {
 						ui.dialog.classList.add("scroll2");
 					}
 				},
-
 				create: {
 					rarity(button) {
 						if (!lib.config.show_rarity) return;
@@ -2486,13 +2313,11 @@ export async function content(config, pack) {
 						if (intro.innerText) intro.innerText = "";
 						intro.style.backgroundImage = 'url("' + decadeUIPath + "assets/image/rarity_" + rarity + '.png")';
 					},
-
 					button(item, type, position, noclick, node) {
 						const button = base.ui.create.button.apply(this, arguments);
 						if (position) position.appendChild(button);
 						return button;
 					},
-
 					control() {
 						var i, controls;
 						var nozoom = false;
@@ -2501,7 +2326,6 @@ export async function content(config, pack) {
 						} else {
 							controls = arguments;
 						}
-
 						var control = document.createElement("div");
 						control.className = "control";
 						control.style.opacity = 1;
@@ -2524,7 +2348,6 @@ export async function content(config, pack) {
 						control.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control2);
 						return control;
 					},
-
 					dialog(...args) {
 						var hidden = false;
 						var notouchscroll = false;
@@ -2562,7 +2385,6 @@ export async function content(config, pack) {
 						if (peaceDialog) dialog.peaceDialog = true;
 						return dialog;
 					},
-
 					selectlist(list, init, position, onchange) {
 						var select = document.createElement("select");
 						for (var i = 0; i < list.length; i++) {
@@ -2581,7 +2403,6 @@ export async function content(config, pack) {
 						if (onchange) select.onchange = onchange;
 						return select;
 					},
-
 					identityCard(identity, position, info, noclick) {
 						const card = ui.create.card(position, info, noclick);
 						card.removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
@@ -2606,7 +2427,6 @@ export async function content(config, pack) {
 							});
 						return card;
 					},
-
 					spinningIdentityCard(identity, dialog) {
 						const card = ui.create.identityCard(identity);
 						const buttons = ui.create.div(".buttons", dialog.content);
@@ -2616,7 +2436,6 @@ export async function content(config, pack) {
 							dialog.open();
 						}, 50);
 					},
-
 					buttonPresets: {
 						character(item, type, position, noclick, node) {
 							if (node) {
@@ -2627,7 +2446,6 @@ export async function content(config, pack) {
 							} else {
 								node = ui.create.div(".button.character.decadeUI");
 							}
-
 							node._link = item;
 							if (type == "characterx") {
 								if (_status.noReplaceCharacter) {
@@ -2640,17 +2458,13 @@ export async function content(config, pack) {
 							if (type == "characterx") {
 								if (lib.characterReplace[item] && lib.characterReplace[item].length) item = lib.characterReplace[item].randomGet();
 							}
-
 							node.link = item;
 							dui.element.create("character", node);
-
 							var doubleCamp = get.is.double(node._link, true);
-
 							if (doubleCamp) node._changeGroup = true;
 							if (type == "characterx" && lib.characterReplace[node._link] && lib.characterReplace[node._link].length > 1) {
 								node._replaceButton = true;
 							}
-
 							node.refresh = function (node, item, intersection) {
 								if (intersection) {
 									node.awaitItem = item;
@@ -2658,7 +2472,6 @@ export async function content(config, pack) {
 								} else {
 									node.setBackground(item, "character");
 								}
-
 								if (node.node) {
 									node.node.name.remove();
 									node.node.hp.remove();
@@ -2673,7 +2486,6 @@ export async function content(config, pack) {
 									intro: decadeUI.element.create("intro", node),
 								};
 								var infoitem = get.character(item);
-
 								node.node.name.innerHTML = get.slimName(item);
 								if (lib.config.buttoncharacter_style == "default" || lib.config.buttoncharacter_style == "simple") {
 									if (lib.config.buttoncharacter_style == "simple") {
@@ -2739,7 +2551,6 @@ export async function content(config, pack) {
 										node.addEventListener("mouseleave", ui.click.buttonnameleave);
 									}
 								}
-
 								node.node.intro.innerText = lib.config.intro;
 								if (!noclick) lib.setIntro(node);
 								if (infoitem[1]) {
@@ -2786,7 +2597,6 @@ export async function content(config, pack) {
 						},
 					},
 				},
-
 				click: {
 					card(e) {
 						delete this._waitingfordrag;
@@ -2802,7 +2612,6 @@ export async function content(config, pack) {
 									clientY: (rect.top + 10) * game.documentZoom,
 								};
 							}
-
 							ui.click.touchpop();
 							ui.click.intro.call(this, e);
 							_status.clicked = false;
@@ -2905,7 +2714,6 @@ export async function content(config, pack) {
 							custom.add.card();
 						}
 						game.check();
-
 						if (lib.config.popequip && lib.config.phonelayout && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
 							var rect = this.getBoundingClientRect();
 							ui.click.touchpop();
@@ -2917,7 +2725,6 @@ export async function content(config, pack) {
 					},
 				},
 			};
-
 			ride.game = {
 				logv(player, card, targets, event, forced, logvid) {
 					if (!player) {
@@ -3004,7 +2811,6 @@ export async function content(config, pack) {
 						avatar.style.transform = "";
 						avatar.classList.add("avatar2");
 						node.appendChild(avatar);
-
 						if (targets && targets.length == 1 && targets[0] != player && get.itemtype(targets[0]) == "player")
 							(() => {
 								var avatar2;
@@ -3033,7 +2839,6 @@ export async function content(config, pack) {
 							node.targets = targets;
 						}
 					}
-
 					const bounds = dui.boundsCaches.window;
 					bounds.check();
 					const fullheight = bounds.height,
@@ -3092,7 +2897,6 @@ export async function content(config, pack) {
 				addOverDialog(dialog, result) {
 					var sprite = decadeUI.backgroundAnimation.current;
 					if (!(sprite && sprite.name == "skin_xiaosha_default")) return;
-
 					decadeUI.backgroundAnimation.canvas.style.zIndex = 7;
 					switch (result) {
 						case "战斗胜利":
@@ -3109,7 +2913,6 @@ export async function content(config, pack) {
 					}
 				},
 			};
-
 			ride.get = {
 				objtype(obj) {
 					obj = Object.prototype.toString.call(obj);
@@ -3131,35 +2934,29 @@ export async function content(config, pack) {
 					}
 				},
 			};
-
 			override(lib, ride.lib);
 			override(ui, ride.ui);
 			override(game, ride.game);
 			override(get, ride.get);
-
 			decadeUI.get.extend(decadeUI, duilib);
 			if (decadeModule.modules) {
 				for (var i = 0; i < decadeModule.modules.length; i++) {
 					decadeModule.modules[i](lib, game, ui, get, ai, _status);
 				}
 			}
-
 			var gameLinexyFunction = game.linexy;
 			var swapControlFunction = game.swapControl;
 			var swapPlayerFunction = game.swapPlayer;
 			var createArenaFunction = ui.create.arena;
 			var createPauseFunction = ui.create.pause;
 			var initCssstylesFunction = lib.init.cssstyles;
-
 			var cardCopyFunction = lib.element.card.copy;
 			var playerAddSkillFunction = lib.element.player.addSkill;
 			var playerRemoveSkillFunction = lib.element.player.removeSkill;
 			var playerAwakenSkillFunction = lib.element.player.awakenSkill;
 			var playerDieFlipFunction = lib.element.player.$dieflip;
-
 			ui.updatejm = function (player, nodes, start, inv) {
 				if (typeof start != "number") start = 0;
-
 				for (var i = 0; i < nodes.childElementCount; i++) {
 					var node = nodes.childNodes[i];
 					if (i < start) {
@@ -3171,10 +2968,8 @@ export async function content(config, pack) {
 					}
 				}
 			};
-
 			ui.updatexr = duilib.throttle(ui.updatex, 100, ui);
 			document.body.onresize = ui.updatexr;
-
 			//十周年UI技能排除
 			get.skillState = function (player) {
 				var skills = base.get.skillState.apply(this, arguments);
@@ -3186,7 +2981,6 @@ export async function content(config, pack) {
 				}
 				return skills;
 			};
-
 			//game.check修改
 			//添加target的un-selectable classList显示
 			lib.hooks["checkTarget"].push(function decadeUI_selectable(target, event) {
@@ -3245,7 +3039,6 @@ export async function content(config, pack) {
 					}
 				}
 			});
-
 			//game.uncheck修改
 			//对十周年UI和本体的视为卡牌样式的同时适配
 			const removeTempname = lib.hooks["uncheckCard"].indexOf(lib.hooks["uncheckCard"].find(i => i.name && i.name == "removeTempname"));
@@ -3266,7 +3059,6 @@ export async function content(config, pack) {
 			lib.hooks["uncheckTarget"].push(function decadeUI_unselectable(target, event) {
 				target.classList.remove("un-selectable");
 			});
-
 			const updateDialog = lib.hooks["checkOverflow"].indexOf(lib.hooks["checkOverflow"].find(i => i.name && i.name == "updateDialog"));
 			lib.hooks["checkOverflow"][updateDialog] = function updateDialog(itemOption, itemContainer, addedItems, game) {
 				//计算压缩折叠的量
@@ -3282,7 +3074,6 @@ export async function content(config, pack) {
 					itemContainer.style.setProperty("--ml", "-" + ml + "px");
 				}
 			};
-
 			game.swapPlayer = function (player, player2) {
 				const list = [game.me, player];
 				var result = swapPlayerFunction.call(this, player, player2);
@@ -3306,7 +3097,6 @@ export async function content(config, pack) {
 				}
 				return result;
 			};
-
 			game.swapControl = function (player) {
 				var result = swapControlFunction.call(this, player);
 				// 单独装备栏
@@ -3337,7 +3127,6 @@ export async function content(config, pack) {
 				}
 				return result;
 			};
-
 			ui.click.intro = function (e) {
 				if (this.classList.contains("infohidden") || _status.dragged) return;
 				_status.clicked = true;
@@ -3352,7 +3141,6 @@ export async function content(config, pack) {
 					}
 					ui.historybar.style.zIndex = 22;
 				}
-
 				var uiintro = uiintro || get.nodeintro(this, false, e);
 				if (!uiintro) return;
 				uiintro.classList.add("popped");
@@ -3373,7 +3161,6 @@ export async function content(config, pack) {
 					}
 					return false;
 				};
-
 				layer.addEventListener(lib.config.touchscreen ? "touchend" : "click", clicklayer);
 				if (!lib.config.touchscreen) layer.oncontextmenu = clicklayer;
 				if (this.parentNode == ui.historybar && lib.config.touchscreen) {
@@ -3383,7 +3170,6 @@ export async function content(config, pack) {
 						clientY: rect.top + 30,
 					};
 				}
-
 				lib.placePoppedDialog(uiintro, e, this);
 				if (this.parentNode == ui.historybar) {
 					if (lib.config.show_history == "right") {
@@ -3392,7 +3178,6 @@ export async function content(config, pack) {
 						uiintro.style.left = ui.historybar.offsetLeft + 60 + "px";
 					}
 				}
-
 				uiintro.style.zIndex = 21;
 				var clickintro = function () {
 					if (_status.touchpopping) return;
@@ -3426,32 +3211,26 @@ export async function content(config, pack) {
 					uiintro.listen(clickintro);
 				}
 				uiintro._close = clicklayer;
-
 				game.pause2();
 				return uiintro;
 			};
-
 			ui.click.identity = function (e) {
 				if (_status.dragged || !game.getIdentityList || _status.video || this.parentNode.forceShown) return;
 				_status.clicked = true;
 				var identityList = game.getIdentityList(this.parentNode);
 				if (!identityList) return;
-
 				if (lib.config.mark_identity_style == "click") {
 					var getNext = false;
 					var theNext;
 					var key;
 					var current = this.firstChild.innerText;
-
 					for (const key in identityList) {
 						if (theNext == null || getNext) {
 							theNext = key;
 							if (getNext) break;
 						}
-
 						if (current == identityList[key]) getNext = true;
 					}
-
 					this.parentNode.setIdentity(theNext);
 				} else {
 					if (get.mode() == "guozhan") {
@@ -3465,7 +3244,6 @@ export async function content(config, pack) {
 						};
 						if (_status.forceKey) identityList.key = "键";
 					}
-
 					if (!dui.$identityMarkBox) {
 						dui.$identityMarkBox = decadeUI.element.create("identity-mark-box");
 						dui.$identityMarkBox.ondeactive = function () {
@@ -3474,7 +3252,6 @@ export async function content(config, pack) {
 							if (!ui.arena.classList.contains("menupaused")) game.resume2();
 						};
 					}
-
 					var index = 0;
 					var node;
 					var nodes = dui.$identityMarkBox.childNodes;
@@ -3490,18 +3267,15 @@ export async function content(config, pack) {
 						} else {
 							node.style.display = "";
 						}
-
 						node.link = key;
 						node.player = this.parentNode;
 						node.innerText = identityList[key];
 						index++;
 					}
-
 					while (index < nodes.length) {
 						nodes[index].style.display = "none";
 						index++;
 					}
-
 					game.pause2();
 					setTimeout(
 						function (player) {
@@ -3513,25 +3287,20 @@ export async function content(config, pack) {
 					);
 				}
 			};
-
 			ui.click.volumn = function () {
 				var setting = ui.create.dialog("hidden");
 				setting.listen(function (e) {
 					e.stopPropagation();
 				});
-
 				var backVolume = decadeUI.component.slider(0, 8, parseInt(lib.config.volumn_background));
 				var gameVolume = decadeUI.component.slider(0, 8, parseInt(lib.config.volumn_audio));
-
 				backVolume.onchange = function () {
 					game.saveConfig("volumn_background", backVolume.value);
 					ui.backgroundMusic.volume = backVolume.value / 8;
 				};
-
 				gameVolume.onchange = function () {
 					game.saveConfig("volumn_audio", gameVolume.value);
 				};
-
 				setting.add("背景音量");
 				setting.content.appendChild(backVolume);
 				setting.add("游戏音量");
@@ -3539,13 +3308,11 @@ export async function content(config, pack) {
 				setting.add(ui.create.div(".placeholder"));
 				return setting;
 			};
-
 			ui.create.pause = function () {
 				var dialog = createPauseFunction.call(this);
 				dialog.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
 				return dialog;
 			};
-
 			ui.clear = function () {
 				game.addVideo("uiClear");
 				var nodes = document.getElementsByClassName("thrown");
@@ -3555,7 +3322,6 @@ export async function content(config, pack) {
 					else nodes[i].delete();
 				}
 			};
-
 			ui.create.arena = function () {
 				ui.updatez();
 				var result = createArenaFunction.apply(this, arguments);
@@ -3567,46 +3333,37 @@ export async function content(config, pack) {
 				ui.arena.classList.remove("mobile");
 				ui.arena.classList.add("decadeUI");
 				ui.control.id = "dui-controls";
-
 				if (lib.config.phonelayout) {
 					ui.arena.setAttribute("data-phonelayout", "on");
 				} else {
 					ui.arena.setAttribute("data-phonelayout", "off");
 				}
-
 				decadeUI.config.update();
 				return result;
 			};
-
 			ui.create.me = function (hasme) {
 				ui.arena.dataset.layout = game.layout;
-
 				ui.mebg = ui.create.div("#mebg", ui.arena);
 				ui.me = ui.create.div(".hand-wrap", ui.arena);
 				ui.handcards1Container = decadeUI.element.create("hand-cards", ui.me);
 				ui.handcards1Container.onmousewheel = decadeUI.handler.handMousewheel;
-
 				ui.handcards2Container = ui.create.div("#handcards2");
 				ui.arena.classList.remove("nome");
-
 				var equipSolts = (ui.equipSolts = decadeUI.element.create("equips-wrap"));
 				equipSolts.back = decadeUI.element.create("equips-back", equipSolts);
 				for (var repetition = 0; repetition < 5; repetition++) {
 					var ediv = decadeUI.element.create(null, equipSolts.back);
 					ediv.dataset.type = repetition;
 				}
-
 				ui.arena.insertBefore(equipSolts, ui.me);
 				decadeUI.bodySensor.addListener(decadeUI.layout.resize);
 				decadeUI.layout.resize();
-
 				ui.handcards1Container.ontouchstart = ui.click.touchStart;
 				ui.handcards2Container.ontouchstart = ui.click.touchStart;
 				ui.handcards1Container.ontouchmove = ui.click.touchScroll;
 				ui.handcards2Container.ontouchmove = ui.click.touchScroll;
 				ui.handcards1Container.style.WebkitOverflowScrolling = "touch";
 				ui.handcards2Container.style.WebkitOverflowScrolling = "touch";
-
 				if (hasme && game.me) {
 					ui.handcards1 = game.me.node.handcards1;
 					ui.handcards2 = game.me.node.handcards2;
@@ -3619,7 +3376,6 @@ export async function content(config, pack) {
 					ui.handcards1Container.appendChild(ui.handcards1);
 					ui.handcards2Container.appendChild(ui.handcards2);
 				}
-
 				/*-----------------分割线-----------------*/
 				if (lib.config.extension_十周年UI_aloneEquip) {
 					if (game.me) {
@@ -3629,7 +3385,6 @@ export async function content(config, pack) {
 					}
 				}
 			};
-
 			ui.create.player = function (position, noclick) {
 				var player = ui.create.div(".player", position);
 				var playerExtend = {
@@ -3712,7 +3467,6 @@ export async function content(config, pack) {
 						judges: [],
 					},
 				};
-
 				var chainImg = new Image();
 				chainImg.onerror = function () {
 					var node = decadeUI.element.create("chain-back", player.node.chain);
@@ -3720,7 +3474,6 @@ export async function content(config, pack) {
 					chainImg.onerror = undefined;
 				};
 				chainImg.src = decadeUIPath + "assets/image/tie_suo.png";
-
 				var extend = {
 					$cardCount: playerExtend.node.count,
 					$dynamicWrap: decadeUI.element.create("dynamic-wrap"),
@@ -3731,11 +3484,9 @@ export async function content(config, pack) {
 				decadeUI.get.extend(player, playerExtend);
 				//decadeUI.get.extend(player, lib.element.player);
 				Object.setPrototypeOf(player, lib.element.Player.prototype);
-
 				player.node.action = ui.create.div(".action", player.node.avatar);
 				var realIdentity = ui.create.div(player.node.identity);
 				realIdentity.player = player;
-
 				let observer = new MutationObserver(mutationsList => {
 					for (let mutation of mutationsList) {
 						if (mutation.type === "childList") {
@@ -3751,7 +3502,6 @@ export async function content(config, pack) {
 					childList: true,
 				};
 				observer.observe(playerExtend.node.equips, config);
-
 				Object.defineProperties(realIdentity, {
 					innerHTML: {
 						configurable: true,
@@ -3765,7 +3515,6 @@ export async function content(config, pack) {
 								this.parentNode.classList.add("guozhan-mode");
 								return;
 							}
-
 							var filename;
 							var checked;
 							var identity = this.parentNode.dataset.color;
@@ -3868,14 +3617,12 @@ export async function content(config, pack) {
 									this.parentNode.style.backgroundImage = "";
 									return;
 							}
-
 							if (!checked && this.parentNode.dataset.color) {
 								if (this.parentNode.dataset.color[0] == "b") {
 									filename += "_blue";
 									this.player.classList.add("opposite-camp");
 								}
 							}
-
 							this.innerText = value;
 							this.style.visibility = "hidden";
 							var image = new Image();
@@ -3883,7 +3630,6 @@ export async function content(config, pack) {
 							image.onerror = function () {
 								this.node.style.visibility = "";
 							};
-
 							// -----------------分割线-----------------
 							// 不同样式身份标记
 							var style = lib.config.extension_十周年UI_newDecadeStyle;
@@ -3899,7 +3645,6 @@ export async function content(config, pack) {
 						},
 					},
 				});
-
 				Object.defineProperties(player.node.count, {
 					innerHTML: {
 						configurable: true,
@@ -3913,7 +3658,6 @@ export async function content(config, pack) {
 						},
 					},
 				});
-
 				if (!noclick) {
 					player.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.target);
 					player.node.identity.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.identity);
@@ -3923,16 +3667,13 @@ export async function content(config, pack) {
 				} else {
 					player.noclick = true;
 				}
-
 				var campWrap = decadeUI.element.create("camp-wrap");
 				var hpWrap = decadeUI.element.create("hp-wrap");
-
 				player.insertBefore(campWrap, player.node.name);
 				player.insertBefore(hpWrap, player.node.hp);
 				player.node.campWrap = campWrap;
 				player.node.hpWrap = hpWrap;
 				hpWrap.appendChild(player.node.hp);
-
 				var campWrapExtend = {
 					node: {
 						back: decadeUI.element.create("camp-back", campWrap),
@@ -3942,19 +3683,15 @@ export async function content(config, pack) {
 						avatarDefaultName: decadeUI.element.create("avatar-name-default", campWrap),
 					},
 				};
-
 				decadeUI.get.extend(campWrap, campWrapExtend);
-
 				campWrap.appendChild(player.node.name);
 				campWrap.node.avatarName.className = "avatar-name";
 				campWrap.node.avatarDefaultName.innerHTML = get.mode() === "guozhan" ? "主将" : "隐匿";
 				//结束
-
 				var node = {
 					mask: player.insertBefore(decadeUI.element.create("mask"), player.node.identity),
 					gainSkill: decadeUI.element.create("gain-skill", player),
 				};
-
 				var properties = {
 					gainSkill: {
 						player: player,
@@ -3989,19 +3726,15 @@ export async function content(config, pack) {
 										html += "" + lib.translate[sender.skills[i]] + " ";
 									}
 								}
-
 								sender.innerHTML = html;
 							}
 						},
 					},
 				};
-
 				decadeUI.get.extend(node.gainSkill, properties.gainSkill);
 				decadeUI.get.extend(player.node, node);
-
 				return player;
 			};
-
 			ui.create.card = function (position, info, noclick) {
 				var card = ui.create.div(".card");
 				card.node = {
@@ -4017,7 +3750,6 @@ export async function content(config, pack) {
 					judgeMark: decadeUI.element.create("judge-mark", card),
 					cardMask: decadeUI.element.create("card-mask", card),
 				};
-
 				var extend = {
 					$name: decadeUI.element.create("top-name", card),
 					$vertname: card.node.name,
@@ -4026,13 +3758,11 @@ export async function content(config, pack) {
 					$range: card.node.range,
 					$gaintag: card.node.gaintag,
 				};
-
 				for (var i in extend) card[i] = extend[i];
 				//for (var i in lib.element.card) card[i] = lib.element.card[i];
 				Object.setPrototypeOf(card, lib.element.Card.prototype);
 				card.node.intro.innerText = lib.config.intro;
 				if (!noclick) lib.setIntro(card);
-
 				card.storage = {};
 				card.vanishtag = [];
 				card.gaintag = [];
@@ -4049,7 +3779,6 @@ export async function content(config, pack) {
 						});
 					}
 				}
-
 				card.$suitnum.$num = decadeUI.element.create(null, card.$suitnum, "span");
 				card.$suitnum.$num.style.fontFamily = '"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
 				card.$suitnum.$br = decadeUI.element.create(null, card.$suitnum, "br");
@@ -4057,23 +3786,19 @@ export async function content(config, pack) {
 				card.$suitnum.$suit.style.fontFamily = '"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
 				card.$equip.$suitnum = decadeUI.element.create(null, card.$equip, "span");
 				card.$equip.$name = decadeUI.element.create(null, card.$equip, "span");
-
 				card.node.judgeMark.node = {
 					back: decadeUI.element.create("back", card.node.judgeMark),
 					mark: decadeUI.element.create("mark", card.node.judgeMark),
 					judge: decadeUI.element.create("judge", card.node.judgeMark),
 				};
-
 				if (position) position.appendChild(card);
 				return card;
 			};
-
 			ui.create.cards = function () {
 				var result = base.ui.create.cards.apply(this, arguments);
 				game.updateRoundNumber();
 				return result;
 			};
-
 			lib.init.cssstyles = function () {
 				var temp = lib.config.glow_phase;
 				lib.config.glow_phase = "";
@@ -4081,11 +3806,9 @@ export async function content(config, pack) {
 				lib.config.glow_phase = temp;
 				ui.css.styles.sheet.insertRule('.avatar-name, .avatar-name-default { font-family: "' + (lib.config.name_font || "xinkai") + '", "xinwei" }', 0);
 			};
-
 			lib.init.layout = function (layout, nosave) {
 				if (!nosave) game.saveConfig("layout", layout);
 				game.layout = layout;
-
 				var relayout = function () {
 					ui.arena.dataset.layout = game.layout;
 					if (lib.config.phonelayout) {
@@ -4097,7 +3820,6 @@ export async function content(config, pack) {
 						ui.arena.classList.remove("phone");
 						ui.arena.setAttribute("data-phonelayout", "off"); // 新增
 					}
-
 					for (var i = 0; i < game.players.length; i++) {
 						if (get.is.linked2(game.players[i])) {
 							if (game.players[i].classList.contains("linked")) {
@@ -4111,7 +3833,6 @@ export async function content(config, pack) {
 							}
 						}
 					}
-
 					ui.updatej();
 					ui.updatem();
 					setTimeout(function () {
@@ -4119,16 +3840,13 @@ export async function content(config, pack) {
 						setTimeout(function () {
 							ui.updatex();
 						}, 500);
-
 						setTimeout(function () {
 							ui.updatec();
 						}, 1000);
 					}, 100);
 				};
-
 				setTimeout(relayout, 500);
 			};
-
 			lib.element.content.chooseToCompare = function () {
 				"step 0";
 				if (!event.position || typeof event.position != "string") {
@@ -4389,7 +4107,6 @@ export async function content(config, pack) {
 					event.preserve = !event.result.bool;
 				}
 			};
-
 			lib.element.content.chooseToCompareMultiple = function () {
 				"step 0";
 				if (!event.fixedResult?.[player.playerid] && !player.countCards("h")) {
@@ -4665,7 +4382,6 @@ export async function content(config, pack) {
 					var cards = get.cards(num);
 					var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
 					guanxing.caption = event.getParent() && event.getParent().name && get.translation(event.getParent().name) != event.getParent().name ? "【" + get.translation(event.getParent().name) + "】" : "请按顺序排列牌";
-
 					game.broadcast(
 						function (player, cards, callback) {
 							if (!window.decadeUI) return;
@@ -4678,12 +4394,10 @@ export async function content(config, pack) {
 						cards,
 						guanxing.callback
 					);
-
 					if (event.isOnline()) {
 						event.player.send(function () {
 							if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
 						}, event.player);
-
 						event.player.wait();
 						decadeUI.game.wait();
 					} else if (!(typeof event.isMine == "function" && event.isMine())) {
@@ -4791,7 +4505,6 @@ export async function content(config, pack) {
 							);
 							time += 500;
 						}
-
 						for (var i = 0; i < cards.length; i++) {
 							setTimeout(
 								function (card, index, finished) {
@@ -4820,7 +4533,6 @@ export async function content(config, pack) {
 			}
 			lib.element.player.setIdentity = function (identity) {
 				if (!identity) identity = this.identity;
-
 				this.node.identity.dataset.color = identity;
 				if (get.mode() == "guozhan") {
 					if (identity == "ye" && get.is.jun(this)) this.identity = identity = lib.character[this.name1][1];
@@ -4828,7 +4540,6 @@ export async function content(config, pack) {
 					this.node.identity.firstChild.innerHTML = get.translation(identity);
 					return this;
 				}
-
 				if (get.is.jun(this)) {
 					this.node.identity.firstChild.innerHTML = "君";
 				} else {
@@ -4836,7 +4547,6 @@ export async function content(config, pack) {
 				}
 				return this;
 			};
-
 			lib.element.player.addSkill = function (skill) {
 				var skill = playerAddSkillFunction.apply(this, arguments);
 				if (!Array.isArray(skill)) {
@@ -4854,7 +4564,6 @@ export async function content(config, pack) {
 				[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 				return skill;
 			};
-
 			lib.element.player.removeSkill = function (skill) {
 				var skill = playerRemoveSkillFunction.apply(this, arguments);
 				if (!Array.isArray(skill)) {
@@ -4865,7 +4574,6 @@ export async function content(config, pack) {
 				[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 				return skill;
 			};
-
 			lib.element.player.awakenSkill = function (skill, nounmark) {
 				const result = playerAwakenSkillFunction.apply(this, arguments);
 				ui.updateSkillControl(this);
@@ -4877,13 +4585,11 @@ export async function content(config, pack) {
 				}
 				return result;
 			};
-
 			lib.element.player.getState = function () {
 				var state = base.lib.element.player.getState.apply(this, arguments);
 				state.seat = this.seat;
 				return state;
 			};
-
 			Object.defineProperties(lib.element.player, {
 				group: {
 					configurable: true,
@@ -4897,7 +4603,6 @@ export async function content(config, pack) {
 						if (lib.config.extension_十周年UI_forcestyle == "2") {
 							this._group = group;
 							this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
-
 							if (!decadeUI.config.campIdentityImageMode) {
 								if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
 								else {
@@ -4968,20 +4673,17 @@ export async function content(config, pack) {
 					},
 				},
 			});
-
 			lib.element.player.setModeState = function (info) {
 				if (info && info.seat) {
 					if (!this.node.seat) this.node.seat = decadeUI.element.create("seat", this);
 					this.node.seat.innerHTML = get.cnNumber(info.seat, true);
 				}
-
 				if (base.lib.element.player.setModeState) {
 					return base.lib.element.player.setModeState.apply(this, arguments);
 				} else {
 					return this.init(info.name, info.name2);
 				}
 			};
-
 			lib.element.player.$damagepop = function (num, nature, font, nobroadcast) {
 				if (typeof num == "number" || typeof num == "string") {
 					game.addVideo("damagepop", this, [num, nature, font]);
@@ -4996,20 +4698,17 @@ export async function content(config, pack) {
 							font
 						);
 					}
-
 					var node;
 					if (this.popupNodeCache && this.popupNodeCache.length) {
 						node = this.popupNodeCache.shift();
 					} else {
 						node = decadeUI.element.create("damage");
 					}
-
 					if (font) {
 						node.classList.add("normal-font");
 					} else {
 						node.classList.remove("normal-font");
 					}
-
 					if (typeof num == "number") {
 						node.popupNumber = num;
 						if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI" && lib.config.extension_十周年UI_newDecadeStyle !== "othersOff" && lib.config.extension_十周年UI_newDecadeStyle !== "on") {
@@ -5024,18 +4723,15 @@ export async function content(config, pack) {
 					} else {
 						node.popupNumber = null;
 					}
-
 					node.innerHTML = num;
 					node.dataset.text = node.textContent || node.innerText;
 					node.nature = nature || "soil";
 					this.damagepopups.push(node);
 				}
-
 				if (this.damagepopups.length && !this.damagepopLocked) {
 					var node = this.damagepopups.shift();
 					this.damagepopLocked = true;
 					if (this != node.parentNode) this.appendChild(node);
-
 					var player = this;
 					if (typeof node.popupNumber == "number") {
 						var popupNum = node.popupNumber;
@@ -5128,7 +4824,6 @@ export async function content(config, pack) {
 							}
 						}
 					}
-
 					node.style.animation = "open-fade-in-out 1.2s";
 					setTimeout(
 						function (player, node) {
@@ -5140,7 +4835,6 @@ export async function content(config, pack) {
 						player,
 						node
 					);
-
 					setTimeout(
 						function (player) {
 							player.damagepopLocked = false;
@@ -5151,7 +4845,6 @@ export async function content(config, pack) {
 					);
 				}
 			};
-
 			lib.element.player.$compare = function (card1, target, card2) {
 				game.broadcast(
 					function (player, target, card1, card2) {
@@ -5167,7 +4860,6 @@ export async function content(config, pack) {
 				target.$throwordered2(card2.copy(false));
 				player.$throwordered2(card1.copy(false));
 			};
-
 			lib.element.player.$compareMultiple = function (card1, targets, cards) {
 				game.broadcast(
 					function (player, card1, targets, cards) {
@@ -5185,15 +4877,12 @@ export async function content(config, pack) {
 				}
 				player.$throwordered2(card1.copy(false));
 			};
-
 			lib.element.card.copy = function () {
 				var clone = cardCopyFunction.apply(this, arguments);
 				clone.nature = this.nature;
-
 				var res = dui.statics.cards;
 				var asset = res[clone.name];
 				if (!res.READ_OK) return clone;
-
 				if (asset && !asset.loaded && clone.classList.contains("decade-card")) {
 					if (asset.loaded == undefined) {
 						var image = asset.image;
@@ -5206,7 +4895,6 @@ export async function content(config, pack) {
 						clone.classList.remove("decade-card");
 					}
 				}
-
 				return clone;
 			};
 		},
@@ -5216,18 +4904,14 @@ export async function content(config, pack) {
 				for (var i in decadeUI.dialog) {
 					if (decadeUI.dialog[i]) element[i] = decadeUI.dialog[i];
 				}
-
 				element.listens = {};
 				for (var i in decadeUI.dialog.listens) {
 					if (decadeUI.dialog.listens[i]) element.listens[i] = decadeUI.dialog.listens[i];
 				}
-
 				element.listens._dialog = element;
 				element.listens._list = [];
-
 				if (className) element.className = className;
 				if (parentNode) parentNode.appendChild(element);
-
 				return element;
 			},
 			open() {
@@ -5235,21 +4919,17 @@ export async function content(config, pack) {
 			},
 			show() {
 				if (this == decadeUI.dialog) return console.error("undefined");
-
 				this.classList.remove("hidden");
 			},
 			hide() {
 				if (this == decadeUI.dialog) return console.error("undefined");
-
 				this.classList.add("hidden");
 			},
 			animate(property, duration, toArray, fromArrayOptional) {
 				if (this == decadeUI.dialog) return console.error("undefined");
 				if (property == null || duration == null || toArray == null) return console.error("arguments");
-
 				var propArray = property.replace(/\s*/g, "").split(",");
 				if (!propArray || propArray.length == 0) return console.error("property");
-
 				var realDuration = 0;
 				if (duration.lastIndexOf("s") != -1) {
 					if (duration.lastIndexOf("ms") != -1) {
@@ -5268,23 +4948,19 @@ export async function content(config, pack) {
 					if (isNaN(duration)) return console.error("duration");
 					realDuration = duration;
 				}
-
 				if (fromArrayOptional) {
 					for (var i = 0; i < propArray.length; i++) {
 						this.style.setProperty(propArray[i], fromArrayOptional[i]);
 					}
 				}
-
 				var duraBefore = this.style.transitionDuration;
 				var propBefore = this.style.transitionProperty;
 				this.style.transitionDuration = realDuration + "ms";
 				this.style.transitionProperty = property;
-
 				ui.refresh(this);
 				for (var i = 0; i < propArray.length; i++) {
 					this.style.setProperty(propArray[i], toArray[i]);
 				}
-
 				var restore = this;
 				setTimeout(function () {
 					restore.style.transitionDuration = duraBefore;
@@ -5294,13 +4970,10 @@ export async function content(config, pack) {
 			close(delayTime, fadeOut) {
 				if (this == decadeUI.dialog) return console.error("undefined");
 				this.listens.clear();
-
 				if (!this.parentNode) return;
-
 				if (fadeOut === true && delayTime) {
 					this.animate("opacity", delayTime, 0);
 				}
-
 				if (delayTime) {
 					var remove = this;
 					delayTime = typeof delayTime == "number" ? delayTime : parseInt(delayTime);
@@ -5309,7 +4982,6 @@ export async function content(config, pack) {
 					}, delayTime);
 					return;
 				}
-
 				this.parentNode.removeChild(this);
 				return;
 			},
@@ -5317,13 +4989,11 @@ export async function content(config, pack) {
 				add(listenElement, event, func, useCapture) {
 					if (!this._dialog || !this._list) return console.error("undefined");
 					if (!(listenElement instanceof HTMLElement) || !event || typeof func !== "function") return console.error("arguments");
-
 					this._list.push(new Array(listenElement, event, func));
 					listenElement.addEventListener(event, func);
 				},
 				remove(listenElementOptional, eventOptional, funcOptional) {
 					if (!this._dialog || !this._list) return console.error("undefined");
-
 					var list = this._list;
 					if (listenElementOptional && eventOptional && funcOptional) {
 						var index = list.indexOf(new Array(listenElementOptional, eventOptional, funcOptional));
@@ -5378,7 +5048,6 @@ export async function content(config, pack) {
 				},
 				clear() {
 					if (!this._dialog || !this._list) return console.error("undefined");
-
 					var list = this._list;
 					for (var i = list.length - 1; i >= 0; i--) {
 						list[i][0].removeEventListener(list[i][1], list[i][2]);
@@ -5396,33 +5065,28 @@ export async function content(config, pack) {
 					this.canvas = ui.arena.appendChild(document.createElement("canvas"));
 					this.canvas.id = "decadeUI-canvas-arena";
 				}
-
 				return true;
 			},
 			add(frameFunc) {
 				if (typeof frameFunc != "function") return;
 				if (!this.check()) return;
-
 				var obj = {
 					inits: [],
 					update: frameFunc,
 					id: decadeUI.getRandom(0, 100),
 				};
-
 				if (arguments.length > 2) {
 					obj.inits = new Array(arguments.length - 2);
 					for (var i = 2; i < arguments.length; i++) {
 						obj.inits[i - 2] = arguments[i];
 					}
 				}
-
 				this.updates.push(obj);
 				if (this.frameId == undefined) this.frameId = requestAnimationFrame(this.update.bind(this));
 			},
 			update() {
 				var frameTime = performance.now();
 				var delta = frameTime - (this.frameTime == undefined ? frameTime : this.frameTime);
-
 				this.frameTime = frameTime;
 				var e = {
 					canvas: this.canvas,
@@ -5438,28 +5102,22 @@ export async function content(config, pack) {
 					},
 					drawLine(x1, y1, x2, y2, color, lineWidth) {
 						if (x1 == null || y1 == null) throw "arguments";
-
 						var context = this.context;
 						context.beginPath();
-
 						if (color) context.strokeStyle = color;
 						if (lineWidth) context.lineWidth = lineWidth;
-
 						if (x2 == null || y2 == null) {
 							context.lineTo(x1, y1);
 						} else {
 							context.moveTo(x1, y1);
 							context.lineTo(x2, y2);
 						}
-
 						context.stroke();
 					},
 					drawRect(x, y, width, height, color, lineWidth) {
 						if (x == null || y == null || width == null || height == null) throw "arguments";
-
 						var ctx = this.context;
 						ctx.beginPath();
-
 						if (color) ctx.strokeStyle = color;
 						if (lineWidth) ctx.lineWidth = lineWidth;
 						ctx.rect(x, y, width, height);
@@ -5469,7 +5127,6 @@ export async function content(config, pack) {
 						if (!text) return;
 						if (x == null || y == null) throw "x or y";
 						var context = this.context;
-
 						if (font) context.font = font;
 						if (textAlign) context.textAlign = textAlign;
 						if (textBaseline) context.textBaseline = textBaseline;
@@ -5477,7 +5134,6 @@ export async function content(config, pack) {
 							if (!stroke) context.fillStyle = color;
 							else context.strokeStyle = color;
 						}
-
 						if (!stroke) context.fillText(text, x, y);
 						else context.strokeText(text, x, y);
 					},
@@ -5489,13 +5145,11 @@ export async function content(config, pack) {
 						this.context.fillRect(x, y, width, height);
 					},
 				};
-
 				if (!decadeUI.dataset.animSizeUpdated) {
 					decadeUI.dataset.animSizeUpdated = true;
 					e.canvas.width = e.canvas.parentNode.offsetWidth;
 					e.canvas.height = e.canvas.parentNode.offsetHeight;
 				}
-
 				e.canvas.height = e.canvas.height;
 				var args;
 				var task;
@@ -5510,13 +5164,11 @@ export async function content(config, pack) {
 					}
 					e.restore();
 				}
-
 				if (this.updates.length == 0) {
 					this.frameId = undefined;
 					this.frameTime = undefined;
 					return;
 				}
-
 				this.frameId = requestAnimationFrame(this.update.bind(this));
 			},
 		},
@@ -5528,20 +5180,16 @@ export async function content(config, pack) {
 				this.maximumWidth = 10000 * this.width;
 				this.maximumHeight = 10000 * this.height;
 				this.events = [];
-
 				var expand = document.createElement("div");
 				expand.style.cssText = "position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;transition:all 0s;";
 				var shrink = expand.cloneNode(false);
-
 				var expandChild = document.createElement("div");
 				expandChild.style.cssText = "transition: all 0s !important; animation: none !important;";
 				var shrinkChild = expandChild.cloneNode(false);
-
 				expandChild.style.width = this.maximumWidth + "px";
 				expandChild.style.height = this.maximumHeight + "px";
 				shrinkChild.style.width = "250%";
 				shrinkChild.style.height = "250%";
-
 				expand.appendChild(expandChild);
 				shrink.appendChild(shrinkChild);
 				element.appendChild(expand);
@@ -5549,31 +5197,25 @@ export async function content(config, pack) {
 				if (expand.offsetParent != element) {
 					element.style.position = "relative";
 				}
-
 				expand.scrollTop = shrink.scrollTop = this.maximumHeight;
 				expand.scrollLeft = shrink.scrollLeft = this.maximumWidth;
-
 				var sensor = this;
 				sensor.onscroll = function (e) {
 					sensor.w = sensor.element.clientWidth || 1;
 					sensor.h = sensor.element.clientHeight || 1;
-
 					if (sensor.w != sensor.width || sensor.h != sensor.height) {
 						sensor.width = sensor.w;
 						sensor.height = sensor.h;
 						sensor.dispatchEvent();
 					}
-
 					expand.scrollTop = shrink.scrollTop = sensor.maximumHeight;
 					expand.scrollLeft = shrink.scrollLeft = sensor.maximumWidth;
 				};
-
 				expand.addEventListener("scroll", sensor.onscroll);
 				shrink.addEventListener("scroll", sensor.onscroll);
 				sensor.expand = expand;
 				sensor.shrink = shrink;
 			}
-
 			ResizeSensor.prototype.addListener = function (callback, capture) {
 				if (this.events == undefined) this.events = [];
 				this.events.push({
@@ -5581,11 +5223,9 @@ export async function content(config, pack) {
 					capture: capture,
 				});
 			};
-
 			ResizeSensor.prototype.dispatchEvent = function () {
 				var capture = true;
 				var evt;
-
 				for (var i = 0; i < this.events.length; i++) {
 					evt = this.events[i];
 					if (evt.capture) {
@@ -5594,12 +5234,10 @@ export async function content(config, pack) {
 						capture = false;
 					}
 				}
-
 				if (!capture) {
 					requestAnimationFrame(this.dispatchFrameEvent.bind(this));
 				}
 			};
-
 			ResizeSensor.prototype.dispatchFrameEvent = function () {
 				var evt;
 				for (var i = 0; i < this.events.length; i++) {
@@ -5607,19 +5245,15 @@ export async function content(config, pack) {
 					if (!evt.capture) evt.callback();
 				}
 			};
-
 			ResizeSensor.prototype.close = function () {
 				this.expand.removeEventListener("scroll", this.onscroll);
 				this.shrink.removeEventListener("scroll", this.onscroll);
-
 				if (!this.element) {
 					this.element.removeChild(this.expand);
 					this.element.removeChild(this.shrink);
 				}
-
 				this.events = null;
 			};
-
 			return ResizeSensor;
 		})(),
 		sheet: {
@@ -5640,11 +5274,9 @@ export async function content(config, pack) {
 				if (typeof selector != "string" || !selector) throw 'parameter "selector" error';
 				if (!this.cachedSheet) this.cachedSheet = {};
 				if (this.cachedSheet[selector]) return this.cachedSheet[selector];
-
 				var sheetList = this.sheetList;
 				var sheet;
 				var shouldBreak = false;
-
 				for (var j = sheetList.length - 1; j >= 0; j--) {
 					if (typeof cssName == "string") {
 						cssName = cssName.replace(/.css/, "") + ".css";
@@ -5653,13 +5285,11 @@ export async function content(config, pack) {
 								sheet = sheetList[k];
 							}
 						}
-
 						shouldBreak = true;
 						if (!sheet) throw "cssName not found";
 					} else {
 						sheet = sheetList[j];
 					}
-
 					// 添加try-catch保证正常运行
 					try {
 						for (var i = 0; i < sheet.cssRules.length; i++) {
@@ -5681,17 +5311,14 @@ export async function content(config, pack) {
 						console.error(error);
 						console.log("error-sheet", sheet);
 					}
-
 					if (shouldBreak) break;
 				}
-
 				return null;
 			},
 			insertRule(rule, index, cssName) {
 				if (!this.sheetList) this.init();
 				if (!this.sheetList) throw "sheet not loaded";
 				if (typeof rule != "string" || !rule) throw 'parameter "rule" error';
-
 				var sheet;
 				if (typeof cssName == "string") {
 					for (var j = sheetList.length - 1; j >= 0; j--) {
@@ -5700,10 +5327,8 @@ export async function content(config, pack) {
 							sheet = sheetList[k];
 						}
 					}
-
 					if (!sheet) throw "cssName not found";
 				}
-
 				if (!sheet) sheet = this.sheetList[this.sheetList.length - 1];
 				var inserted = 0;
 				if (typeof index == "number") {
@@ -5711,7 +5336,6 @@ export async function content(config, pack) {
 				} else {
 					inserted = sheet.insertRule(rule, sheet.cssRules.length);
 				}
-
 				return sheet.cssRules[inserted].style;
 			},
 		},
@@ -5722,10 +5346,8 @@ export async function content(config, pack) {
 			},
 			updateHand() {
 				if (!game.me) return;
-
 				var handNode = ui.handcards1;
 				if (!handNode) return console.error("hand undefined");
-
 				var card;
 				var cards = [];
 				var childs = handNode.childNodes;
@@ -5737,28 +5359,22 @@ export async function content(config, pack) {
 						card.scaled = false;
 					}
 				}
-
 				if (!cards.length) return;
-
 				var bounds = dui.boundsCaches.hand;
 				bounds.check();
-
 				var pw = bounds.width;
 				var ph = bounds.height;
 				var cw = bounds.cardWidth;
 				var ch = bounds.cardHeight;
 				var cs = bounds.cardScale;
-
 				var csw = cw * cs;
 				var x;
 				var y = Math.round((ch * cs - ch) / 2);
-
 				var xMargin = csw + 2;
 				var xStart = (csw - cw) / 2;
 				var totalW = cards.length * csw + (cards.length - 1) * 2;
 				var limitW = pw;
 				var expand;
-
 				if (totalW > limitW) {
 					xMargin = csw - Math.abs(limitW - csw * cards.length) / (cards.length - 1);
 					if (lib.config.fold_card) {
@@ -5783,7 +5399,6 @@ export async function content(config, pack) {
 						xStart += (limitW - totalW) / 1.7;
 					}
 				}
-
 				var card;
 				for (var i = 0; i < cards.length; i++) {
 					x = Math.round(xStart + i * xMargin);
@@ -5794,7 +5409,6 @@ export async function content(config, pack) {
 					card.style.transform = "translate(" + x + "px," + y + "px) scale(" + cs + ")";
 					card._transform = card.style.transform;
 				}
-
 				if (expand) {
 					/*-----------------分割线-----------------*/
 					// 手牌滑动，咸鱼大佬提供代码
@@ -5813,7 +5427,6 @@ export async function content(config, pack) {
 			},
 			updateDiscard() {
 				if (!ui.thrown) ui.thrown = [];
-
 				for (var i = ui.thrown.length - 1; i >= 0; i--) {
 					if (ui.thrown[i].classList.contains("drawingcard") || ui.thrown[i].classList.contains("removing") || ui.thrown[i].parentNode != ui.arena || ui.thrown[i].fixed) {
 						ui.thrown.splice(i, 1);
@@ -5821,34 +5434,27 @@ export async function content(config, pack) {
 						ui.thrown[i].classList.remove("removing");
 					}
 				}
-
 				if (!ui.thrown.length) return;
-
 				var cards = ui.thrown;
 				var bounds = dui.boundsCaches.arena;
 				bounds.check();
-
 				var pw = bounds.width;
 				var ph = bounds.height;
 				var cw = bounds.cardWidth;
 				var ch = bounds.cardHeight;
 				var cs = bounds.cardScale;
-
 				var csw = cw * cs;
 				var x;
 				var y = Math.round((ph - ch) / 2);
-
 				var xMargin = csw + 2;
 				var xStart = (csw - cw) / 2;
 				var totalW = cards.length * csw + (cards.length - 1) * 2;
 				var limitW = pw;
-
 				if (totalW > limitW) {
 					xMargin = csw - Math.abs(limitW - csw * cards.length) / (cards.length - 1);
 				} else {
 					xStart += (limitW - totalW) / 2;
 				}
-
 				var card;
 				for (var i = 0; i < cards.length; i++) {
 					x = Math.round(xStart + i * xMargin);
@@ -5861,14 +5467,11 @@ export async function content(config, pack) {
 			},
 			clearout(card) {
 				if (!card) return;
-
 				if (card.fixed || card.classList.contains("removing")) return;
-
 				if (ui.thrown.indexOf(card) == -1) {
 					ui.thrown.splice(0, 0, card);
 					dui.queueNextFrameTick(dui.layoutDiscard, dui);
 				}
-
 				card.classList.add("invalided");
 				setTimeout(
 					function (card) {
@@ -5894,7 +5497,6 @@ export async function content(config, pack) {
 				} else {
 					this._delayClearTimeoutTime = nowTime;
 				}
-
 				this._delayClearTimeout = setTimeout(function () {
 					decadeUI.layout._delayClearTimeout = null;
 					decadeUI.layout._delayClearTimeoutTime = null;
@@ -5921,7 +5523,6 @@ export async function content(config, pack) {
 				} else {
 					this._handcardTimeoutTime = nowTime;
 				}
-
 				this._handcardTimeout = setTimeout(function () {
 					decadeUI.layout._handcardTimeout = null;
 					decadeUI.layout._handcardTimeoutTime = null;
@@ -5943,7 +5544,6 @@ export async function content(config, pack) {
 				} else {
 					this._discardTimeoutTime = nowTime;
 				}
-
 				this._discardTimeout = setTimeout(function () {
 					decadeUI.layout._discardTimeout = null;
 					decadeUI.layout._discardTimeoutTime = null;
@@ -5953,55 +5553,44 @@ export async function content(config, pack) {
 			resize() {
 				if (decadeUI.isMobile()) ui.arena.classList.add("dui-mobile");
 				else ui.arena.classList.remove("dui-mobile");
-
 				var set = decadeUI.dataset;
 				set.animSizeUpdated = false;
 				set.bodySize.updated = false;
-
 				var caches = decadeUI.boundsCaches;
 				for (var key in caches) caches[key].updated = false;
-
 				var buttonsWindow = decadeUI.sheet.getStyle("#window > .dialog.popped .buttons:not(.smallzoom)");
 				if (!buttonsWindow) {
 					buttonsWindow = decadeUI.sheet.insertRule("#window > .dialog.popped .buttons:not(.smallzoom) { zoom: 1; }");
 				}
-
 				var buttonsArena = decadeUI.sheet.getStyle("#arena:not(.choose-character) .buttons:not(.smallzoom)");
 				if (!buttonsArena) {
 					buttonsArena = decadeUI.sheet.insertRule("#arena:not(.choose-character) .buttons:not(.smallzoom) { zoom: 1; }");
 				}
-
 				decadeUI.zooms.card = decadeUI.getCardBestScale();
 				if (ui.me) {
 					var height = Math.round(decadeUI.getHandCardSize().height * decadeUI.zooms.card + 30.4) + "px";
 					ui.me.style.height = height;
 				}
-
 				if (buttonsArena) {
 					buttonsArena.zoom = decadeUI.zooms.card;
 				}
-
 				if (buttonsWindow) {
 					buttonsWindow.zoom = decadeUI.zooms.card;
 				}
-
 				decadeUI.layout.invalidate();
 			},
 		},
 		handler: {
 			handMousewheel(e) {
 				if (!ui.handcards1Container) return console.error("ui.handcards1Container");
-
 				var hand = ui.handcards1Container;
 				if (hand.scrollNum == void 0) hand.scrollNum = 0;
 				if (hand.lastFrameTime == void 0) hand.lastFrameTime = performance.now();
-
 				function handScroll() {
 					var now = performance.now();
 					var delta = now - hand.lastFrameTime;
 					var num = Math.round((delta / 16) * 16);
 					hand.lastFrameTime = now;
-
 					if (hand.scrollNum > 0) {
 						num = Math.min(hand.scrollNum, num);
 						hand.scrollNum -= num;
@@ -6010,7 +5599,6 @@ export async function content(config, pack) {
 						hand.scrollNum += num;
 						num = -num;
 					}
-
 					if (hand.scrollNum == 0) {
 						hand.frameId = void 0;
 						hand.lastFrameTime = void 0;
@@ -6019,13 +5607,11 @@ export async function content(config, pack) {
 						ui.handcards1Container.scrollLeft += num;
 					}
 				}
-
 				if (e.wheelDelta > 0) {
 					hand.scrollNum -= 84;
 				} else {
 					hand.scrollNum += 84;
 				}
-
 				if (hand.frameId == void 0) {
 					hand.frameId = requestAnimationFrame(handScroll);
 				}
@@ -6044,17 +5630,13 @@ export async function content(config, pack) {
 			game.pause();
 			_status.timeout = setTimeout(game.resume, milliseconds);
 		},
-
 		queueNextTick(callback, ctx) {
 			if (!dui._tickEntries) dui._tickEntries = [];
-
 			dui._tickEntries.push({
 				ctx: ctx,
 				callback: callback,
 			});
-
 			if (dui._queueTick) return;
-
 			dui._queueTick = Promise.resolve().then(function () {
 				dui._queueTick = null;
 				var entries = dui._tickEntries;
@@ -6064,14 +5646,11 @@ export async function content(config, pack) {
 		},
 		queueNextFrameTick(callback, ctx) {
 			if (!dui._frameTickEntries) dui._frameTickEntries = [];
-
 			dui._frameTickEntries.push({
 				ctx: ctx,
 				callback: callback,
 			});
-
 			if (dui._queueFrameTick) return;
-
 			dui._queueFrameTick = requestAnimationFrame(function () {
 				dui._queueFrameTick = null;
 				setTimeout(
@@ -6084,15 +5663,12 @@ export async function content(config, pack) {
 				dui._frameTickEntries = [];
 			});
 		},
-
 		layoutHand() {
 			dui.layout.updateHand();
 		},
-
 		layoutHandDraws(cards) {
 			var bounds = dui.boundsCaches.hand;
 			bounds.check();
-
 			var x, y;
 			var pw = bounds.width;
 			var ph = bounds.height;
@@ -6101,7 +5677,6 @@ export async function content(config, pack) {
 			var cs = bounds.cardScale;
 			var csw = cw * cs;
 			var xStart, xMargin;
-
 			var draws = [];
 			var card;
 			var clone;
@@ -6117,7 +5692,6 @@ export async function content(config, pack) {
 				} else {
 					xStart += (limitW - totalW) / 2;
 				}
-
 				y = Math.round(source.cacheTop - bounds.y - 30 + (source.cacheHeight - ch) / 2);
 				for (var i = 0; i < cards.length; i++) {
 					x = Math.round(xStart + i * xMargin);
@@ -6145,11 +5719,9 @@ export async function content(config, pack) {
 					}
 				}
 			}
-
 			y = Math.round(-ch * cs * 2);
 			xMargin = csw * 0.5;
 			xStart = (pw - xMargin * (draws.length + 1)) / 2 - (cw - csw) / 2;
-
 			for (var i = 0; i < draws.length; i++) {
 				x = Math.round(xStart + i * xMargin);
 				card = draws[i];
@@ -6159,40 +5731,33 @@ export async function content(config, pack) {
 				card.style.transform = "translate(" + x + "px," + y + "px) scale(" + cs + ")";
 			}
 		},
-
 		layoutDrawCards(cards, player, center) {
 			var bounds = dui.boundsCaches.arena;
 			if (!bounds.updated) bounds.update();
-
 			player.checkBoundsCache();
 			var playerX = player.cacheLeft;
 			var playerY = player.cacheTop;
 			var playerW = player.cacheWidth;
 			var playerH = player.cacheHeight;
-
 			var pw = bounds.width;
 			var ph = bounds.height;
 			var cw = bounds.cardWidth;
 			var ch = bounds.cardHeight;
 			var cs = bounds.cardScale;
 			var csw = cw * cs;
-
 			var xMargin = 27;
 			var xStart = (center ? (pw - playerW) / 2 : playerX) - csw / 2 - (cw - csw) / 2;
 			var totalW = xMargin * cards.length + (csw - xMargin);
 			var limitW = playerW + csw;
-
 			if (totalW > limitW) {
 				xMargin = csw - Math.abs(limitW - csw * cards.length) / (cards.length - 1);
 			} else {
 				xStart += (limitW - totalW) / 2;
 			}
-
 			var x;
 			var y;
 			if (center) y = Math.round((ph - ch) / 2);
 			else y = Math.round(playerY + (playerH - ch) / 2);
-
 			var card;
 			for (var i = 0; i < cards.length; i++) {
 				x = Math.round(xStart + i * xMargin);
@@ -6203,29 +5768,23 @@ export async function content(config, pack) {
 				card.style.transform = "translate(" + x + "px," + y + "px) scale(" + cs + ")";
 			}
 		},
-
 		layoutDiscard() {
 			dui.layout.updateDiscard();
 		},
-
 		delayRemoveCards(cards, delay, delay2) {
 			if (!Array.isArray(cards)) cards = [cards];
-
 			setTimeout(
 				function (cards, delay2) {
 					var remove = function (cards) {
 						for (var i = 0; i < cards.length; i++) cards[i].remove();
 					};
-
 					if (delay2 == null) {
 						remove(cards);
 						return;
 					}
-
 					for (var i = 0; i < cards.length; i++) {
 						cards[i].classList.add("removing");
 					}
-
 					setTimeout(remove, delay2, cards);
 				},
 				delay,
@@ -6233,7 +5792,6 @@ export async function content(config, pack) {
 				delay2
 			);
 		},
-
 		//虚拟卡牌花色点数显示
 		cardTempSuitNum(card, cardsuit, cardnumber) {
 			var remain = false;
@@ -6253,7 +5811,6 @@ export async function content(config, pack) {
 			else snnode.$suit.innerHTML = "◈";
 			card.dataset.tempsn = cardsuit;
 		},
-
 		tryAddPlayerCardUseTag(card, player, event) {
 			if (!card || !player || !event) return;
 			var tagNode = card.querySelector(".used-info");
@@ -6298,7 +5855,6 @@ export async function content(config, pack) {
 					if (event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
 						var name = event.card.name,
 							nature = event.card.nature;
-
 						switch (name) {
 							case "effect_caochuanjiejian":
 								decadeUI.animation.cap.playSpineTo(card, "effect_caochuanjiejian");
@@ -6462,35 +6018,29 @@ export async function content(config, pack) {
 			}
 			tagNode.innerHTML = tagText;
 		},
-
 		getRandom(min, max) {
 			if (min == null) {
 				min = -2147483648;
 			}
-
 			if (max == null) {
 				max = 2147483648;
 			}
-
 			if (min > max) {
 				min = min + max;
 				max = min - max;
 				min = min - max;
 			}
-
 			var diff = 0;
 			if (min < 0) {
 				diff = min;
 				min = 0;
 				max -= diff;
 			}
-
 			return Math.floor(Math.random() * (max + 1 - min)) + min + diff;
 		},
 		//自用卡牌大小，检测联机昵称
 		getCardBestScale(size) {
 			if (!(size && size.height)) size = decadeUI.getHandCardSize();
-
 			var bodySize = decadeUI.get.bodySize();
 			var scaleFactor = 0.18;
 			if (decadeUI.isMobile()) {
@@ -6534,7 +6084,6 @@ export async function content(config, pack) {
 		getPlayerIdentity(player, identity, chinese, isMark) {
 			if (!(player instanceof HTMLElement && get.itemtype(player) == "player")) throw "player";
 			if (!identity) identity = player.identity;
-
 			var mode = get.mode();
 			var translated = false;
 			if (!chinese) {
@@ -6543,17 +6092,13 @@ export async function content(config, pack) {
 						if (!player.isAlive() || player.identityShown || player == game.me) {
 							identity = ((player.special_identity ? player.special_identity : identity) || "").replace(/identity_/, "");
 						}
-
 						break;
-
 					case "guozhan":
 						if (identity == "unknown") {
 							identity = player.wontYe() ? lib.character[player.name1][1] : "ye";
 						}
-
 						if (get.is.jun(player)) identity += "jun";
 						break;
-
 					case "versus":
 						if (!game.me) break;
 						switch (_status.mode) {
@@ -6574,13 +6119,11 @@ export async function content(config, pack) {
 							case "guandu":
 								if (get.translation(player.side + "Color") == "wei") identity += "_blue";
 								break;
-
 							case "two":
 								var side = player.finalSide ? player.finalSide : player.side;
 								identity = game.me.side == side ? "friend" : "enemy";
 								break;
 						}
-
 						break;
 					case "doudizhu":
 						identity = identity == "zhu" ? "dizhu" : "nongmin";
@@ -6610,12 +6153,10 @@ export async function content(config, pack) {
 							}
 						}
 						break;
-
 					case "guozhan":
 						if (identity == "unknown") {
 							identity = player.wontYe() ? player.trueIdentity || lib.character[player.name1][1] : "ye";
 						}
-
 						if (get.is.jun(player)) {
 							identity = isMark ? "君" : get.translation(identity) + "君";
 						} else {
@@ -6623,7 +6164,6 @@ export async function content(config, pack) {
 						}
 						translated = true;
 						break;
-
 					case "versus":
 						translated = true;
 						if (!game.me) break;
@@ -6647,23 +6187,19 @@ export async function content(config, pack) {
 										break;
 								}
 								break;
-
 							case "two":
 								var side = player.finalSide ? player.finalSide : player.side;
 								identity = game.me.side == side ? "友方" : "敌方";
 								break;
-
 							case "siguo":
 							case "jiange":
 								identity = get.translation(identity) + "将";
 								break;
-
 							default:
 								translated = false;
 								break;
 						}
 						break;
-
 					case "doudizhu":
 						identity += "2";
 						break;
@@ -6685,30 +6221,24 @@ export async function content(config, pack) {
 						}
 						break;
 				}
-
 				if (!translated) identity = get.translation(identity);
 				if (isMark) identity = identity[0];
 			}
-
 			return identity;
 		},
-
 		create: {
 			skillDialog() {
 				var dialog = document.createElement("div");
 				dialog.className = "skill-dialog";
-
 				var extend = {
 					caption: undefined,
 					tip: undefined,
-
 					open(customParent) {
 						if (!customParent) {
 							var size = decadeUI.get.bodySize();
 							this.style.minHeight = parseInt(size.height * 0.42) + "px";
 							if (this.parentNode != ui.arena) ui.arena.appendChild(this);
 						}
-
 						this.style.animation = "open-dialog 0.4s";
 						return this;
 					},
@@ -6724,7 +6254,6 @@ export async function content(config, pack) {
 							this.remove();
 							this.removeEventListener("animationend", func);
 						};
-
 						var animation = "close-dialog";
 						if (this.style.animationName == animation) {
 							setTimeout(
@@ -6739,7 +6268,6 @@ export async function content(config, pack) {
 							this.addEventListener("animationend", func);
 						}
 					},
-
 					appendControl(text, clickFunc) {
 						var control = document.createElement("div");
 						control.className = "control-button";
@@ -6747,17 +6275,14 @@ export async function content(config, pack) {
 						if (clickFunc) {
 							control.addEventListener("click", clickFunc);
 						}
-
 						return this.$controls.appendChild(control);
 					},
-
 					$caption: decadeUI.element.create("caption", dialog),
 					$content: decadeUI.element.create("content", dialog),
 					$tip: decadeUI.element.create("tip", dialog),
 					$controls: decadeUI.element.create("controls", dialog),
 				};
 				decadeUI.get.extend(dialog, extend);
-
 				Object.defineProperties(dialog, {
 					caption: {
 						configurable: true,
@@ -6780,21 +6305,17 @@ export async function content(config, pack) {
 						},
 					},
 				});
-
 				return dialog;
 			},
-
 			compareDialog(player, target) {
 				var dialog = decadeUI.create.skillDialog();
 				dialog.classList.add("compare");
 				dialog.$content.classList.add("buttons");
-
 				var extend = {
 					player: undefined,
 					target: undefined,
 					playerCard: undefined,
 					targetCard: undefined,
-
 					$player: decadeUI.element.create("player-character player1", dialog.$content),
 					$target: decadeUI.element.create("player-character player2", dialog.$content),
 					$playerCard: decadeUI.element.create("player-card", dialog.$content),
@@ -6802,7 +6323,6 @@ export async function content(config, pack) {
 					$vs: decadeUI.element.create("vs", dialog.$content),
 				};
 				decadeUI.get.extend(dialog, extend);
-
 				decadeUI.element.create("image", dialog.$player),
 					decadeUI.element.create("image", dialog.$target),
 					Object.defineProperties(dialog, {
@@ -6814,13 +6334,11 @@ export async function content(config, pack) {
 							set(value) {
 								if (this._player == value) return;
 								this._player = value;
-
 								if (value == null || value.isUnseen()) {
 									this.$player.firstChild.style.backgroundImage = "";
 								} else {
 									this.$player.firstChild.style.backgroundImage = (value.isUnseen(0) ? value.node.avatar2 : value.node.avatar).style.backgroundImage;
 								}
-
 								if (value) this.$playerCard.dataset.text = get.translation(value) + "发起";
 							},
 						},
@@ -6837,7 +6355,6 @@ export async function content(config, pack) {
 								} else {
 									this.$target.firstChild.style.backgroundImage = (value.isUnseen(0) ? value.node.avatar2 : value.node.avatar).style.backgroundImage;
 								}
-
 								if (value) this.$targetCard.dataset.text = get.translation(value);
 							},
 						},
@@ -6866,14 +6383,11 @@ export async function content(config, pack) {
 							},
 						},
 					});
-
 				if (player) dialog.player = player;
 				if (target) dialog.target = target;
-
 				return dialog;
 			},
 		},
-
 		get: {
 			judgeEffect(name, value) {
 				switch (name) {
@@ -6889,35 +6403,27 @@ export async function content(config, pack) {
 					case "乐不思蜀":
 						return value < 0 ? true : false;
 				}
-
 				return value;
 			},
-
 			isWebKit() {
 				return document.body.style.WebkitBoxShadow !== undefined;
 			},
-
 			lerp(min, max, fraction) {
 				return (max - min) * fraction + min;
 			},
-
 			ease(fraction) {
 				if (!decadeUI.get._bezier3) decadeUI.get._bezier3 = new duilib.CubicBezierEase(0.25, 0.1, 0.25, 1);
 				return decadeUI.get._bezier3.ease(fraction);
 			},
-
 			extend(target, source) {
 				if (source === null || typeof source !== "object") return target;
-
 				var keys = Object.keys(source);
 				var i = keys.length;
 				while (i--) {
 					target[keys[i]] = source[keys[i]];
 				}
-
 				return target;
 			},
-
 			bodySize() {
 				var size = decadeUI.dataset.bodySize;
 				if (!size.updated) {
@@ -6926,13 +6432,10 @@ export async function content(config, pack) {
 					size.height = body.clientHeight;
 					size.width = body.clientWidth;
 				}
-
 				return size;
 			},
-
 			bestValueCards(cards, player) {
 				if (!player) player = _status.event.player;
-
 				var matchs = [];
 				var basics = [];
 				var equips = [];
@@ -6940,7 +6443,6 @@ export async function content(config, pack) {
 				cards.sort(function (a, b) {
 					return get.value(b, player) - get.value(a, player);
 				});
-
 				for (var i = 0; i >= 0 && i < cards.length; i++) {
 					var limited = false;
 					switch (get.type(cards[i])) {
@@ -6951,10 +6453,8 @@ export async function content(config, pack) {
 									break;
 								}
 							}
-
 							if (!limited) basics.push(cards[i]);
 							break;
-
 						case "equip":
 							if (hasEquipSkill) break;
 							for (var j = 0; j < equips.length; j++) {
@@ -6963,27 +6463,22 @@ export async function content(config, pack) {
 									break;
 								}
 							}
-
 							if (!limited) equips.push(cards[i]);
 							break;
 					}
-
 					if (!limited) {
 						matchs.push(cards[i]);
 						cards.splice(i--, 1);
 					}
 				}
-
 				cards.sort(function (a, b) {
 					return get.value(b, player) - get.value(a, player);
 				});
-
 				cards = matchs.concat(cards);
 				return cards;
 			},
 			cheatJudgeCards(cards, judges, friendly) {
 				if (!cards || !judges) throw arguments;
-
 				var cheats = [];
 				var judgeCost;
 				for (var i = 0; i < judges.length; i++) {
@@ -6991,7 +6486,6 @@ export async function content(config, pack) {
 					cards.sort(function (a, b) {
 						return friendly ? judge(b) - judge(a) : judge(a) - judge(b);
 					});
-
 					judgeCost = judge(cards[0]);
 					if ((friendly && judgeCost >= 0) || (!friendly && judgeCost < 0)) {
 						cheats.push(cards.shift());
@@ -6999,42 +6493,34 @@ export async function content(config, pack) {
 						break;
 					}
 				}
-
 				return cheats;
 			},
 			elementLeftFromWindow(element) {
 				var left = element.offsetLeft;
 				var current = element.offsetParent;
-
 				while (current != null) {
 					left += current.offsetLeft;
 					current = current.offsetParent;
 				}
-
 				return left;
 			},
 			elementTopFromWindow(element) {
 				var top = element.offsetTop;
 				var current = element.offsetParent;
-
 				while (current != null) {
 					top += current.offsetTop;
 					current = current.offsetParent;
 				}
-
 				return top;
 			},
 			handcardInitPos() {
 				var hand = dui.boundsCaches.hand;
 				if (!hand.updated) hand.update();
-
 				var cardW = hand.cardWidth;
 				var cardH = hand.cardHeight;
 				var scale = hand.cardScale;
-
 				var x = -Math.round((cardW - cardW * scale) / 2);
 				var y = (cardH * scale - cardH) / 2;
-
 				return {
 					x: x,
 					y: y,
@@ -7042,7 +6528,6 @@ export async function content(config, pack) {
 				};
 			},
 		},
-
 		set: (function (set) {
 			set.activeElement = function (element) {
 				var deactive = dui.$activeElement;
@@ -7050,7 +6535,6 @@ export async function content(config, pack) {
 				if (deactive && deactive != element && typeof deactive.ondeactive == "function") {
 					deactive.ondeactive();
 				}
-
 				if (element && element != deactive && typeof element.onactive == "function") {
 					element.onactive();
 				}
@@ -7067,13 +6551,11 @@ export async function content(config, pack) {
 					cards.READ_OK = true;
 					if (typeof format != "string") format = "webp";
 					if (format === "off") return;
-
 					format = "." + format.toLowerCase();
 					for (var i = 0; i < files.length; i++) {
 						filename = entry ? files[i].name : files[i];
 						index = filename.lastIndexOf(format);
 						if (index == -1) continue;
-
 						cardname = filename.substring(0, index);
 						cards[cardname] = {
 							url: prefix + filename,
@@ -7082,11 +6564,9 @@ export async function content(config, pack) {
 						};
 					}
 				};
-
 				if (window.fs) {
 					fs.readdir(__dirname + "/" + decadeUIPath + "image/card/", function (err, files) {
 						if (err) return;
-
 						readFiles(files);
 					});
 				} else if (window.resolveLocalFileSystemURL) {
@@ -7101,7 +6581,6 @@ export async function content(config, pack) {
 			})({}),
 			handTips: [],
 		},
-
 		dataset: {
 			animSizeUpdated: false,
 			bodySizeUpdated: false,
@@ -7112,7 +6591,6 @@ export async function content(config, pack) {
 			},
 		},
 	};
-
 	dui.showHandTip = function (text) {
 		var tip;
 		var tips = this.statics.handTips;
@@ -7124,14 +6602,12 @@ export async function content(config, pack) {
 				tips[i].hide();
 			}
 		}
-
 		if (tip == undefined) {
 			tip = dui.element.create("hand-tip", ui.arena);
 			tips.unshift(tip);
 			tip.clear = function () {
 				var nodes = this.childNodes;
 				for (var i = 0; i < nodes.length; i++) nodes[i].textContent = "";
-
 				this.dataset.text = "";
 			};
 			tip.setText = function (text, type) {
@@ -7140,13 +6616,11 @@ export async function content(config, pack) {
 			};
 			tip.setInfomation = function (text) {
 				if (this.$info == null) this.$info = dui.element.create("hand-tip-info", ui.arena);
-
 				this.$info.innerHTML = text;
 			};
 			tip.appendText = function (text, type) {
 				if (text == undefined || text === "") return;
 				if (type == undefined) type = "";
-
 				var nodes = this.childNodes;
 				for (var i = 0; i < nodes.length; i++) {
 					if (nodes[i].textContent == "") {
@@ -7155,7 +6629,6 @@ export async function content(config, pack) {
 						return nodes[i];
 					}
 				}
-
 				var span = document.createElement("span");
 				span.textContent = text;
 				span.dataset.type = type;
@@ -7179,7 +6652,6 @@ export async function content(config, pack) {
 				var tips = dui.statics.handTips;
 				for (var i = 0; i < tips.length; i++) {
 					if (tips[i].closed) continue;
-
 					tips[i].show();
 					return;
 				}
@@ -7189,7 +6661,6 @@ export async function content(config, pack) {
 				for (var i = 0; i < nodes.length; i++) {
 					if (nodes[i].textContent != "") return false;
 				}
-
 				return true;
 			};
 		}
@@ -7197,7 +6668,6 @@ export async function content(config, pack) {
 		tip.show();
 		return tip;
 	};
-
 	decadeUI.BoundsCache = (function () {
 		function BoundsCache(element, updateBefore) {
 			this.element = element;
@@ -7246,13 +6716,11 @@ export async function content(config, pack) {
 				},
 			});
 		}
-
 		BoundsCache.prototype.check = function () {
 			if (!this.updated) this.update();
 		};
 		BoundsCache.prototype.update = function () {
 			if (this.updateBefore) this.updateBefore();
-
 			var element = this.element;
 			this.updated = true;
 			if (element == undefined) return;
@@ -7261,10 +6729,8 @@ export async function content(config, pack) {
 			this._width = element.offsetWidth;
 			this._height = element.offsetHeight;
 		};
-
 		return BoundsCache;
 	})();
-
 	decadeUI.boundsCaches = (function (boundsCaches) {
 		boundsCaches.window = new decadeUI.BoundsCache(null, function () {
 			this.element = ui.window;
@@ -7272,10 +6738,8 @@ export async function content(config, pack) {
 		boundsCaches.arena = new decadeUI.BoundsCache(null, function () {
 			this.element = ui.arena;
 			if (ui.arena == null) return;
-
 			this.cardScale = dui.getCardBestScale();
 			if (this.cardWidth != null) return;
-
 			var childs = ui.arena.childNodes;
 			for (var i = 0; i < childs.length; i++) {
 				if (childs[i].classList.contains("card")) {
@@ -7284,7 +6748,6 @@ export async function content(config, pack) {
 					return;
 				}
 			}
-
 			var card = dui.element.create("card");
 			card.style.opacity = 0;
 			ui.arena.appendChild(card);
@@ -7295,10 +6758,8 @@ export async function content(config, pack) {
 		boundsCaches.hand = new decadeUI.BoundsCache(null, function () {
 			this.element = ui.me;
 			if (ui.handcards1 == null) return;
-
 			this.cardScale = dui.getCardBestScale();
 			if (this.cardWidth != null) return;
-
 			var childs = ui.handcards1.childNodes;
 			for (var i = 0; i < childs.length; i++) {
 				if (childs[i].classList.contains("card")) {
@@ -7307,7 +6768,6 @@ export async function content(config, pack) {
 					return;
 				}
 			}
-
 			var card = dui.element.create("card");
 			card.style.opacity = 0;
 			ui.handcards1.appendChild(card);
@@ -7315,10 +6775,8 @@ export async function content(config, pack) {
 			this.cardHeight = card.offsetHeight;
 			card.remove();
 		});
-
 		return boundsCaches;
 	})({});
-
 	decadeUI.element = {
 		base: {
 			removeSelf(milliseconds) {
@@ -7330,7 +6788,6 @@ export async function content(config, pack) {
 					}, milliseconds);
 					return;
 				}
-
 				if (remove.parentNode) remove.parentNode.removeChild(remove);
 				return;
 			},
@@ -7339,20 +6796,15 @@ export async function content(config, pack) {
 			var tag = tagName == void 0 ? "div" : tagName;
 			var element = document.createElement(tag);
 			element.view = {};
-
 			for (var key in this.base) {
 				element[key] = this.base[key];
 			}
-
 			if (className) element.className = className;
-
 			if (parentNode) parentNode.appendChild(element);
-
 			return element;
 		},
 		clone(element) {},
 	};
-
 	decadeUI.game = {
 		wait() {
 			game.pause();
@@ -7374,7 +6826,6 @@ export async function content(config, pack) {
 			}
 		},
 	};
-
 	decadeUI.config = config;
 	if (decadeUI.config.campIdentityImageMode === undefined) {
 		decadeUI.config.campIdentityImageMode = true;
@@ -7389,7 +6840,6 @@ export async function content(config, pack) {
 			}
 		}
 	};
-
 	decadeUI.init();
 	console.timeEnd(decadeUIName);
 	//手杀UI
@@ -7406,35 +6856,27 @@ export async function content(config, pack) {
 				var ab = that.getElementsByClassName("timeai"); //进度条
 				var cd = that.getElementsByClassName("tipshow"); //阶段，出牌提示条
 				var ef = that.getElementsByClassName("tipskill"); //技能提示条
-
 				//-------初始化-----//
 				if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
 				if (cd[0]) cd[0].parentNode.removeChild(cd[0]);
 				if (ef[0]) ef[0].parentNode.removeChild(ef[0]);
-
 				game.JindutiaoAIplayer();
 				window.boxContentAI.classList.add("timeai");
 				that.appendChild(window.boxContentAI);
-
 				var tipbanlist = ["_recasting", "jiu"]; //过滤部分触发技能，可以自己添加
-
 				if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
 					var tipskillbox = document.createElement("div"); //盒子
 					var tipshow = document.createElement("img"); //图片思考中
 					var tipskilltext = document.createElement("div"); //技能文本
-
 					//------盒子样式--------//
 					tipskillbox.classList.add("tipskill"); //盒子设置技能类名
 					tipskillbox.style.cssText = "display:block;position:absolute;pointer-events:none;z-index:90;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:0px;";
-
 					//--------技能文本-----//
 					tipskilltext.innerHTML = get.skillTranslation(name, that).slice(0, 2);
 					tipskilltext.style.cssText = "color:#ADC63A;text-shadow:#707852 0 0;font-size:11px;font-family:shousha;display:block;position:absolute;z-index:91;bottom:-22px;letter-spacing:1.5px;line-height:15px;left:15px;";
-
 					//-----思考中底图------//
 					tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/skilltip.png";
 					tipshow.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
-
 					tipskillbox.appendChild(tipshow);
 					tipskillbox.appendChild(tipskilltext);
 					that.appendChild(tipskillbox);
@@ -7524,31 +6966,26 @@ export async function content(config, pack) {
 	lib.element.player.$changeZhuanhuanji = function (skill) {
 		originchangeZhuanhuanji.apply(this, arguments);
 		if (!get.is.zhuanhuanji(skill, this)) return;
-		if (this.classList.contains("unseen") && this !== game.me) return;
+		if (this.hiddenSkills.includes(skill) && this !== game.me) return;
 		var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
 		var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
-
 		function imageExists(url) {
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", url, false);
 			xhr.send();
 			return xhr.status !== 404;
 		}
-
 		try {
 			if (mark) mark.dk = imageExists(url);
 		} catch (err) {
 			if (mark) mark.dk = false;
 		}
-
 		if (!mark) return;
-
 		var style = lib.config.extension_十周年UI_newDecadeStyle;
 		var yangUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
 		var yingUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_ying.png";
 		var defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png";
 		var defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_ying.png";
-
 		if (style == "on" || style == "othersOff" || style == "onlineUI" || style == "babysha") {
 			if (mark.classList.contains("yin")) {
 				mark.classList.remove("yin");
@@ -7629,7 +7066,7 @@ export async function content(config, pack) {
 		);
 	};
 	lib.element.player.$failSkill = function (skill) {
-		if (this.classList.contains("unseen") && this !== game.me) return;
+		if (this.hiddenSkills.includes(skill) && this !== game.me) return;
 		var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
 		if (mark) mark.classList.add("fail");
 	};
@@ -7746,7 +7183,6 @@ export async function content(config, pack) {
 					item.link = get.cnNumber(i, true);
 					item.listen(ui.click.dialogcontrol);
 				}
-
 				event.dialog.forcebutton = true;
 				event.dialog.classList.add("forcebutton");
 				event.dialog.open();
@@ -7819,7 +7255,6 @@ export async function content(config, pack) {
 						}
 						//--------------//
 					}
-
 					event.dialog.open();
 					for (var i = 0; i < event.choiceList.length; i++) {
 						event.dialog.add('<div class="popup text" style="width:calc(100% - 10px);display:inline-block">' + (event.displayIndex !== false ? "选项" + get.cnNumber(i + 1, true) + "：" : "") + event.choiceList[i] + "</div>");
@@ -7876,7 +7311,6 @@ export async function content(config, pack) {
 			return img;
 		};
 	}
-
 	// ========== 思考提示技能模板 ==========
 	function createThinkSkill({ card, tipClass, img, style }) {
 		return {
@@ -7897,7 +7331,6 @@ export async function content(config, pack) {
 			},
 		};
 	}
-
 	// ========== 清除提示技能模板 ==========
 	function createClearSkill({ tipClass }) {
 		return {
@@ -7919,7 +7352,6 @@ export async function content(config, pack) {
 			},
 		};
 	}
-
 	//-------------AI进度条-----------//
 	if (get.mode() != "connect") {
 		lib.onover.push(function (bool) {
@@ -8125,7 +7557,6 @@ export async function content(config, pack) {
 				boxContent.appendChild(boxTime);
 				boxContent.appendChild(imgBg);
 				if (player != game.me) player.appendChild(boxContent);
-
 				window.timerx = setInterval(() => {
 					boxTime.data--;
 					boxTime.style.width = boxTime.data + "px";
@@ -8182,7 +7613,6 @@ export async function content(config, pack) {
 			},
 		};
 	}
-
 	// ========== 思考提示技能静态注册 ==========
 	lib.skill._chupaiE = {
 		trigger: { player: ["useCardBegin", "respondBegin"] },
@@ -8252,7 +7682,6 @@ export async function content(config, pack) {
 			}
 		},
 	};
-
 	// ========== 清除提示技能静态注册 ==========
 	lib.skill._chupaiF = {
 		trigger: { global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"] },
@@ -8326,7 +7755,6 @@ export async function content(config, pack) {
 			}
 		},
 	};
-
 	//--------------------其他特殊技能--------------------//
 	lib.skill._chupaiA = {
 		trigger: {
@@ -8659,7 +8087,6 @@ export async function content(config, pack) {
 			}, 15500);
 			gtbbUI.div2.innerHTML = '<marquee direction="left" behavior="scroll" scrollamount="9.8" loop="1" width="100%" height="50" align="absmiddle">' + '<font face="' + fontset + '">' + playerLabel + '<font color="' + colorA + '"><b>' + name + "</b></font>" + action + '<font color="' + colorB + '"><b>' + story + box + "</b></font>" + getText + "<b>" + reward + "</b>" + tail + "</font></marquee>";
 		}
-
 		gtbbUI.div = ui.create.div("");
 		gtbbUI.div2 = ui.create.div("", gtbbUI.div);
 		/*----------手杀样式-------*/
@@ -8674,7 +8101,6 @@ export async function content(config, pack) {
 			gtbbUI.div2.style.cssText = "pointer-events:none;width:85.5%;height:35px;left:8%;line-height:35px;";
 			/*------------------------*/
 		}
-
 		var id = setInterval(function () {
 			if (!gtbbUI.div.parentNode && ui.window) {
 				ui.window.appendChild(gtbbUI.div);
@@ -8719,12 +8145,10 @@ export async function content(config, pack) {
 							clearInterval(window.timer);
 							delete window.timer;
 						}
-
 						if (window.timer2) {
 							clearInterval(window.timer2);
 							delete window.timer2;
 						}
-
 						var bar = document.getElementById("jindutiaopl");
 						if (bar) bar.remove();
 					},
