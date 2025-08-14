@@ -286,7 +286,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			node.style.display = "";
 			this.cleanupSkillMarks(node, xiandingji, juexingji);
-			this.createSkillMarks(node, xiandingji, juexingji);
+			this.createSkillMarks(node, xiandingji, juexingji, player);
 		},
 		cleanupSkillMarks(node, xiandingji, juexingji) {
 			Array.from(node.childNodes).forEach(item => {
@@ -300,7 +300,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			});
 		},
-		createSkillMarks(node, xiandingji, juexingji) {
+		createSkillMarks(node, xiandingji, juexingji, player) {
 			for (const skillId in xiandingji) {
 				if (player.hiddenSkills.includes(skillId) && player !== game.me) continue;
 				const info = lib.skill[skillId];
