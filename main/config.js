@@ -286,7 +286,7 @@ export let config = {
     },
     forcestyle: {
         name: "势力样式",
-        init: "1",
+        init: "2",
         item: {
             1: "文字样式",
             2: "图片样式",
