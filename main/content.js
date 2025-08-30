@@ -6038,17 +6038,10 @@ export async function content(config, pack) {
 			}
 			return Math.floor(Math.random() * (max + 1 - min)) + min + diff;
 		},
-		//自用卡牌大小，检测联机昵称
 		getCardBestScale(size) {
 			if (!(size && size.height)) size = decadeUI.getHandCardSize();
 			var bodySize = decadeUI.get.bodySize();
-			var scaleFactor = 0.18;
-			if (decadeUI.isMobile()) {
-				scaleFactor = 0.23;
-			} else if (game.me && get.connectNickname() === "点点") {
-				scaleFactor = 0.22;
-			}
-			return Math.min((bodySize.height * scaleFactor) / size.height, 1);
+			return Math.min((bodySize.height * (decadeUI.isMobile() ? 0.23 : 0.18)) / size.height, 1);
 		},
 		getHandCardSize(canUseDefault) {
 			var style = decadeUI.sheet.getStyle(".media_defined > .card");
