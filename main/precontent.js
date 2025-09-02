@@ -647,11 +647,11 @@ export async function precontent() {
 					},
 					progressBar: {
 						data: 395,
-						style: "z-index:1;width:399px;height:10px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;",
+						style: "z-index:1;width:399px;height:12px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;",
 					},
 					backgroundImage: {
 						src: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/newTimeBarBg.png",
-						style: "width: 400px;height:12px;position: absolute;top: -3;z-index: -1;",
+						style: "width: 400px;height:15px;position: absolute;top: -3;z-index: -1;",
 					},
 					clearSpecial: true,
 				},

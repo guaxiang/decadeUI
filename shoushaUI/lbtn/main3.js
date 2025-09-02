@@ -185,12 +185,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			var nextIndex = (currentIndex + 1) % Backgrounds.length;
 			var nextName = Backgrounds[nextIndex];
-			var extPath = "ext:十周年UI/shoushaUI/lbtn/images/background/" + nextName + ".jpg";
-			lib.config.image_background = extPath;
+			lib.config.image_background = nextName;
 			lib.config.image_background_index = nextIndex;
-			game.saveConfig("image_background", extPath);
+			game.saveConfig("image_background", nextName);
 			game.saveConfig("image_background_index", nextIndex);
-			game.updateBackground();
+			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + nextName + ".jpg");
 		});
 		// 创建托管按钮
 		var TG = ui.create.div(".controls", HOME);
