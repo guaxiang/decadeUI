@@ -4487,11 +4487,13 @@ export async function content(config, pack) {
 			lib.element.player.awakenSkill = function (skill, nounmark) {
 				const result = playerAwakenSkillFunction.apply(this, arguments);
 				ui.updateSkillControl(this);
+				if (get.info(skill)?.dutySkill) {
+					const that = this;
+					game.expandSkills([skill]).forEach(taofen => that.shixiaoSkill(taofen));
+				}
 				const fname = _status.event.getParent()?.skill;
 				if (fname?.endsWith("_fail") && fname?.slice(0, -5) == skill) {
 					this.failSkill(skill);
-					const that = this;
-					game.expandSkills([skill]).forEach(taofen => that.shixiaoSkill(taofen));
 				}
 				return result;
 			};
