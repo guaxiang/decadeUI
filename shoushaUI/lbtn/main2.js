@@ -182,6 +182,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 				const randomBg = BACKGROUNDS.randomGet();
 				ui.background.setBackgroundImage(`extension/十周年UI/shoushaUI/lbtn/images/background/${randomBg}.jpg`);
+				lib.config.image_background = randomBg;
+				game.saveConfig("image_background", randomBg);
 			});
 			const surrenderBtn = ui.create.div(".TX", menuPopup);
 			surrenderBtn.addEventListener("click", event => {
@@ -210,6 +212,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	}
 	// 初始化
 	lib.arenaReady.push(function () {
+		if (lib.config.image_background) {
+			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + lib.config.image_background + ".jpg");
+		}
 		// 更新轮次
 		const originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {

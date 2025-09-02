@@ -1,5 +1,8 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
 	lib.arenaReady.push(function () {
+		if (lib.config.image_background) {
+			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + lib.config.image_background + ".jpg");
+		}
 		// 更新轮次
 		var originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
@@ -170,8 +173,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		BJ.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/button/button_bj.png");
 		BJ.addEventListener("click", event => {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-			var Backgrounds = ["一将成名"];
-			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + Backgrounds.randomGet() + ".jpg");
+			var Backgrounds = ["一将成名", "三国开黑节", "人间安乐", "兵临城下", "兵荒马乱", "十周年", "华灯初上", "天书乱斗", "新十周年", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游"];
+			var selectedBg = Backgrounds.randomGet();
+			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + selectedBg + ".jpg");
+			lib.config.image_background = selectedBg;
+			game.saveConfig("image_background", selectedBg);
 		});
 		// 创建托管按钮
 		var TG = ui.create.div(".controls", HOME);
@@ -188,6 +194,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			window.location.reload();
 		});
 	}
+	
 	var plugin = {
 		name: "lbtn",
 		filter() {
