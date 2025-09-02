@@ -647,7 +647,7 @@ export async function precontent() {
 					},
 					progressBar: {
 						data: 395,
-						style: "z-index:1;width:399px;height:12px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;",
+						style: "z-index:1;width:399px;height:12px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;border-radius:6px;",
 					},
 					backgroundImage: {
 						src: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/newTimeBarBg.png",

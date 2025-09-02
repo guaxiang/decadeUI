@@ -39,7 +39,7 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`十周年UI 当前版本号${pack.version}`,
-					"适配本体：v1.10.17.4 待定",
+					"适配本体：v1.10.17.4",
 					"bugfix",
 					"函数跟进",
 					"UI界面调整",
