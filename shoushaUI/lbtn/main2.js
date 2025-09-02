@@ -24,7 +24,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		JIN: "jin",
 		YE: "ye",
 	};
-	const BACKGROUNDS = ["人间安乐", "兵临城下", "兵荒马乱", "三国开黑节", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游", "十周年"];
+	const BACKGROUNDS = ["一将成名", "三国开黑节", "人间安乐", "兵临城下", "兵荒马乱", "十周年", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游"];
 	// 工具函数
 	const utils = {
 		playAudio(path) {
@@ -180,10 +180,23 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			const bgBtn = ui.create.div(".BJ", menuPopup);
 			bgBtn.addEventListener("click", event => {
 				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-				const randomBg = BACKGROUNDS.randomGet();
-				ui.background.setBackgroundImage(`extension/十周年UI/shoushaUI/lbtn/images/background/${randomBg}.jpg`);
-				lib.config.image_background = randomBg;
-				game.saveConfig("image_background", randomBg);
+				let currentIndex = typeof lib.config.image_background_index === "number" ? lib.config.image_background_index : -1;
+				if (currentIndex === -1) {
+					const cfg = lib.config.image_background || "";
+					let name = cfg;
+					const match = /background\/(.+?)\.jpg$/i.exec(cfg);
+					if (match && match[1]) name = match[1];
+					currentIndex = BACKGROUNDS.indexOf(name);
+					if (currentIndex < 0) currentIndex = -1;
+				}
+				const nextIndex = (currentIndex + 1) % BACKGROUNDS.length;
+				const nextName = BACKGROUNDS[nextIndex];
+				const extPath = `ext:十周年UI/shoushaUI/lbtn/images/background/${nextName}.jpg`;
+				lib.config.image_background = extPath;
+				lib.config.image_background_index = nextIndex;
+				game.saveConfig("image_background", extPath);
+				game.saveConfig("image_background_index", nextIndex);
+				game.updateBackground();
 			});
 			const surrenderBtn = ui.create.div(".TX", menuPopup);
 			surrenderBtn.addEventListener("click", event => {
@@ -213,7 +226,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	// 初始化
 	lib.arenaReady.push(function () {
 		if (lib.config.image_background) {
-			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + lib.config.image_background + ".jpg");
+			game.updateBackground();
 		}
 		// 更新轮次
 		const originUpdateRoundNumber = game.updateRoundNumber;

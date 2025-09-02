@@ -173,11 +173,24 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		BJ.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/button/button_bj.png");
 		BJ.addEventListener("click", event => {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-			var Backgrounds = ["一将成名", "三国开黑节", "人间安乐", "兵临城下", "兵荒马乱", "十周年", "华灯初上", "天书乱斗", "新十周年", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游"];
-			var selectedBg = Backgrounds.randomGet();
-			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + selectedBg + ".jpg");
-			lib.config.image_background = selectedBg;
-			game.saveConfig("image_background", selectedBg);
+			var Backgrounds = ["一将成名", "三国开黑节", "人间安乐", "兵临城下", "兵荒马乱", "十周年", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游"];
+			var currentIndex = typeof lib.config.image_background_index === "number" ? lib.config.image_background_index : -1;
+			if (currentIndex === -1) {
+				var cfg = lib.config.image_background || "";
+				var name = cfg;
+				var match = /background\/(.+?)\.jpg$/i.exec(cfg);
+				if (match && match[1]) name = match[1];
+				currentIndex = Backgrounds.indexOf(name);
+				if (currentIndex < 0) currentIndex = -1;
+			}
+			var nextIndex = (currentIndex + 1) % Backgrounds.length;
+			var nextName = Backgrounds[nextIndex];
+			var extPath = "ext:十周年UI/shoushaUI/lbtn/images/background/" + nextName + ".jpg";
+			lib.config.image_background = extPath;
+			lib.config.image_background_index = nextIndex;
+			game.saveConfig("image_background", extPath);
+			game.saveConfig("image_background_index", nextIndex);
+			game.updateBackground();
 		});
 		// 创建托管按钮
 		var TG = ui.create.div(".controls", HOME);
