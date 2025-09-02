@@ -273,7 +273,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				});
 				if (Array.isArray(skill)) {
-					var sortlist = game.me.getSkills(null, false, false);
+					var sortlist = game.expandSkills(game.me.getSkills(null, false, false));
 					skill.sort((a, b) => sortlist.indexOf(a) - sortlist.indexOf(b));
 				}
 				//修改结束
