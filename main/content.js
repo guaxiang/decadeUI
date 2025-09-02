@@ -1603,20 +1603,9 @@ export async function content(config, pack) {
 									return a.tx - b.tx;
 								});
 								for (var i = 0; i < cards.length; i++) {
-									(function (card, i) {
-										setTimeout(function () {
-											player.$throwordered2(card, nosource);
-											if (card.fixed) {
-												card.style.transition = "all 0.5s cubic-bezier(.4, 0, .2, 1)";
-												setTimeout(function () {
-													if (card.parentNode) {
-														card.style.opacity = "0.7";
-														card.style.transform = card.style.transform + " scale(0.9)";
-													}
-												}, 100);
-											}
-										}, i * 50);
-									})(cards[i], i);
+									(function (card) {
+										player.$throwordered2(card, nosource);
+									})(cards[i]);
 								}
 								if (game.chess) this.chessFocus();
 								return cards[cards.length - 1];
@@ -5649,6 +5638,7 @@ export async function content(config, pack) {
 				card.tx = x;
 				card.ty = y;
 				card.scaled = true;
+				card.style.transition = "transform 400ms ease-out";
 				card.style.transform = "translate(" + x + "px," + y + "px) scale(" + cs + ")";
 			}
 		},
