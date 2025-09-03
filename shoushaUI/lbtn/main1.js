@@ -56,18 +56,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			game.ui_identityShow.style.top = "1.9px"; /*图层1 上下位置如果需要改动 两个图层都要改*/
 			game.ui_identityShow.style.left = "63.5px"; /*图层2 左右位置如果需要改动 两个图层都要改*/
 			game.ui_identityShow.style["z-index"] = 4;
-			if (lib.config.mode != "doudizhu") {
-				ui.arena.appendChild(game.ui_identityShow);
-			}
+			ui.arena.appendChild(game.ui_identityShow);
 		}
 		if (game.ui_identityShowx == undefined) {
 			game.ui_identityShowx = ui.create.div("", "身份加载中......");
 			game.ui_identityShowx.style.top = "1.9px"; /*图层2*/
 			game.ui_identityShowx.style.left = "63.5px"; /*图层2*/
 			game.ui_identityShowx.style["z-index"] = 3;
-			if (lib.config.mode != "doudizhu") {
-				ui.arena.appendChild(game.ui_identityShowx);
-			}
+			ui.arena.appendChild(game.ui_identityShowx);
 		}
 	};
 	// 重写手牌自动整理逻辑，改为监听模式
@@ -222,9 +218,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			document.body.appendChild(liaotian);
 		}
 		/*---------------------*/
-		if (lib.config.mode == "identity" || lib.config.mode == "guozhan" || lib.config.mode == "versus" || lib.config.mode == "single" || lib.config.mode == "boss") {
+		if (lib.config.mode == "identity" || lib.config.mode == "guozhan" || lib.config.mode == "versus" || lib.config.mode == "single" || lib.config.mode == "boss" || lib.config.mode == "doudizhu") {
 			var translate = {};
 			switch (lib.config.mode) {
+				case "doudizhu":
+					translate = {
+						zhu: "击败所有农民",
+						fan: "击败地主",
+						undefined: "未选择阵营",
+					};
+					break;
 				case "single":
 					translate = {
 						zhu: "击败对手",
