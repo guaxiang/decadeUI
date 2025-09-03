@@ -109,7 +109,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		const sortImg = isTouch ? "zhengli.png" : "zhenglix.png";
 		let sortBtnStyle;
 		if (isTouch) {
-			sortBtnStyle = isRightLayout ? utils.getButtonStyle(88, "81/247", "calc(100% - 35px)", "calc(100% - 380px)", 7) : utils.getButtonStyle(120, "81/247", "calc(100% - 50px)", "right: calc(100% - 400px)", 4);
+			sortBtnStyle = isRightLayout ? utils.getButtonStyle(88, "81/247", "calc(100% - 35px)", "calc(100% - 380px)", 7) : utils.getButtonStyle(88, "81/247", "calc(100% - 35px)", "calc(100% - 1260px)", 7);
 		} else {
 			sortBtnStyle = isRightLayout ? utils.getButtonStyle(45, "110/170", "calc(100% - 45px)", "calc(100% - 290px)", 7) : utils.getButtonStyle(88, "81/247", "calc(100% - 33px)", "right: calc(100% - 367.2px)", 4);
 		}
