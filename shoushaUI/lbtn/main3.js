@@ -1,8 +1,5 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
 	lib.arenaReady.push(function () {
-		if (lib.config.image_background) {
-			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + lib.config.image_background + ".jpg");
-		}
 		// 更新轮次
 		var originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
@@ -173,23 +170,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		BJ.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/button/button_bj.png");
 		BJ.addEventListener("click", event => {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-			var Backgrounds = ["一将成名", "三国开黑节", "人间安乐", "兵临城下", "兵荒马乱", "十周年", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游"];
-			var currentIndex = typeof lib.config.image_background_index === "number" ? lib.config.image_background_index : -1;
-			if (currentIndex === -1) {
-				var cfg = lib.config.image_background || "";
-				var name = cfg;
-				var match = /background\/(.+?)\.jpg$/i.exec(cfg);
-				if (match && match[1]) name = match[1];
-				currentIndex = Backgrounds.indexOf(name);
-				if (currentIndex < 0) currentIndex = -1;
-			}
-			var nextIndex = (currentIndex + 1) % Backgrounds.length;
-			var nextName = Backgrounds[nextIndex];
-			lib.config.image_background = nextName;
-			lib.config.image_background_index = nextIndex;
-			game.saveConfig("image_background", nextName);
-			game.saveConfig("image_background_index", nextIndex);
-			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + nextName + ".jpg");
+			openBackgroundSelector();
 		});
 		// 创建托管按钮
 		var TG = ui.create.div(".controls", HOME);
@@ -206,7 +187,50 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			window.location.reload();
 		});
 	}
-	
+	// 辅助函数：打开背景选择器
+	function openBackgroundSelector() {
+		var popuperContainer = ui.create.div(
+			".popup-container",
+			{
+				background: "rgba(0, 0, 0, 0.8)",
+			},
+			ui.window
+		);
+		var guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
+			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
+			popuperContainer.hide();
+			game.resume2();
+		});
+		var bigdialog = ui.create.div(".bgdialog", popuperContainer);
+		var bgbg = ui.create.div(".backgroundsbg", bigdialog);
+		loadBackgroundImages(bgbg);
+	}
+	// 辅助函数：加载背景图片
+	function loadBackgroundImages(container) {
+		let path = "image/background/";
+		game.getFileList(path, function (folders, files) {
+			for (let tempbackground of files) {
+				let fileName = tempbackground.replace(/\.[^/.]+$/, "");
+				let fileExtension = tempbackground.split(".").pop();
+				if (!fileExtension || fileName.startsWith("oltianhou_")) continue;
+				let img = ui.create.div(".backgrounds", container);
+				img.setBackgroundImage(path + tempbackground);
+				if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
+				img.addEventListener("click", function () {
+					let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
+					allSelectedElements.forEach(function (selectedElement) {
+						selectedElement.parentNode.removeChild(selectedElement);
+					});
+					ui.create.div(".bgxuanzhong", img);
+					game.saveConfig("image_background", fileName);
+					lib.init.background();
+					game.updateBackground();
+				});
+				let backgroundName = lib.configMenu.appearence.config.image_background.item[fileName] ? lib.configMenu.appearence.config.image_background.item[fileName] : fileName;
+				ui.create.div(".buttontext", backgroundName, img);
+			}
+		});
+	}
 	var plugin = {
 		name: "lbtn",
 		filter() {

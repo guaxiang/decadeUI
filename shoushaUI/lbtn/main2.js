@@ -24,7 +24,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		JIN: "jin",
 		YE: "ye",
 	};
-	const BACKGROUNDS = ["一将成名", "三国开黑节", "人间安乐", "兵临城下", "兵荒马乱", "十周年", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游"];
+	const BACKGROUNDS = ["人间安乐", "兵临城下", "兵荒马乱", "三国开黑节", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游", "十周年"];
 	// 工具函数
 	const utils = {
 		playAudio(path) {
@@ -139,75 +139,102 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		setInterval(updateSortButtonVisibility, 1000);
 		updateSortButtonVisibility();
 	}
-	// 创建右上角菜单
-	function createTopRightMenu() {
-		const isTouch = lib.config.phonelayout;
-		const topOffset = isTouch ? "10px" : "60px"; // 非触屏布局往下移动50px
-		// 背景阴影
-		const shadow = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png", "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-4");
-		document.body.appendChild(shadow);
-		// 菜单按钮
-		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", `display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: ${topOffset};right: 55px;background-color: transparent;z-index:5`);
-		document.body.appendChild(menuBtn);
-		let menuPopup = null;
-		function openMenu() {
-			if (menuPopup) return;
-			utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
-			menuPopup = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
-			menuPopup.addEventListener("click", event => {
-				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/back.mp3");
-				event.stopPropagation();
-				closeMenu();
-			});
-			// 创建菜单项
-			const home = ui.create.div(".HOME", menuPopup);
-			const settingsBtn = ui.create.div(".SZ", menuPopup);
-			settingsBtn.addEventListener("click", event => {
-				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-				if (!ui.click.configMenu) return;
-				game.closePopped();
-				game.pause2();
-				ui.click.configMenu();
-				ui.system1.classList.remove("shown");
-				ui.system2.classList.remove("shown");
-				closeMenu();
-			});
-			const leaveBtn = ui.create.div(".LK", menuPopup);
-			leaveBtn.addEventListener("click", event => {
-				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-				window.location.reload();
-			});
-			const bgBtn = ui.create.div(".BJ", menuPopup);
-			bgBtn.addEventListener("click", event => {
-				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-				let currentIndex = typeof lib.config.image_background_index === "number" ? lib.config.image_background_index : -1;
-				if (currentIndex === -1) {
-					const cfg = lib.config.image_background || "";
-					let name = cfg;
-					const match = /background\/(.+?)\.jpg$/i.exec(cfg);
-					if (match && match[1]) name = match[1];
-					currentIndex = BACKGROUNDS.indexOf(name);
-					if (currentIndex < 0) currentIndex = -1;
-				}
-				const nextIndex = (currentIndex + 1) % BACKGROUNDS.length;
-				const nextName = BACKGROUNDS[nextIndex];
-				lib.config.image_background = nextName;
-				lib.config.image_background_index = nextIndex;
-				game.saveConfig("image_background", nextName);
-				game.saveConfig("image_background_index", nextIndex);
-				ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + nextName + ".jpg");
-			});
-			const surrenderBtn = ui.create.div(".TX", menuPopup);
-			surrenderBtn.addEventListener("click", event => {
-				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-				game.over();
-			});
-			const autoBtn = ui.create.div(".TG", menuPopup);
-			autoBtn.addEventListener("click", event => {
-				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-				ui.click.auto();
-			});
-		}
+			// 创建右上角菜单
+		function createTopRightMenu() {
+			const isTouch = lib.config.phonelayout;
+			const topOffset = isTouch ? "10px" : "60px"; // 非触屏布局往下移动50px
+			// 背景阴影
+			const shadow = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png", "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-4");
+			document.body.appendChild(shadow);
+			// 菜单按钮
+			const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", `display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: ${topOffset};right: 55px;background-color: transparent;z-index:5`);
+			document.body.appendChild(menuBtn);
+			let menuPopup = null;
+			function openMenu() {
+				if (menuPopup) return;
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
+				menuPopup = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
+				menuPopup.addEventListener("click", event => {
+					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/back.mp3");
+					event.stopPropagation();
+					closeMenu();
+				});
+				// 创建菜单项
+				const home = ui.create.div(".HOME", menuPopup);
+				const settingsBtn = ui.create.div(".SZ", menuPopup);
+				settingsBtn.addEventListener("click", event => {
+					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					if (!ui.click.configMenu) return;
+					game.closePopped();
+					game.pause2();
+					ui.click.configMenu();
+					ui.system1.classList.remove("shown");
+					ui.system2.classList.remove("shown");
+					closeMenu();
+				});
+				const leaveBtn = ui.create.div(".LK", menuPopup);
+				leaveBtn.addEventListener("click", event => {
+					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					window.location.reload();
+				});
+				const bgBtn = ui.create.div(".BJ", menuPopup);
+				bgBtn.addEventListener("click", event => {
+					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					openBackgroundSelector();
+				});
+				const surrenderBtn = ui.create.div(".TX", menuPopup);
+				surrenderBtn.addEventListener("click", event => {
+					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					game.over();
+				});
+				const autoBtn = ui.create.div(".TG", menuPopup);
+				autoBtn.addEventListener("click", event => {
+					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					ui.click.auto();
+				});
+			}
+			function openBackgroundSelector() {
+				var popuperContainer = ui.create.div(
+					".popup-container",
+					{
+						background: "rgba(0, 0, 0, 0.8)",
+					},
+					ui.window
+				);
+				var guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
+					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
+					popuperContainer.hide();
+					game.resume2();
+				});
+				var bigdialog = ui.create.div(".bgdialog", popuperContainer);
+				var bgbg = ui.create.div(".backgroundsbg", bigdialog);
+				loadBackgroundImages(bgbg);
+			}
+			function loadBackgroundImages(container) {
+				let path = "image/background/";
+				game.getFileList(path, function (folders, files) {
+					for (let tempbackground of files) {
+						let fileName = tempbackground.replace(/\.[^/.]+$/, "");
+						let fileExtension = tempbackground.split(".").pop();
+						if (!fileExtension || fileName.startsWith("oltianhou_")) continue;
+						let img = ui.create.div(".backgrounds", container);
+						img.setBackgroundImage(path + tempbackground);
+						if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
+						img.addEventListener("click", function () {
+							let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
+							allSelectedElements.forEach(function (selectedElement) {
+								selectedElement.parentNode.removeChild(selectedElement);
+							});
+							ui.create.div(".bgxuanzhong", img);
+							game.saveConfig("image_background", fileName);
+							lib.init.background();
+							game.updateBackground();
+						});
+						let backgroundName = lib.configMenu.appearence.config.image_background.item[fileName] ? lib.configMenu.appearence.config.image_background.item[fileName] : fileName;
+						ui.create.div(".buttontext", backgroundName, img);
+					}
+				});
+			}
 		function closeMenu() {
 			if (menuPopup) {
 				menuPopup.delete(200);
@@ -224,9 +251,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	}
 	// 初始化
 	lib.arenaReady.push(function () {
-		if (lib.config.image_background) {
-			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + lib.config.image_background + ".jpg");
-		}
 		// 更新轮次
 		const originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
