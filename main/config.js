@@ -395,6 +395,25 @@ export let config = {
             if (window.decadeUI) decadeUI.layout.updateHand();
         },
     },
+    cardScale: {
+        name: "卡牌大小",
+        intro: "输入0.10~1.00的小数，回车保存并生效",
+        init: "0.18",
+        input: true,
+        onblur: function () {
+            this.innerHTML = this.innerHTML.replace(/<br>/g, "");
+            var value = parseFloat(this.innerHTML);
+            if (isNaN(value)) value = 0.18;
+            if (value < 0.1) value = 0.1;
+            if (value > 1) value = 1;
+            this.innerHTML = value.toFixed(2);
+            game.saveConfig("extension_十周年UI_cardScale", value);
+            if (window.decadeUI) {
+                decadeUI.zooms.card = decadeUI.getCardBestScale();
+                decadeUI.layout.resize();
+            }
+        },
+    },
     playerMarkStyle: {
         name: "标记样式",
         init: "decade",

@@ -5954,7 +5954,10 @@ export async function content(config, pack) {
 		getCardBestScale(size) {
 			if (!(size && size.height)) size = decadeUI.getHandCardSize();
 			var bodySize = decadeUI.get.bodySize();
-			return Math.min((bodySize.height * (decadeUI.isMobile() ? 0.23 : 0.18)) / size.height, 1);
+			// 读取用户配置的缩放基准，默认0.18；移动端仍使用0.23以保证可点按性
+			var cfg = (lib && lib.config && lib.config.extension_十周年UI_cardScale) || 0.18;
+			var base = decadeUI.isMobile() ? 0.23 : cfg;
+			return Math.min((bodySize.height * base) / size.height, 1);
 		},
 		getHandCardSize(canUseDefault) {
 			var style = decadeUI.sheet.getStyle(".media_defined > .card");
