@@ -644,14 +644,12 @@ export async function precontent() {
 						position: "fixed",
 						left: "calc(50% - 197px)",
 						bottom: parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%",
+						backgroundColor: "#4B3621",
+						borderRadius: "6px",
 					},
 					progressBar: {
 						data: 395,
 						style: "z-index:1;width:399px;height:12px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;border-radius:6px;",
-					},
-					backgroundImage: {
-						src: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/newTimeBarBg.png",
-						style: "width: 400px;height:15px;position: absolute;top: -3;z-index: -1;",
 					},
 					clearSpecial: true,
 				},
