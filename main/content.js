@@ -766,11 +766,6 @@ export async function content(config, pack) {
 									that.node.dieidentity.innerHTML = "";
 								}
 								that.node.dieidentity.style.backgroundImage = 'url("' + url + '")';
-								if (decadeUI.config.newDecadeStyle === "othersOff") {
-									that.node.dieidentity.style.backgroundSize = "80% 80%";
-									that.node.dieidentity.style.left = "17px";
-									that.node.dieidentity.style.bottom = "0px";
-								}
 								image.src = url;
 								setTimeout(function () {
 									var rect = that.getBoundingClientRect();
