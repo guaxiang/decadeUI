@@ -2913,7 +2913,7 @@ export async function content(config, pack) {
 									}, event.compareId);
 									event.lose_list = lose_list;
 								},
-								...base.lib.element.content.chooseToCompare.slice(3, 4),
+								...base.lib.element.content.chooseToCompare.slice(4, 5),
 								async (event, trigger, player) => {
 									if (event.isDelay) {
 										game.broadcastAll(eventName => {
@@ -2935,9 +2935,7 @@ export async function content(config, pack) {
 												const dialog = ui.dialogs[eventName];
 												if (dialog) {
 													dialog.playerCard = playerCard.copy();
-													dialog.playerCard.classList.remove("glow");
 													dialog.targetCard = targetCard.copy();
-													dialog.targetCard.classList.remove("glow");
 												}
 											} else {
 												ui.arena.classList.add("thrownhighlight");
