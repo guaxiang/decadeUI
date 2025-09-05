@@ -229,9 +229,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			trigger: {
 				player: "phaseDrawBegin1",
 			},
+			filter(event, player) {
+				return get.population("qun") > 0;
+			},
 			content() {
 				var num = get.population("qun");
-				if (player.hasSkill("huangjintianbingfu")) {
+				if (player.hasSkill("hongfa", null, null, false)) {
 					num += player.getExpansions("huangjintianbingfu").length;
 				}
 				var cards = get.cards(num);
