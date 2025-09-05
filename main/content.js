@@ -95,6 +95,9 @@ export async function content(config, pack) {
 					create: {
 						cards: ui.create.cards,
 						button: ui.create.button,
+						arena: ui.create.arena,
+						pause: ui.create.pause,
+						characterDialog: ui.create.characterDialog,
 					},
 					click: {
 						intro: ui.click.intro,
@@ -106,6 +109,8 @@ export async function content(config, pack) {
 				},
 				game: {
 					swapSeat: game.swapSeat,
+					swapControl: game.swapControl,
+					swapPlayer: game.swapPlayer,
 					addGlobalSkill: game.addGlobalSkill,
 					removeGlobalSkill: game.removeGlobalSkill,
 				},
@@ -113,8 +118,12 @@ export async function content(config, pack) {
 					element: {
 						card: {
 							$init: lib.element.card.$init,
+							copy: lib.element.card.copy,
 						},
 						player: {
+							addSkill: lib.element.player.addSkill,
+							removeSkill: lib.element.player.removeSkill,
+							awakenSkill: lib.element.player.awakenSkill,
 							getState: lib.element.player.getState,
 							setModeState: lib.element.player.setModeState,
 							$dieAfter: lib.element.player.$dieAfter,
@@ -132,14 +141,21 @@ export async function content(config, pack) {
 							$handleEquipChange: lib.element.player.$handleEquipChange,
 							useCardAnimateBefore: lib.element.player.useCardAnimateBefore,
 							respondAnimateBefore: lib.element.player.respondAnimateBefore,
+							$changeZhuanhuanji: lib.element.player.$changeZhuanhuanji,
+							trySkillAnimate: lib.element.player.trySkillAnimate,
 						},
 						content: {
 							lose: lib.element.content.lose,
 							gain: lib.element.content.gain,
+							chooseToGuanxing: lib.element.content.chooseToGuanxing,
+							chooseToCompare: lib.element.content.chooseToCompare,
 						},
 						dialog: {
 							close: lib.element.dialog.close,
 						},
+					},
+					init: {
+						cssstyles: lib.init.cssstyles,
 					},
 				},
 			};
@@ -198,6 +214,26 @@ export async function content(config, pack) {
 							},
 						},
 						card: {
+							copy() {
+								var clone = base.lib.element.card.copy.apply(this, arguments);
+								clone.nature = this.nature;
+								var res = dui.statics.cards;
+								var asset = res[clone.name];
+								if (!res.READ_OK) return clone;
+								if (asset && !asset.loaded && clone.classList.contains("decade-card")) {
+									if (asset.loaded == undefined) {
+										var image = asset.image;
+										image.addEventListener("error", function () {
+											clone.style.background = asset.rawUrl;
+											clone.classList.remove("decade-card");
+										});
+									} else {
+										clone.style.background = asset.rawUrl;
+										clone.classList.remove("decade-card");
+									}
+								}
+								return clone;
+							},
 							$init(card) {
 								base.lib.element.card.$init.apply(this, arguments);
 								this.node.range.innerHTML = "";
@@ -418,6 +454,67 @@ export async function content(config, pack) {
 							},
 						},
 						player: {
+							addSkill(skill) {
+								var skill = base.lib.element.player.addSkill.apply(this, arguments);
+								if (!Array.isArray(skill)) {
+									const skills = ["name", "name1", "name2"].reduce((list, name) => {
+										if (this[name] && (name != "name1" || this.name != this.name1)) {
+											list.addArray(get.character(this[name], 3) || []);
+										}
+										return list;
+									}, []);
+									if (!skills.includes(skill)) {
+										var info = get.info(skill);
+										if (!(!info || info.nopop || !get.translation(skill + "_info") || !lib.translate[skill + "_info"])) this.node.gainSkill.gain(skill);
+									}
+								}
+								[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
+								return skill;
+							},
+							removeSkill(skill) {
+								var skill = base.lib.element.player.removeSkill.apply(this, arguments);
+								if (!Array.isArray(skill)) {
+									if (this.node.gainSkill.skills && this.node.gainSkill.skills.includes(skill)) {
+										this.node.gainSkill.lose(skill);
+									}
+								}
+								[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
+								return skill;
+							},
+							awakenSkill(skill) {
+								const result = base.lib.element.player.awakenSkill.apply(this, arguments);
+								ui.updateSkillControl(this);
+								if (get.info(skill)?.dutySkill) {
+									const that = this;
+									game.expandSkills([skill]).forEach(taofen => that.shixiaoSkill(taofen));
+								}
+								const fname = _status.event.getParent()?.skill;
+								if (fname?.endsWith("_fail") && fname?.slice(0, -5) == skill) {
+									this.failSkill(skill);
+								}
+								return result;
+							},
+							setIdentity(identity) {
+								identity = identity || this.identity;
+								this.node.identity.dataset.color = identity;
+								if (get.mode() == "guozhan") {
+									if (identity == "ye" && get.is.jun(this)) this.identity = identity = lib.character[this.name1][1];
+									this.group = identity;
+									this.node.identity.firstChild.innerHTML = get.translation(identity);
+									return this;
+								}
+								if (get.is.jun(this)) {
+									this.node.identity.firstChild.innerHTML = "君";
+								} else {
+									this.node.identity.firstChild.innerHTML = get.translation(identity);
+								}
+								return this;
+							},
+							getState() {
+								const state = base.lib.element.player.getState.apply(this, arguments);
+								state.seat = this.seat;
+								return state;
+							},
 							mark(item, info, skill) {
 								if (item && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
 									const info = get.info(item);
@@ -1709,6 +1806,380 @@ export async function content(config, pack) {
 									});
 								});
 							},
+							/*-------转换技，阴阳标记等----*/
+							//修改changezhuanhuanji函数
+							$changeZhuanhuanji(skill) {
+								base.lib.element.player.$changeZhuanhuanji.apply(this, arguments);
+								if (!get.is.zhuanhuanji(skill, this)) return;
+								if (this.hiddenSkills.includes(skill) && this !== game.me) return;
+								var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
+								var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
+								function imageExists(url) {
+									var xhr = new XMLHttpRequest();
+									xhr.open("GET", url, false);
+									xhr.send();
+									return xhr.status !== 404;
+								}
+								try {
+									if (mark) mark.dk = imageExists(url);
+								} catch (err) {
+									if (mark) mark.dk = false;
+								}
+								if (!mark) return;
+								var style = lib.config.extension_十周年UI_newDecadeStyle;
+								var yangUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
+								var yingUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_ying.png";
+								var defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png";
+								var defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_ying.png";
+								if (style == "on" || style == "othersOff" || style == "onlineUI" || style == "babysha") {
+									if (mark.classList.contains("yin")) {
+										mark.classList.remove("yin");
+										mark.classList.add("yang");
+									} else {
+										mark.classList.remove("yang");
+										mark.classList.add("yin");
+									}
+								} else {
+									if (mark.dd === true) {
+										this.yingSkill(skill);
+										mark.dd = false;
+										mark.setBackgroundImage(mark.dk ? yangUrl : defaultYangUrl);
+									} else {
+										this.yangSkill(skill);
+										mark.dd = true;
+										mark.setBackgroundImage(mark.dk ? yingUrl : defaultYingUrl);
+									}
+								}
+							},
+							//修改技能按钮
+							//定义两个空集合阳按钮和阴按钮（别问为啥阴不是yin而是ying，问就是拿yang复制比较简单）
+							//定义阴函数，将技能加入阴集合，并删除阳集合里的该技能。
+							yangSkill(skill) {
+								var player = this;
+								game.broadcastAll(
+									function (player, skill) {
+										player.$yangSkill(skill);
+									},
+									player,
+									skill
+								);
+							},
+							$yangSkill(skill) {
+								this.yangedSkills ??= [];
+								this.yangedSkills.add(skill);
+								this.yingedSkills ??= [];
+								this.yingedSkills.remove(skill);
+							},
+							//阳函数同理
+							yingSkill(skill) {
+								var player = this;
+								game.broadcastAll(
+									function (player, skill) {
+										player.$yingSkill(skill);
+									},
+									player,
+									skill
+								);
+							},
+							$yingSkill(skill) {
+								this.yingedSkills ??= [];
+								this.yingedSkills.add(skill);
+								this.yangedSkills ??= [];
+								this.yangedSkills.remove(skill);
+							},
+							//添加failskill函数
+							//这是失败函数，添加到使命技的失败分支里，作用是为使命技的class样式添加一个后缀fail，这样在使命技失败的时候创建的标记就会是白底和一个x（类似限定技使用后），而使命技成功的标记就会是红底。
+							failSkill(skill) {
+								var player = this;
+								game.broadcastAll(
+									function (player, skill) {
+										player.$failSkill(skill);
+									},
+									player,
+									skill
+								);
+							},
+							$failSkill(skill) {
+								if (this.hiddenSkills.includes(skill) && this !== game.me) return;
+								var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
+								if (mark) mark.classList.add("fail");
+							},
+							//添加失效函数
+							//构建一个失效技能的空集合
+							//失效函数是为了给技能按钮上锁的，在技能失效时，补上shixiao函数，技能就会被加入失效集合里，十周年UI那里就会检测到技能失效，从而添加上锁图片。
+							shixiaoSkill(skill) {
+								var player = this;
+								game.broadcastAll(
+									function (player, skill) {
+										player.$shixiaoSkill(skill);
+									},
+									player,
+									skill
+								);
+							},
+							$shixiaoSkill(skill) {
+								this.shixiaoedSkills ??= [];
+								this.shixiaoedSkills.add(skill);
+							},
+							//添加解除失效函数
+							//看名字就知道是干啥的
+							unshixiaoSkill(skill) {
+								var player = this;
+								game.broadcastAll(
+									function (player, skill) {
+										player.$unshixiaoSkill(skill);
+									},
+									player,
+									skill
+								);
+							},
+							$unshixiaoSkill(skill) {
+								this.shixiaoedSkills ??= [];
+								this.shixiaoedSkills.remove(skill);
+							},
+							trySkillAnimate(name) {
+								base.lib.element.player.trySkillAnimate.apply(this, arguments);
+								var that = this;
+								//------技能进度条------------//
+								if (lib.config["extension_十周年UI_enable"] && lib.config.extension_十周年UI_jindutiao == true) {
+									if (!document.querySelector("#jindutiaopl") && that == game.me) {
+										game.Jindutiaoplayer();
+									} else if (that != game.me) {
+										var ab = that.getElementsByClassName("timeai"); //进度条
+										var cd = that.getElementsByClassName("tipshow"); //阶段，出牌提示条
+										var ef = that.getElementsByClassName("tipskill"); //技能提示条
+										//-------初始化-----//
+										if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+										if (cd[0]) cd[0].parentNode.removeChild(cd[0]);
+										if (ef[0]) ef[0].parentNode.removeChild(ef[0]);
+										game.JindutiaoAIplayer();
+										window.boxContentAI.classList.add("timeai");
+										that.appendChild(window.boxContentAI);
+										var tipbanlist = ["_recasting", "jiu"]; //过滤部分触发技能，可以自己添加
+										if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
+											var tipskillbox = document.createElement("div"); //盒子
+											var tipshow = document.createElement("img"); //图片思考中
+											var tipskilltext = document.createElement("div"); //技能文本
+											//------盒子样式--------//
+											tipskillbox.classList.add("tipskill"); //盒子设置技能类名
+											tipskillbox.style.cssText = "display:block;position:absolute;pointer-events:none;z-index:90;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:0px;";
+											//--------技能文本-----//
+											tipskilltext.innerHTML = get.skillTranslation(name, that).slice(0, 2);
+											tipskilltext.style.cssText = "color:#ADC63A;text-shadow:#707852 0 0;font-size:11px;font-family:shousha;display:block;position:absolute;z-index:91;bottom:-22px;letter-spacing:1.5px;line-height:15px;left:15px;";
+											//-----思考中底图------//
+											tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/skilltip.png";
+											tipshow.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+											tipskillbox.appendChild(tipshow);
+											tipskillbox.appendChild(tipskilltext);
+											that.appendChild(tipskillbox);
+										}
+									}
+								}
+							},
+							setModeState(info) {
+								if (info?.seat) {
+									if (!this.node.seat) this.node.seat = decadeUI.element.create("seat", this);
+									this.node.seat.innerHTML = get.cnNumber(info.seat, true);
+								}
+								if (base.lib.element.player.setModeState) {
+									return base.lib.element.player.setModeState.apply(this, arguments);
+								} else {
+									return this.init(info.name, info.name2);
+								}
+							},
+							$damagepop(num, nature, font, nobroadcast) {
+								if (typeof num == "number" || typeof num == "string") {
+									game.addVideo("damagepop", this, [num, nature, font]);
+									if (nobroadcast !== false) {
+										game.broadcast(
+											function (player, num, nature, font) {
+												player.$damagepop(num, nature, font);
+											},
+											this,
+											num,
+											nature,
+											font
+										);
+									}
+									var node;
+									if (this.popupNodeCache && this.popupNodeCache.length) {
+										node = this.popupNodeCache.shift();
+									} else {
+										node = decadeUI.element.create("damage");
+									}
+									if (font) {
+										node.classList.add("normal-font");
+									} else {
+										node.classList.remove("normal-font");
+									}
+									if (typeof num == "number") {
+										node.popupNumber = num;
+										if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI" && lib.config.extension_十周年UI_newDecadeStyle !== "othersOff" && lib.config.extension_十周年UI_newDecadeStyle !== "on") {
+											if (num == Infinity) {
+												num = "+∞";
+											} else if (num == -Infinity) {
+												num = "-∞";
+											} else if (num > 0) {
+												num = "+" + num;
+											}
+										} else num = "";
+									} else {
+										node.popupNumber = null;
+									}
+									node.innerHTML = num;
+									node.dataset.text = node.textContent || node.innerText;
+									node.nature = nature || "soil";
+									this.damagepopups.push(node);
+								}
+								if (this.damagepopups.length && !this.damagepopLocked) {
+									var node = this.damagepopups.shift();
+									this.damagepopLocked = true;
+									if (this != node.parentNode) this.appendChild(node);
+									var player = this;
+									if (typeof node.popupNumber == "number") {
+										var popupNum = node.popupNumber;
+										if (popupNum < 0) {
+											switch (node.nature) {
+												case "thunder":
+													if (popupNum <= -2) {
+														decadeUI.animation.playSpine(
+															{
+																name: "effect_shoujidonghua",
+																action: "play6",
+															},
+															{
+																scale: 0.8,
+																parent: player,
+															}
+														);
+													} else {
+														decadeUI.animation.playSpine(
+															{
+																name: "effect_shoujidonghua",
+																action: "play5",
+															},
+															{
+																scale: 0.8,
+																parent: player,
+															}
+														);
+													}
+													break;
+												case "fire":
+													if (popupNum <= -2) {
+														decadeUI.animation.playSpine(
+															{
+																name: "effect_shoujidonghua",
+																action: "play4",
+															},
+															{
+																scale: 0.8,
+																parent: player,
+															}
+														);
+													} else {
+														decadeUI.animation.playSpine(
+															{
+																name: "effect_shoujidonghua",
+																action: "play3",
+															},
+															{
+																scale: 0.8,
+																parent: player,
+															}
+														);
+													}
+													break;
+												case "water":
+													break;
+												default:
+													if (popupNum <= -2) {
+														decadeUI.animation.playSpine(
+															{
+																name: "effect_shoujidonghua",
+																action: "play2",
+															},
+															{
+																scale: 0.8,
+																parent: player,
+															}
+														);
+													} else {
+														decadeUI.animation.playSpine(
+															{
+																name: "effect_shoujidonghua",
+																action: "play1",
+															},
+															{
+																scale: 0.8,
+																parent: player,
+															}
+														);
+													}
+													break;
+											}
+										} else {
+											if (node.nature == "wood") {
+												decadeUI.animation.playSpine("effect_zhiliao", {
+													scale: 0.7,
+													parent: player,
+												});
+											}
+										}
+									}
+									node.style.animation = "open-fade-in-out 1.2s";
+									setTimeout(
+										function (player, node) {
+											if (!player.popupNodeCache) player.popupNodeCache = [];
+											node.style.animation = "";
+											player.popupNodeCache.push(node);
+										},
+										1210,
+										player,
+										node
+									);
+									setTimeout(
+										function (player) {
+											player.damagepopLocked = false;
+											player.$damagepop();
+										},
+										500,
+										player
+									);
+								}
+							},
+							$compare(card1, target, card2) {
+								game.broadcast(
+									function (player, target, card1, card2) {
+										player.$compare(card1, target, card2);
+									},
+									this,
+									target,
+									card1,
+									card2
+								);
+								game.addVideo("compare", this, [get.cardInfo(card1), target.dataset.position, get.cardInfo(card2)]);
+								var player = this;
+								target.$throwordered2(card2.copy(false));
+								player.$throwordered2(card1.copy(false));
+							},
+							$compareMultiple(card1, targets, cards) {
+								game.broadcast(
+									function (player, card1, targets, cards) {
+										player.$compareMultiple(card1, targets, cards);
+									},
+									this,
+									card1,
+									targets,
+									cards
+								);
+								game.addVideo("compareMultiple", this, [get.cardInfo(card1), get.targetsInfo(targets), get.cardsInfo(cards)]);
+								var player = this;
+								for (var i = targets.length - 1; i >= 0; i--) {
+									targets[i].$throwordered2(cards[i].copy(false));
+								}
+								player.$throwordered2(card1.copy(false));
+							},
 						},
 						content: {
 							changeHp() {
@@ -2194,34 +2665,840 @@ export async function content(config, pack) {
 								},
 								...base.lib.element.content.lose.slice(2),
 							],
-							/*-----------------分割线-----------------*/
+							/*翻面*/
 							turnOver() {
 								game.log(player, "翻面");
-								player.classList.toggle("turnedover");
-								game.broadcast(function (player) {
-									player.classList.toggle("turnedover");
-								}, player);
+								game.broadcastAll(player => player.classList.toggle("turnedover"), player);
 								game.addVideo("turnOver", player, player.classList.contains("turnedover"));
 								player.queueCssAnimation("turned-over 0.5s linear");
 							},
+							get chooseToGuanxing() {
+								//联机禁用chhoseToGuanxing函数
+								if (_status.connectMode) return base.lib.element.content.chooseToGuanxing;
+								return function () {
+									"step 0";
+									if (player.isUnderControl()) game.swapPlayer(player);
+									var cards = get.cards(num);
+									var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
+									guanxing.caption = event.getParent() && event.getParent().name && get.translation(event.getParent().name) != event.getParent().name ? "【" + get.translation(event.getParent().name) + "】" : "请按顺序排列牌";
+									game.broadcast(
+										function (player, cards, callback) {
+											if (!window.decadeUI) return;
+											var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
+											guanxing.caption = "观星";
+											guanxing.callback = callback;
+											game.log(guanxing.callback);
+										},
+										player,
+										cards,
+										guanxing.callback
+									);
+									if (event.isOnline()) {
+										event.player.send(function () {
+											if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
+										}, event.player);
+										event.player.wait();
+										decadeUI.game.wait();
+									} else if (!(typeof event.isMine == "function" && event.isMine())) {
+										const processAI =
+											event.processAI ||
+											function (list) {
+												let cards = list[0][1],
+													player = _status.event.player,
+													target = _status.currentPhase || player,
+													name = _status.event.getTrigger()?.name,
+													countWuxie = current => {
+														let num = current.getKnownCards(player, card => {
+															return get.name(card, current) === "wuxie";
+														});
+														if (num && current !== player) return num;
+														let skills = current.getSkills("invisible").concat(lib.skill.global);
+														game.expandSkills(skills);
+														for (let i = 0; i < skills.length; i++) {
+															let ifo = get.info(skills[i]);
+															if (!ifo) continue;
+															if (ifo.viewAs && typeof ifo.viewAs != "function" && ifo.viewAs.name == "wuxie") {
+																if (!ifo.viewAsFilter || ifo.viewAsFilter(current)) {
+																	num++;
+																	break;
+																}
+															} else {
+																let hiddenCard = ifo.hiddenCard;
+																if (typeof hiddenCard == "function" && hiddenCard(current, "wuxie")) {
+																	num++;
+																	break;
+																}
+															}
+														}
+														return num;
+													},
+													top = [];
+												switch (name) {
+													case "phaseJieshu":
+														target = target.next;
+													case "phaseZhunbei":
+														let att = get.sgn(get.attitude(player, target)),
+															judges = target.getCards("j"),
+															needs = 0,
+															wuxie = countWuxie(target);
+														for (let i = Math.min(cards.length, judges.length) - 1; i >= 0; i--) {
+															let j = judges[i],
+																cardj = j.viewAs
+																	? {
+																			name: j.viewAs,
+																			cards: j.cards || [j],
+																	  }
+																	: j;
+															if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
+																wuxie--;
+																continue;
+															}
+															let judge = get.judge(j);
+															cards.sort((a, b) => {
+																return (judge(b) - judge(a)) * att;
+															});
+															if (judge(cards[0]) * att < 0) {
+																needs++;
+																continue;
+															} else {
+																top.unshift(cards.shift());
+															}
+														}
+														if (needs > 0 && needs >= judges.length) {
+															return [top, cards];
+														}
+														cards.sort((a, b) => {
+															return (get.value(b, target) - get.value(a, target)) * att;
+														});
+														while (needs--) {
+															top.unshift(cards.shift());
+														}
+														while (cards.length) {
+															if (get.value(cards[0], target) > 6 == att > 0) top.push(cards.shift());
+															else break;
+														}
+														return [top, cards];
+													default:
+														cards.sort((a, b) => {
+															return get.value(b, target) - get.value(a, target);
+														});
+														while (cards.length) {
+															if (get.value(cards[0], target) > 6) top.push(cards.shift());
+															else break;
+														}
+														return [top, cards];
+												}
+											};
+										var [cards, cheats] = processAI([[" ", guanxing.cards[0].slice()]]),
+											time = 500;
+										for (var i = 0; i < cheats.length; i++) {
+											setTimeout(
+												function (card, index, finished) {
+													guanxing.move(card, index, 0);
+													if (finished) guanxing.finishTime(1000);
+												},
+												time,
+												cheats[i],
+												i,
+												i >= cheats.length - 1 && cards.length == 0
+											);
+											time += 500;
+										}
+										for (var i = 0; i < cards.length; i++) {
+											setTimeout(
+												function (card, index, finished) {
+													guanxing.move(card, index, 1);
+													if (finished) guanxing.finishTime(1000);
+												},
+												time,
+												cards[i],
+												i,
+												i >= cards.length - 1
+											);
+											time += 500;
+										}
+									}
+									"step 1";
+									var [top, bottom] = [event.cards1, event.cards2];
+									event.result = {
+										bool: true,
+										moved: [top, bottom],
+									};
+									game.addCardKnower(top, player);
+									game.addCardKnower(bottom, player);
+									player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
+									game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
+								};
+							},
+							chooseToCompare: [
+								async (event, trigger, player) => {
+									const { target } = event;
+									if (!event.position || typeof event.position != "string") event.position = "h";
+									if (((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards(event.position) == 0) || ((!event.fixedResult || !event.fixedResult[target.playerid]) && target.countCards(event.position) == 0)) {
+										event.result = { cancelled: true, bool: false };
+										event.finish();
+										return;
+									}
+									game.log(player, "对", target, "发起", event.isDelay ? "延时" : "", "拼点");
+									event.filterCard ??= lib.filter.all;
+									// 更新拼点框
+									event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+									event.compareId = `${event.compareName}_${get.id()}`;
+									event.addMessageHook("finished", function () {
+										const dialog = ui.dialogs[this.compareId];
+										if (dialog) dialog.close();
+									});
+									game.broadcastAll(
+										function (player, target, eventName, compareId) {
+											if (window.decadeUI) {
+												const dialog = decadeUI.create.compareDialog();
+												dialog.caption = get.translation(eventName) + "拼点";
+												dialog.player = player;
+												dialog.target = target;
+												dialog.open();
+												decadeUI.delay(400);
+												ui.dialogs[compareId] = dialog;
+											}
+										},
+										player,
+										event.target,
+										event.compareName,
+										event.compareId
+									);
+								},
+								base.lib.element.content.chooseToCompare[1],
+								async (event, trigger, player, result) => {
+									const { target } = event;
+									const lose_list = [];
+									if (event.fixedResult && event.fixedResult[player.playerid]) {
+										lose_list.push([player, [event.fixedResult[player.playerid]]]);
+									} else {
+										if (result[0].skill && lib.skill[result[0].skill] && lib.skill[result[0].skill].onCompare) {
+											player.logSkill(result[0].skill);
+											result[0].cards = lib.skill[result[0].skill].onCompare(player);
+										}
+										lose_list.push([player, result[0].cards]);
+									}
+									event.card1 = lose_list[0][1][0];
+									// 更新拼点框
+									game.broadcastAll(eventName => {
+										if (window.decadeUI) {
+											const dialog = ui.dialogs[eventName];
+											if (dialog) {
+												dialog.$playerCard.classList.add("infohidden");
+												dialog.$playerCard.classList.add("infoflip");
+											}
+										}
+									}, event.compareId);
+									if (event.list.includes(target)) {
+										let index = event.list.indexOf(target);
+										if (result[index].skill && lib.skill[result[index].skill] && lib.skill[result[index].skill].onCompare) {
+											target.logSkill(result[index].skill);
+											result[index].cards = lib.skill[result[index].skill].onCompare(target);
+										}
+										lose_list.push([target, result[index].cards]);
+									} else if (event.fixedResult && event.fixedResult[target.playerid]) {
+										lose_list.push([target, [event.fixedResult[target.playerid]]]);
+									}
+									event.card2 = lose_list[1][1][0];
+									// 更新拼点框
+									game.broadcastAll(eventName => {
+										if (window.decadeUI) {
+											const dialog = ui.dialogs[eventName];
+											if (dialog) {
+												dialog.$playerCard.classList.add("infohidden");
+												dialog.$playerCard.classList.add("infoflip");
+											}
+										}
+									}, event.compareId);
+									event.lose_list = lose_list;
+								},
+								...base.lib.element.content.chooseToCompare.slice(3, 4),
+								async (event, trigger, player) => {
+									if (event.isDelay) {
+										game.broadcastAll(eventName => {
+											if (window.decadeUI) {
+												const dialog = ui.dialogs[eventName];
+												if (dialog) dialog.close();
+											}
+										}, event.compareId);
+									}
+								},
+								base.lib.element.content.chooseToCompare[5],
+								async (event, trigger, player) => {
+									const target = event.target;
+									// 更新拼点框
+									game.broadcastAll(
+										(eventName, player, target, playerCard, targetCard) => {
+											ui.arena.classList.add("thrownhighlight");
+											if (window.decadeUI) {
+												const dialog = ui.dialogs[eventName];
+												if (dialog) {
+													dialog.playerCard = playerCard.copy();
+													dialog.playerCard.classList.remove("glow");
+													dialog.targetCard = targetCard.copy();
+													dialog.targetCard.classList.remove("glow");
+												}
+											} else {
+												ui.arena.classList.add("thrownhighlight");
+												player.$compare(playerCard, target, targetCard);
+											}
+										},
+										event.compareId,
+										player,
+										target,
+										event.card1,
+										event.card2
+									);
+									game.addVideo("thrownhighlight1");
+									game.log(player, "的拼点牌为", event.card1);
+									game.log(target, "的拼点牌为", event.card2);
+									var getNum = function (card) {
+										for (var i of event.lose_list) {
+											if (i[1].includes(card)) return get.number(card, i[0]);
+										}
+										return get.number(card, false);
+									};
+									event.num1 = getNum(event.card1);
+									event.num2 = getNum(event.card2);
+									event.trigger("compare");
+									decadeUI.delay(400);
+								},
+								base.lib.element.content.chooseToCompare[7],
+								async (event, trigger, player) => {
+									const target = event.target;
+									var str;
+									if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
+										event.result.bool = true;
+										event.result.winner = player;
+										str = get.translation(player) + "拼点成功";
+										player.popup("胜");
+										target.popup("负");
+									} else {
+										event.result.bool = false;
+										str = get.translation(player) + "拼点失败";
+										if (event.forceWinner !== target && event.num1 == event.num2) {
+											event.result.tie = true;
+											player.popup("平");
+											target.popup("平");
+										} else {
+											event.result.winner = target;
+											player.popup("负");
+											target.popup("胜");
+										}
+									}
+									// 更新拼点框
+									game.broadcastAll(
+										function (str, eventName, result) {
+											if (!window.decadeUI) {
+												var dialog = ui.create.dialog(str);
+												dialog.classList.add("center");
+												setTimeout(
+													function (dialog) {
+														dialog.close();
+													},
+													1000,
+													dialog
+												);
+												return;
+											}
+											var dialog = ui.dialogs[eventName];
+											dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
+											setTimeout(
+												function (dialog, eventName) {
+													dialog.close();
+													setTimeout(
+														function (dialog) {
+															dialog.player.$throwordered2(dialog.playerCard, true);
+															dialog.target.$throwordered2(dialog.targetCard, true);
+														},
+														180,
+														dialog
+													);
+													ui.dialogs[eventName] = undefined;
+												},
+												1400,
+												dialog,
+												eventName
+											);
+										},
+										str,
+										event.compareId,
+										event.result.bool
+									);
+									decadeUI.delay(1800);
+								},
+								base.lib.element.content.chooseToCompare[9],
+							],
+							chooseToCompareMultiple() {
+								"step 0";
+								if (!event.fixedResult?.[player.playerid] && !player.countCards("h")) {
+									event.result = { cancelled: true, bool: false };
+									event.finish();
+									return;
+								}
+								for (var i = 0; i < targets.length; i++) {
+									if ((!event.fixedResult || !event.fixedResult[targets[i].playerid]) && targets[i].countCards("h") == 0) {
+										event.result = { cancelled: true, bool: false };
+										event.finish();
+										return;
+									}
+								}
+								if (!event.multitarget) {
+									targets.sort(lib.sort.seat);
+								}
+								game.log(player, "对", targets, "发起拼点");
+								if (!event.filterCard) event.filterCard = lib.filter.all;
+								// 更新拼点框
+								event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+								event.compareId = `${event.compareName}_${get.id()}`;
+								event.addMessageHook("finished", function () {
+									var dialog = ui.dialogs[this.compareId];
+									if (dialog) dialog.close();
+								});
+								game.broadcastAll(
+									function (player, target, eventName, compareId) {
+										if (!window.decadeUI) return;
+										var dialog = decadeUI.create.compareDialog();
+										dialog.caption = get.translation(eventName) + "拼点";
+										dialog.player = player;
+										dialog.target = target;
+										dialog.open();
+										decadeUI.delay(400);
+										ui.dialogs[compareId] = dialog;
+									},
+									player,
+									targets[0],
+									event.compareName,
+									event.compareId
+								);
+								"step 1";
+								event._result = [];
+								event.list = targets.filter(current => !event.fixedResult?.[current.playerid]);
+								if (event.list.length || !event.fixedResult?.[player.playerid]) {
+									if (!event.fixedResult?.[player.playerid]) event.list.unshift(player);
+									player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
+										var hs = target.getCards("h");
+										var event = _status.event;
+										event.player = target;
+										hs.sort(function (a, b) {
+											return event.ai(b) - event.ai(a);
+										});
+										delete event.player;
+										return {
+											bool: true,
+											cards: [hs[0]],
+										};
+									};
+								}
+								"step 2";
+								var cards = [];
+								var lose_list = [];
+								event.lose_list = lose_list;
+								event.getNum = function (card) {
+									for (var i of event.lose_list) {
+										if (i[1].includes(card)) return get.number(card, i[0]);
+									}
+									return get.number(card, false);
+								};
+								if (event.fixedResult && event.fixedResult[player.playerid]) {
+									event.list.unshift(player);
+									result.unshift({
+										bool: true,
+										cards: [event.fixedResult[player.playerid]],
+									});
+									lose_list.push([player, [event.fixedResult[player.playerid]]]);
+								} else {
+									if (result[0].skill && lib.skill[result[0].skill] && lib.skill[result[0].skill].onCompare) {
+										player.logSkill(result[0].skill);
+										result[0].cards = lib.skill[result[0].skill].onCompare(player);
+									} else lose_list.push([player, result[0].cards]);
+								}
+								for (var j = 0; j < targets.length; j++) {
+									if (event.list.includes(targets[j])) {
+										var i = event.list.indexOf(targets[j]);
+										if (result[i].skill && lib.skill[result[i].skill] && lib.skill[result[i].skill].onCompare) {
+											event.list[i].logSkill(result[i].skill);
+											result[i].cards = lib.skill[result[i].skill].onCompare(event.list[i]);
+										} else lose_list.push([targets[j], result[i].cards]);
+										cards.push(result[i].cards[0]);
+									} else if (event.fixedResult && event.fixedResult[targets[j].playerid]) {
+										cards.push(event.fixedResult[targets[j].playerid]);
+										lose_list.push([targets[j], [event.fixedResult[targets[j].playerid]]]);
+									}
+								}
+								if (lose_list.length) {
+									game.loseAsync({
+										lose_list: lose_list,
+									}).setContent("chooseToCompareLose");
+								}
+								event.cardlist = cards;
+								event.cards = cards;
+								event.card1 = result[0].cards[0];
+								event.num1 = event.getNum(event.card1);
+								event.iwhile = 0;
+								event.result = {
+									player: event.card1,
+									targets: event.cardlist.slice(0),
+									num1: [],
+									num2: [],
+								};
+								"step 3";
+								event.trigger("compareCardShowBefore");
+								"step 4";
+								game.log(player, "的拼点牌为", event.card1);
+								// 更新拼点框
+								game.broadcastAll(
+									function (eventName, playerCard) {
+										if (!window.decadeUI) return;
+										var dialog = ui.dialogs[eventName];
+										dialog.playerCard = playerCard.copy();
+									},
+									event.compareId,
+									event.card1
+								);
+								"step 5";
+								if (event.iwhile < targets.length) {
+									event.target = targets[event.iwhile];
+									event.card2 = event.cardlist[event.iwhile];
+									event.num2 = event.getNum(event.card2);
+									game.log(event.target, "的拼点牌为", event.card2);
+									player.line(event.target);
+									// 更新拼点框
+									game.broadcastAll(
+										function (eventName, player, target, playerCard, targetCard) {
+											if (!window.decadeUI) {
+												player.$compare(playerCard, target, targetCard);
+												return;
+											}
+											var dialog = ui.dialogs[eventName];
+											dialog.show();
+											dialog.target = target;
+											dialog.targetCard = targetCard.copy();
+										},
+										event.compareId,
+										player,
+										event.target,
+										event.card1,
+										event.card2
+									);
+									event.trigger("compare");
+									decadeUI.delay(400);
+								} else {
+									// 更新拼点框
+									game.broadcastAll(function (eventName) {
+										if (!window.decadeUI) return;
+										var dialog = ui.dialogs[eventName];
+										dialog.close();
+										setTimeout(
+											function (dialog) {
+												dialog.player.$throwordered2(dialog.playerCard, true);
+											},
+											110,
+											dialog
+										);
+									}, event.compareId);
+									event.goto(10);
+								}
+								"step 6";
+								event.iiwhile = event.iwhile;
+								delete event.iwhile;
+								event.trigger("compareFixing");
+								"step 7";
+								event.result.num1[event.iiwhile] = event.num1;
+								event.result.num2[event.iiwhile] = event.num2;
+								var str, result;
+								if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
+									result = true;
+									event.winner = player;
+									str = get.translation(player) + "拼点成功";
+									player.popup("胜");
+									target.popup("负");
+								} else {
+									result = false;
+									str = get.translation(player) + "拼点失败";
+									if (event.forceWinner !== target && event.num1 == event.num2) {
+										player.popup("平");
+										target.popup("平");
+									} else {
+										event.winner = target;
+										player.popup("负");
+										target.popup("胜");
+									}
+								}
+								// 更新拼点框
+								game.broadcastAll(
+									function (str, eventName, result) {
+										if (!window.decadeUI) {
+											var dialog = ui.create.dialog(str);
+											dialog.classList.add("center");
+											setTimeout(
+												function (dialog) {
+													dialog.close();
+												},
+												1000,
+												dialog
+											);
+											return;
+										}
+										var dialog = ui.dialogs[eventName];
+										dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
+										setTimeout(
+											function (dialog) {
+												dialog.hide();
+												dialog.$playerCard.dataset.result = "";
+												setTimeout(
+													function (dialog) {
+														dialog.target.$throwordered2(dialog.targetCard, true);
+													},
+													180,
+													dialog
+												);
+											},
+											1400,
+											dialog,
+											eventName
+										);
+									},
+									str,
+									event.compareId,
+									result
+								);
+								decadeUI.delay(1800);
+								"step 8";
+								if (event.callback) {
+									game.broadcastAll(
+										function (card1, card2) {
+											if (!window.decadeUI) {
+												if (card1.clone) card1.clone.style.opacity = 0.5;
+												if (card2.clone) card2.clone.style.opacity = 0.5;
+											}
+										},
+										event.card1,
+										event.card2
+									);
+									var next = game.createEvent("compareMultiple");
+									next.player = player;
+									next.target = event.target;
+									next.card1 = event.card1;
+									next.card2 = event.card2;
+									next.num1 = event.num1;
+									next.num2 = event.num2;
+									next.winner = event.winner;
+									next.setContent(event.callback);
+									event.compareMultiple = true;
+								}
+								"step 9";
+								delete event.winner;
+								delete event.forceWinner;
+								event.iwhile = event.iiwhile + 1;
+								event.goto(5);
+								"step 10";
+								game.broadcastAll(ui.clear);
+								event.cards.add(event.card1);
+							},
+							/*选项条分离*/
+							/*分离选项条 修改选项函数*/
+							chooseControl() {
+								"step 0";
+								if (event.controls.length == 0) {
+									if (event.sortcard) {
+										var sortnum = 2;
+										if (event.sorttop) {
+											sortnum = 1;
+										}
+										for (var i = 0; i < event.sortcard.length + sortnum; i++) {
+											event.controls.push(get.cnNumber(i, true));
+										}
+									} else if (event.choiceList) {
+										for (var i = 0; i < event.choiceList.length; i++) {
+											event.controls.push("选项" + get.cnNumber(i + 1, true));
+										}
+									} else {
+										event.finish();
+										return;
+									}
+								} else if (event.choiceList && event.controls.length == 1 && event.controls[0] == "cancel2") {
+									event.controls.shift();
+									for (var i = 0; i < event.choiceList.length; i++) {
+										event.controls.push("选项" + get.cnNumber(i + 1, true));
+									}
+									event.controls.push("cancel2");
+								}
+								if (event.isMine()) {
+									if (event.arrangeSkill) {
+										var hidden = player.hiddenSkills.slice(0);
+										game.expandSkills(hidden);
+										if (hidden.length) {
+											for (var i of event.controls) {
+												if (_status.prehidden_skills.includes(i) && hidden.includes(i)) {
+													event.result = {
+														bool: true,
+														control: i,
+													};
+													return;
+												}
+											}
+										}
+									} else if (event.hsskill && _status.prehidden_skills.includes(event.hsskill) && event.controls.includes("cancel2")) {
+										event.result = {
+											bool: true,
+											control: "cancel2",
+										};
+										return;
+									}
+									if (event.sortcard) {
+										var prompt = event.prompt || "选择一个位置";
+										if (event.tosort) {
+											prompt += "放置" + get.translation(event.tosort);
+										}
+										event.dialog = ui.create.dialog(prompt, "hidden");
+										if (event.sortcard && event.sortcard.length) {
+											event.dialog.addSmall(event.sortcard);
+										} else {
+											event.dialog.buttons = [];
+											event.dialog.add(ui.create.div(".buttons"));
+										}
+										var buttons = event.dialog.content.lastChild;
+										var sortnum = 2;
+										if (event.sorttop) {
+											sortnum = 1;
+										}
+										for (var i = 0; i < event.dialog.buttons.length + sortnum; i++) {
+											var item = ui.create.div(".button.card.pointerdiv.mebg");
+											item.style.width = "50px";
+											buttons.insertBefore(item, event.dialog.buttons[i]);
+											item.innerHTML = '<div style="font-family: xinwei;font-size: 25px;height: 75px;line-height: 25px;top: 8px;left: 10px;width: 30px;">第' + get.cnNumber(i + 1, true) + "张</div>";
+											if (i == event.dialog.buttons.length + 1) {
+												item.firstChild.innerHTML = "牌堆底";
+											}
+											item.link = get.cnNumber(i, true);
+											item.listen(ui.click.dialogcontrol);
+										}
+										event.dialog.forcebutton = true;
+										event.dialog.classList.add("forcebutton");
+										event.dialog.open();
+									} else if (event.dialogcontrol) {
+										event.dialog = ui.create.dialog(event.prompt || "选择一项", "hidden");
+										for (var i = 0; i < event.controls.length; i++) {
+											var item = event.dialog.add('<div class="popup text pointerdiv" style="width:calc(100% - 10px);display:inline-block">' + event.controls[i] + "</div>");
+											item.firstChild.listen(ui.click.dialogcontrol);
+											item.firstChild.link = event.controls[i];
+										}
+										event.dialog.forcebutton = true;
+										event.dialog.classList.add("forcebutton");
+										if (event.addDialog) {
+											for (var i = 0; i < event.addDialog.length; i++) {
+												if (get.itemtype(event.addDialog[i]) == "cards") {
+													event.dialog.addSmall(event.addDialog[i]);
+												} else {
+													event.dialog.add(event.addDialog[i]);
+												}
+											}
+											event.dialog.add(ui.create.div(".placeholder.slim"));
+										}
+										event.dialog.open();
+									} else {
+										if (event.seperate || lib.config.seperate_control) {
+											var controls = event.controls.slice(0);
+											var num = 0;
+											controls.remove("cancel2");
+											if ((event.direct && controls.length == 1) || event.forceDirect) {
+												event.result = {
+													control: event.controls[0],
+													links: get.links([event.controls[0]]),
+												};
+												return;
+											} else {
+												event.controlbars = [];
+												for (var i = 0; i < event.controls.length; i++) {
+													event.controlbars.push(ui.create.control([event.controls[i]]));
+												}
+											}
+										} else {
+											var controls = event.controls.slice(0);
+											controls.remove("cancel2");
+											if ((event.direct && controls.length == 1) || event.forceDirect) {
+												event.result = {
+													control: event.controls[0],
+													links: get.links([event.controls[0]]),
+												};
+												return;
+											}
+											event.controlbar = ui.create.control(event.controls);
+										}
+										if (event.dialog) {
+											if (Array.isArray(event.dialog)) {
+												event.dialog = ui.create.dialog.apply(this, event.dialog);
+											}
+											event.dialog.open();
+										} else if (event.choiceList) {
+											event.dialog = ui.create.dialog(event.prompt || "选择一项", "hidden");
+											event.dialog.forcebutton = true;
+											var list = ui.control.childNodes;
+											for (var i = 0; i < list.length; i++) {
+												list[i].childNodes[0].classList.add("choice"); /*添加类名*/
+												//--------背水-----//
+												if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "babysha" && lib.config.extension_十周年UI_newDecadeStyle != "onlineUI") {
+													/*list[i].childNodes[0].setBackgroundImage('extension/无名补丁/image/beishui.png');*/
+													list[i].childNodes[0].setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/beishui.png");
+													list[i].childNodes[0].innerText = "背水";
+												}
+												//--------------//
+											}
+											event.dialog.open();
+											for (var i = 0; i < event.choiceList.length; i++) {
+												event.dialog.add('<div class="popup text" style="width:calc(100% - 10px);display:inline-block">' + (event.displayIndex !== false ? "选项" + get.cnNumber(i + 1, true) + "：" : "") + event.choiceList[i] + "</div>");
+											}
+										} else if (event.prompt) {
+											event.dialog = ui.create.dialog(event.prompt);
+											if (event.prompt2) {
+												event.dialog.addText(event.prompt2, event.prompt2.length <= 20 || event.centerprompt2);
+											}
+										}
+									}
+									game.pause();
+									game.countChoose();
+									event.choosing = true;
+								} else if (event.isOnline()) {
+									event.send();
+								} else {
+									event.result = "ai";
+								}
+								"step 1";
+								if (event.result == "ai") {
+									event.result = {};
+									if (event.ai) {
+										var result = event.ai(event.getParent(), player);
+										if (typeof result == "number") event.result.control = event.controls[result];
+										else event.result.control = result;
+									} else event.result.control = event.controls[event.choice];
+								}
+								event.result.index = event.controls.indexOf(event.result.control);
+								event.choosing = false;
+								_status.imchoosing = false;
+								if (event.dialog && event.dialog.close) event.dialog.close();
+								if (event.controlbar) event.controlbar.close();
+								if (event.controlbars) {
+									for (var i = 0; i < event.controlbars.length; i++) {
+										event.controlbars[i].close();
+									}
+								}
+								event.resume();
+							},
+						},
+					},
+					init: {
+						cssstyles() {
+							var temp = lib.config.glow_phase;
+							lib.config.glow_phase = "";
+							base.lib.init.cssstyles.call(this);
+							lib.config.glow_phase = temp;
+							ui.css.styles.sheet.insertRule('.avatar-name, .avatar-name-default { font-family: "' + (lib.config.name_font || "xinkai") + '", "xinwei" }', 0);
 						},
 					},
 				},
 				ui: {
-					create: {
-						prebutton(item, type, position, noclick) {
-							var button = ui.create.div();
-							button.style.display = "none";
-							button.link = item;
-							button.activate = function () {
-								var node = ui.create.button(item, type, undefined, noclick, button);
-								node.activate = undefined;
-							};
-							_status.prebutton.push(button);
-							if (position) position.appendChild(button);
-							return button;
-						},
-					},
 					updatec() {
 						var controls = ui.control.childNodes;
 						var stayleft;
@@ -2290,7 +3567,35 @@ export async function content(config, pack) {
 							ui.dialog.classList.add("scroll2");
 						}
 					},
+					updatejm(player, nodes, start, inv) {
+						if (typeof start != "number") start = 0;
+						for (var i = 0; i < nodes.childElementCount; i++) {
+							var node = nodes.childNodes[i];
+							if (i < start) {
+								node.style.transform = "";
+							} else if (node.classList.contains("removing")) {
+								start++;
+							} else {
+								node.classList.remove("drawinghidden");
+							}
+						}
+					},
+					updatexr: (() => {
+						return duilib.throttle(ui.updatex, 100, ui);
+					})(),
 					create: {
+						prebutton(item, type, position, noclick) {
+							var button = ui.create.div();
+							button.style.display = "none";
+							button.link = item;
+							button.activate = function () {
+								var node = ui.create.button(item, type, undefined, noclick, button);
+								node.activate = undefined;
+							};
+							_status.prebutton.push(button);
+							if (position) position.appendChild(button);
+							return button;
+						},
 						rarity(button) {
 							if (!lib.config.show_rarity) return;
 							var rarity = game.getRarity(button.link);
@@ -2422,6 +3727,106 @@ export async function content(config, pack) {
 								buttons.appendChild(card);
 								dialog.open();
 							}, 50);
+						},
+						arena() {
+							ui.updatez();
+							var result = base.ui.create.arena.apply(this, arguments);
+							ui.arena.classList.remove("slim_player");
+							ui.arena.classList.remove("uslim_player");
+							ui.arena.classList.remove("mslim_player");
+							ui.arena.classList.remove("lslim_player");
+							ui.arena.classList.remove("oldlayout");
+							ui.arena.classList.remove("mobile");
+							ui.arena.classList.add("decadeUI");
+							ui.control.id = "dui-controls";
+							if (lib.config.phonelayout) {
+								ui.arena.setAttribute("data-phonelayout", "on");
+							} else {
+								ui.arena.setAttribute("data-phonelayout", "off");
+							}
+							decadeUI.config.update();
+							return result;
+						},
+						pause() {
+							var dialog = base.ui.create.pause.call(this);
+							dialog.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
+							return dialog;
+						},
+						//发动技能函数
+						//武将搜索代码摘抄至扩展ol
+						characterDialog() {
+							const dialog = base.ui.create.characterDialog.apply(this, arguments);
+							const control = lib.config.extension_十周年UI_mx_decade_characterDialog || "default";
+							if (control != "default") {
+								const Searcher = dialog.querySelector(".searcher.caption");
+								if (Searcher) Searcher.parentNode.removeChild(Searcher);
+								if (control == "extension-OL-system") {
+									var content_container = dialog.childNodes[0];
+									var content = content_container.childNodes[0];
+									var switch_con = content.childNodes[0];
+									var buttons = content.childNodes[1];
+									var div = ui.create.div("extension-OL-system");
+									div.style.height = "35px";
+									div.style.width = "calc(100%)";
+									div.style.top = "-2px";
+									div.style.left = "0px";
+									div.style["white-space"] = "nowrap";
+									div.style["text-align"] = "center";
+									div.style["line-height"] = "26px";
+									div.style["font-size"] = "24px";
+									div.style["font-family"] = "xinwei";
+									div.innerHTML = "搜索：" + '<select size="1" style="width:75px;height:21px;">' + '<option value="name">名称翻译</option>' + '<option value="name1">名称ID</option>' + '<option value="name2">名称ID(精确匹配)</option>' + '<option value="skill">技能翻译</option>' + '<option value="skill1">技能ID</option>' + '<option value="skill2">技能ID(精确匹配)</option>' + '<option value="skill3">技能描述/翻译</option>' + "→" + '<input type="text" style="width:150px;"></input>' + "</select>";
+									var input = div.querySelector("input");
+									input.placeholder = "非精确匹配支持正则搜索";
+									input.onkeydown = function (e) {
+										e.stopPropagation();
+										if (e.keyCode == 13) {
+											var value = this.value;
+											if (value == "") {
+												game.alert("搜索不能为空");
+												input.focus();
+												return;
+											}
+											var choice = div.querySelector("select").options[div.querySelector("select").selectedIndex].value;
+											if (value) {
+												for (var i = 0; i < buttons.childNodes.length; i++) {
+													buttons.childNodes[i].classList.add("nodisplay");
+													var name = buttons.childNodes[i].link;
+													var skills = get.character(name).skills || [];
+													if (
+														(function (choice, value, name, skills) {
+															if (choice.endsWith("2")) return choice === "name2" ? value === name : skills.includes(value);
+															value = new RegExp(value, "g");
+															const goon = (value, text) => text && value.test(text);
+															if (choice == "name1") return goon(value, name);
+															else if (choice == "name") return goon(value, get.translation(name)) || goon(value, get.translation(name + "_ab"));
+															else if (choice == "skill1") return skills.some(skill => goon(value, skill));
+															else if (choice == "skill") return skills.some(skill => goon(value, get.translation(skill)));
+															else return skills.some(skill => goon(value, get.translation(skill + "_info")));
+														})(choice, value, name, skills)
+													) {
+														buttons.childNodes[i].classList.remove("nodisplay");
+													}
+												}
+											}
+											if (dialog.paginationMaxCount.get("character")) {
+												const buttons = dialog.content.querySelector(".buttons");
+												const p = dialog.paginationMap.get(buttons);
+												if (p) {
+													const array = dialog.buttons.filter(item => !item.classList.contains("nodisplay"));
+													p.state.data = array;
+													p.setTotalPageCount(Math.ceil(array.length / dialog.paginationMaxCount.get("character")));
+												}
+											}
+										}
+									};
+									input.onmousedown = function (e) {
+										e.stopPropagation();
+									};
+									switch_con.insertBefore(div, switch_con.firstChild);
+								}
+							}
+							return dialog;
 						},
 						buttonPresets: {
 							character(item, type, position, noclick, node) {
@@ -2875,6 +4280,59 @@ export async function content(config, pack) {
 						player2.seat = player2.getSeatNum();
 						if (player2.node.seat) player2.node.seat.innerHTML = get.cnNumber(player2.seat, true);
 					},
+					swapPlayer(player, player2) {
+						const list = [game.me, player];
+						const result = base.game.swapPlayer.call(this, player, player2);
+						/*-----------------分割线-----------------*/
+						// 单独装备栏
+						if (lib.config.extension_十周年UI_aloneEquip && game.me && game.me !== ui.equipSolts.me) {
+							ui.equipSolts.me.appendChild(ui.equipSolts.equips);
+							ui.equipSolts.me = game.me;
+							ui.equipSolts.equips = game.me.node.equips;
+							ui.equipSolts.appendChild(game.me.node.equips);
+							game.me.$syncExpand();
+						}
+						// 可见手牌显示
+						list.forEach(i => i.decadeUI_updateShowCards());
+						if (lib.refreshPlayerSkills) {
+							list.forEach(i => lib.refreshPlayerSkills(i));
+						}
+						if (lib.clearAllSkillDisplay) lib.clearAllSkillDisplay();
+						if (lib.refreshPlayerSkills) {
+							game.players.concat(game.dead || []).forEach(i => lib.refreshPlayerSkills(i));
+						}
+						return result;
+					},
+					swapControl(player) {
+						const result = base.game.swapControl.call(this, player);
+						// 单独装备栏
+						if (lib.config.extension_十周年UI_aloneEquip && game.me && game.me !== ui.equipSolts.me) {
+							ui.equipSolts.me.appendChild(ui.equipSolts.equips);
+							ui.equipSolts.me = game.me;
+							ui.equipSolts.equips = game.me.node.equips;
+							ui.equipSolts.appendChild(game.me.node.equips);
+							game.me.$syncExpand();
+						}
+						if (ui.equipSolts) {
+							if (game.me && typeof game.me.$handleEquipChange === "function") {
+								game.me.$handleEquipChange();
+							}
+							if (player && typeof player.$handleEquipChange === "function") {
+								player.$handleEquipChange();
+							}
+						}
+						// 可见手牌显示
+						player.decadeUI_updateShowCards();
+						if (lib.refreshPlayerSkills) {
+							lib.refreshPlayerSkills(player);
+							if (game.me) lib.refreshPlayerSkills(game.me);
+						}
+						if (lib.clearAllSkillDisplay) lib.clearAllSkillDisplay();
+						if (lib.refreshPlayerSkills) {
+							game.players.concat(game.dead || []).forEach(i => lib.refreshPlayerSkills(i));
+						}
+						return result;
+					},
 					addGlobalSkill() {
 						const result = base.game.addGlobalSkill.apply(this, arguments);
 						[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
@@ -2905,6 +4363,17 @@ export async function content(config, pack) {
 					},
 				},
 				get: {
+					//十周年UI技能排除
+					skillState(player) {
+						const skills = base.get.skillState.apply(this, arguments);
+						if (game.me !== player) {
+							var global = (skills.global = skills.global.concat());
+							for (var i = global.length - 1; i >= 0; i--) {
+								if (global[i].indexOf("decadeUI") >= 0) global.splice(i, 1);
+							}
+						}
+						return skills;
+					},
 					objtype(obj) {
 						obj = Object.prototype.toString.call(obj);
 						switch (obj) {
@@ -2936,43 +4405,7 @@ export async function content(config, pack) {
 					decadeModule.modules[i](lib, game, ui, get, ai, _status);
 				}
 			}
-			var gameLinexyFunction = game.linexy;
-			var swapControlFunction = game.swapControl;
-			var swapPlayerFunction = game.swapPlayer;
-			var createArenaFunction = ui.create.arena;
-			var createPauseFunction = ui.create.pause;
-			var initCssstylesFunction = lib.init.cssstyles;
-			var cardCopyFunction = lib.element.card.copy;
-			var playerAddSkillFunction = lib.element.player.addSkill;
-			var playerRemoveSkillFunction = lib.element.player.removeSkill;
-			var playerAwakenSkillFunction = lib.element.player.awakenSkill;
-			var playerDieFlipFunction = lib.element.player.$dieflip;
-			ui.updatejm = function (player, nodes, start, inv) {
-				if (typeof start != "number") start = 0;
-				for (var i = 0; i < nodes.childElementCount; i++) {
-					var node = nodes.childNodes[i];
-					if (i < start) {
-						node.style.transform = "";
-					} else if (node.classList.contains("removing")) {
-						start++;
-					} else {
-						node.classList.remove("drawinghidden");
-					}
-				}
-			};
-			ui.updatexr = duilib.throttle(ui.updatex, 100, ui);
 			document.body.onresize = ui.updatexr;
-			//十周年UI技能排除
-			get.skillState = function (player) {
-				var skills = base.get.skillState.apply(this, arguments);
-				if (game.me != player) {
-					var global = (skills.global = skills.global.concat());
-					for (var i = global.length - 1; i >= 0; i--) {
-						if (global[i].indexOf("decadeUI") >= 0) global.splice(i, 1);
-					}
-				}
-				return skills;
-			};
 			//game.check修改
 			//添加target的un-selectable classList显示
 			lib.hooks["checkTarget"].push(function decadeUI_selectable(target, event) {
@@ -3065,59 +4498,6 @@ export async function content(config, pack) {
 					const ml = Math.min((n * W - L + 30 * n) / (n - 1), W - r / game.documentZoom);
 					itemContainer.style.setProperty("--ml", "-" + ml + "px");
 				}
-			};
-			game.swapPlayer = function (player, player2) {
-				const list = [game.me, player];
-				var result = swapPlayerFunction.call(this, player, player2);
-				/*-----------------分割线-----------------*/
-				// 单独装备栏
-				if (lib.config.extension_十周年UI_aloneEquip && game.me && game.me !== ui.equipSolts.me) {
-					ui.equipSolts.me.appendChild(ui.equipSolts.equips);
-					ui.equipSolts.me = game.me;
-					ui.equipSolts.equips = game.me.node.equips;
-					ui.equipSolts.appendChild(game.me.node.equips);
-					game.me.$syncExpand();
-				}
-				// 可见手牌显示
-				list.forEach(i => i.decadeUI_updateShowCards());
-				if (lib.refreshPlayerSkills) {
-					list.forEach(i => lib.refreshPlayerSkills(i));
-				}
-				if (lib.clearAllSkillDisplay) lib.clearAllSkillDisplay();
-				if (lib.refreshPlayerSkills) {
-					game.players.concat(game.dead || []).forEach(i => lib.refreshPlayerSkills(i));
-				}
-				return result;
-			};
-			game.swapControl = function (player) {
-				var result = swapControlFunction.call(this, player);
-				// 单独装备栏
-				if (lib.config.extension_十周年UI_aloneEquip && game.me && game.me !== ui.equipSolts.me) {
-					ui.equipSolts.me.appendChild(ui.equipSolts.equips);
-					ui.equipSolts.me = game.me;
-					ui.equipSolts.equips = game.me.node.equips;
-					ui.equipSolts.appendChild(game.me.node.equips);
-					game.me.$syncExpand();
-				}
-				if (ui.equipSolts) {
-					if (game.me && typeof game.me.$handleEquipChange === "function") {
-						game.me.$handleEquipChange();
-					}
-					if (player && typeof player.$handleEquipChange === "function") {
-						player.$handleEquipChange();
-					}
-				}
-				// 可见手牌显示
-				player.decadeUI_updateShowCards();
-				if (lib.refreshPlayerSkills) {
-					lib.refreshPlayerSkills(player);
-					if (game.me) lib.refreshPlayerSkills(game.me);
-				}
-				if (lib.clearAllSkillDisplay) lib.clearAllSkillDisplay();
-				if (lib.refreshPlayerSkills) {
-					game.players.concat(game.dead || []).forEach(i => lib.refreshPlayerSkills(i));
-				}
-				return result;
 			};
 			ui.click.identity = function (e) {
 				if (_status.dragged || !game.getIdentityList || _status.video || this.parentNode.forceShown) return;
@@ -3213,11 +4593,6 @@ export async function content(config, pack) {
 				setting.add(ui.create.div(".placeholder"));
 				return setting;
 			};
-			ui.create.pause = function () {
-				var dialog = createPauseFunction.call(this);
-				dialog.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
-				return dialog;
-			};
 			ui.clear = function () {
 				game.addVideo("uiClear");
 				var nodes = document.getElementsByClassName("thrown");
@@ -3226,25 +4601,6 @@ export async function content(config, pack) {
 					if (nodes[i].classList.contains("card")) decadeUI.layout.clearout(nodes[i]);
 					else nodes[i].delete();
 				}
-			};
-			ui.create.arena = function () {
-				ui.updatez();
-				var result = createArenaFunction.apply(this, arguments);
-				ui.arena.classList.remove("slim_player");
-				ui.arena.classList.remove("uslim_player");
-				ui.arena.classList.remove("mslim_player");
-				ui.arena.classList.remove("lslim_player");
-				ui.arena.classList.remove("oldlayout");
-				ui.arena.classList.remove("mobile");
-				ui.arena.classList.add("decadeUI");
-				ui.control.id = "dui-controls";
-				if (lib.config.phonelayout) {
-					ui.arena.setAttribute("data-phonelayout", "on");
-				} else {
-					ui.arena.setAttribute("data-phonelayout", "off");
-				}
-				decadeUI.config.update();
-				return result;
 			};
 			ui.create.me = function (hasme) {
 				ui.arena.dataset.layout = game.layout;
@@ -3704,13 +5060,6 @@ export async function content(config, pack) {
 				game.updateRoundNumber();
 				return result;
 			};
-			lib.init.cssstyles = function () {
-				var temp = lib.config.glow_phase;
-				lib.config.glow_phase = "";
-				initCssstylesFunction.call(this);
-				lib.config.glow_phase = temp;
-				ui.css.styles.sheet.insertRule('.avatar-name, .avatar-name-default { font-family: "' + (lib.config.name_font || "xinkai") + '", "xinwei" }', 0);
-			};
 			lib.init.layout = function (layout, nosave) {
 				if (!nosave) game.saveConfig("layout", layout);
 				game.layout = layout;
@@ -3751,751 +5100,6 @@ export async function content(config, pack) {
 					}, 100);
 				};
 				setTimeout(relayout, 500);
-			};
-			lib.element.content.chooseToCompare = function () {
-				"step 0";
-				if (!event.position || typeof event.position != "string") {
-					event.position = "h";
-				}
-				if (((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards(event.position) == 0) || ((!event.fixedResult || !event.fixedResult[target.playerid]) && target.countCards(event.position) == 0)) {
-					event.result = { cancelled: true, bool: false };
-					event.finish();
-					return;
-				}
-				game.log(player, "对", target, "发起", event.isDelay ? "延时" : "", "拼点");
-				if (!event.filterCard) event.filterCard = lib.filter.all;
-				// 更新拼点框
-				event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
-				event.compareId = `${event.compareName}_${get.id()}`;
-				event.addMessageHook("finished", function () {
-					var dialog = ui.dialogs[this.compareId];
-					if (dialog) dialog.close();
-				});
-				game.broadcastAll(
-					function (player, target, eventName, compareId) {
-						if (!window.decadeUI) return;
-						var dialog = decadeUI.create.compareDialog();
-						dialog.caption = get.translation(eventName) + "拼点";
-						dialog.player = player;
-						dialog.target = target;
-						dialog.open();
-						decadeUI.delay(400);
-						ui.dialogs[compareId] = dialog;
-					},
-					player,
-					target,
-					event.compareName,
-					event.compareId
-				);
-				"step 1";
-				event.list = [player, target].filter(current => !event.fixedResult?.[current.playerid]);
-				if (event.list.length) {
-					player.chooseCardOL(event.list, "请选择拼点牌", true, event.position).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
-						var hs = target.getCards("h");
-						var event = _status.event;
-						event.player = target;
-						hs.sort(function (a, b) {
-							return event.ai(b) - event.ai(a);
-						});
-						delete event.player;
-						return {
-							bool: true,
-							cards: [hs[0]],
-						};
-					};
-				}
-				"step 2";
-				const lose_list = [];
-				if (event.fixedResult && event.fixedResult[player.playerid]) {
-					lose_list.push([player, [event.fixedResult[player.playerid]]]);
-				} else {
-					if (result[0].skill && lib.skill[result[0].skill] && lib.skill[result[0].skill].onCompare) {
-						player.logSkill(result[0].skill);
-						result[0].cards = lib.skill[result[0].skill].onCompare(player);
-					}
-					lose_list.push([player, result[0].cards]);
-				}
-				event.card1 = lose_list[0][1][0];
-				// 更新拼点框
-				game.broadcastAll(function (eventName) {
-					if (!window.decadeUI) return;
-					var dialog = ui.dialogs[eventName];
-					dialog.$playerCard.classList.add("infohidden");
-					dialog.$playerCard.classList.add("infoflip");
-				}, event.compareId);
-				if (event.list.includes(target)) {
-					let index = event.list.indexOf(target);
-					if (result[index].skill && lib.skill[result[index].skill] && lib.skill[result[index].skill].onCompare) {
-						target.logSkill(result[index].skill);
-						result[index].cards = lib.skill[result[index].skill].onCompare(target);
-					}
-					lose_list.push([target, result[index].cards]);
-				} else if (event.fixedResult && event.fixedResult[target.playerid]) {
-					lose_list.push([target, [event.fixedResult[target.playerid]]]);
-				}
-				event.card2 = lose_list[1][1][0];
-				// 更新拼点框
-				game.broadcastAll(function (eventName) {
-					if (!window.decadeUI) return;
-					var dialog = ui.dialogs[eventName];
-					dialog.$playerCard.classList.add("infohidden");
-					dialog.$playerCard.classList.add("infoflip");
-				}, event.compareId);
-				event.lose_list = lose_list;
-				"step 3";
-				if (event.card2.number >= 10 || event.card2.number <= 4) {
-					if (target.countCards("h") > 2) event.addToAI = true;
-				}
-				"step 4";
-				if (event.lose_list.length) {
-					game.loseAsync({
-						lose_list: event.lose_list,
-					}).setContent("chooseToCompareLose");
-				}
-				"step 5";
-				if (event.isDelay) {
-					let cards = [];
-					for (let current of event.lose_list) {
-						current[0].$giveAuto(current[1], current[0], false);
-						cards.addArray(current[1]);
-					}
-					game.cardsGotoSpecial(cards);
-					player
-						.when({
-							global: ["dieAfter", "phaseEnd"],
-						})
-						.assign({
-							forceDie: true,
-						})
-						.filter((event, player) => {
-							return event.name == "phase" || [player, target].includes(event.player);
-						})
-						.vars({
-							cards,
-							target,
-							evt: event,
-						})
-						.then(() => {
-							if (cards.some(card => get.position(card) == "s")) {
-								game.cardsDiscard(cards);
-								evt.isDestoryed = true;
-							}
-						});
-					event.untrigger();
-					game.broadcastAll(function (eventName) {
-						if (!window.decadeUI) return;
-						var dialog = ui.dialogs[eventName];
-						if (dialog) dialog.close();
-					}, event.compareId);
-					event.finish();
-				} else {
-					event.trigger("compareCardShowBefore");
-				}
-				"step 6";
-				// 更新拼点框
-				game.broadcastAll(
-					function (eventName, player, target, playerCard, targetCard) {
-						ui.arena.classList.add("thrownhighlight");
-						if (!window.decadeUI) {
-							ui.arena.classList.add("thrownhighlight");
-							player.$compare(playerCard, target, targetCard);
-							return;
-						}
-						var dialog = ui.dialogs[eventName];
-						dialog.playerCard = playerCard.copy();
-						dialog.targetCard = targetCard.copy();
-					},
-					event.compareId,
-					player,
-					target,
-					event.card1,
-					event.card2
-				);
-				game.addVideo("thrownhighlight1");
-				game.log(player, "的拼点牌为", event.card1);
-				game.log(target, "的拼点牌为", event.card2);
-				var getNum = function (card) {
-					for (var i of event.lose_list) {
-						if (i[1].includes(card)) return get.number(card, i[0]);
-					}
-					return get.number(card, false);
-				};
-				event.num1 = getNum(event.card1);
-				event.num2 = getNum(event.card2);
-				event.trigger("compare");
-				decadeUI.delay(400);
-				"step 7";
-				event.result = {
-					player: event.card1,
-					target: event.card2,
-					num1: event.num1,
-					num2: event.num2,
-				};
-				event.trigger("compareFixing");
-				"step 8";
-				var str;
-				if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
-					event.result.bool = true;
-					event.result.winner = player;
-					str = get.translation(player) + "拼点成功";
-					player.popup("胜");
-					target.popup("负");
-				} else {
-					event.result.bool = false;
-					str = get.translation(player) + "拼点失败";
-					if (event.forceWinner !== target && event.num1 == event.num2) {
-						event.result.tie = true;
-						player.popup("平");
-						target.popup("平");
-					} else {
-						event.result.winner = target;
-						player.popup("负");
-						target.popup("胜");
-					}
-				}
-				// 更新拼点框
-				game.broadcastAll(
-					function (str, eventName, result) {
-						if (!window.decadeUI) {
-							var dialog = ui.create.dialog(str);
-							dialog.classList.add("center");
-							setTimeout(
-								function (dialog) {
-									dialog.close();
-								},
-								1000,
-								dialog
-							);
-							return;
-						}
-						var dialog = ui.dialogs[eventName];
-						dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
-						setTimeout(
-							function (dialog, eventName) {
-								dialog.close();
-								setTimeout(
-									function (dialog) {
-										dialog.player.$throwordered2(dialog.playerCard, true);
-										dialog.target.$throwordered2(dialog.targetCard, true);
-									},
-									180,
-									dialog
-								);
-								ui.dialogs[eventName] = undefined;
-							},
-							1400,
-							dialog,
-							eventName
-						);
-					},
-					str,
-					event.compareId,
-					event.result.bool
-				);
-				decadeUI.delay(1800);
-				"step 9";
-				if (typeof event.target.ai.shown == "number" && event.target.ai.shown <= 0.85 && event.addToAI) {
-					event.target.ai.shown += 0.1;
-				}
-				game.broadcastAll(function () {
-					ui.arena.classList.remove("thrownhighlight");
-				});
-				game.addVideo("thrownhighlight2");
-				if (event.clear !== false) {
-					game.broadcastAll(ui.clear);
-				}
-				if (typeof event.preserve == "function") {
-					event.preserve = event.preserve(event.result);
-				} else if (event.preserve == "win") {
-					event.preserve = event.result.bool;
-				} else if (event.preserve == "lose") {
-					event.preserve = !event.result.bool;
-				}
-			};
-			lib.element.content.chooseToCompareMultiple = function () {
-				"step 0";
-				if (!event.fixedResult?.[player.playerid] && !player.countCards("h")) {
-					event.result = { cancelled: true, bool: false };
-					event.finish();
-					return;
-				}
-				for (var i = 0; i < targets.length; i++) {
-					if ((!event.fixedResult || !event.fixedResult[targets[i].playerid]) && targets[i].countCards("h") == 0) {
-						event.result = { cancelled: true, bool: false };
-						event.finish();
-						return;
-					}
-				}
-				if (!event.multitarget) {
-					targets.sort(lib.sort.seat);
-				}
-				game.log(player, "对", targets, "发起拼点");
-				if (!event.filterCard) event.filterCard = lib.filter.all;
-				// 更新拼点框
-				event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
-				event.compareId = `${event.compareName}_${get.id()}`;
-				event.addMessageHook("finished", function () {
-					var dialog = ui.dialogs[this.compareId];
-					if (dialog) dialog.close();
-				});
-				game.broadcastAll(
-					function (player, target, eventName, compareId) {
-						if (!window.decadeUI) return;
-						var dialog = decadeUI.create.compareDialog();
-						dialog.caption = get.translation(eventName) + "拼点";
-						dialog.player = player;
-						dialog.target = target;
-						dialog.open();
-						decadeUI.delay(400);
-						ui.dialogs[compareId] = dialog;
-					},
-					player,
-					targets[0],
-					event.compareName,
-					event.compareId
-				);
-				"step 1";
-				event._result = [];
-				event.list = targets.filter(current => !event.fixedResult?.[current.playerid]);
-				if (event.list.length || !event.fixedResult?.[player.playerid]) {
-					if (!event.fixedResult?.[player.playerid]) event.list.unshift(player);
-					player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
-						var hs = target.getCards("h");
-						var event = _status.event;
-						event.player = target;
-						hs.sort(function (a, b) {
-							return event.ai(b) - event.ai(a);
-						});
-						delete event.player;
-						return {
-							bool: true,
-							cards: [hs[0]],
-						};
-					};
-				}
-				"step 2";
-				var cards = [];
-				var lose_list = [];
-				event.lose_list = lose_list;
-				event.getNum = function (card) {
-					for (var i of event.lose_list) {
-						if (i[1].includes(card)) return get.number(card, i[0]);
-					}
-					return get.number(card, false);
-				};
-				if (event.fixedResult && event.fixedResult[player.playerid]) {
-					event.list.unshift(player);
-					result.unshift({
-						bool: true,
-						cards: [event.fixedResult[player.playerid]],
-					});
-					lose_list.push([player, [event.fixedResult[player.playerid]]]);
-				} else {
-					if (result[0].skill && lib.skill[result[0].skill] && lib.skill[result[0].skill].onCompare) {
-						player.logSkill(result[0].skill);
-						result[0].cards = lib.skill[result[0].skill].onCompare(player);
-					} else lose_list.push([player, result[0].cards]);
-				}
-				for (var j = 0; j < targets.length; j++) {
-					if (event.list.includes(targets[j])) {
-						var i = event.list.indexOf(targets[j]);
-						if (result[i].skill && lib.skill[result[i].skill] && lib.skill[result[i].skill].onCompare) {
-							event.list[i].logSkill(result[i].skill);
-							result[i].cards = lib.skill[result[i].skill].onCompare(event.list[i]);
-						} else lose_list.push([targets[j], result[i].cards]);
-						cards.push(result[i].cards[0]);
-					} else if (event.fixedResult && event.fixedResult[targets[j].playerid]) {
-						cards.push(event.fixedResult[targets[j].playerid]);
-						lose_list.push([targets[j], [event.fixedResult[targets[j].playerid]]]);
-					}
-				}
-				if (lose_list.length) {
-					game.loseAsync({
-						lose_list: lose_list,
-					}).setContent("chooseToCompareLose");
-				}
-				event.cardlist = cards;
-				event.cards = cards;
-				event.card1 = result[0].cards[0];
-				event.num1 = event.getNum(event.card1);
-				event.iwhile = 0;
-				event.result = {
-					player: event.card1,
-					targets: event.cardlist.slice(0),
-					num1: [],
-					num2: [],
-				};
-				"step 3";
-				event.trigger("compareCardShowBefore");
-				"step 4";
-				game.log(player, "的拼点牌为", event.card1);
-				// 更新拼点框
-				game.broadcastAll(
-					function (eventName, playerCard) {
-						if (!window.decadeUI) return;
-						var dialog = ui.dialogs[eventName];
-						dialog.playerCard = playerCard.copy();
-					},
-					event.compareId,
-					event.card1
-				);
-				"step 5";
-				if (event.iwhile < targets.length) {
-					event.target = targets[event.iwhile];
-					event.card2 = event.cardlist[event.iwhile];
-					event.num2 = event.getNum(event.card2);
-					game.log(event.target, "的拼点牌为", event.card2);
-					player.line(event.target);
-					// 更新拼点框
-					game.broadcastAll(
-						function (eventName, player, target, playerCard, targetCard) {
-							if (!window.decadeUI) {
-								player.$compare(playerCard, target, targetCard);
-								return;
-							}
-							var dialog = ui.dialogs[eventName];
-							dialog.show();
-							dialog.target = target;
-							dialog.targetCard = targetCard.copy();
-						},
-						event.compareId,
-						player,
-						event.target,
-						event.card1,
-						event.card2
-					);
-					event.trigger("compare");
-					decadeUI.delay(400);
-				} else {
-					// 更新拼点框
-					game.broadcastAll(function (eventName) {
-						if (!window.decadeUI) return;
-						var dialog = ui.dialogs[eventName];
-						dialog.close();
-						setTimeout(
-							function (dialog) {
-								dialog.player.$throwordered2(dialog.playerCard, true);
-							},
-							110,
-							dialog
-						);
-					}, event.compareId);
-					event.goto(10);
-				}
-				"step 6";
-				event.iiwhile = event.iwhile;
-				delete event.iwhile;
-				event.trigger("compareFixing");
-				"step 7";
-				event.result.num1[event.iiwhile] = event.num1;
-				event.result.num2[event.iiwhile] = event.num2;
-				var str, result;
-				if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
-					result = true;
-					event.winner = player;
-					str = get.translation(player) + "拼点成功";
-					player.popup("胜");
-					target.popup("负");
-				} else {
-					result = false;
-					str = get.translation(player) + "拼点失败";
-					if (event.forceWinner !== target && event.num1 == event.num2) {
-						player.popup("平");
-						target.popup("平");
-					} else {
-						event.winner = target;
-						player.popup("负");
-						target.popup("胜");
-					}
-				}
-				// 更新拼点框
-				game.broadcastAll(
-					function (str, eventName, result) {
-						if (!window.decadeUI) {
-							var dialog = ui.create.dialog(str);
-							dialog.classList.add("center");
-							setTimeout(
-								function (dialog) {
-									dialog.close();
-								},
-								1000,
-								dialog
-							);
-							return;
-						}
-						var dialog = ui.dialogs[eventName];
-						dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
-						setTimeout(
-							function (dialog) {
-								dialog.hide();
-								dialog.$playerCard.dataset.result = "";
-								setTimeout(
-									function (dialog) {
-										dialog.target.$throwordered2(dialog.targetCard, true);
-									},
-									180,
-									dialog
-								);
-							},
-							1400,
-							dialog,
-							eventName
-						);
-					},
-					str,
-					event.compareId,
-					result
-				);
-				decadeUI.delay(1800);
-				"step 8";
-				if (event.callback) {
-					game.broadcastAll(
-						function (card1, card2) {
-							if (!window.decadeUI) {
-								if (card1.clone) card1.clone.style.opacity = 0.5;
-								if (card2.clone) card2.clone.style.opacity = 0.5;
-							}
-						},
-						event.card1,
-						event.card2
-					);
-					var next = game.createEvent("compareMultiple");
-					next.player = player;
-					next.target = event.target;
-					next.card1 = event.card1;
-					next.card2 = event.card2;
-					next.num1 = event.num1;
-					next.num2 = event.num2;
-					next.winner = event.winner;
-					next.setContent(event.callback);
-					event.compareMultiple = true;
-				}
-				"step 9";
-				delete event.winner;
-				delete event.forceWinner;
-				event.iwhile = event.iiwhile + 1;
-				event.goto(5);
-				"step 10";
-				game.broadcastAll(ui.clear);
-				event.cards.add(event.card1);
-			};
-			//联机禁用chhoseToGuanxing函数
-			if (!_status.connectMode) {
-				lib.element.content.chooseToGuanxing = function () {
-					"step 0";
-					if (player.isUnderControl()) game.swapPlayer(player);
-					var cards = get.cards(num);
-					var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
-					guanxing.caption = event.getParent() && event.getParent().name && get.translation(event.getParent().name) != event.getParent().name ? "【" + get.translation(event.getParent().name) + "】" : "请按顺序排列牌";
-					game.broadcast(
-						function (player, cards, callback) {
-							if (!window.decadeUI) return;
-							var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
-							guanxing.caption = "观星";
-							guanxing.callback = callback;
-							game.log(guanxing.callback);
-						},
-						player,
-						cards,
-						guanxing.callback
-					);
-					if (event.isOnline()) {
-						event.player.send(function () {
-							if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
-						}, event.player);
-						event.player.wait();
-						decadeUI.game.wait();
-					} else if (!(typeof event.isMine == "function" && event.isMine())) {
-						const processAI =
-							event.processAI ||
-							function (list) {
-								let cards = list[0][1],
-									player = _status.event.player,
-									target = _status.currentPhase || player,
-									name = _status.event.getTrigger()?.name,
-									countWuxie = current => {
-										let num = current.getKnownCards(player, card => {
-											return get.name(card, current) === "wuxie";
-										});
-										if (num && current !== player) return num;
-										let skills = current.getSkills("invisible").concat(lib.skill.global);
-										game.expandSkills(skills);
-										for (let i = 0; i < skills.length; i++) {
-											let ifo = get.info(skills[i]);
-											if (!ifo) continue;
-											if (ifo.viewAs && typeof ifo.viewAs != "function" && ifo.viewAs.name == "wuxie") {
-												if (!ifo.viewAsFilter || ifo.viewAsFilter(current)) {
-													num++;
-													break;
-												}
-											} else {
-												let hiddenCard = ifo.hiddenCard;
-												if (typeof hiddenCard == "function" && hiddenCard(current, "wuxie")) {
-													num++;
-													break;
-												}
-											}
-										}
-										return num;
-									},
-									top = [];
-								switch (name) {
-									case "phaseJieshu":
-										target = target.next;
-									case "phaseZhunbei":
-										let att = get.sgn(get.attitude(player, target)),
-											judges = target.getCards("j"),
-											needs = 0,
-											wuxie = countWuxie(target);
-										for (let i = Math.min(cards.length, judges.length) - 1; i >= 0; i--) {
-											let j = judges[i],
-												cardj = j.viewAs
-													? {
-															name: j.viewAs,
-															cards: j.cards || [j],
-													  }
-													: j;
-											if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
-												wuxie--;
-												continue;
-											}
-											let judge = get.judge(j);
-											cards.sort((a, b) => {
-												return (judge(b) - judge(a)) * att;
-											});
-											if (judge(cards[0]) * att < 0) {
-												needs++;
-												continue;
-											} else {
-												top.unshift(cards.shift());
-											}
-										}
-										if (needs > 0 && needs >= judges.length) {
-											return [top, cards];
-										}
-										cards.sort((a, b) => {
-											return (get.value(b, target) - get.value(a, target)) * att;
-										});
-										while (needs--) {
-											top.unshift(cards.shift());
-										}
-										while (cards.length) {
-											if (get.value(cards[0], target) > 6 == att > 0) top.push(cards.shift());
-											else break;
-										}
-										return [top, cards];
-									default:
-										cards.sort((a, b) => {
-											return get.value(b, target) - get.value(a, target);
-										});
-										while (cards.length) {
-											if (get.value(cards[0], target) > 6) top.push(cards.shift());
-											else break;
-										}
-										return [top, cards];
-								}
-							};
-						var [cards, cheats] = processAI([[" ", guanxing.cards[0].slice()]]),
-							time = 500;
-						for (var i = 0; i < cheats.length; i++) {
-							setTimeout(
-								function (card, index, finished) {
-									guanxing.move(card, index, 0);
-									if (finished) guanxing.finishTime(1000);
-								},
-								time,
-								cheats[i],
-								i,
-								i >= cheats.length - 1 && cards.length == 0
-							);
-							time += 500;
-						}
-						for (var i = 0; i < cards.length; i++) {
-							setTimeout(
-								function (card, index, finished) {
-									guanxing.move(card, index, 1);
-									if (finished) guanxing.finishTime(1000);
-								},
-								time,
-								cards[i],
-								i,
-								i >= cards.length - 1
-							);
-							time += 500;
-						}
-					}
-					"step 1";
-					var [top, bottom] = [event.cards1, event.cards2];
-					event.result = {
-						bool: true,
-						moved: [top, bottom],
-					};
-					game.addCardKnower(top, player);
-					game.addCardKnower(bottom, player);
-					player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
-					game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
-				};
-			}
-			lib.element.player.setIdentity = function (identity) {
-				if (!identity) identity = this.identity;
-				this.node.identity.dataset.color = identity;
-				if (get.mode() == "guozhan") {
-					if (identity == "ye" && get.is.jun(this)) this.identity = identity = lib.character[this.name1][1];
-					this.group = identity;
-					this.node.identity.firstChild.innerHTML = get.translation(identity);
-					return this;
-				}
-				if (get.is.jun(this)) {
-					this.node.identity.firstChild.innerHTML = "君";
-				} else {
-					this.node.identity.firstChild.innerHTML = get.translation(identity);
-				}
-				return this;
-			};
-			lib.element.player.addSkill = function (skill) {
-				var skill = playerAddSkillFunction.apply(this, arguments);
-				if (!Array.isArray(skill)) {
-					const skills = ["name", "name1", "name2"].reduce((list, name) => {
-						if (this[name] && (name != "name1" || this.name != this.name1)) {
-							list.addArray(get.character(this[name], 3) || []);
-						}
-						return list;
-					}, []);
-					if (!skills.includes(skill)) {
-						var info = get.info(skill);
-						if (!(!info || info.nopop || !get.translation(skill + "_info") || !lib.translate[skill + "_info"])) this.node.gainSkill.gain(skill);
-					}
-				}
-				[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
-				return skill;
-			};
-			lib.element.player.removeSkill = function (skill) {
-				var skill = playerRemoveSkillFunction.apply(this, arguments);
-				if (!Array.isArray(skill)) {
-					if (this.node.gainSkill.skills && this.node.gainSkill.skills.includes(skill)) {
-						this.node.gainSkill.lose(skill);
-					}
-				}
-				[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
-				return skill;
-			};
-			lib.element.player.awakenSkill = function (skill, nounmark) {
-				const result = playerAwakenSkillFunction.apply(this, arguments);
-				ui.updateSkillControl(this);
-				if (get.info(skill)?.dutySkill) {
-					const that = this;
-					game.expandSkills([skill]).forEach(taofen => that.shixiaoSkill(taofen));
-				}
-				const fname = _status.event.getParent()?.skill;
-				if (fname?.endsWith("_fail") && fname?.slice(0, -5) == skill) {
-					this.failSkill(skill);
-				}
-				return result;
-			};
-			lib.element.player.getState = function () {
-				var state = base.lib.element.player.getState.apply(this, arguments);
-				state.seat = this.seat;
-				return state;
 			};
 			Object.defineProperties(lib.element.player, {
 				group: {
@@ -4580,230 +5184,6 @@ export async function content(config, pack) {
 					},
 				},
 			});
-			lib.element.player.setModeState = function (info) {
-				if (info && info.seat) {
-					if (!this.node.seat) this.node.seat = decadeUI.element.create("seat", this);
-					this.node.seat.innerHTML = get.cnNumber(info.seat, true);
-				}
-				if (base.lib.element.player.setModeState) {
-					return base.lib.element.player.setModeState.apply(this, arguments);
-				} else {
-					return this.init(info.name, info.name2);
-				}
-			};
-			lib.element.player.$damagepop = function (num, nature, font, nobroadcast) {
-				if (typeof num == "number" || typeof num == "string") {
-					game.addVideo("damagepop", this, [num, nature, font]);
-					if (nobroadcast !== false) {
-						game.broadcast(
-							function (player, num, nature, font) {
-								player.$damagepop(num, nature, font);
-							},
-							this,
-							num,
-							nature,
-							font
-						);
-					}
-					var node;
-					if (this.popupNodeCache && this.popupNodeCache.length) {
-						node = this.popupNodeCache.shift();
-					} else {
-						node = decadeUI.element.create("damage");
-					}
-					if (font) {
-						node.classList.add("normal-font");
-					} else {
-						node.classList.remove("normal-font");
-					}
-					if (typeof num == "number") {
-						node.popupNumber = num;
-						if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI" && lib.config.extension_十周年UI_newDecadeStyle !== "othersOff" && lib.config.extension_十周年UI_newDecadeStyle !== "on") {
-							if (num == Infinity) {
-								num = "+∞";
-							} else if (num == -Infinity) {
-								num = "-∞";
-							} else if (num > 0) {
-								num = "+" + num;
-							}
-						} else num = "";
-					} else {
-						node.popupNumber = null;
-					}
-					node.innerHTML = num;
-					node.dataset.text = node.textContent || node.innerText;
-					node.nature = nature || "soil";
-					this.damagepopups.push(node);
-				}
-				if (this.damagepopups.length && !this.damagepopLocked) {
-					var node = this.damagepopups.shift();
-					this.damagepopLocked = true;
-					if (this != node.parentNode) this.appendChild(node);
-					var player = this;
-					if (typeof node.popupNumber == "number") {
-						var popupNum = node.popupNumber;
-						if (popupNum < 0) {
-							switch (node.nature) {
-								case "thunder":
-									if (popupNum <= -2) {
-										decadeUI.animation.playSpine(
-											{
-												name: "effect_shoujidonghua",
-												action: "play6",
-											},
-											{
-												scale: 0.8,
-												parent: player,
-											}
-										);
-									} else {
-										decadeUI.animation.playSpine(
-											{
-												name: "effect_shoujidonghua",
-												action: "play5",
-											},
-											{
-												scale: 0.8,
-												parent: player,
-											}
-										);
-									}
-									break;
-								case "fire":
-									if (popupNum <= -2) {
-										decadeUI.animation.playSpine(
-											{
-												name: "effect_shoujidonghua",
-												action: "play4",
-											},
-											{
-												scale: 0.8,
-												parent: player,
-											}
-										);
-									} else {
-										decadeUI.animation.playSpine(
-											{
-												name: "effect_shoujidonghua",
-												action: "play3",
-											},
-											{
-												scale: 0.8,
-												parent: player,
-											}
-										);
-									}
-									break;
-								case "water":
-									break;
-								default:
-									if (popupNum <= -2) {
-										decadeUI.animation.playSpine(
-											{
-												name: "effect_shoujidonghua",
-												action: "play2",
-											},
-											{
-												scale: 0.8,
-												parent: player,
-											}
-										);
-									} else {
-										decadeUI.animation.playSpine(
-											{
-												name: "effect_shoujidonghua",
-												action: "play1",
-											},
-											{
-												scale: 0.8,
-												parent: player,
-											}
-										);
-									}
-									break;
-							}
-						} else {
-							if (node.nature == "wood") {
-								decadeUI.animation.playSpine("effect_zhiliao", {
-									scale: 0.7,
-									parent: player,
-								});
-							}
-						}
-					}
-					node.style.animation = "open-fade-in-out 1.2s";
-					setTimeout(
-						function (player, node) {
-							if (!player.popupNodeCache) player.popupNodeCache = [];
-							node.style.animation = "";
-							player.popupNodeCache.push(node);
-						},
-						1210,
-						player,
-						node
-					);
-					setTimeout(
-						function (player) {
-							player.damagepopLocked = false;
-							player.$damagepop();
-						},
-						500,
-						player
-					);
-				}
-			};
-			lib.element.player.$compare = function (card1, target, card2) {
-				game.broadcast(
-					function (player, target, card1, card2) {
-						player.$compare(card1, target, card2);
-					},
-					this,
-					target,
-					card1,
-					card2
-				);
-				game.addVideo("compare", this, [get.cardInfo(card1), target.dataset.position, get.cardInfo(card2)]);
-				var player = this;
-				target.$throwordered2(card2.copy(false));
-				player.$throwordered2(card1.copy(false));
-			};
-			lib.element.player.$compareMultiple = function (card1, targets, cards) {
-				game.broadcast(
-					function (player, card1, targets, cards) {
-						player.$compareMultiple(card1, targets, cards);
-					},
-					this,
-					card1,
-					targets,
-					cards
-				);
-				game.addVideo("compareMultiple", this, [get.cardInfo(card1), get.targetsInfo(targets), get.cardsInfo(cards)]);
-				var player = this;
-				for (var i = targets.length - 1; i >= 0; i--) {
-					targets[i].$throwordered2(cards[i].copy(false));
-				}
-				player.$throwordered2(card1.copy(false));
-			};
-			lib.element.card.copy = function () {
-				var clone = cardCopyFunction.apply(this, arguments);
-				clone.nature = this.nature;
-				var res = dui.statics.cards;
-				var asset = res[clone.name];
-				if (!res.READ_OK) return clone;
-				if (asset && !asset.loaded && clone.classList.contains("decade-card")) {
-					if (asset.loaded == undefined) {
-						var image = asset.image;
-						image.addEventListener("error", function () {
-							clone.style.background = asset.rawUrl;
-							clone.classList.remove("decade-card");
-						});
-					} else {
-						clone.style.background = asset.rawUrl;
-						clone.classList.remove("decade-card");
-					}
-				}
-				return clone;
-			};
 		},
 		dialog: {
 			create(className, parentNode, tagName) {
@@ -5726,146 +6106,7 @@ export async function content(config, pack) {
 			card.$usedtag = tagNode;
 			if (event.blameEvent) event = event.blameEvent;
 			let tagText;
-			const playername = get.slimName(player?.name);
-			let border = get.groupnature(get.bordergroup(player?.name));
-			let eventInfo = `<span style="font-weight:700"><span data-nature=${border}><span style="letter-spacing:0.1em">${playername}</span></span><br/><span style="color:#FFD700">`;
 			switch (event.name) {
-				case "useCard":
-				case "respond":
-					tagText = eventInfo + (event.name === "useCard" ? "使用" : "打出") + "</span>";
-					const cardname = event.card.name,
-						cardnature = get.nature(event.card);
-					if (lib.config.cardtempname != "off" && (card.name != cardname || !get.is.sameNature(cardnature, card.nature, true))) {
-						if (lib.config.extension_十周年UI_showTemp) {
-							if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
-							var tempname = "";
-							var tempname2 = get.translation(cardname);
-							if (cardnature) {
-								card._tempName.dataset.nature = cardnature;
-								if (cardname == "sha") {
-									tempname2 = get.translation(cardnature) + tempname2;
-								}
-							}
-							tempname += tempname2;
-							card._tempName.innerHTML = tempname;
-							card._tempName.tempname = tempname;
-						} else {
-							var node = ui.create.cardTempName(event.card, card);
-							var cardtempnameConfig = lib.config.cardtempname;
-							if (cardtempnameConfig !== "default") node.classList.remove("vertical");
-						}
-					}
-					const cardnumber = get.number(event.card),
-						cardsuit = get.suit(event.card);
-					if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
-						dui.cardTempSuitNum(card, cardsuit, cardnumber);
-					}
-					if (event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
-						var name = event.card.name,
-							nature = event.card.nature;
-						switch (name) {
-							case "effect_caochuanjiejian":
-								decadeUI.animation.cap.playSpineTo(card, "effect_caochuanjiejian");
-								break;
-							case "sha":
-								switch (nature) {
-									case "thunder":
-										decadeUI.animation.cap.playSpineTo(card, "effect_leisha");
-										break;
-									case "fire":
-										decadeUI.animation.cap.playSpineTo(card, "effect_huosha");
-										break;
-									default:
-										if (get.color(card) == "red") {
-											decadeUI.animation.cap.playSpineTo(card, "effect_hongsha");
-										} else {
-											decadeUI.animation.cap.playSpineTo(card, "effect_heisha");
-										}
-										break;
-								}
-								break;
-							case "shan":
-								decadeUI.animation.cap.playSpineTo(card, "effect_shan");
-								break;
-							case "tao":
-								decadeUI.animation.cap.playSpineTo(card, "effect_tao", {
-									scale: 0.9,
-								});
-								break;
-							case "tiesuo":
-								decadeUI.animation.cap.playSpineTo(card, "effect_tiesuolianhuan", {
-									scale: 0.9,
-								});
-								break;
-							case "jiu":
-								decadeUI.animation.cap.playSpineTo(card, "effect_jiu", {
-									y: [-30, 0.5],
-								});
-								break;
-							case "kaihua":
-								decadeUI.animation.cap.playSpineTo(card, "effect_shushangkaihua");
-								break;
-							case "wuzhong":
-								decadeUI.animation.cap.playSpineTo(card, "effect_wuzhongshengyou");
-								break;
-							case "wuxie":
-								decadeUI.animation.cap.playSpineTo(card, "effect_wuxiekeji", {
-									y: [10, 0.5],
-									scale: 0.9,
-								});
-								break;
-							case "juedou":
-								decadeUI.animation.cap.playSpineTo(card, "SF_eff_jiangling_juedou", {
-									x: [10, 0.4],
-									scale: 1,
-								});
-								break;
-							case "nanman":
-								decadeUI.animation.cap.playSpineTo(card, "effect_nanmanruqin", {
-									scale: 0.45,
-								});
-								break;
-							case "wanjian":
-								decadeUI.animation.cap.playSpineTo(card, "effect_wanjianqifa", {
-									scale: 0.78,
-								});
-								break;
-							case "wugu":
-								decadeUI.animation.cap.playSpineTo(card, "effect_wugufengdeng", {
-									y: [10, 0.5],
-								});
-								break;
-							case "taoyuan":
-								decadeUI.animation.cap.playSpineTo(card, "SF_kapai_eff_taoyuanjieyi", {
-									y: [10, 0.5],
-								});
-								break;
-							case "shunshou":
-								decadeUI.animation.cap.playSpineTo(card, "effect_shunshouqianyang");
-								break;
-							case "huogong":
-								decadeUI.animation.cap.playSpineTo(card, "effect_huogong", {
-									x: [8, 0.5],
-									scale: 0.5,
-								});
-								break;
-							case "guohe":
-								decadeUI.animation.cap.playSpineTo(card, "effect_guohechaiqiao", {
-									y: [10, 0.5],
-								});
-								break;
-							case "yuanjiao":
-								decadeUI.animation.cap.playSpineTo(card, "effect_yuanjiaojingong");
-								break;
-							case "zhibi":
-								decadeUI.animation.cap.playSpineTo(card, "effect_zhijizhibi");
-								break;
-							case "zhulu_card":
-								decadeUI.animation.cap.playSpineTo(card, "effect_zhulutianxia");
-								break;
-						}
-					}
-					break;
 				case "judge":
 					tagText = event.judgestr + "的判定牌";
 					event.addMessageHook("judgeResult", function () {
@@ -5922,6 +6163,140 @@ export async function content(config, pack) {
 					break;
 				default:
 					tagText = get.cardsetion(player);
+					if (["useCard", "respond"].includes(event.name)) {
+						const cardname = event.card.name,
+							cardnature = get.nature(event.card);
+						if (lib.config.cardtempname != "off" && (card.name != cardname || !get.is.sameNature(cardnature, card.nature, true))) {
+							if (lib.config.extension_十周年UI_showTemp) {
+								if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
+								var tempname = "";
+								var tempname2 = get.translation(cardname);
+								if (cardnature) {
+									card._tempName.dataset.nature = cardnature;
+									if (cardname == "sha") {
+										tempname2 = get.translation(cardnature) + tempname2;
+									}
+								}
+								tempname += tempname2;
+								card._tempName.innerHTML = tempname;
+								card._tempName.tempname = tempname;
+							} else {
+								var node = ui.create.cardTempName(event.card, card);
+								var cardtempnameConfig = lib.config.cardtempname;
+								if (cardtempnameConfig !== "default") node.classList.remove("vertical");
+							}
+						}
+						const cardnumber = get.number(event.card),
+							cardsuit = get.suit(event.card);
+						if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
+							dui.cardTempSuitNum(card, cardsuit, cardnumber);
+						}
+						if (event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
+							var name = event.card.name,
+								nature = event.card.nature;
+							switch (name) {
+								case "effect_caochuanjiejian":
+									decadeUI.animation.cap.playSpineTo(card, "effect_caochuanjiejian");
+									break;
+								case "sha":
+									switch (nature) {
+										case "thunder":
+											decadeUI.animation.cap.playSpineTo(card, "effect_leisha");
+											break;
+										case "fire":
+											decadeUI.animation.cap.playSpineTo(card, "effect_huosha");
+											break;
+										default:
+											if (get.color(card) == "red") {
+												decadeUI.animation.cap.playSpineTo(card, "effect_hongsha");
+											} else {
+												decadeUI.animation.cap.playSpineTo(card, "effect_heisha");
+											}
+											break;
+									}
+									break;
+								case "shan":
+									decadeUI.animation.cap.playSpineTo(card, "effect_shan");
+									break;
+								case "tao":
+									decadeUI.animation.cap.playSpineTo(card, "effect_tao", {
+										scale: 0.9,
+									});
+									break;
+								case "tiesuo":
+									decadeUI.animation.cap.playSpineTo(card, "effect_tiesuolianhuan", {
+										scale: 0.9,
+									});
+									break;
+								case "jiu":
+									decadeUI.animation.cap.playSpineTo(card, "effect_jiu", {
+										y: [-30, 0.5],
+									});
+									break;
+								case "kaihua":
+									decadeUI.animation.cap.playSpineTo(card, "effect_shushangkaihua");
+									break;
+								case "wuzhong":
+									decadeUI.animation.cap.playSpineTo(card, "effect_wuzhongshengyou");
+									break;
+								case "wuxie":
+									decadeUI.animation.cap.playSpineTo(card, "effect_wuxiekeji", {
+										y: [10, 0.5],
+										scale: 0.9,
+									});
+									break;
+								case "juedou":
+									decadeUI.animation.cap.playSpineTo(card, "SF_eff_jiangling_juedou", {
+										x: [10, 0.4],
+										scale: 1,
+									});
+									break;
+								case "nanman":
+									decadeUI.animation.cap.playSpineTo(card, "effect_nanmanruqin", {
+										scale: 0.45,
+									});
+									break;
+								case "wanjian":
+									decadeUI.animation.cap.playSpineTo(card, "effect_wanjianqifa", {
+										scale: 0.78,
+									});
+									break;
+								case "wugu":
+									decadeUI.animation.cap.playSpineTo(card, "effect_wugufengdeng", {
+										y: [10, 0.5],
+									});
+									break;
+								case "taoyuan":
+									decadeUI.animation.cap.playSpineTo(card, "SF_kapai_eff_taoyuanjieyi", {
+										y: [10, 0.5],
+									});
+									break;
+								case "shunshou":
+									decadeUI.animation.cap.playSpineTo(card, "effect_shunshouqianyang");
+									break;
+								case "huogong":
+									decadeUI.animation.cap.playSpineTo(card, "effect_huogong", {
+										x: [8, 0.5],
+										scale: 0.5,
+									});
+									break;
+								case "guohe":
+									decadeUI.animation.cap.playSpineTo(card, "effect_guohechaiqiao", {
+										y: [10, 0.5],
+									});
+									break;
+								case "yuanjiao":
+									decadeUI.animation.cap.playSpineTo(card, "effect_yuanjiaojingong");
+									break;
+								case "zhibi":
+									decadeUI.animation.cap.playSpineTo(card, "effect_zhijizhibi");
+									break;
+								case "zhulu_card":
+									decadeUI.animation.cap.playSpineTo(card, "effect_zhulutianxia");
+									break;
+							}
+						}
+					}
 					break;
 			}
 			tagNode.innerHTML = tagText;
@@ -6747,458 +7122,6 @@ export async function content(config, pack) {
 	decadeUI.init();
 	console.timeEnd(decadeUIName);
 	//手杀UI
-	//发动技能函数
-	var shoushaUI = lib.element.player.trySkillAnimate;
-	lib.element.player.trySkillAnimate = function (name, popname, checkShow) {
-		shoushaUI.apply(this, arguments);
-		var that = this;
-		//------技能进度条------------//
-		if (lib.config["extension_十周年UI_enable"] && lib.config.extension_十周年UI_jindutiao == true) {
-			if (!document.querySelector("#jindutiaopl") && that == game.me) {
-				game.Jindutiaoplayer();
-			} else if (that != game.me) {
-				var ab = that.getElementsByClassName("timeai"); //进度条
-				var cd = that.getElementsByClassName("tipshow"); //阶段，出牌提示条
-				var ef = that.getElementsByClassName("tipskill"); //技能提示条
-				//-------初始化-----//
-				if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
-				if (cd[0]) cd[0].parentNode.removeChild(cd[0]);
-				if (ef[0]) ef[0].parentNode.removeChild(ef[0]);
-				game.JindutiaoAIplayer();
-				window.boxContentAI.classList.add("timeai");
-				that.appendChild(window.boxContentAI);
-				var tipbanlist = ["_recasting", "jiu"]; //过滤部分触发技能，可以自己添加
-				if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
-					var tipskillbox = document.createElement("div"); //盒子
-					var tipshow = document.createElement("img"); //图片思考中
-					var tipskilltext = document.createElement("div"); //技能文本
-					//------盒子样式--------//
-					tipskillbox.classList.add("tipskill"); //盒子设置技能类名
-					tipskillbox.style.cssText = "display:block;position:absolute;pointer-events:none;z-index:90;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:0px;";
-					//--------技能文本-----//
-					tipskilltext.innerHTML = get.skillTranslation(name, that).slice(0, 2);
-					tipskilltext.style.cssText = "color:#ADC63A;text-shadow:#707852 0 0;font-size:11px;font-family:shousha;display:block;position:absolute;z-index:91;bottom:-22px;letter-spacing:1.5px;line-height:15px;left:15px;";
-					//-----思考中底图------//
-					tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/skilltip.png";
-					tipshow.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
-					tipskillbox.appendChild(tipshow);
-					tipskillbox.appendChild(tipskilltext);
-					that.appendChild(tipskillbox);
-				}
-			}
-		}
-	};
-	//武将搜索代码摘抄至扩展ol
-	var kzol_create_characterDialog = ui.create.characterDialog;
-	ui.create.characterDialog = function () {
-		var dialog = kzol_create_characterDialog.apply(this, arguments);
-		const control = lib.config.extension_十周年UI_mx_decade_characterDialog || "default";
-		if (control != "default") {
-			const Searcher = dialog.querySelector(".searcher.caption");
-			if (Searcher) Searcher.parentNode.removeChild(Searcher);
-			if (control == "extension-OL-system") {
-				var content_container = dialog.childNodes[0];
-				var content = content_container.childNodes[0];
-				var switch_con = content.childNodes[0];
-				var buttons = content.childNodes[1];
-				var div = ui.create.div("extension-OL-system");
-				div.style.height = "35px";
-				div.style.width = "calc(100%)";
-				div.style.top = "-2px";
-				div.style.left = "0px";
-				div.style["white-space"] = "nowrap";
-				div.style["text-align"] = "center";
-				div.style["line-height"] = "26px";
-				div.style["font-size"] = "24px";
-				div.style["font-family"] = "xinwei";
-				div.innerHTML = "搜索：" + '<select size="1" style="width:75px;height:21px;">' + '<option value="name">名称翻译</option>' + '<option value="name1">名称ID</option>' + '<option value="name2">名称ID(精确匹配)</option>' + '<option value="skill">技能翻译</option>' + '<option value="skill1">技能ID</option>' + '<option value="skill2">技能ID(精确匹配)</option>' + '<option value="skill3">技能描述/翻译</option>' + "→" + '<input type="text" style="width:150px;"></input>' + "</select>";
-				var input = div.querySelector("input");
-				input.placeholder = "非精确匹配支持正则搜索";
-				input.onkeydown = function (e) {
-					e.stopPropagation();
-					if (e.keyCode == 13) {
-						var value = this.value;
-						if (value == "") {
-							game.alert("搜索不能为空");
-							input.focus();
-							return;
-						}
-						var choice = div.querySelector("select").options[div.querySelector("select").selectedIndex].value;
-						if (value) {
-							for (var i = 0; i < buttons.childNodes.length; i++) {
-								buttons.childNodes[i].classList.add("nodisplay");
-								var name = buttons.childNodes[i].link;
-								var skills = get.character(name).skills || [];
-								if (
-									(function (choice, value, name, skills) {
-										if (choice.endsWith("2")) return choice === "name2" ? value === name : skills.includes(value);
-										value = new RegExp(value, "g");
-										const goon = (value, text) => text && value.test(text);
-										if (choice == "name1") return goon(value, name);
-										else if (choice == "name") return goon(value, get.translation(name)) || goon(value, get.translation(name + "_ab"));
-										else if (choice == "skill1") return skills.some(skill => goon(value, skill));
-										else if (choice == "skill") return skills.some(skill => goon(value, get.translation(skill)));
-										else return skills.some(skill => goon(value, get.translation(skill + "_info")));
-									})(choice, value, name, skills)
-								) {
-									buttons.childNodes[i].classList.remove("nodisplay");
-								}
-							}
-						}
-						if (dialog.paginationMaxCount.get("character")) {
-							const buttons = dialog.content.querySelector(".buttons");
-							const p = dialog.paginationMap.get(buttons);
-							if (p) {
-								const array = dialog.buttons.filter(item => !item.classList.contains("nodisplay"));
-								p.state.data = array;
-								p.setTotalPageCount(Math.ceil(array.length / dialog.paginationMaxCount.get("character")));
-							}
-						}
-					}
-				};
-				input.onmousedown = function (e) {
-					e.stopPropagation();
-				};
-				switch_con.insertBefore(div, switch_con.firstChild);
-			}
-		}
-		return dialog;
-	};
-	/*-------转换技，阴阳标记等----*/
-	//修改changezhuanhuanji函数
-	var originchangeZhuanhuanji = lib.element.player.$changeZhuanhuanji;
-	lib.element.player.$changeZhuanhuanji = function (skill) {
-		originchangeZhuanhuanji.apply(this, arguments);
-		if (!get.is.zhuanhuanji(skill, this)) return;
-		if (this.hiddenSkills.includes(skill) && this !== game.me) return;
-		var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
-		var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
-		function imageExists(url) {
-			var xhr = new XMLHttpRequest();
-			xhr.open("GET", url, false);
-			xhr.send();
-			return xhr.status !== 404;
-		}
-		try {
-			if (mark) mark.dk = imageExists(url);
-		} catch (err) {
-			if (mark) mark.dk = false;
-		}
-		if (!mark) return;
-		var style = lib.config.extension_十周年UI_newDecadeStyle;
-		var yangUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
-		var yingUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_ying.png";
-		var defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png";
-		var defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_ying.png";
-		if (style == "on" || style == "othersOff" || style == "onlineUI" || style == "babysha") {
-			if (mark.classList.contains("yin")) {
-				mark.classList.remove("yin");
-				mark.classList.add("yang");
-			} else {
-				mark.classList.remove("yang");
-				mark.classList.add("yin");
-			}
-		} else {
-			if (mark.dd === true) {
-				this.yingSkill(skill);
-				mark.dd = false;
-				mark.setBackgroundImage(mark.dk ? yangUrl : defaultYangUrl);
-			} else {
-				this.yangSkill(skill);
-				mark.dd = true;
-				mark.setBackgroundImage(mark.dk ? yingUrl : defaultYingUrl);
-			}
-		}
-	};
-	//修改技能按钮
-	//定义两个空集合阳按钮和阴按钮（别问为啥阴不是yin而是ying，问就是拿yang复制比较简单）
-	/*孩子你这么写直接全场共用了
-	lib.element.player.yangedSkills = [];
-	lib.element.player.yingedSkills = [];*/
-	//定义阴函数，将技能加入阴集合，并删除阳集合里的该技能。
-	lib.element.player.yangSkill = function (skill) {
-		var player = this;
-		game.broadcastAll(
-			function (player, skill) {
-				player.$yangSkill(skill);
-			},
-			player,
-			skill
-		);
-	};
-	lib.element.player.$yangSkill = function (skill) {
-		if (!this.yangedSkills) {
-			this.yangedSkills = [];
-		}
-		this.yangedSkills.add(skill);
-		if (!this.yingedSkills) {
-			this.yingedSkills = [];
-		}
-		this.yingedSkills.remove(skill);
-	};
-	//阳函数同理
-	lib.element.player.yingSkill = function (skill) {
-		var player = this;
-		game.broadcastAll(
-			function (player, skill) {
-				player.$yingSkill(skill);
-			},
-			player,
-			skill
-		);
-	};
-	lib.element.player.$yingSkill = function (skill) {
-		if (!this.yingedSkills) {
-			this.yingedSkills = [];
-		}
-		this.yingedSkills.add(skill);
-		if (!this.yangedSkills) {
-			this.yangedSkills = [];
-		}
-		this.yangedSkills.remove(skill);
-	};
-	//添加failskill函数
-	//这是失败函数，添加到使命技的失败分支里，作用是为使命技的class样式添加一个后缀fail，这样在使命技失败的时候创建的标记就会是白底和一个x（类似限定技使用后），而使命技成功的标记就会是红底。
-	lib.element.player.failSkill = function (skill) {
-		var player = this;
-		game.broadcastAll(
-			function (player, skill) {
-				player.$failSkill(skill);
-			},
-			player,
-			skill
-		);
-	};
-	lib.element.player.$failSkill = function (skill) {
-		if (this.hiddenSkills.includes(skill) && this !== game.me) return;
-		var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
-		if (mark) mark.classList.add("fail");
-	};
-	//添加失效函数
-	//构建一个失效技能的空集合
-	//失效函数是为了给技能按钮上锁的，在技能失效时，补上shixiao函数，技能就会被加入失效集合里，十周年UI那里就会检测到技能失效，从而添加上锁图片。
-	/*拷打喵！
-	lib.element.player.shixiaoedSkills = [];*/
-	(lib.element.player.shixiaoSkill = function (skill) {
-		var player = this;
-		game.broadcastAll(
-			function (player, skill) {
-				player.$shixiaoSkill(skill);
-			},
-			player,
-			skill
-		);
-	}),
-		(lib.element.player.$shixiaoSkill = function (skill) {
-			if (!this.shixiaoedSkills) this.shixiaoedSkills = [];
-			this.shixiaoedSkills.add(skill);
-		}),
-		//添加解除失效函数
-		//看名字就知道是干啥的
-		(lib.element.player.unshixiaoSkill = function (skill) {
-			var player = this;
-			game.broadcastAll(
-				function (player, skill) {
-					player.$unshixiaoSkill(skill);
-				},
-				player,
-				skill
-			);
-		}),
-		(lib.element.player.$unshixiaoSkill = function (skill) {
-			if (!this.shixiaoedSkills) this.shixiaoedSkills = [];
-			this.shixiaoedSkills.remove(skill);
-		});
-	/*选项条分离*/
-	/*分离选项条 修改选项函数*/
-	lib.element.content.chooseControl = function () {
-		"step 0";
-		if (event.controls.length == 0) {
-			if (event.sortcard) {
-				var sortnum = 2;
-				if (event.sorttop) {
-					sortnum = 1;
-				}
-				for (var i = 0; i < event.sortcard.length + sortnum; i++) {
-					event.controls.push(get.cnNumber(i, true));
-				}
-			} else if (event.choiceList) {
-				for (var i = 0; i < event.choiceList.length; i++) {
-					event.controls.push("选项" + get.cnNumber(i + 1, true));
-				}
-			} else {
-				event.finish();
-				return;
-			}
-		} else if (event.choiceList && event.controls.length == 1 && event.controls[0] == "cancel2") {
-			event.controls.shift();
-			for (var i = 0; i < event.choiceList.length; i++) {
-				event.controls.push("选项" + get.cnNumber(i + 1, true));
-			}
-			event.controls.push("cancel2");
-		}
-		if (event.isMine()) {
-			if (event.arrangeSkill) {
-				var hidden = player.hiddenSkills.slice(0);
-				game.expandSkills(hidden);
-				if (hidden.length) {
-					for (var i of event.controls) {
-						if (_status.prehidden_skills.includes(i) && hidden.includes(i)) {
-							event.result = {
-								bool: true,
-								control: i,
-							};
-							return;
-						}
-					}
-				}
-			} else if (event.hsskill && _status.prehidden_skills.includes(event.hsskill) && event.controls.includes("cancel2")) {
-				event.result = {
-					bool: true,
-					control: "cancel2",
-				};
-				return;
-			}
-			if (event.sortcard) {
-				var prompt = event.prompt || "选择一个位置";
-				if (event.tosort) {
-					prompt += "放置" + get.translation(event.tosort);
-				}
-				event.dialog = ui.create.dialog(prompt, "hidden");
-				if (event.sortcard && event.sortcard.length) {
-					event.dialog.addSmall(event.sortcard);
-				} else {
-					event.dialog.buttons = [];
-					event.dialog.add(ui.create.div(".buttons"));
-				}
-				var buttons = event.dialog.content.lastChild;
-				var sortnum = 2;
-				if (event.sorttop) {
-					sortnum = 1;
-				}
-				for (var i = 0; i < event.dialog.buttons.length + sortnum; i++) {
-					var item = ui.create.div(".button.card.pointerdiv.mebg");
-					item.style.width = "50px";
-					buttons.insertBefore(item, event.dialog.buttons[i]);
-					item.innerHTML = '<div style="font-family: xinwei;font-size: 25px;height: 75px;line-height: 25px;top: 8px;left: 10px;width: 30px;">第' + get.cnNumber(i + 1, true) + "张</div>";
-					if (i == event.dialog.buttons.length + 1) {
-						item.firstChild.innerHTML = "牌堆底";
-					}
-					item.link = get.cnNumber(i, true);
-					item.listen(ui.click.dialogcontrol);
-				}
-				event.dialog.forcebutton = true;
-				event.dialog.classList.add("forcebutton");
-				event.dialog.open();
-			} else if (event.dialogcontrol) {
-				event.dialog = ui.create.dialog(event.prompt || "选择一项", "hidden");
-				for (var i = 0; i < event.controls.length; i++) {
-					var item = event.dialog.add('<div class="popup text pointerdiv" style="width:calc(100% - 10px);display:inline-block">' + event.controls[i] + "</div>");
-					item.firstChild.listen(ui.click.dialogcontrol);
-					item.firstChild.link = event.controls[i];
-				}
-				event.dialog.forcebutton = true;
-				event.dialog.classList.add("forcebutton");
-				if (event.addDialog) {
-					for (var i = 0; i < event.addDialog.length; i++) {
-						if (get.itemtype(event.addDialog[i]) == "cards") {
-							event.dialog.addSmall(event.addDialog[i]);
-						} else {
-							event.dialog.add(event.addDialog[i]);
-						}
-					}
-					event.dialog.add(ui.create.div(".placeholder.slim"));
-				}
-				event.dialog.open();
-			} else {
-				if (event.seperate || lib.config.seperate_control) {
-					var controls = event.controls.slice(0);
-					var num = 0;
-					controls.remove("cancel2");
-					if ((event.direct && controls.length == 1) || event.forceDirect) {
-						event.result = {
-							control: event.controls[0],
-							links: get.links([event.controls[0]]),
-						};
-						return;
-					} else {
-						event.controlbars = [];
-						for (var i = 0; i < event.controls.length; i++) {
-							event.controlbars.push(ui.create.control([event.controls[i]]));
-						}
-					}
-				} else {
-					var controls = event.controls.slice(0);
-					var num = 0;
-					controls.remove("cancel2");
-					if ((event.direct && controls.length == 1) || event.forceDirect) {
-						event.result = {
-							control: event.controls[0],
-							links: get.links([event.controls[0]]),
-						};
-						return;
-					}
-					event.controlbar = ui.create.control(event.controls);
-				}
-				if (event.dialog) {
-					if (Array.isArray(event.dialog)) {
-						event.dialog = ui.create.dialog.apply(this, event.dialog);
-					}
-					event.dialog.open();
-				} else if (event.choiceList) {
-					event.dialog = ui.create.dialog(event.prompt || "选择一项", "hidden");
-					event.dialog.forcebutton = true;
-					var list = ui.control.childNodes;
-					for (var i = 0; i < list.length; i++) {
-						list[i].childNodes[0].classList.add("choice"); /*添加类名*/
-						//--------背水-----//
-						if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "babysha" && lib.config.extension_十周年UI_newDecadeStyle != "onlineUI") {
-							/*list[i].childNodes[0].setBackgroundImage('extension/无名补丁/image/beishui.png');*/
-							list[i].childNodes[0].setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/beishui.png");
-							list[i].childNodes[0].innerText = "背水";
-						}
-						//--------------//
-					}
-					event.dialog.open();
-					for (var i = 0; i < event.choiceList.length; i++) {
-						event.dialog.add('<div class="popup text" style="width:calc(100% - 10px);display:inline-block">' + (event.displayIndex !== false ? "选项" + get.cnNumber(i + 1, true) + "：" : "") + event.choiceList[i] + "</div>");
-					}
-				} else if (event.prompt) {
-					event.dialog = ui.create.dialog(event.prompt);
-					if (event.prompt2) {
-						event.dialog.addText(event.prompt2, event.prompt2.length <= 20 || event.centerprompt2);
-					}
-				}
-			}
-			game.pause();
-			game.countChoose();
-			event.choosing = true;
-		} else if (event.isOnline()) {
-			event.send();
-		} else {
-			event.result = "ai";
-		}
-		"step 1";
-		if (event.result == "ai") {
-			event.result = {};
-			if (event.ai) {
-				var result = event.ai(event.getParent(), player);
-				if (typeof result == "number") event.result.control = event.controls[result];
-				else event.result.control = result;
-			} else event.result.control = event.controls[event.choice];
-		}
-		event.result.index = event.controls.indexOf(event.result.control);
-		event.choosing = false;
-		_status.imchoosing = false;
-		if (event.dialog && event.dialog.close) event.dialog.close();
-		if (event.controlbar) event.controlbar.close();
-		if (event.controlbars) {
-			for (var i = 0; i < event.controlbars.length; i++) {
-				event.controlbars[i].close();
-			}
-		}
-		event.resume();
-	};
 	// ========== 工具函数统一挂载 ==========
 	if (!lib.removeFirstByClass) {
 		lib.removeFirstByClass = function (parent, className) {
