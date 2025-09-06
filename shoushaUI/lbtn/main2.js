@@ -215,12 +215,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				game.getFileList(path, function (folders, files) {
 					let systemFiles = [];
 					let customFiles = [];
+					// 获取隐藏的系统背景列表
+					let hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
 					for (let tempbackground of files) {
 						let fileName = tempbackground.replace(/\.[^/.]+$/, "");
 						let fileExtension = tempbackground.split(".").pop();
 						if (!fileExtension || fileName.startsWith("oltianhou_")) continue;
-						if (fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_")) customFiles.push(tempbackground);
-						else systemFiles.push(tempbackground);
+						// 检查系统背景是否被隐藏
+						if (fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_")) {
+							customFiles.push(tempbackground);
+						} else {
+							// 系统背景：检查是否在隐藏列表中
+							if (!hiddenBgs.includes(fileName)) {
+								systemFiles.push(tempbackground);
+							}
+						}
 					}
 					let orderedFiles = systemFiles.concat(customFiles);
 					for (let tempbackground of orderedFiles) {
@@ -286,50 +295,63 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						ui.create.div(".buttontext", "删除背景", delItem);
 						delItem.addEventListener("click", function(){
 							utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-							var tips = ui.create.div(".buttontext", "点击要删除的自定义背景", delItem);
+							var tips = ui.create.div(".buttontext", "点击要删除的自定义背景或隐藏系统背景", delItem);
 							var onClickToDelete = function(ev){
 								var target = ev.currentTarget;
 								var fname = target && target.dataset && target.dataset.name;
 								if(!fname){ return; }
+								// 检查是否为系统背景
 								if(!(fname.startsWith("cdv_bg_") || fname.startsWith("custom_bg_"))){
-									alert("只能删除自定义背景");
+									// 系统背景：隐藏而不是删除
+									if(confirm("是否隐藏此系统背景？")){
+										// 获取隐藏背景列表
+										var hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
+										if(!hiddenBgs.includes(fname)){
+											hiddenBgs.push(fname);
+											lib.config.extension_十周年UI_hiddenSystemBackgrounds = hiddenBgs;
+											game.saveConfig("extension_十周年UI_hiddenSystemBackgrounds", hiddenBgs);
+										}
+										// 如果当前背景被隐藏，切换到默认背景
+										if(lib.config.image_background == fname){
+											game.saveConfig("image_background", "default");
+											lib.init.background();
+											game.updateBackground();
+										}
+										// 重新加载背景列表
+										while(container.firstChild){ container.removeChild(container.firstChild); }
+										loadBackgroundImages(container);
+									}
 									cleanup();
 									return;
 								}
+								// 自定义背景：删除
 								if(confirm("是否删除此背景？（此操作不可撤销）")){
-									// 从自定义名称映射中移除
 									var nameMap2 = lib.config.extension_十周年UI_customBackgroundNames || {};
 									if(nameMap2[fname]){
 										delete nameMap2[fname];
 										lib.config.extension_十周年UI_customBackgroundNames = nameMap2;
 										game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap2);
 									}
-									// 删除物理文件或DB
 									if(fname.startsWith("cdv_bg_")){
 										game.removeFile("image/background/" + fname + ".jpg");
 									}else{
 										game.deleteDB("image", fname);
 									}
-									// 如果当前使用该背景，切回默认
 									if(lib.config.image_background == fname){
 										game.saveConfig("image_background", "default");
 										lib.init.background();
 										game.updateBackground();
 									}
-									// 重新加载列表
 									while(container.firstChild){ container.removeChild(container.firstChild); }
 									loadBackgroundImages(container);
 								}
 								cleanup();
 							};
 							var items = Array.from(container.querySelectorAll('.backgrounds'));
-							// 排除末尾两个特殊项（添加/删除）
 							items.slice(0, Math.max(0, items.length - 2)).forEach(function(n){
 								n.addEventListener('click', onClickToDelete, { once: true });
 							});
-							function cleanup(){
-								if(tips && tips.remove) tips.remove();
-							}
+							function cleanup(){ if(tips && tips.remove) tips.remove(); }
 						});
 					})(container);
 				});
