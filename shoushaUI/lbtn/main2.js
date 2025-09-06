@@ -259,6 +259,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						var input = document.createElement("input");
 						input.type = "file";
 						input.accept = "image/*";
+						input.multiple = true; // 支持多选
 						input.style.display = "none";
 						document.body.appendChild(input);
 						var write = (data, dir, name) => (game.promises && game.promises.writeFile) ? game.promises.writeFile(data, dir, name) : new Promise(resolve => game.writeFile(data, dir, name, resolve));
@@ -267,28 +268,34 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							input.click();
 						});
 						input.onchange = function(e){
-							var file = e.target.files && e.target.files[0];
-							if(!file) return;
-							// 按照本体：写入 image/background 下，使用 cdv_/custom_ 前缀
-							var base = (game.writeFile ? "cdv_" : "custom_") + "bg_" + Date.now();
-							var targetName = base + ".jpg";
-							// 记录展示名并持久化
-							var originName = (file.name || "").replace(/\.[^/.]+$/, "");
-							var nameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
-							nameMap[base] = originName || base;
-							lib.config.extension_十周年UI_customBackgroundNames = nameMap;
-							game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap);
-							// 直接传 File 对象（与本体一致）
-							var writer = () => write(file, "image/background", targetName).then(function(){
-								game.saveConfig("image_background", base);
-								lib.init.background();
-								game.updateBackground();
+							var files = e.target.files;
+							if(!files || files.length === 0) return;
+							var processFiles = async function() {
+								var nameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+								for(var i = 0; i < files.length; i++) {
+									var file = files[i];
+									if(!file) continue;
+									var base = (game.writeFile ? "cdv_" : "custom_") + "bg_" + Date.now() + "_" + i;
+									var targetName = base + ".jpg";
+									var originName = (file.name || "").replace(/\.[^/.]+$/, "");
+									nameMap[base] = originName || base;
+									try {
+										await write(file, "image/background", targetName);
+										if(i === 0) {
+											game.saveConfig("image_background", base);
+											lib.init.background();
+											game.updateBackground();
+										}
+									} catch(err) {
+										console && console.error && console.error("导入背景失败:", err);
+									}
+								}
+								lib.config.extension_十周年UI_customBackgroundNames = nameMap;
+								game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap);
 								while(container.firstChild){ container.removeChild(container.firstChild); }
 								loadBackgroundImages(container);
-							}).catch(function(err){
-								console && console.error && console.error(err);
-							});
-							writer();
+							};
+							processFiles();
 						};
 						// 删除背景（紧随添加背景后）
 						var delItem = ui.create.div(".backgrounds", container);
