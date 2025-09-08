@@ -6,6 +6,23 @@ export async function content(config, pack) {
 	game.menuZoom = 1;
 	//单独装备栏
 	_status.nopopequip = lib.config.extension_十周年UI_aloneEquip;
+	// 隐藏菜单栏
+	if (config.hideMenuBar) {
+		if (window.node && window.node.menuBar) {
+			try {
+				window.node.menuBar.hide();
+			} catch {}
+		} else if (window.require) {
+			try {
+				let remote = require("@electron/remote");
+				if (remote) {
+					let win = remote.getCurrentWindow();
+					win.setMenuBarVisibility(false);
+					win.setAutoHideMenuBar(true);
+				}
+			} catch {}
+		}
+	}
 	//布局
 	switch (lib.config.layout) {
 		case "long2":
