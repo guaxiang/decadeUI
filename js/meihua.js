@@ -173,6 +173,19 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.playAudio("..", "extension", "十周年UI", `audio/${audioToPlay}`);
 			}
 		});
+		// 自己准备阶段音效
+		lib.skill._preparePhaseAudio = {
+			trigger: { player: ["phaseZhunbeiBefore"] },
+			forced: true,
+			popup: false,
+			charlotte: true,
+			filter(event, player) {
+				return player == game.me && _status.currentPhase == player;
+			},
+			content() {
+				game.playAudio("..", "extension", "十周年UI", `audio/seatRoundState_start`);
+			},
+		};
 	}
 	//手气卡美化
 	if (lib.config["extension_十周年UI_shouqikamh"]) {
