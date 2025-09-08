@@ -44,27 +44,32 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 			});
 			Object.assign(ui, {
-				updateSkillControl(player, clear) {
-					var eSkills = player.getSkills("e", true, false).slice(0);
-					var skills = player.getSkills("invisible", null, false);
-					for (var i = 0; i < skills.length; i++) {
-						var info = get.info(skills[i]);
-						if (info && info.nopop && !skills[i].startsWith("olhedao_tianshu_")) skills.splice(i--, 1);
-					}
-					var iSkills = player.invisibleSkills.slice(0);
-					game.expandSkills(iSkills);
-					skills.addArray(
-						iSkills.filter(function (skill) {
-							var info = get.info(skill);
-							return info && info.enable;
-						})
-					);
-					if (player === game.me) {
-						var skillControl = ui.create.skillControl(clear);
-						skillControl.add(skills, eSkills);
-						skillControl.update();
-						game.addVideo("updateSkillControl", player, clear);
-					}
+			updateSkillControl(player, clear) {
+				var eSkills = player.getSkills("e", true, false).slice(0);
+				var skills = player.getSkills("invisible", null, false);
+				var gSkills = null;
+				if (ui.skills2 && ui.skills2.skills.length) {
+					gSkills = ui.skills2.skills;
+				}
+				for (var i = 0; i < skills.length; i++) {
+					var info = get.info(skills[i]);
+					if (info && info.nopop && !skills[i].startsWith("olhedao_tianshu_")) skills.splice(i--, 1);
+				}
+				var iSkills = player.invisibleSkills.slice(0);
+				game.expandSkills(iSkills);
+				skills.addArray(
+					iSkills.filter(function (skill) {
+						var info = get.info(skill);
+						return info && info.enable;
+					})
+				);
+				if (player === game.me) {
+					var skillControl = ui.create.skillControl(clear);
+					skillControl.add(skills, eSkills);
+					if (gSkills) skillControl.add(gSkills);
+					skillControl.update();
+					game.addVideo("updateSkillControl", player, clear);
+				}
 					var juexingji = {};
 					var xiandingji = {};
 					player.getSkills("invisible", null, false).forEach(function (skill) {
