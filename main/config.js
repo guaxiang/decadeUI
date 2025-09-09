@@ -68,45 +68,6 @@ export let config = {
             game.reload();
         },
     },
-    hideMenuBar: {
-        name: "隐藏pc顶部菜单栏",
-        init: false,
-        intro: "开启后将隐藏顶部菜单栏，支持Alt快捷键临时显示",
-        onclick(value) {
-            game.saveConfig("extension_十周年UI_hideMenuBar", value);
-            if (value) {
-                if (window.node && window.node.menuBar) {
-                    try {
-                        window.node.menuBar.hide();
-                    } catch (e) {}
-                } else if (window.require) {
-                    try {
-                        let remote = require("@electron/remote");
-                        if (remote) {
-                            let win = remote.getCurrentWindow();
-                            win.setMenuBarVisibility(false);
-                            win.setAutoHideMenuBar(true);
-                        }
-                    } catch (e) {}
-                }
-            } else {
-                if (window.node && window.node.menuBar) {
-                    try {
-                        window.node.menuBar.show();
-                    } catch (e) {}
-                } else if (window.require) {
-                    try {
-                        let remote = require("@electron/remote");
-                        if (remote) {
-                            let win = remote.getCurrentWindow();
-                            win.setMenuBarVisibility(true);
-                            win.setAutoHideMenuBar(false);
-                        }
-                    } catch (e) {}
-                }
-            }
-        },
-    },
     FL120: {
         name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
         intro: "",
