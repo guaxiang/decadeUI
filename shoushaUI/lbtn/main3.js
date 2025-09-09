@@ -235,14 +235,82 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				img.setBackgroundImage(path + tempbackground);
 				if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
 				img.addEventListener("click", function () {
-					let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
-					allSelectedElements.forEach(function (selectedElement) {
-						selectedElement.parentNode.removeChild(selectedElement);
-					});
-					ui.create.div(".bgxuanzhong", img);
-					game.saveConfig("image_background", fileName);
-					lib.init.background();
-					game.updateBackground();
+					// 检查是否在编辑模式
+					var editItem = container.querySelector('.backgrounds:last-child');
+					var isEditMode = editItem && editItem.querySelector('.buttontext').innerHTML === "完成编辑";
+					
+					if(isEditMode) {
+						// 编辑模式：执行删除或隐藏操作
+						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+						
+						// 检查是否为系统背景
+						if(!(fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_"))){
+							// 系统背景：隐藏而不是删除
+							// 获取隐藏背景列表
+							var hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
+							if(!hiddenBgs.includes(fileName)){
+								hiddenBgs.push(fileName);
+								lib.config.extension_十周年UI_hiddenSystemBackgrounds = hiddenBgs;
+								game.saveConfig("extension_十周年UI_hiddenSystemBackgrounds", hiddenBgs);
+							}
+							// 如果当前背景被隐藏，切换到默认背景
+							if(lib.config.image_background == fileName){
+								game.saveConfig("image_background", "default");
+								lib.init.background();
+								game.updateBackground();
+							}
+							// 重新加载背景列表但保持编辑模式
+							while(container.firstChild){ container.removeChild(container.firstChild); }
+							loadBackgroundImages(container);
+							// 重新进入编辑模式
+							setTimeout(function(){
+								var editItem = container.querySelector('.backgrounds:last-child');
+								if(editItem) {
+									editItem.click();
+								}
+							}, 100);
+							return;
+						}
+						// 自定义背景：删除
+						if(confirm("是否删除此背景？（此操作不可撤销）")){
+							var nameMap2 = lib.config.extension_十周年UI_customBackgroundNames || {};
+							if(nameMap2[fileName]){
+								delete nameMap2[fileName];
+								lib.config.extension_十周年UI_customBackgroundNames = nameMap2;
+								game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap2);
+							}
+							if(fileName.startsWith("cdv_bg_")){
+								game.removeFile("image/background/" + fileName + ".jpg");
+							}else{
+								game.deleteDB("image", fileName);
+							}
+							if(lib.config.image_background == fileName){
+								game.saveConfig("image_background", "default");
+								lib.init.background();
+								game.updateBackground();
+							}
+							// 重新加载背景列表但保持编辑模式
+							while(container.firstChild){ container.removeChild(container.firstChild); }
+							loadBackgroundImages(container);
+							// 重新进入编辑模式
+							setTimeout(function(){
+								var editItem = container.querySelector('.backgrounds:last-child');
+								if(editItem) {
+									editItem.click();
+								}
+							}, 100);
+						}
+					} else {
+						// 正常模式：选择背景
+						let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
+						allSelectedElements.forEach(function (selectedElement) {
+							selectedElement.parentNode.removeChild(selectedElement);
+						});
+						ui.create.div(".bgxuanzhong", img);
+						game.saveConfig("image_background", fileName);
+						lib.init.background();
+						game.updateBackground();
+					}
 				});
 				let customNameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
 				let backgroundName = lib.configMenu.appearence.config.image_background.item[fileName] ? lib.configMenu.appearence.config.image_background.item[fileName] : (customNameMap[fileName] || fileName);
@@ -293,68 +361,40 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					};
 					processFiles();
 				};
-				// 删除背景（紧随添加背景后）
-				var delItem = ui.create.div(".backgrounds", container);
-				ui.create.div(".buttontext", "删除背景", delItem);
-				delItem.addEventListener("click", function(){
+				// 编辑背景按钮（使用本体逻辑）
+				var editItem = ui.create.div(".backgrounds", container);
+				ui.create.div(".buttontext", "编辑背景", editItem);
+				var isEditMode = false;
+				editItem.addEventListener("click", function(){
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-					var tips = ui.create.div(".buttontext", "点击要删除的自定义背景或隐藏系统背景", delItem);
-					var onClickToDelete = function(ev){
-						var target = ev.currentTarget;
-						var fname = target && target.dataset && target.dataset.name;
-						if(!fname){ return; }
-						// 检查是否为系统背景
-						if(!(fname.startsWith("cdv_bg_") || fname.startsWith("custom_bg_"))){
-							// 系统背景：隐藏而不是删除
-							if(confirm("是否隐藏此系统背景？")){
-								// 获取隐藏背景列表
-								var hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
-								if(!hiddenBgs.includes(fname)){
-									hiddenBgs.push(fname);
-									lib.config.extension_十周年UI_hiddenSystemBackgrounds = hiddenBgs;
-									game.saveConfig("extension_十周年UI_hiddenSystemBackgrounds", hiddenBgs);
-								}
-								// 如果当前背景被隐藏，切换到默认背景
-								if(lib.config.image_background == fname){
-									game.saveConfig("image_background", "default");
-									lib.init.background();
-									game.updateBackground();
-								}
-								// 重新加载背景列表
-								while(container.firstChild){ container.removeChild(container.firstChild); }
-								loadBackgroundImages(container);
-							}
-							cleanup();
-							return;
-						}
-						// 自定义背景：删除
-						if(confirm("是否删除此背景？（此操作不可撤销）")){
-							var nameMap2 = lib.config.extension_十周年UI_customBackgroundNames || {};
-							if(nameMap2[fname]){
-								delete nameMap2[fname];
-								lib.config.extension_十周年UI_customBackgroundNames = nameMap2;
-								game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap2);
-							}
-							if(fname.startsWith("cdv_bg_")){
-								game.removeFile("image/background/" + fname + ".jpg");
-							}else{
-								game.deleteDB("image", fname);
-							}
-							if(lib.config.image_background == fname){
-								game.saveConfig("image_background", "default");
-								lib.init.background();
-								game.updateBackground();
-							}
-							while(container.firstChild){ container.removeChild(container.firstChild); }
-							loadBackgroundImages(container);
-						}
-						cleanup();
-					};
+					isEditMode = !isEditMode;
+					// 切换所有背景项的显示模式
 					var items = Array.from(container.querySelectorAll('.backgrounds'));
-					items.slice(0, Math.max(0, items.length - 2)).forEach(function(n){
-						n.addEventListener('click', onClickToDelete, { once: true });
+					items.slice(0, Math.max(0, items.length - 3)).forEach(function(item){
+						var fname = item.dataset.name;
+						if(!fname) return;
+						var textDiv = item.querySelector('.buttontext');
+						if(!textDiv) return;
+						
+						if(isEditMode) {
+							// 编辑模式：显示删除或隐藏
+							if(fname.startsWith("cdv_bg_") || fname.startsWith("custom_bg_")) {
+								textDiv.innerHTML = "删除";
+							} else {
+								textDiv.innerHTML = "隐藏";
+							}
+						} else {
+							// 正常模式：显示背景名称
+							var customNameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+							var backgroundName = lib.configMenu.appearence.config.image_background.item[fname] ? 
+								lib.configMenu.appearence.config.image_background.item[fname] : 
+								(customNameMap[fname] || fname);
+							textDiv.innerHTML = backgroundName;
+						}
 					});
-					function cleanup(){ if(tips && tips.remove) tips.remove(); }
+					// 更新编辑按钮文字
+					var editText = editItem.querySelector('.buttontext');
+					editText.innerHTML = isEditMode ? "完成编辑" : "编辑背景";
 				});
 			})(container);
 		});
