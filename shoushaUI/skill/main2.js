@@ -281,6 +281,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (!node) {
 				node = player.node.xSkillMarks = ui.create.div(".skillMarks", player);
 			}
+			// 根据playerMarkStyle配置决定是否显示技能mark
+			var playerMarkStyle = lib.config["extension_十周年UI_playerMarkStyle"];
+			if (playerMarkStyle !== "decade") {
+				node.style.display = "none";
+				return;
+			}
 			node.style.display = "";
 			Array.from(node.childNodes).forEach(function (item) {
 				if (skills1.hasOwnProperty(item.dataset.id)) return;

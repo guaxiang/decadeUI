@@ -40,7 +40,7 @@ export default async function () {
 				let log = [
 					`十周年UI 当前版本号${pack.version}`,
 					"适配本体：v1.10.17.5 待定",
-					"bugfix 待定",
+					"bugfix",
 					"函数跟进 待定",
 					"UI界面调整",
 					"玩家现在可以自由调整卡牌大小",
