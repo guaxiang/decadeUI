@@ -1634,12 +1634,17 @@ export async function content(config, pack) {
 									cards = new Array(cards);
 								} else {
 									itemtype = get.itemtype(cards);
+									var playCardAudio = function() {
+										if (lib.config["extension_十周年UI_jiaohuyinxiao"]) {
+											game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
+										}
+									};
 									if (itemtype == "cards") {
 										cards = cards.concat();
-										game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
+										playCardAudio();
 									} else if (itemtype == "card") {
 										cards = [cards];
-										game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
+										playCardAudio();
 									} else {
 										var evt = _status.event;
 										if (evt && evt.card && evt.cards === cards) {
@@ -1647,7 +1652,7 @@ export async function content(config, pack) {
 											if (evt.card.suit == "none") card.node.suitnum.style.display = "none";
 											card.dataset.virtual = 1;
 											cards = [card];
-											game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
+											playCardAudio();
 										}
 									}
 								}
