@@ -5860,7 +5860,10 @@ export async function content(config, pack) {
 					event.apcard = card;
 					break;
 				default:
+					let evt = _status.event;
+					_status.event = event;
 					tagText = get.cardsetion(player);
+					_status.event = evt;
 					if (["useCard", "respond"].includes(event.name)) {
 						const cardname = event.card.name,
 							cardnature = get.nature(event.card);
