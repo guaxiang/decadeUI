@@ -4,7 +4,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			app.reWriteFunction(lib, {
 				setIntro: [
@@ -58,7 +58,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					offical_icon_3: "百夫长",
 					offical_icon_4: "千夫长",
 					offical_icon_5: "校尉",
-					offical_icon_6: "先锋",
+					offical_icon_6: "先锋将军",
 					offical_icon_7: "中军将军",
 					offical_icon_8: "领军将军",
 					offical_icon_9: "骠骑将军",
@@ -91,19 +91,21 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						name2 = "unknown";
 					}
 					let biankuang;
-					if (lib.config.extension_十周年UI_ZLLT) {
-						biankuang = ui.create.div(".biankuang", blackBg2);
-					} else {
-						biankuang = ui.create.div(".biankuang2", blackBg2);
-					}
+					biankuang = ui.create.div(".biankuang2", blackBg2);
 					biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_${player.group}.png`);
 					let leftPane;
-					if (lib.config.extension_十周年UI_ZLLT) {
-						leftPane = ui.create.div(".left", biankuang);
-					} else {
+					if (lib.config["extension_十周年UI_outcropSkin"] == "shizhounian") {
+						leftPane = ui.create.div(".left3", biankuang);
+					} else if (lib.config["extension_十周年UI_outcropSkin"] == "shousha") {
 						leftPane = ui.create.div(".left2", biankuang);
+					} else {
+						leftPane = ui.create.div(".left", biankuang);
 					}
-					leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
+					if (player.classList.contains("unseen") && player !== game.me) {
+						leftPane.style.backgroundImage = "url('image/character/hidden_image.jpg')";
+					} else {
+						leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
+					}
 					createButton(name, leftPane.firstChild);
 					createButton(name2, leftPane.firstChild);
 					const biankuangname = ui.create.div(".biankuangname", biankuang);
@@ -154,91 +156,91 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 							player === game.me
 								? lib.config.connect_nickname
 								: get.translation(
-										[
-											"氪金抽66",
-											"卡宝真可爱",
-											"蒸蒸日上",
-											"√卡视我如父",
-											"麒麟弓免疫枸杞",
-											"坏可宣（老坏批）",
-											"六千大败而归",
-											"开局酒古锭",
-											"遇事不决刷个乐",
-											"见面两刀喜相逢",
-											"改名出66",
-											"时代的六万五",
-											"韩旭",
-											"司马长衫",
-											"ogx",
-											"狗卡不如无名杀",
-											"王八万",
-											"一拳兀突骨",
-											"开局送神将",
-											"丈八二桃",
-											"装甲车车",
-											"等我喝口酒",
-											"Samuri",
-											"马",
-											"Log-Frunki",
-											"aoe银钱豹",
-											"没有丈八就托管",
-											"无中yyds",
-											"给咸鱼鸽鸽打call",
-											"小零二哟～",
-											"长歌最帅了",
-											"大猫有侠者之风",
-											"布灵布灵❤️",
-											"我爱～摸鱼🐠～",
-											"小寻寻真棒",
-											"呲牙哥超爱笑",
-											"是俺杀哒",
-											"阿七阿七",
-											"祖安·灰晖是龙王",
-											"吃颗桃桃好遗计",
-											"好可宣✓良民",
-											"藏海表锅好",
-											"金乎？木乎？水乎！！",
-											"无法也无天",
-											"西风不识相",
-											"神秘喵酱",
-											"星城在干嘛？",
-											"子鱼今天摸鱼了吗？",
-											"阳光苞里有阳光",
-											"诗笺的小裙裙",
-											"轮回中的消逝",
-											"乱踢jb的云野",
-											"小一是不是...是不是...",
-											"美羊羊爱瑟瑟",
-											"化梦的星辰",
-											"杰哥带你登dua郎",
-											"世中君子人",
-											"叹年华未央",
-											"短咕咕",
-											"洛天依？！",
-											"黄老板是好人～",
-											"来点瑟瑟文和",
-											"鲨鱼配辣椒",
-											"萝卜～好萝卜",
-											"废城君",
-											"E佬细节鬼才",
-											"感到棘手要怀念谁？",
-											"半价小薯片",
-											"JK欧拉欧拉欧拉",
-											"新年快乐",
-											"乔姐带你飞",
-											"12345678？",
-											"缘之空",
-											"小小恐龙",
-											"教主：杀我！",
-											"才思泉涌的司马",
-											"我是好人",
-											"喜怒无常的大宝",
-											"黄赌毒",
-											"阴间杀～秋",
-											"敢于劈瓜的关羽",
-											"暮暮子",
-										].randomGet(1)
-								  )
+									[
+										"氪金抽66",
+										"卡宝真可爱",
+										"蒸蒸日上",
+										"√卡视我如父",
+										"麒麟弓免疫枸杞",
+										"坏可宣（老坏批）",
+										"六千大败而归",
+										"开局酒古锭",
+										"遇事不决刷个乐",
+										"见面两刀喜相逢",
+										"改名出66",
+										"时代的六万五",
+										"韩旭",
+										"司马长衫",
+										"ogx",
+										"狗卡不如无名杀",
+										"王八万",
+										"一拳兀突骨",
+										"开局送神将",
+										"丈八二桃",
+										"装甲车车",
+										"等我喝口酒",
+										"Samuri",
+										"马",
+										"Log-Frunki",
+										"aoe银钱豹",
+										"没有丈八就托管",
+										"无中yyds",
+										"给咸鱼鸽鸽打call",
+										"小零二哟～",
+										"长歌最帅了",
+										"大猫有侠者之风",
+										"布灵布灵❤️",
+										"我爱～摸鱼🐠～",
+										"小寻寻真棒",
+										"呲牙哥超爱笑",
+										"是俺杀哒",
+										"阿七阿七",
+										"祖安·灰晖是龙王",
+										"吃颗桃桃好遗计",
+										"好可宣✓良民",
+										"藏海表锅好",
+										"金乎？木乎？水乎！！",
+										"无法也无天",
+										"西风不识相",
+										"神秘喵酱",
+										"星城在干嘛？",
+										"子鱼今天摸鱼了吗？",
+										"阳光苞里有阳光",
+										"诗笺的小裙裙",
+										"轮回中的消逝",
+										"乱踢jb的云野",
+										"小一是不是...是不是...",
+										"美羊羊爱瑟瑟",
+										"化梦的星辰",
+										"杰哥带你登dua郎",
+										"世中君子人",
+										"叹年华未央",
+										"短咕咕",
+										"洛天依？！",
+										"黄老板是好人～",
+										"来点瑟瑟文和",
+										"鲨鱼配辣椒",
+										"萝卜～好萝卜",
+										"废城君",
+										"E佬细节鬼才",
+										"感到棘手要怀念谁？",
+										"半价小薯片",
+										"JK欧拉欧拉欧拉",
+										"新年快乐",
+										"乔姐带你飞",
+										"12345678？",
+										"缘之空",
+										"小小恐龙",
+										"教主：杀我！",
+										"才思泉涌的司马",
+										"我是好人",
+										"喜怒无常的大宝",
+										"黄赌毒",
+										"阴间杀～秋",
+										"敢于劈瓜的关羽",
+										"暮暮子",
+									].randomGet(1)
+								)
 						);
 						ui.create.div(".gonghui", bigdialog, get.translation(`(${["无名杀会员", "手机三国杀会员", "三国杀ol会员", "三国杀十周年会员", "怒焰三国杀会员", "欢乐三国杀会员", "阵面对决会员"].randomGet(1)})`));
 						ui.create.div(".xianhua", bigdialog, get.translation(`鲜花${Math.floor(Math.random() * 999 + 1)}`));
@@ -266,7 +268,11 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						const xingbietu = ["xingbie1", "xingbie2"];
 						useless.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/shousha/useless.png");
 						useless2.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/shousha/useless2.png");
-						minixingxiang.style.backgroundImage = player.node.avatar.style.backgroundImage;
+						if (player.classList.contains("unseen") && player !== game.me) {
+							minixingxiang.style.backgroundImage = "url('image/character/hidden_image.jpg')";
+						} else {
+							minixingxiang.style.backgroundImage = player.node.avatar.style.backgroundImage;
+						}
 						jingji.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/${jingjitu.randomGet()}.png`);
 						xingbie.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/${xingbietu.randomGet()}.png`);
 					};
@@ -308,44 +314,63 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						}
 					}
 					if (oSkills.length) {
-						ui.create.div(".xcaption", "武将技能", rightPane.firstChild);
+						let captionText = "武将技能";
+						switch (lib.config.mode) {
+							case "doudizhu":
+								captionText = "武将技能·斗地主";
+								break;
+							case "identity":
+								captionText = "武将技能·身份";
+								break;
+							case "versus":
+								captionText = "武将技能·团战";
+								break;
+							case "single":
+								captionText = "武将技能·1v1";
+								break;
+						}
+						ui.create.div(".xcaption", captionText, rightPane.firstChild);
 						oSkills.forEach(name => {
+							const skillEnabled = get.info(name).enable;
+							const skillIcon = skillEnabled ? "sp_zhu" : "sp_bei";
+							const baseIcon = `<img src="extension/十周年UI/shoushaUI/character/images/shousha/${skillIcon}.png" style="width:25px;height:25px;margin-bottom:-7px;">`;
+							const transparentIcon = `<img src="extension/十周年UI/shoushaUI/character/images/shousha/${skillIcon}.png" style="width:25px;height:25px;margin-bottom:-7px;opacity:0.5;">`;
+							const skillName = `【${lib.translate[name]}】`;
+							const skillInfo = get.skillInfoTranslation(name, player);
+
 							if (player.forbiddenSkills[name]) {
-								if (player.forbiddenSkills[name].length) ui.create.div(".xskill", `<div data-color><span style="opacity:0.5">【${lib.translate[name]}】</span></div><div><span style="opacity:0.5">（与${get.translation(player.forbiddenSkills[name])}冲突）${get.skillInfoTranslation(name, player)}</span></div>`, rightPane.firstChild);
-								else ui.create.div(".xskill", `<div data-color><span style="opacity:0.5">【${lib.translate[name]}】</span></div><div><span style="opacity:0.5">（双将禁用）${get.skillInfoTranslation(name, player)}</span></div>`, rightPane.firstChild);
+								const conflict = player.forbiddenSkills[name].length
+									? `（与${get.translation(player.forbiddenSkills[name])}冲突）`
+									: "（双将禁用）";
+								ui.create.div(".xskill", `<div data-color><span style="opacity:0.5">${skillName}</span></div><div><span style="opacity:0.5">${conflict}${skillInfo}</span></div>`, rightPane.firstChild);
 							} else if (player.hiddenSkills.includes(name)) {
 								if (lib.skill[name].preHidden && get.mode() == "guozhan") {
-									const id = ui.create.div(".xskill", `<div data-color><span style="opacity:0.5">【${lib.translate[name]}】</span></div><div><span style="opacity:0.5">${get.skillInfoTranslation(name, player)}</span><br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div></div>`, rightPane.firstChild);
+									const id = ui.create.div(".xskill", transparentIcon + `<div data-color><span style="opacity:0.5">${skillName}</span></div><div><span style="opacity:0.5">${skillInfo}</span><br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div></div>`, rightPane.firstChild);
 									const underlinenode = id.querySelector(".underlinenode");
 									if (_status.prehidden_skills.includes(name)) underlinenode.classList.remove("on");
 									underlinenode.link = name;
 									underlinenode.listen(ui.click.hiddenskill);
 								} else {
-									ui.create.div(".xskill", `<div data-color><span style="opacity:0.5">【${lib.translate[name]}】</span></div><div><span style="opacity:0.5">${get.skillInfoTranslation(name, player)}</span></div>`, rightPane.firstChild);
+									ui.create.div(".xskill", transparentIcon + `<div data-color><span style="opacity:0.5">${skillName}</span></div><div><span style="opacity:0.5">${skillInfo}</span></div>`, rightPane.firstChild);
 								}
 							} else if (!player.getSkills().includes(name) || player.awakenedSkills.includes(name)) {
-								ui.create.div(".xskill", `<div data-color><span style="opacity:0.5">【${lib.translate[name]}】</span></div><div><span style="opacity:0.5">${get.skillInfoTranslation(name, player)}</span></div>`, rightPane.firstChild);
+								ui.create.div(".xskill", transparentIcon + `<div data-color><span style="opacity:0.5">${skillName}</span></div><div><span style="opacity:0.5">${skillInfo}</span></div>`, rightPane.firstChild);
 							} else if (lib.skill[name].frequent || lib.skill[name].subfrequent) {
-								const id = ui.create.div(".xskill", `<div data-color>【${lib.translate[name]}】</div><div>${get.skillInfoTranslation(name, player)}<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div></div>`, rightPane.firstChild);
+								const id = ui.create.div(".xskill", baseIcon + `<div data-color>${skillName}</div><div>${skillInfo}<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div></div>`, rightPane.firstChild);
 								const underlinenode = id.querySelector(".underlinenode");
-								if (lib.skill[name].frequent) {
-									if (lib.config.autoskilllist.includes(name)) {
-										underlinenode.classList.remove("on");
-									}
-								}
-								if (lib.skill[name].subfrequent) {
-									for (let j = 0; j < lib.skill[name].subfrequent.length; j++) {
-										if (lib.config.autoskilllist.includes(name + "_" + lib.skill[name].subfrequent[j])) {
-											underlinenode.classList.remove("on");
-										}
-									}
-								}
-								if (lib.config.autoskilllist.includes(name)) underlinenode.classList.remove("on");
+
+								// 处理自动技能开关状态
+								const shouldDisable = lib.skill[name].frequent && lib.config.autoskilllist.includes(name) ||
+									lib.skill[name].subfrequent && lib.skill[name].subfrequent.some(sub =>
+										lib.config.autoskilllist.includes(name + "_" + sub));
+								if (shouldDisable) underlinenode.classList.remove("on");
+
 								underlinenode.link = name;
 								underlinenode.listen(ui.click.autoskill2);
 							} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true)) {
-								const id = ui.create.div(".xskill", `<div data-color>【${lib.translate[name]}】</div><div>${get.skillInfoTranslation(name, player)}<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div></div>`, rightPane.firstChild);
+								const id = ui.create.div(".xskill", baseIcon + `<div data-color>${skillName}</div><div>${skillInfo}<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px;color: rgba(255, 203, 0, 1);">点击发动</div></div>`, rightPane.firstChild);
 								const intronode = id.querySelector(".skillbutton");
+
 								if (!_status.gameStarted || (lib.skill[name].clickableFilter && !lib.skill[name].clickableFilter(player))) {
 									intronode.classList.add("disabled");
 									intronode.style.opacity = 0.5;
@@ -360,7 +385,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 									intronode.listen(ui.click.skillbutton);
 								}
 							} else {
-								ui.create.div(".xskill", `<div data-color>【${lib.translate[name]}】</div><div>${get.skillInfoTranslation(name, player)}</div>`, rightPane.firstChild);
+								ui.create.div(".xskill", baseIcon + `<div data-color>${skillName}</div><div>${skillInfo}</div>`, rightPane.firstChild);
 							}
 						});
 					}
@@ -369,10 +394,29 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
 						eSkills.forEach(card => {
 							const cards = card.cards;
-							let str = [get.translation(card), get.translation(card.name + "_info")];
-							if (Array.isArray(cards) && cards.length) str[0] += `（${get.translation(card.cards)}）`;
-							if (lib.card[card.name]?.cardPrompt) str[1] = lib.card[card.name].cardPrompt(card, player);
-							ui.create.div(".xskill", `<div data-color>${str[0]}</div><div>${str[1]}</div>`, rightPane.firstChild);
+							let isQiexie = card.name.startsWith("qiexie_");
+							let displayName = card.name + "_info";
+							let str = [
+								get.translation(isQiexie ? card.name : card),
+								get.translation(displayName)
+							];
+							if (Array.isArray(cards) && cards.length) {
+								str[0] += "（" + get.translation(card.cards) + "）";
+							}
+							if (lib.card[card.name]?.cardPrompt) {
+								str[1] = lib.card[card.name].cardPrompt(card, player);
+							}
+							if (isQiexie && lib.translate[card.name + "_append"]) {
+								str[1] +=
+									'<br><br><div style="font-size: 0.85em; font-family: xinwei; line-height: 1.2;">' +
+									lib.translate[card.name + "_append"] +
+									'</div>';
+							}
+							ui.create.div(
+								".xskill",
+								"<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>",
+								rightPane.firstChild
+							);
 						});
 					}
 					const judges = player.getCards("j");

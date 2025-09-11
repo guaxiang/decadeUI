@@ -68,7 +68,7 @@
 .character-dialog .basicInfo .dengji {
 	position: relative;
 	font-size: 20px;
-	color: rgb(162 255 0);
+	color: #E0C03C;
 	text-shadow: none;
 	font-weight: normal;
 	font-family: shousha;
@@ -102,7 +102,8 @@
 	line-height: 35px;
 	font-family: "shousha";
 	font-size: 26px;
-	color: #daff00;
+	color: #F4BA16;
+	text-shadow: black 0 0 0px;
 }
 /* 对局信息 胜率逃率 */
 .character-dialog .fight-bg {
@@ -181,8 +182,8 @@
 	position: absolute;
 	width: 15px;
 	height: 100%;
-	left: 3%;
-	bottom: 4%;
+	left: 1.5%;
+	bottom: 6%;
 	z-index: 99;
 	display: inline-flex;
 	flex-direction: column-reverse;
@@ -191,8 +192,9 @@
 	position: relative;
 	background: url("./images/shousha/xing.png");
 	background-size: cover;
-	width: 16px;
-	height: 16px;
+	width: 18px;
+	height: 18px;
+	margin-bottom:-4px;
 	z-index: 99;
 }
 .xing2 {
@@ -208,8 +210,9 @@
 	position: relative;
 	background: url("./images/shousha/xing.png");
 	background-size: cover;
-	width: 15px;
-	height: 15px;
+	width: 18px;
+	height: 18px;
+	margin-bottom:-4px;
 	left: 60%;
 	top: -16%;
 	z-index: 99;
@@ -397,6 +400,7 @@
 /*武将名字*/
 .character-dialog .biankuang2 > div.biankuangname {
 	position: absolute;
+	line-height: 14px; /*换行间距*/
 	width: 15px;
 	left: 3%;
 	top: 14%;
@@ -406,6 +410,7 @@
 }
 .character-dialog > div.biankuangname2 {
 	position: absolute;
+	line-height: 14px; /*换行间距*/
 	width: 15px;
 	left: 5.8%;
 	top: 52%;
@@ -416,34 +421,51 @@
 .character-dialog > div.dengji {
 	z-index: 68;
 }
-/*武将牌露头*/
-.character-dialog > div.left {
-	left: 50px;
-	top: auto;
-	bottom: 15.4%;
-	width: 16.5%;
-	height: 39%;
-	opacity: 1;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: top;
-	border-radius: 10px;
-	-webkit-clip-path: url(#solo-clip);
-	transition-property: opacity, transform;
-	z-index: 69;
-}
 /*武将牌不露头*/
-.character-dialog .biankuang2 > div.left2 {
-	left: 19%;
+.character-dialog .biankuang2 > div.left {
+	left: 18%;
 	top: auto;
 	bottom: 2%;
-	width: 78.5%;
+	width: 80%;
 	height: 96%;
 	opacity: 1;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: top;
-	border-radius: 7px;
+	border-radius: 8px;
+	transition-property: opacity, transform;
+	z-index: 69;
+}
+/*武将牌手杀露头*/
+.character-dialog .biankuang2 > div.left2 {
+	left: 19%;
+	top: auto;
+	bottom: 2%;
+	width: 78.5%;
+	height: 110%;
+	opacity: 1;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top;
+	border-radius: 8px;
+	-webkit-clip-path: url(#solo-clip);
+	transition-property: opacity, transform;
+	z-index: 69;
+}
+/*武将牌十周年露头*/
+.character-dialog .biankuang2 > div.left3 {
+	left: 20.5%;
+	top: auto;
+	bottom: 2%;
+	left: 20.5px;
+    width: 81%;
+    height: 103%;
+	opacity: 1;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top;
+	border-radius: 8px;
+	-webkit-clip-path: url(#solo-clip);
 	transition-property: opacity, transform;
 	z-index: 69;
 }
@@ -488,7 +510,7 @@
 .character-dialog div.right .xcaption {
 	width: 100%;
 	bottom: 0%;
-	color: #cbc6b3;
+	color: #BDAF91;
 	text-align: center;
 	font-size: 18px;
 	font-weight: bold;
@@ -508,14 +530,14 @@
 	font-family: "shousha";
 }
 .character-dialog div.right .xskill > div[data-color] {
-	color: #d3c436;
+	color: #E0C03C;
 }
 .character-dialog div.right .xskill > div[data-color="red"] {
-	color: #f0db1e;
+	color: #E0C03C;
 }
 .character-dialog div.right .xskill > div[data-color="black"] {
-	color: #f0db1e;
+	color: #E0C03C;
 }
 .character-dialog div.right .xskill + .xskill {
-	margin-top: 15px;
+	margin-top: 5px;
 }
