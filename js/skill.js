@@ -12,7 +12,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			content() {
 				game.removeGlobalSkill("mx_start");
 				const style = lib.config.extension_十周年UI_newDecadeStyle;
-				const isShousha = style === "othersOn" || style === "off";
+				const isShousha = style === "off";
 				const effectName = isShousha ? "effect_youxikaishi_shousha" : "effect_youxikaishi";
 				const audio = isShousha ? "audio/game_start_shousha.mp3" : "audio/game_start.mp3";
 				const scaleFactor = isShousha ? 1.5 : 0.76;

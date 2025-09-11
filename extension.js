@@ -39,9 +39,11 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`十周年UI 当前版本号${pack.version}`,
+					"※从0.4.0开始，左手布局不在维护",
+					"※更新前注意备份dynamicSkin.js",
 					"适配本体：v1.10.17.5 待定",
 					"bugfix",
-					"函数跟进 待定",
+					"函数跟进",
 					"UI界面调整",
 					"玩家现在可以自由调整卡牌大小",
 					"",

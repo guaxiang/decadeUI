@@ -31,7 +31,7 @@ export async function precontent() {
 			["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"].forEach(path => this.css(decadeUIPath + path));
 			// newDecadeStyle相关CSS加载
 			const style = lib.config.extension_十周年UI_newDecadeStyle;
-			const styleIndex = ["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(style);
+			const styleIndex = ["on", "off", "othersOff", "onlineUI", "babysha"].indexOf(style);
 			if (style !== void 0) {
 				this.css(decadeUIPath + `css/player${styleIndex + 1}.css`);
 			} else {
@@ -70,7 +70,6 @@ export async function precontent() {
 				{
 					on: 2,
 					off: 1,
-					othersOn: 1,
 					othersOff: 3,
 					onlineUI: 4,
 					babysha: 5,
@@ -489,7 +488,6 @@ export async function precontent() {
 	var styleMap = {
 		on: 2,
 		off: 1,
-		othersOn: 1,
 		othersOff: 3,
 		onlineUI: 4,
 		babysha: 5,

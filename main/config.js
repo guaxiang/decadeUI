@@ -29,10 +29,9 @@ export let config = {
         init: "on",
         item: {
             on: "十周年",
-            off: "新手杀",
-            othersOn: "旧手杀",
-            onlineUI: "online",
+            off: "移动版",
             othersOff: "一将成名",
+            onlineUI: "online",
             babysha: "欢乐三国杀",
         },
         onclick(control) {

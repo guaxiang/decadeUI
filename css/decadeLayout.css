@@ -190,9 +190,6 @@
 #arena[data-new-decade-style="off"]>.player {
 	--w: 128px !important;
 }
-#arena[data-new-decade-style="othersOn"]>.player {
-	--w: 128px !important;
-}
 #arena[data-new-decade-style="othersOff"]>.player {
 	--w: 120px;
 }
