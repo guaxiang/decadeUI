@@ -1436,6 +1436,9 @@ export async function content(config, pack) {
 									)
 										isDrawCard = true;
 								}
+								if (lib.config["extension_十周年UI_Soundeffects"]) {
+									game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
+								}
 								if (game.me == this && !isDrawCard) return;
 								var fragment = document.createDocumentFragment();
 								var card;
@@ -1635,7 +1638,7 @@ export async function content(config, pack) {
 								} else {
 									itemtype = get.itemtype(cards);
 									var playCardAudio = function() {
-										if (lib.config["extension_十周年UI_jiaohuyinxiao"]) {
+										if (lib.config["extension_十周年UI_Soundeffects"]) {
 											game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
 										}
 									};

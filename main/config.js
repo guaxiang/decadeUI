@@ -157,10 +157,10 @@ export let config = {
             setTimeout(() => game.reload(), 100);
         },
     },
-    jiaohuyinxiao: {
+    Soundeffects: {
         name: "交互音效",
         intro: "开启后，对局内点击卡牌或按钮会有交互音效",
-        init: false,
+        init: true,
     },
     dynamicBackground: {
         name: "动态背景",

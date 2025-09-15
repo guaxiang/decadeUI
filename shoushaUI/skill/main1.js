@@ -324,6 +324,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						self.addSkillLocksAndButtons(node, item.id);
 						ui.create.div(".skillitem-child", node, name);
 						node.dataset.id = item.id;
+						node.addEventListener("click", function () {
+							if (lib.config["extension_十周年UI_Soundeffects"] == "on") game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
+						});
 						app.listen(node, plugin.clickSkill);
 						return;
 					}

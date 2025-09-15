@@ -212,7 +212,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 	}
 	// 局内交互优化
-	if (lib.config["extension_十周年UI_jiaohuyinxiao"]) {
+	if (lib.config["extension_十周年UI_Soundeffects"]) {
 		lib.skill._useCardAudio = {
 			trigger: {
 				player: "useCard",
