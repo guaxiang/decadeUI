@@ -126,7 +126,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				ui.skepk.innerHTML = "选择势力";
 				for (const button of dialog.buttons) {
 					if (!button) continue;
-					const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/vcard_${button.name}.png` : `extension/十周年UI/image/group/vcard_${button.name}.png`;
+					const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
 					button.setBackgroundImage(imagePath);
 					button.style.setProperty("box-shadow", "unset", "important");
 					button.innerHTML = "";
