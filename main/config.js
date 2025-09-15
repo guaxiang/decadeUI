@@ -294,6 +294,11 @@ export let config = {
             if (window.decadeUI) ui.arena.dataset.forcestyle = lib.config["extension_十周年UI_forcestyle"];
         },
     },
+    luckycard: {
+        name: "手气卡美化",
+        init: false,
+        intro: "开启后，开启后手气卡锁定五次",
+    },
     aloneEquip: {
         name: "单独装备栏",
         intro: "切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整",

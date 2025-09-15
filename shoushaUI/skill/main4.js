@@ -239,7 +239,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							node.appendChild(dot);
 						}
 						node.addEventListener("click", function () {
-							if (lib.config["extension_十周年UI_Soundeffects"] == "on") game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
+							if (lib.config["extension_十周年UI_Soundeffects"]) game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 						});
 						app.listen(node, plugin.clickSkill);
 						return;

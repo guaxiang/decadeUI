@@ -205,7 +205,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (lib.skill[item.id]?.zhuanhuanji) node.classList.add("zhuanhuanji");
 						if (get.is.locked(item.id, game.me)) node.classList.add("locked");
 						node.addEventListener(lib.config.touchscreen ? "touchend" : "click", function () {
-							if (lib.config["extension_十周年UI_Soundeffects"] == "on") game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
+							if (lib.config["extension_十周年UI_Soundeffects"]) game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 						});
 						app.listen(node, plugin.clickSkill);
 						return;
