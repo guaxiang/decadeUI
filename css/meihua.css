@@ -47,3 +47,129 @@
 	height: 20px;
 	margin: 0;
 }
+
+.groupTitle {
+	position: absolute;
+	top: 5%;
+	left: 50%;
+	transform: translateX(-50%);
+	font-family: kaiti;
+	font-size: 24px;
+	font-weight: bold;
+	color: #ffd700;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+	z-index: 10;
+	pointer-events: none;
+	text-align: center;
+	white-space: nowrap;
+}
+.groupJindutiao {
+	position: absolute;
+	bottom: 15%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80%;
+	height: 20px;
+	z-index: 10;
+	pointer-events: none;
+}
+.groupJindutiao1 {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 13px;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	z-index: 1;
+}
+.groupJindutiao2 {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 13px;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	z-index: 2;
+	transition: width 0.1s ease-out;
+}
+.groupJindutiaoText {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-family: "xinwei", "Microsoft YaHei", sans-serif;
+	font-size: 12px;
+	color: #ffffff;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+	z-index: 3;
+	pointer-events: none;
+	text-align: center;
+	white-space: nowrap;
+}
+.dialog .button {
+	transition: all 0.2s ease;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.dialog .button:hover {
+	transform: scale(1.05);
+	filter: brightness(1.1);
+}
+
+.dialog .button:active {
+	transform: scale(0.95);
+}
+.dialog.faction-choice {
+	z-index: 6;
+	top: 25%;
+	left: 0%;
+	width: 100%;
+	height: 50% !important;
+	background-size: 100% 100%;
+}
+.dialog.faction-choice .content {
+	z-index: 7;
+	top: 20% !important;
+	left: 15%;
+	width: 70%;
+	height: 90% !important;
+}
+.dialog.noupdate {
+	animation: factionDialogFadeIn 0.3s ease-out;
+}
+@keyframes factionDialogFadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.8) translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+@media (max-width: 1200px) {
+	.groupTitle {
+		font-size: 20px;
+	}
+	.groupJindutiao {
+		width: 90%;
+		bottom: 12%;
+	}
+}
+@media (max-width: 768px) {
+	.groupTitle {
+		font-size: 18px;
+		top: 8%;
+	}
+	.groupJindutiao {
+		width: 95%;
+		bottom: 10%;
+	}
+	.groupJindutiaoText {
+		font-size: 10px;
+	}
+}

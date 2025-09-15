@@ -61,29 +61,21 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	//势力选择
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
-			get: () => {
-				if (get.mode() === "guozhan") return ["wei", "shu", "wu", "qun", "jin"];
-				return ["wei", "shu", "wu", "qun", "jin"];
-			},
+			get: () => ["wei", "shu", "wu", "qun", "jin"],
 			set: () => {},
 		});
 		lib.skill._slyh = {
-			trigger: {
-				global: "gameStart",
-				player: "enterGame",
-			},
+			trigger: { global: "gameStart", player: "enterGame" },
 			forced: true,
 			popup: false,
 			silent: true,
 			priority: Infinity,
 			filter(_, player) {
-				if (get.mode() === "guozhan") return false;
-				return player.group && !lib.group.includes(player.group);
+				return get.mode() !== "guozhan" && player.group && !lib.group.includes(player.group);
 			},
 			async content(event, trigger, player) {
-				const list = lib.group.slice(0, 5);
 				const result = await player
-					.chooseControl(list)
+					.chooseControl(lib.group.slice(0, 5))
 					.set("ai", () => get.event().controls.randomGet())
 					.set("prompt", "请选择你的势力")
 					.forResult();
@@ -92,6 +84,95 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					player.node.name.dataset.nature = get.groupnature(result.control);
 				}
 			},
+		};
+		const originalChooseControl = lib.element.player.chooseControl;
+		lib.element.player.chooseControl = function (...args) {
+			const next = game.createEvent("chooseControl");
+			next.controls = [];
+			for (const arg of args) {
+				if (typeof arg === "string") {
+					if (arg === "dialogcontrol") next.dialogcontrol = true;
+					else if (arg === "seperate") next.seperate = true;
+					else next.controls.push(arg);
+				} else if (Array.isArray(arg)) {
+					next.controls = next.controls.concat(arg);
+				} else if (typeof arg === "function") {
+					next.ai = arg;
+				} else if (typeof arg === "number") {
+					next.choice = arg;
+				} else if (get.itemtype(arg) === "dialog") {
+					next.dialog = arg;
+				}
+			}
+			next.player = this;
+			next.choice = next.choice || 0;
+			const groupTranslations = lib.group.map(i => get.translation(i));
+			const isFactionChoice = next.controls.length && next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val));
+			if (this !== game.me || !isFactionChoice) {
+				next.setContent("chooseControl");
+				return next;
+			}
+			next.setContent(function () {
+				"step 0";
+				const list = event.controls;
+				if (!list?.length) {
+					event.finish();
+					return;
+				}
+				const dialog = ui.create.dialog("hidden", [list, "vcard"]);
+				dialog.classList.add("noupdate", "faction-choice");
+				dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
+				if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
+				ui.skepk.innerHTML = "选择势力";
+				for (const button of dialog.buttons) {
+					if (!button) continue;
+					const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/vcard_${button.name}.png` : `extension/十周年UI/image/group/vcard_${button.name}.png`;
+					button.setBackgroundImage(imagePath);
+					button.style.setProperty("box-shadow", "unset", "important");
+					button.innerHTML = "";
+				}
+				if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
+				const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
+				progressBarBg.setBackgroundImage("extension/十周年UI/image/group/TimeBarBg.png");
+				progressBarBg.style.height = "13px";
+				const progressBar = ui.create.div(".groupJindutiao2", ui.dialogbar);
+				progressBar.setBackgroundImage("extension/十周年UI/image/group/TimeBarFull.png");
+				progressBar.style.height = "13px";
+				progressBar.style.width = "0%";
+				if (!ui.dialogtext) ui.dialogtext = ui.create.div(".groupJindutiaoText", ui.dialogbar);
+				ui.dialogtext.innerHTML = "";
+				progressBar.data = 100;
+				if (event.progressInterval) {
+					clearInterval(event.progressInterval);
+					delete event.progressInterval;
+				}
+				event.progressInterval = setInterval(() => {
+					progressBar.data -= 100 / 150; // 15秒 * 10次/秒
+					if (progressBar.data <= 0) {
+						progressBar.data = 0;
+						clearInterval(event.progressInterval);
+						delete event.progressInterval;
+					}
+					progressBar.style.width = progressBar.data + "%";
+				}, 100);
+				event.nextx = game.createEvent("chooseGroup");
+				event.nextx.dialog = dialog;
+				event.nextx.setContent(() => {
+					game.me.chooseButton(1, event.dialog, true).set("newconfirm1", true);
+				});
+				const dcs = document.getElementById("dui-controls");
+				if (dcs) dcs.style.scale = "0";
+				("step 1");
+				const dcs2 = document.getElementById("dui-controls");
+				if (dcs2) dcs2.style.scale = "1";
+				const val = event.nextx._result.links[0][2];
+				event.result = {
+					bool: true,
+					control: val,
+					index: event.controls.indexOf(val),
+				};
+			});
+			return next;
 		};
 	}
 	//武将背景
