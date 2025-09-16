@@ -635,19 +635,19 @@ export async function precontent() {
 				4: {
 					name: "新样式",
 					container: {
-						width: "400px",
+						width: "450px",
 						height: "13px",
 						display: "block",
 						margin: "0 0 !important",
 						position: "fixed",
-						left: "calc(50% - 197px)",
+						left: "calc(50% - 220px)",
 						bottom: parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%",
 						backgroundColor: "#4B3621",
 						borderRadius: "6px",
 					},
 					progressBar: {
-						data: 395,
-						style: "z-index:1;width:399px;height:12px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;border-radius:6px;",
+						data: 449,
+						style: "z-index:1;width:449px;height:12px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;border-radius:6px;",
 					},
 					clearSpecial: true,
 				},
