@@ -123,10 +123,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				dialog.classList.add("noupdate", "faction-choice");
 				dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
 				if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
-				ui.skepk.innerHTML = "选择势力";
+				ui.skepk.innerHTML = "请选择势力";
 				for (const button of dialog.buttons) {
 					if (!button) continue;
-					const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
+					const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : lib.config.extension_十周年UI_newDecadeStyle === "off" ? `extension/十周年UI/image/group/off/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
 					button.setBackgroundImage(imagePath);
 					button.style.setProperty("box-shadow", "unset", "important");
 					button.innerHTML = "";
