@@ -108,20 +108,6 @@
 	text-align: center;
 	white-space: nowrap;
 }
-.dialog .button {
-	transition: all 0.2s ease;
-	border-radius: 8px;
-	overflow: hidden;
-}
-
-.dialog .button:hover {
-	transform: scale(1.05);
-	filter: brightness(1.1);
-}
-
-.dialog .button:active {
-	transform: scale(0.95);
-}
 .dialog.faction-choice {
 	z-index: 6;
 	top: 25%;
@@ -139,36 +125,4 @@
 }
 .dialog.noupdate {
 	animation: factionDialogFadeIn 0.3s ease-out;
-}
-@keyframes factionDialogFadeIn {
-	from {
-		opacity: 0;
-		transform: scale(0.8) translateY(-20px);
-	}
-	to {
-		opacity: 1;
-		transform: scale(1) translateY(0);
-	}
-}
-@media (max-width: 1200px) {
-	.groupTitle {
-		font-size: 20px;
-	}
-	.groupJindutiao {
-		width: 90%;
-		bottom: 12%;
-	}
-}
-@media (max-width: 768px) {
-	.groupTitle {
-		font-size: 18px;
-		top: 8%;
-	}
-	.groupJindutiao {
-		width: 95%;
-		bottom: 10%;
-	}
-	.groupJindutiaoText {
-		font-size: 10px;
-	}
 }

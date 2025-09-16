@@ -130,6 +130,21 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					button.setBackgroundImage(imagePath);
 					button.style.setProperty("box-shadow", "unset", "important");
 					button.innerHTML = "";
+					button.addEventListener("click", () => {
+						for (const btn of dialog.buttons) {
+							if (btn) {
+								btn.style.border = "none";
+								btn.style.opacity = "1";
+							}
+						}
+						button.style.border = "3px solid #ffd700";
+						button.style.opacity = "0.8";
+						const dcs = document.getElementById("dui-controls");
+						if (dcs) {
+							dcs.style.scale = "1";
+							dcs.style.display = "block";
+						}
+					});
 				}
 				if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
 				const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
