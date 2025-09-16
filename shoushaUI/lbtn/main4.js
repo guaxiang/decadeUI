@@ -137,7 +137,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 	};
 	/*预留的接口
-    ui.huanfubutton   武将头像上面的换肤按钮
     ui.identityShow    左上角的牌局记录及胜利条件
     ui.caidanbutton       右上角的菜单按钮
     ui.anniubuttons       左下角的三个按钮
@@ -335,31 +334,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			clonedSidebar.scrollTop = clonedSidebar.scrollHeight - clonedSidebar.clientHeight;
 		}
 	};
-	function huanfu() {
-		ui.huanfubutton = ui.create.div(".huanfubutton", ui.window);
-		ui.huanfubutton.onclick = function () {
-			if (!game.me || !game.me.name) {
-				if (typeof ui.showMessage === "function") {
-					ui.showMessage("请先选择武将");
-				} else {
-					alert("请先选择武将");
-				}
-				return;
-			}
-			game.qhly_open_small ? game.qhly_open_small(game.me.name, null, game.me) : ui.click.charactercard(game.me.name, game.me, lib.config.mode === "guozhan" ? "guozhan" : true);
-		};
-		ui.updateHuanfuButton = function () {
-			if (!game.me || !game.me.name) {
-				ui.huanfubutton.style.opacity = "0.5";
-				ui.huanfubutton.style.cursor = "not-allowed";
-			} else {
-				ui.huanfubutton.style.opacity = "1";
-				ui.huanfubutton.style.cursor = "pointer";
-			}
-		};
-		ui.updateHuanfuButton();
-		setInterval(ui.updateHuanfuButton, 1000);
-	}
 	function shenfenrenwu() {
 		//身份任务
 		const setupModeConfigs = () => {
@@ -1169,7 +1143,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		if (game.updateRoundNum) game.updateRoundNum();
 	}
 	lib.arenaReady.push(function () {
-		huanfu(); //换肤按钮
 		shenfenrenwu(); //身份任务按钮
 		createcaidan(); //右上角菜单按钮
 		xiaopeijian(); //左下角小配件
