@@ -1,7 +1,7 @@
 .skill-control {
 	/*技能按钮*/
 	max-width: 200px;
-	bottom: 30px;
+	bottom: 1px;
 	right: 190px;
 	z-index: 0;
 }
@@ -109,8 +109,8 @@
 .skillMarks {
 	max-height: 80px;
 	overflow-y: auto;
-	left: -5px !important;
-	top: 135px !important;
+	left: 97px !important;
+	top: 35px !important;
 	z-index: 90 !important;
 	justify-content: center;
 	align-items: center;
@@ -212,7 +212,7 @@
 .skill-control {
 	/*技能按钮*/
 	max-width: 200px;
-	bottom: 30px;
+	bottom: 1px;
 	right: 190px;
 	z-index: 0;
 }

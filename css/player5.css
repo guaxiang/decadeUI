@@ -127,9 +127,6 @@
 	visibility: visible;
 	background-position-x: center;
 }
-.player[data-position="0"]>.card-count {
-	visibility: hidden;
-}
 /*主玩家位置*/
 .player[data-position="0"],
 #arena>.player[data-position="0"],

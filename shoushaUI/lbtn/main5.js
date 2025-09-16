@@ -61,7 +61,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			width: var(--w);
 	        height: var(--h);
 			position: absolute;
-			bottom: 13%;
+			bottom: 10%;
 			left: 75px;
 			right: auto;
 			background-color: transparent;
@@ -102,20 +102,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	// 创建整理手牌按钮
 	function createSortButton() {
 		const sortButton = ui.create.node("img");
-		sortButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/zhenglihs.png";
+		sortButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jiaoliuhs.png";
 		// 根据布局设置按钮位置
 		if (lib.config["extension_十周年UI_rightLayout"] == "on") {
 			sortButton.style.cssText = `
 				display: block;
-				--w: 100px;
-				--h: calc(var(--w) * 81/347);
+				--w: 47px;
+	        	--h: 47px;
 				width: var(--w);
-				height: var(--h);
+	       		height: var(--h);
 				position: absolute;
-				top: calc(100% - 31px);
-				left: calc(100% - 373px);
+				bottom: 1%;
+				left: 75px;
+				right: auto;
 				background-color: transparent;
-				z-index: 2;
+				z-index: 1;
 			`;
 		} else {
 			sortButton.style.cssText = `
@@ -281,13 +282,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				let huanfuButton, jiluButton, meiguiButton, xiaolianButton;
 				// 根据布局创建按钮
 				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-					huanfuButton = ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
-					jiluButton = ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
 					meiguiButton = ui.create.div(".meiguiButton_new", ui.arena);
 					xiaolianButton = ui.create.div(".xiaolianButton_new", ui.arena);
 				} else {
-					huanfuButton = ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
-					jiluButton = ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
 					meiguiButton = ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
 					xiaolianButton = ui.create.div(".xiaolianButton_new1", ui.arena, plugin.click.xiaolian);
 				}
@@ -332,7 +329,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 			// 卡牌轮次时间创建
 			cardRoundTime() {
-				const node = ui.create.div(".cardRoundNumber", ui.arena).hide();
+				const node = ui.create.div(".cardRoundNumber", ui.arena, ui.click.pause).hide();
 				node.node = {
 					cardPileNumber: ui.create.div(".cardPileNumber", node),
 					roundNumber: ui.create.div(".roundNumber", node),

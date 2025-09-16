@@ -56,36 +56,6 @@
 	/* box-shadow: 8px 8px 8px #624f42; /* 添加阴影，值可以根据需要调整 */
 }
 /*---------新版小配件--------*/
-.jiluButton_new {
-	display: block;
-	--w: 47px;
-	--h: 47px;
-	width: var(--w);
-	height: var(--h);
-	position: absolute;
-	bottom: 2%;
-	left: 45px;
-	right: auto;
-	background-image: url("./images/uibutton/jiaoliuhs.png");
-	background-size: 100% 100%;
-	z-index: 3;
-	margin-left: 10px;
-}
-.huanfuButton_new {
-	display: block;
-	--w: 50px;
-	--h: 23px;
-	width: var(--w);
-	height: var(--h);
-	position: absolute;
-	bottom: 0.5%;
-	left: auto;
-	right: 190px;
-	background-image: url("./images/uibutton/meiguihs.png");
-	background-size: 100% 100%;
-	z-index: 3;
-	margin-left: 10px;
-}
 /*-----------------------------*/
 .lbtn-confirm:not(.closing).removing {
 	opacity: 1 !important;
@@ -181,16 +151,8 @@
 }
 /*手牌数参数*/
 .handcardNumber>.cardNumber {
-	left: -85px;
-	bottom: 18px;
-	height: 8px;
-	line-height: 25px;
-	text-align: center;
-	color: #fffcf5;
-	font-size: 15px;
-	white-space: nowrap;
-	letter-spacing: 0.35px;
-	/*字体间距*/
+	display: none !important;
+	/* 完全隐藏元素 */
 }
 .cardRoundNumber {
 	top: 16px;
@@ -266,35 +228,6 @@
 	text-shadow: none !important;
 }
 /*左手模式*/
-/*换肤*/
-.huanfuButton_new1 {
-	display: block;
-	--w: 47px;
-	--h: 47px;
-	width: var(--w);
-	height: var(--h);
-	bottom: 24%;
-	position: absolute;
-	right: 0;
-	background-image: url("./images/uibutton/new_huanfu_new.png");
-	background-size: 100% 100%;
-	border-radius: 1px;
-	z-index: 3;
-}
-.jiluButton_new1 {
-	display: block;
-	--w: 47px;
-	--h: 47px;
-	width: var(--w);
-	height: var(--h);
-	position: absolute;
-	bottom: 4%;
-	right: 0;
-	background-image: url("./images/uibutton/new_jilu_new.png");
-	background-size: 100% 100%;
-	border-radius: 1px;
-	z-index: 4;
-}
 .xiaolianButton_new1 {
 	display: block;
 	--w: 47px;
