@@ -3647,8 +3647,8 @@ export async function content(config, pack) {
 									node.node.intro.innerText = lib.config.intro;
 									if (!noclick) lib.setIntro(node);
 									if (infoitem[1]) {
+										var doubleCamp = get.is.double(item, true);
 										if (doubleCamp) {
-											var text = "";
 											node.node.group.innerHTML = doubleCamp.reduce((previousValue, currentValue) => `${previousValue}<div data-nature="${get.groupnature(currentValue)}">${get.translation(currentValue)}</div>`, "");
 											if (doubleCamp.length > 4)
 												if (new Set([5, 6, 9]).has(doubleCamp.length)) node.node.group.style.height = "48px";
