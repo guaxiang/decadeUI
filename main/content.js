@@ -4411,7 +4411,7 @@ export async function content(config, pack) {
 					storage: {
 						counttrigger: new Proxy({}, {
 							get(_, prop) {
-								return player.getStat("triggerSkill")?.[prop];
+								return player.getStat("triggerSkill")[prop];
 							},
 							set(_, prop, value) {
 								player.getStat("triggerSkill")[prop] = value;
