@@ -4391,6 +4391,7 @@ export async function content(config, pack) {
 						{
 							card: {},
 							skill: {},
+							triggerSkill: {},
 						},
 					],
 					actionHistory: [
@@ -4446,6 +4447,31 @@ export async function content(config, pack) {
 				decadeUI.get.extend(player, playerExtend);
 				//decadeUI.get.extend(player, lib.element.player);
 				Object.setPrototypeOf(player, lib.element.Player.prototype);
+				if (!player.storage) player.storage = {};
+				if (!player.storage.counttrigger) {
+					player.storage.counttrigger = new Proxy({}, {
+						get(_, prop) {
+							return player.getStat("triggerSkill")?.[prop];
+						},
+						set(_, prop, value) {
+							player.getStat("triggerSkill")[prop] = value;
+							return true;
+						},
+						deleteProperty(_, prop) {
+							delete player.getStat("triggerSkill")[prop];
+							return true;
+						},
+						has(_, prop) {
+							return prop in player.getStat("triggerSkill");
+						},
+						ownKeys() {
+							return Reflect.ownKeys(player.getStat("triggerSkill"));
+						},
+						getOwnPropertyDescriptor(_, prop) {
+							return Object.getOwnPropertyDescriptor(player.getStat("triggerSkill"), prop);
+						}
+					});
+				}
 				player.node.action = ui.create.div(".action", player.node.avatar);
 				var realIdentity = ui.create.div(player.node.identity);
 				realIdentity.player = player;
