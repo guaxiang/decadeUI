@@ -5396,6 +5396,7 @@ export async function content(config, pack) {
 					card.scaled = true;
 					card.style.transform = "translate(" + x + "px," + y + "px) scale(" + cs + ")";
 					card._transform = card.style.transform;
+					card.updateTransform(card.classList.contains("selected"));
 				}
 				if (expand) {
 					/*-----------------分割线-----------------*/
