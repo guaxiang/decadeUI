@@ -2843,7 +2843,9 @@ export async function content(config, pack) {
 							chooseToCompare: [
 								base.lib.element.content.chooseToCompare[0],
 								async (event, trigger, player) => {
-									event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+									let __compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+									if (typeof __compareName === "string" && __compareName.startsWith("pre_")) __compareName = __compareName.slice(4);
+									event.compareName = __compareName;
 									event.compareId = `${event.compareName}_${get.id()}`;
 									event.addMessageHook("finished", function () {
 										const dialog = ui.dialogs[this.compareId];
@@ -2969,7 +2971,9 @@ export async function content(config, pack) {
 								async (event, trigger, player) => {
 									const evt = event.parentEvent;
 									const target = event.target;
-									event.compareName = evt.getParent()?.name === "trigger" ? evt.name : evt.getParent().name;
+									let __compareName2 = evt.getParent()?.name === "trigger" ? evt.name : evt.getParent().name;
+									if (typeof __compareName2 === "string" && __compareName2.startsWith("pre_")) __compareName2 = __compareName2.slice(4);
+									event.compareName = __compareName2;
 									event.compareId = `${event.compareName}_${get.id()}`;
 									event.addMessageHook("finished", function () {
 										const dialog = ui.dialogs[this.compareId];
@@ -3050,7 +3054,9 @@ export async function content(config, pack) {
 								async (event, trigger, player) => {
 									const targets = event.targets;
 									await base.lib.element.content.chooseToCompareMultiple[0](event, trigger, player);
-									event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+									let __compareName3 = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+									if (typeof __compareName3 === "string" && __compareName3.startsWith("pre_")) __compareName3 = __compareName3.slice(4);
+									event.compareName = __compareName3;
 									event.compareId = `${event.compareName}_${get.id()}`;
 									event.addMessageHook("finished", function () {
 										var dialog = ui.dialogs[this.compareId];
