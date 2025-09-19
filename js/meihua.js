@@ -283,13 +283,17 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			if (_status.brawl && _status.brawl.noGameDraw) return;
 			const end = player;
 			let currentPlayer = player;
-			do {
-				let numx = typeof num === "function" ? num(currentPlayer) : num;
-				const cards = [];
-				const otherGetCards = event.otherPile?.[currentPlayer.playerid]?.getCards;
-				if (otherGetCards) cards.addArray(otherGetCards(numx));
-				if (currentPlayer.getTopCards) cards.addArray(currentPlayer.getTopCards(numx - cards.length));
-				cards.addArray(get.cards(numx - cards.length));
+				do {
+					let numx = typeof num === "function" ? num(currentPlayer) : num;
+					const cards = [];
+					const otherGetCards = event.otherPile?.[currentPlayer.playerid]?.getCards;
+					if (otherGetCards) {
+						cards.addArray(otherGetCards(numx));
+					} else if (currentPlayer.getTopCards) {
+						cards.addArray(currentPlayer.getTopCards(numx));
+					} else {
+						cards.addArray(get.cards(numx));
+					}
 				if (event.gaintag?.[currentPlayer.playerid]) {
 					const gaintag = event.gaintag[currentPlayer.playerid];
 					const list = typeof gaintag === "function" ? gaintag(numx, cards) : [[cards, gaintag]];
@@ -305,7 +309,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				} else {
 					currentPlayer.directgain(cards);
 				}
-				if (currentPlayer.singleHp && get.mode() !== "guozhan" && (lib.config.mode !== "doudizhu" || _status.mode !== "online")) {
+				if (currentPlayer.singleHp === true && get.mode() !== "guozhan" && (lib.config.mode !== "doudizhu" || _status.mode !== "online")) {
 					currentPlayer.doubleDraw();
 				}
 				currentPlayer._start_cards = currentPlayer.getCards("h");
@@ -370,6 +374,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						} else {
 							game.me.directgain(cards);
 						}
+						game.me._start_cards = game.me.getCards("h");
 						numsl--;
 						numsy--;
 					} else {
