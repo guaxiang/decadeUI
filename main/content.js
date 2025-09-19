@@ -2855,7 +2855,7 @@ export async function content(config, pack) {
 												const dialog = decadeUI.create.compareDialog();
 												dialog.caption = get.translation(eventName) + "拼点";
 												dialog.player = player;
-												dialog.target = target;
+												dialog.target = (typeof target === "string") ? player : target;
 												dialog.open();
 												decadeUI.delay(400);
 												ui.dialogs[compareId] = dialog;
@@ -2901,10 +2901,11 @@ export async function content(config, pack) {
 												if (dialog) {
 													dialog.playerCard = playerCard.copy();
 													dialog.targetCard = targetCard.copy();
+													if (typeof target === "string") dialog.target = player;
 												}
 											} else {
 												ui.arena.classList.add("thrownhighlight");
-												player.$compare(playerCard, target, targetCard);
+												player.$compare(playerCard, (typeof target === "string") ? player : target, targetCard);
 											}
 										},
 										event.compareId,
