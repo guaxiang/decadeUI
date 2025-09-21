@@ -129,41 +129,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				);
 			},
 		},
-		//游戏开始分发手牌停顿
-		decadeUI_gameDrawDelay: {
-			trigger: {
-				global: "gameDrawBegin",
-			},
-			filter() {
-				return !(_status.brawl && _status.brawl.noGameDraw);
-			},
-			priority: 100,
-			firstDo: true,
-			silent: true,
-			forced: true,
-			popup: false,
-			content() {
-				game.removeGlobalSkill("decadeUI_gameDrawDelay");
-				decadeUI.delay(250);
-			},
-		},
-		decadeUI_gameDrawDelayx: {
-			trigger: {
-				global: "gameDrawEnd",
-			},
-			filter() {
-				return !(_status.brawl && _status.brawl.noGameDraw);
-			},
-			priority: -100,
-			lastDo: true,
-			silent: true,
-			forced: true,
-			popup: false,
-			content() {
-				game.removeGlobalSkill("decadeUI_gameDrawDelayx");
-				setTimeout(decadeUI.effect.gameStart, 51);
-			},
-		},
 	};
 	decadeUI.skill = {
 		ghujia: {
