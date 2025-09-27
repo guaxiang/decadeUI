@@ -24,7 +24,6 @@ export async function precontent() {
 	window.decadeModule = (function (decadeModule) {
 		var version = lib.extensionPack.十周年UI.version;
 		function checkVersionCompatibility() {
-			if (!lib.config.extension_十周年UI_versionCheck) return;
 			const currentVersion = lib.version;
 			const requiredVersion = lib.extensionPack.十周年UI.minNonameVersion;
 			function compareVersions(v1, v2) {
@@ -42,6 +41,13 @@ export async function precontent() {
 			const comparison = compareVersions(currentVersion, requiredVersion);
 			if (comparison < 0) {
 				const message = `版本不匹配警告！\n\n十周年UI要求无名杀版本：${requiredVersion}\n当前无名杀版本：${currentVersion}\n\n请更新无名杀到 ${requiredVersion} 版本以确保十周年UI正常运行。\n\n点击确定继续游戏，但是所遇到的bug均不受理。`;
+				setTimeout(() => {
+					if (confirm(message)) {
+						game.print("已确认版本不匹配，继续游戏...");
+					}
+				}, 1000);
+			} else if (comparison > 0) {
+				const message = `版本不匹配警告！\n\n当前无名杀版本：${currentVersion}\n十周年UI要求无名杀版本：${requiredVersion}\n\n当前本体版本过高，请更新十周年UI到 ${currentVersion} 版本以确保十周年UI正常运行。\n\n点击确定继续游戏，但是所遇到的bug均不受理。`;
 				setTimeout(() => {
 					if (confirm(message)) {
 						game.print("已确认版本不匹配，继续游戏...");

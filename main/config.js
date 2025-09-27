@@ -10,11 +10,6 @@ export let config = {
             game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
         },
     },
-    versionCheck: {
-        name: "版本检测",
-        init: true,
-        intro: "开启后会在游戏启动时检测无名杀版本是否与十周年UI兼容，版本不匹配时会弹出警告",
-    },
     eruda: {
         name: "调试助手",
         init: false,
