@@ -9,7 +9,7 @@
 	"importConfig": [
 		{
 			"name": "骨骼包",
-			"path": "assets/dynamic",
+			"path": "./",
 			"condition": ["js/dynamicSkin.js"]
 		}
 	]
