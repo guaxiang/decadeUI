@@ -466,26 +466,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							oSkills.forEach(function (name) {
 								if (player.forbiddenSkills[name]) {
 									if (player.forbiddenSkills[name].length) {
-										ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + "（与" + get.translation(player.forbiddenSkills[name]) + "冲突）" + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
+										ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + "（与" + get.translation(player.forbiddenSkills[name]) + "冲突）" + get.skillInfoTranslation(name, player, false) + "</span>" + "</div>", rightPane.firstChild);
 									} else {
-										ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + "（双将禁用）" + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
+										ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + "（双将禁用）" + get.skillInfoTranslation(name, player, false) + "</span>" + "</div>", rightPane.firstChild);
 									}
 								} else if (player.hiddenSkills.includes(name)) {
 									if (lib.skill[name].preHidden && get.mode() == "guozhan") {
 										var id = name + "_idx";
-										id = ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>' + "</div>", rightPane.firstChild);
+										id = ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player, false) + "</span>" + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>' + "</div>", rightPane.firstChild);
 										var underlinenode = id.querySelector(".underlinenode");
 										if (_status.prehidden_skills.includes(name)) underlinenode.classList.remove("on");
 										underlinenode.link = name;
 										underlinenode.listen(ui.click.hiddenskill);
 									} else {
-										ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
+										ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player, false) + "</span>" + "</div>", rightPane.firstChild);
 									}
 								} else if (!player.getSkills().includes(name) || player.awakenedSkills.includes(name)) {
-									ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
+									ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player, false) + "</span>" + "</div>", rightPane.firstChild);
 								} else if (lib.skill[name].frequent || lib.skill[name].subfrequent) {
 									var id = name + "_id";
-									id = ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>' + "</div>", rightPane.firstChild);
+									id = ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player, false) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>' + "</div>", rightPane.firstChild);
 									var underlinenode = id.querySelector(".underlinenode");
 									if (lib.skill[name].frequent) {
 										if (lib.config.autoskilllist.includes(name)) {
@@ -504,7 +504,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 									underlinenode.listen(ui.click.autoskill2);
 								} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true)) {
 									var id = name + "_idy";
-									id = ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", rightPane.firstChild);
+									id = ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player, false) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", rightPane.firstChild);
 									var intronode = id.querySelector(".skillbutton");
 									if (!_status.gameStarted || (lib.skill[name].clickableFilter && !lib.skill[name].clickableFilter(player))) {
 										intronode.classList.add("disabled");
@@ -520,7 +520,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 										intronode.listen(ui.click.skillbutton);
 									}
 								} else {
-									ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player) + "</div>", rightPane.firstChild);
+									ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player, false) + "</div>", rightPane.firstChild);
 								}
 							});
 						}

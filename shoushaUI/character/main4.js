@@ -474,28 +474,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		// 创建禁用技能项
 		createForbiddenSkillItem(container, name, player, typeText) {
-			const skillHTML = Utils.generateSkillHTML(`<span style="opacity:1">${lib.translate[name]}</span>`, `<span style="opacity:1">(与${get.translation(player.forbiddenSkills[name])}冲突)${get.skillInfoTranslation(name, player)}</span>`, typeText);
+			const skillHTML = Utils.generateSkillHTML(`<span style="opacity:1">${lib.translate[name]}</span>`, `<span style="opacity:1">(与${get.translation(player.forbiddenSkills[name])}冲突)${get.skillInfoTranslation(name, player, false)}</span>`, typeText);
 			ui.create.div(".xskill", skillHTML, container);
 		}
 		// 创建隐藏技能项
 		createHiddenSkillItem(container, name, player, typeText) {
 			if (lib.skill[name].preHidden && get.mode() == "guozhan") {
-				const id = ui.create.div(".xskill", Utils.generateSkillHTML('<span style="opacity:0.5">' + lib.translate[name] + "</span>", '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + '</span><br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>', typeText), container);
+				const id = ui.create.div(".xskill", Utils.generateSkillHTML('<span style="opacity:0.5">' + lib.translate[name] + "</span>", '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player, false) + '</span><br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>', typeText), container);
 				const underlinenode = id.querySelector(".underlinenode");
 				if (_status.prehidden_skills.includes(name)) underlinenode.classList.remove("on");
 				underlinenode.link = name;
 				underlinenode.listen(ui.click.hiddenskill);
 			} else {
-				ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player), typeText), container);
+				ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player, false), typeText), container);
 			}
 		}
 		// 创建普通技能项
 		createNormalSkillItem(container, name, player, typeText) {
-			ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player), typeText), container);
+			ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player, false), typeText), container);
 		}
 		// 创建频繁技能项
 		createFrequentSkillItem(container, name, player, typeText) {
-			const id = ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>', typeText), container);
+			const id = ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player, false) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>', typeText), container);
 			const underlinenode = id.querySelector(".underlinenode");
 			if (lib.skill[name].frequent && lib.config.autoskilllist.includes(name)) {
 				underlinenode.classList.remove("on");
@@ -512,7 +512,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		// 创建可点击技能项
 		createClickableSkillItem(container, name, player, typeText) {
-			const intronode = ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>', typeText), container);
+			const intronode = ui.create.div(".xskill", Utils.generateSkillHTML(lib.translate[name], get.skillInfoTranslation(name, player, false) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>', typeText), container);
 			if (!_status.gameStarted || (lib.skill[name].clickableFilter && !lib.skill[name].clickableFilter(player))) {
 				intronode.classList.add("disabled");
 				intronode.style.opacity = 0.5;

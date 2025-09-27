@@ -333,20 +333,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		createSkillElement(skillName, player, container, dialogContainer) {
 			if (player.forbiddenSkills[skillName]) {
 				if (player.forbiddenSkills[skillName].length) {
-					ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + "（与" + get.translation(player.forbiddenSkills[skillName]) + "冲突）" + get.skillInfoTranslation(skillName, player) + "</span>" + "</div>", container);
+					ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + "（与" + get.translation(player.forbiddenSkills[skillName]) + "冲突）" + get.skillInfoTranslation(skillName, player, false) + "</span>" + "</div>", container);
 				} else {
-					ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + "（双将禁用）" + get.skillInfoTranslation(skillName, player) + "</span>" + "</div>", container);
+					ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + "（双将禁用）" + get.skillInfoTranslation(skillName, player, false) + "</span>" + "</div>", container);
 				}
 			} else if (player.hiddenSkills.includes(skillName)) {
 				this.createHiddenSkillElement(skillName, player, container);
 			} else if (!player.getSkills().includes(skillName) || player.awakenedSkills.includes(skillName)) {
-				ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player) + "</span>" + "</div>", container);
+				ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player, false) + "</span>" + "</div>", container);
 			} else if (lib.skill[skillName].frequent || lib.skill[skillName].subfrequent) {
 				this.createFrequentSkillElement(skillName, player, container);
 			} else if (lib.skill[skillName].clickable && player.isIn() && player.isUnderControl(true)) {
 				this.createClickableSkillElement(skillName, player, container, dialogContainer);
 			} else {
-				ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player) + "</div>", container);
+				ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player, false) + "</div>", container);
 			}
 		},
 
@@ -354,20 +354,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		createHiddenSkillElement(skillName, player, container) {
 			if (lib.skill[skillName].preHidden && get.mode() == "guozhan") {
 				var id = skillName + "_idx";
-				id = ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player) + "</span>" + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>' + "</div>", container);
+				id = ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player, false) + "</span>" + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>' + "</div>", container);
 				var underlinenode = id.querySelector(".underlinenode");
 				if (_status.prehidden_skills.includes(skillName)) underlinenode.classList.remove("on");
 				underlinenode.link = skillName;
 				underlinenode.listen(ui.click.hiddenskill);
 			} else {
-				ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player) + "</span>" + "</div>", container);
+				ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player, false) + "</span>" + "</div>", container);
 			}
 		},
 
 		// 创建频繁技能元素
 		createFrequentSkillElement(skillName, player, container) {
 			var id = skillName + "_id";
-			id = ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>' + "</div>", container);
+			id = ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player, false) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>' + "</div>", container);
 			var underlinenode = id.querySelector(".underlinenode");
 
 			if (lib.skill[skillName].frequent) {
@@ -390,7 +390,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		// 创建可点击技能元素
 		createClickableSkillElement(skillName, player, container, dialogContainer) {
 			var id = skillName + "_idy";
-			id = ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", container);
+			id = ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player, false) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", container);
 			var intronode = id.querySelector(".skillbutton");
 
 			if (!_status.gameStarted || (lib.skill[skillName].clickableFilter && !lib.skill[skillName].clickableFilter(player))) {

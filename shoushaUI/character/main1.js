@@ -336,7 +336,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 							const baseIcon = `<img src="extension/十周年UI/shoushaUI/character/images/shousha/${skillIcon}.png" style="width:25px;height:25px;margin-bottom:-7px;">`;
 							const transparentIcon = `<img src="extension/十周年UI/shoushaUI/character/images/shousha/${skillIcon}.png" style="width:25px;height:25px;margin-bottom:-7px;opacity:0.5;">`;
 							const skillName = `【${lib.translate[name]}】`;
-							const skillInfo = get.skillInfoTranslation(name, player);
+							const skillInfo = get.skillInfoTranslation(name, player, false);
 
 							if (player.forbiddenSkills[name]) {
 								const conflict = player.forbiddenSkills[name].length

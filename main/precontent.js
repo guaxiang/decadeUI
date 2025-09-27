@@ -448,7 +448,7 @@ export async function precontent() {
 					if (obj.info.clickable && node.isIn() && node.isUnderControl(true)) obj.clickable = true;
 					if (obj.info.nobracket) obj.nobracket = true;
 				}
-				obj.translation = get.skillInfoTranslation(skill);
+				obj.translation = get.skillInfoTranslation(skill, undefined, false);
 				obj.translationSource = lib.translate[skill + "_info"];
 				obj.translationAppend = lib.translate[skill + "_append"];
 				obj.type = obj.info && obj.info.enable ? "enable" : "trigger";
