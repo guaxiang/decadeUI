@@ -47,7 +47,7 @@ export async function precontent() {
 					}
 				}, 1000);
 			} else if (comparison > 0) {
-				const message = `版本不匹配警告！\n\n当前无名杀版本：${currentVersion}\n十周年UI要求无名杀版本：${requiredVersion}\n\n当前本体版本过高，请更新十周年UI到 ${currentVersion} 版本以确保十周年UI正常运行。\n\n点击确定继续游戏，但是所遇到的bug均不受理。`;
+				const message = `版本不匹配警告！\n\n当前无名杀版本：${currentVersion}\n十周年UI版本：${requiredVersion}\n\n当前十周年UI版本过低，请更新十周年UI到 ${currentVersion} 版本以确保十周年UI正常运行。\n\n点击确定继续游戏，但是所遇到的bug均不受理。`;
 				setTimeout(() => {
 					if (confirm(message)) {
 						game.print("已确认版本不匹配，继续游戏...");
