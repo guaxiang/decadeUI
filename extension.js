@@ -38,8 +38,8 @@ export default async function () {
 			};
 			pack.intro = (pack => {
 				let log = [
-					`当前版本号${pack.version}`,
-					"适配本体：v1.10.17.5 待定",
+					`十周年UI版本号：${pack.version}`,
+					`适配本体：${otherInfo.minNonameVersion}`,
 					"bugfix",
 					"函数跟进",
 					"UI界面调整",

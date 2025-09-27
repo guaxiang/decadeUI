@@ -10,6 +10,11 @@ export let config = {
             game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
         },
     },
+    versionCheck: {
+        name: "版本检测",
+        init: true,
+        intro: "开启后会在游戏启动时检测无名杀版本是否与十周年UI兼容，版本不匹配时会弹出警告",
+    },
     eruda: {
         name: "调试助手",
         init: false,
@@ -657,16 +662,6 @@ export let config = {
             default: "默认本体框",
             "extension-OL-system": "扩展内置框",
             offDialog: "关闭筛选框",
-        },
-    },
-    //手杀UI
-    FL5: {
-        name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
-        intro: "",
-        init: true,
-        clear: true,
-        onclick: function () {
-            game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
         },
     },
 }
