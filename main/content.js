@@ -1336,7 +1336,7 @@ export async function content(config, pack) {
 									var hand = dui.boundsCaches.hand;
 									if (player == game.me) {
 										hand.check();
-										x1 = hand.x + hand.width / 2;
+										x1 = hand.x + hand.width / 1.5;
 										y1 = hand.y;
 									} else {
 										x1 = player.cacheLeft + player.cacheWidth / 2;
@@ -1344,7 +1344,7 @@ export async function content(config, pack) {
 									}
 									if (target == game.me) {
 										hand.check();
-										x2 = hand.x + hand.width / 2;
+										x2 = hand.x + hand.width / 1.5;
 										y2 = hand.y;
 									} else {
 										x2 = target.cacheLeft + target.cacheWidth / 2;
