@@ -8,7 +8,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 	//OL随机框 by柳下跖
 	if (lib.config.extension_十周年UI_newDecadeStyle && lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
-		//给龙头添加OL等阶框
 		lib.skill._longLevel = {
 			trigger: {
 				global: "gameStart",
@@ -18,8 +17,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter: function (event, player) {
 				return lib.config.extension_十周年UI_longLevel == "ten" || lib.config.extension_十周年UI_longLevel == "eleven";
 			},
-			content: function () {
-				// 稀有度配置
+			async content() {
+				const player = _status.event.player;
 				const rarityConfig = {
 					silver: { k: "k2", border: "border_campOL5", top: "-20.5px", right: "-5px", height: "115%", width: "120%" },
 					gold: { k: "k4", border: "border_campOL2", top: "-5px", right: "-3px", height: "107.5%", width: "105%" },
@@ -27,7 +26,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					bing: { k: "k8", border: "border_campOL4", top: "-6px", right: "-5.5px", height: "109%", width: "113%" },
 					yan: { k: "k2", border: "border_campOL5", top: "-20.5px", right: "-5px", height: "115%", width: "120%" },
 				};
-				// 稀有度映射
 				const rarityMap = ["silver", "gold", "yu", "bing", "yan"];
 				let rarity;
 				if (lib.config.extension_十周年UI_longLevel == "ten") {
@@ -44,12 +42,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 				if (rarity && rarityConfig[rarity]) {
 					const config = rarityConfig[rarity];
-					// 创建龙头图片
 					const longtou = document.createElement("img");
 					longtou.src = decadeUIPath + "/assets/image/OL/" + config.k + ".png";
 					longtou.style.cssText = "pointer-events:none;position:absolute;display:block;top:" + config.top + ";right:" + config.right + ";height:" + config.height + ";width:" + config.width + ";z-index:60";
 					player.appendChild(longtou);
-					// 创建龙尾边框
 					const longwei = document.createElement("img");
 					longwei.src = decadeUIPath + "/assets/image/OL/" + config.border + ".png";
 					longwei.style.cssText = "pointer-events:none;position:absolute;display:block;top:" + config.top + ";right:" + config.right + ";height:" + config.height + ";width:" + config.width + ";z-index:72";
@@ -73,7 +69,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(_, player) {
 				return get.mode() !== "guozhan" && player.group && !lib.group.includes(player.group);
 			},
-			async content(event, trigger, player) {
+			async content() {
+				const player = _status.event.player;
 				const result = await player
 					.chooseControl(lib.group.slice(0, 5))
 					.set("ai", () => get.event().controls.randomGet())
@@ -112,8 +109,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				next.setContent("chooseControl");
 				return next;
 			}
-			next.setContent(function () {
+			next.setContent(async function () {
 				"step 0";
+				const event = get.event();
 				const list = event.controls;
 				if (!list?.length) {
 					event.finish();
@@ -171,12 +169,15 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				("step 1");
 				const dcs2 = document.getElementById("dui-controls");
 				if (dcs2) dcs2.style.scale = "1";
-				const val = event.nextx._result.links[0][2];
-				event.result = {
-					bool: true,
-					control: val,
-					index: event.controls.indexOf(val),
-				};
+				await event.nextx;
+				const val = event.nextx._result?.links?.[0]?.[2];
+				if (val) {
+					event.result = {
+						bool: true,
+						control: val,
+						index: event.controls.indexOf(val),
+					};
+				}
 			});
 			return next;
 		};
@@ -192,7 +193,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				player: ["enterGame", "showCharacterEnd"],
 			},
 			priority: 100,
-			content() {
+			async content() {
 				const setBackground = player => {
 					if (!player) return;
 					const mode = get.mode();
@@ -226,7 +227,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			forced: true,
 			popup: false,
 			priority: -10,
-			content() {
+			async content(event, trigger, player) {
 				const card = trigger.card;
 				const cardType = get.type(card);
 				let audioName;
@@ -269,7 +270,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event, player) {
 				return player == game.me && _status.currentPhase == player;
 			},
-			content() {
+			async content() {
 				game.playAudio("..", "extension", "十周年UI", `audio/seatRoundState_start`);
 			},
 		};
@@ -278,7 +279,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	if (lib.config["extension_十周年UI_luckycard"]) {
 		lib.element.content.gameDraw = async function () {
 			const event = get.event();
-			const player = event.player;
+			const player = _status.event.player || event.player;
 			const num = event.num;
 			if (_status.brawl && _status.brawl.noGameDraw) return;
 			const end = player;
@@ -459,7 +460,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event, player) {
 				return player == game.me && _status.auto == false;
 			},
-			content() {
+			async content(event, trigger, player) {
 				trigger._jd_ddxy = true;
 				game.showJDTsImage("ddxy", 10);
 			},
@@ -475,7 +476,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			charlotte: true,
 			forced: true,
-			content() {
+			async content(event, trigger, player) {
 				trigger._jd_ddxy = true;
 				game.showJDTsImage("ddxy", true);
 			},
@@ -503,7 +504,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			charlotte: true,
 			forced: true,
-			content() {
+			async content(event, trigger, player) {
 				trigger._jd_ddxy = true;
 				game.showJDTsImage("ddxy", true);
 			},
@@ -519,7 +520,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event, player) {
 				return player == game.me && event.card.name == "shan";
 			},
-			content() {
+			async content(event, trigger, player) {
 				trigger._jd_ddxy = true;
 				game.as_removeImage();
 				if (_status.as_showImage_phase) {
@@ -538,7 +539,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				return player == game.me && _status.auto == false;
 			},
 			direct: true,
-			content() {
+			async content() {
 				game.as_removeImage();
 				if (_status.as_showImage_phase) {
 					game.showJDTsImage(_status.as_showImage_phase, true);
@@ -557,7 +558,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				//剩余人数两人时
 				if (game.players.length == 2 && _status.currentPhase != game.me) return true;
 			},
-			content() {
+			async content() {
 				game.showJDTsImage("dfsk", true);
 			},
 		};
@@ -572,7 +573,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			forced: true,
 			charlotte: true,
-			content() {
+			async content() {
 				game.as_removeImage();
 			},
 		};
@@ -586,7 +587,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event, player) {
 				return player == game.me && _status.auto == false;
 			},
-			content() {
+			async content() {
 				game.as_removeImage();
 			},
 		};
@@ -604,7 +605,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity,
 			firstDo: true,
-			content() {
+			async content() {
 				game.showJDTsImage("hhks", true);
 				_status.as_showImage_phase = "hhks";
 			},
@@ -623,7 +624,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity,
 			firstDo: true,
-			content() {
+			async content() {
 				game.showJDTsImage("pdjd", true);
 				_status.as_showImage_phase = "zbjd";
 			},
@@ -641,7 +642,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: -Infinity,
 			lastDo: true,
-			content() {
+			async content() {
 				if (_status.as_showImage_phase && _status.as_showImage_phase == "zbjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
@@ -662,7 +663,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity,
 			firstDo: true,
-			content() {
+			async content() {
 				game.showJDTsImage("pdjd", true);
 				_status.as_showImage_phase = "pdjd";
 			},
@@ -680,7 +681,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: -Infinity,
 			lastDo: true,
-			content() {
+			async content() {
 				if (_status.as_showImage_phase && _status.as_showImage_phase == "pdjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
@@ -701,7 +702,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity,
 			firstDo: true,
-			content() {
+			async content() {
 				game.showJDTsImage("mpjd", true);
 				_status.as_showImage_phase = "mpjd";
 			},
@@ -719,7 +720,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: -Infinity,
 			lastDo: true,
-			content() {
+			async content() {
 				if (_status.as_showImage_phase && _status.as_showImage_phase == "mpjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
@@ -740,7 +741,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity,
 			firstDo: true,
-			content() {
+			async content() {
 				game.showJDTsImage("cpjd", true);
 				_status.as_showImage_phase = "cpjd";
 			},
@@ -758,7 +759,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: -Infinity,
 			lastDo: true,
-			content() {
+			async content() {
 				if (_status.as_showImage_phase && _status.as_showImage_phase == "cpjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
@@ -779,7 +780,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity,
 			firstDo: true,
-			content() {
+			async content() {
 				game.showJDTsImage("qpjd", true);
 				_status.as_showImage_phase = "qpjd";
 			},
@@ -797,7 +798,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: -Infinity,
 			lastDo: true,
-			content() {
+			async content() {
 				if (_status.as_showImage_phase && _status.as_showImage_phase == "qpjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
@@ -818,7 +819,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity,
 			firstDo: true,
-			content() {
+			async content() {
 				game.showJDTsImage("pdjd", true);
 				_status.as_showImage_phase = "jsjd";
 			},
@@ -836,7 +837,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: -Infinity,
 			lastDo: true,
-			content() {
+			async content() {
 				if (_status.as_showImage_phase && _status.as_showImage_phase == "jsjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
@@ -857,7 +858,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity,
 			firstDo: true,
-			content() {
+			async content() {
 				game.showJDTsImage("hhjs", true);
 				_status.as_showImage_phase = "hhjs";
 			},
@@ -875,7 +876,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: -Infinity,
 			lastDo: true,
-			content() {
+			async content() {
 				if (_status.as_showImage_phase && _status.as_showImage_phase == "hhjs") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
@@ -895,7 +896,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event) {
 				return event.num && event.num > 0 && event.num <= 9;
 			},
-			content() {
+			async content(event, trigger, player) {
 				const action = trigger.num.toString();
 				if (action) {
 					dcdAnim.loadSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2.name, "skel", () => {
@@ -912,7 +913,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event) {
 				return event.num >= 0 && event.num <= 9 && event.unreal;
 			},
-			content() {
+			async content(event, trigger, player) {
 				const action = "play" + trigger.num.toString();
 				if (action) {
 					dcdAnim.loadSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.name, "skel", () => {
@@ -929,7 +930,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event) {
 				return event.num && event.num > 1 && event.num <= 9;
 			},
-			content() {
+			async content(event, trigger, player) {
 				const action = trigger.num.toString();
 				if (action) {
 					dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.name, "skel", () => {
@@ -941,7 +942,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		};
 	}
 	//目标指示特效
-	lib.element.player.inits = [].concat(lib.element.player.inits || []).concat(player => {
+	lib.element.player.inits = [].concat(lib.element.player.inits || []).concat(async player => {
 		if (player.ChupaizhishiXObserver) return;
 		const ANIMATION_CONFIG = {
 			jiangjun: { name: "SF_xuanzhong_eff_jiangjun", scale: 0.6 },
@@ -1013,7 +1014,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			const playerSkillArrays = new Map();
 			const isOtherSkill = skill => !!lib.translate?.[skill];
 			const getSkillName = skill => lib.translate?.[skill] || skill;
-			const updateSkillDisplay = player => {
+			const updateSkillDisplay = async player => {
 				if (getAllPlayersCount() >= 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
@@ -1050,7 +1051,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					avatar.parentNode.appendChild(skillList);
 				});
 			};
-			const updateSkillArray = (player, skill, add = true) => {
+			const updateSkillArray = async (player, skill, add = true) => {
 				if (getAllPlayersCount() >= 5) return;
 				if (player === game.me || !isOtherSkill(skill)) return;
 				if (!playerSkillArrays.has(player)) playerSkillArrays.set(player, []);
@@ -1058,33 +1059,35 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const idx = arr.indexOf(skill);
 				if (add && idx === -1) arr.push(skill);
 				if (!add && idx > -1) arr.splice(idx, 1);
-				updateSkillDisplay(player);
+				await updateSkillDisplay(player);
 			};
-			const refreshPlayerSkills = player => {
+			const refreshPlayerSkills = async player => {
 				if (getAllPlayersCount() >= 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
 				playerSkillArrays.delete(player);
-				[...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])].forEach(skill => updateSkillArray(player, skill, true));
+				for (const skill of [...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])]) {
+					await updateSkillArray(player, skill, true);
+				}
 			};
 			["showCharacterEnd", "hideCharacter", "changeCharacter", "removeCharacter"].forEach(eventName => {
 				const oldHandler = lib.element.player[eventName];
 				if (!oldHandler) return;
-				lib.element.player[eventName] = function (...args) {
+				lib.element.player[eventName] = async function (...args) {
 					if (typeof oldHandler === "function") oldHandler.apply(this, args);
-					refreshPlayerSkills(this);
+					await refreshPlayerSkills(this);
 				};
 			});
 			const origAdd = lib.element.player.addSkill;
 			const origRemove = lib.element.player.removeSkill;
-			lib.element.player.addSkill = function (skill, ...args) {
+			lib.element.player.addSkill = async function (skill, ...args) {
 				const res = origAdd.apply(this, [skill, ...args]);
-				requestAnimationFrame(() => updateSkillArray(this, skill, true));
+				requestAnimationFrame(async () => await updateSkillArray(this, skill, true));
 				return res;
 			};
-			lib.element.player.removeSkill = function (skill, ...args) {
+			lib.element.player.removeSkill = async function (skill, ...args) {
 				const res = origRemove.apply(this, [skill, ...args]);
-				requestAnimationFrame(() => updateSkillArray(this, skill, false));
+				requestAnimationFrame(async () => await updateSkillArray(this, skill, false));
 				return res;
 			};
 			lib.onover.push(() => playerSkillArrays.clear());
@@ -1092,18 +1095,17 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		})();
 		lib.refreshPlayerSkills = skillDisplayManager.refreshPlayerSkills;
 	}
-	// 清理所有技能外显
-	function clearAllSkillDisplay() {
-		[...game.players, ...(game.dead || [])].forEach(player => {
+	async function clearAllSkillDisplay() {
+		for (const player of [...game.players, ...(game.dead || [])]) {
 			const avatar = player.node.avatar;
 			if (!avatar) return;
 			avatar.parentNode.querySelectorAll(".baby_skill").forEach(list => list.remove());
-		});
+		}
 	}
 	lib.clearAllSkillDisplay = clearAllSkillDisplay;
 	// 装备卡牌选择优化
 	const ep = "已装备";
-	lib.hooks.checkBegin.add(function (event) {
+	lib.hooks.checkBegin.add(async function (event) {
 		let player = event.player;
 		if (!player || !event.position || typeof event.position !== "string") return;
 		if (!event.position.includes("e") || !player.countCards("e")) return;
@@ -1155,7 +1157,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			return a.number - b.number;
 		});
 	});
-	lib.hooks.uncheckBegin.add((event, args) => {
+	lib.hooks.uncheckBegin.add(async (event, args) => {
 		const { player } = event;
 		if (!args.includes("card") || !event.copyCards) return;
 		if (!event.result && !(["chooseToUse", "chooseToRespond"].includes(event.name) && !event.skill)) return;
