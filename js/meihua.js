@@ -1110,7 +1110,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		if (!player || !event.position || typeof event.position !== "string") return;
 		if (!event.position.includes("e") || !player.countCards("e")) return;
 		if (event.copyCards) return;
-		if (!["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard"].includes(event.name)) return;
+		if (!["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard", "chooseToGive"].includes(event.name)) return;
 		event.copyCards = true;
 		if (!event.position.includes("s")) {
 			event.position += "s";
