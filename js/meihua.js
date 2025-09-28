@@ -1101,4 +1101,74 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 	}
 	lib.clearAllSkillDisplay = clearAllSkillDisplay;
+	// 装备卡牌选择优化
+	const ep = "已装备";
+	lib.hooks.checkBegin.add(function (event) {
+		let player = event.player;
+		if (!player || !event.position || typeof event.position !== "string") return;
+		if (!event.position.includes("e") || !player.countCards("e")) return;
+		if (event.copyCards) return;
+		if (!["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard"].includes(event.name)) return;
+		event.copyCards = true;
+		if (!event.position.includes("s")) {
+			event.position += "s";
+		}
+		let equipCards = player.getCards("e");
+		let cardCopies = equipCards.map(function(originalCard) {
+			let card = ui.create.card(ui.special);
+			card.init([originalCard.suit, originalCard.number, originalCard.name, originalCard.nature]);
+			card.cardid = originalCard.cardid;
+			card.wunature = originalCard.wunature;
+			card.storage = originalCard.storage;
+			card.relatedCard = originalCard;
+			card.owner = get.owner(originalCard);
+			card.addEventListener("click", async function() {
+				let isSelected = ui.selected.cards.includes(card.relatedCard);
+				ui.selected.cards.remove(card);
+				if (!isSelected) {
+					ui.selected.cards.add(card.relatedCard);
+					card.relatedCard.classList.add("selected");
+				} else {
+					card.relatedCard.classList.remove("selected");
+				}
+				await game.check();
+			});
+			return card;
+		});
+		if (event.filterCard) {
+			let originalFilterCard = event.filterCard;
+			event.filterCard = function(card, player, target) {
+				let relatedCard = card.relatedCard || card;
+				if (get.position(card) === "e") return false;
+				if (get.position(card) === "s" && get.itemtype(card) === "card" && !card.hasGaintag(ep)) return false;
+				return originalFilterCard(relatedCard, player, target);
+			};
+		}
+		player.directgains(cardCopies, null, ep);
+		cardCopies.forEach(function(card) {
+			card.node.gaintag.classList.remove("gaintag", "info");
+			card.node.gaintag.classList.add("epclick");
+		});
+		cardCopies.sort(function(a, b) {
+			if (a.name !== b.name) return lib.sort.card(a.name, b.name);
+			if (a.suit !== b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
+			return a.number - b.number;
+		});
+	});
+	lib.hooks.uncheckBegin.add((event, args) => {
+		const { player } = event;
+		if (!args.includes("card") || !event.copyCards) return;
+		if (!event.result && !(["chooseToUse", "chooseToRespond"].includes(event.name) && !event.skill)) return;
+		const cards = event.result?.cards;
+		if (cards) {
+			cards.forEach((card, i) => {
+				if (card.hasGaintag(ep)) {
+					cards[i] = player.getCards("e", c => c.cardid === card.cardid)[0];
+				}
+			});
+		}
+		player?.getCards("s", card => card.hasGaintag(ep))
+			.forEach(card => card.delete());
+		event.copyCards = false;
+	});
 });
