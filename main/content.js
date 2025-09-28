@@ -5415,7 +5415,7 @@ export async function content(config, pack) {
 					if (get.is && typeof get.is.phoneLayout === "function" && lib.config.phonelayout) {
 						xStart += 0; // 触屏模式靠左
 					} else if (lib.config.extension_十周年UI_newDecadeStyle == "on") {
-						xStart += (limitW - totalW) / 1.7;
+						xStart = (ui.arena.offsetWidth - totalW) / 2 - bounds.x;
 					}
 				}
 				var card;
