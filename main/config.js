@@ -395,7 +395,7 @@ export let config = {
         },
     },
     cardScale: {
-        name: "卡牌大小",
+        name: "电脑卡牌大小",
         intro: "输入0.10~1.00的小数，回车保存并生效",
         init: "0.18",
         input: true,
