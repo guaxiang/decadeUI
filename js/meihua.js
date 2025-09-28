@@ -1104,7 +1104,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 	lib.clearAllSkillDisplay = clearAllSkillDisplay;
 	// 装备卡牌选择优化
-	const ep = "equipHand";
 	lib.hooks.checkBegin.add(async function (event) {
 		let player = event.player;
 		if (!player || !event.position || typeof event.position !== "string") return;
@@ -1142,11 +1141,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			event.filterCard = function(card, player, target) {
 				let relatedCard = card.relatedCard || card;
 				if (get.position(card) === "e") return false;
-				if (get.position(card) === "s" && get.itemtype(card) === "card" && !card.hasGaintag(ep)) return false;
+				if (get.position(card) === "s" && get.itemtype(card) === "card" && !card.hasGaintag("equipHand")) return false;
 				return originalFilterCard(relatedCard, player, target);
 			};
 		}
-		player.directgains(cardCopies, null, ep);
+		player.directgains(cardCopies, null, "equipHand");
 		cardCopies.forEach(function(card) {
 			card.node.gaintag.classList.remove("gaintag", "info");
 			card.node.gaintag.classList.add("epclick");
@@ -1165,12 +1164,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		const cards = event.result?.cards;
 		if (cards) {
 			cards.forEach((card, i) => {
-				if (card.hasGaintag(ep)) {
+				if (card.hasGaintag("equipHand")) {
 					cards[i] = player.getCards("e", c => c.cardid === card.cardid)[0];
 				}
 			});
 		}
-		player?.getCards("s", card => card.hasGaintag(ep))
+		player?.getCards("s", card => card.hasGaintag("equipHand"))
 			.forEach(card => card.delete());
 		event.copyCards = false;
 		if (player === game.me) {
