@@ -1,5 +1,5 @@
 .handdisplays {
-	background-color: rgba(3, 3, 3, 0.5);
+	background-color: rgba(3, 3, 3, 0.3);
 	width: 35px;
 	height: 90px;
 	left: -45px;
@@ -13,10 +13,9 @@
 	text-align: center;
 	width: 100%;
 	font-weight: 700;
-	overflow: scroll;
-	color: rgb(216, 203, 87);
+	color: rgb(224, 215, 174);
 	font-family: "yuanli";
-	font-size: 13px;
+	font-size: 10px;
 }
 .baby_skill {
 	display: flex;
@@ -125,7 +124,7 @@
 	bottom: 1%;
 	left: 5px;
 	text-align: left;
-	font-family: "xingkai";
+	font-family: "yuanli";
 	font-size: 20px;
 	color: white;
 	background: linear-gradient(to right, transparent 0%, rgba(255, 120, 0, 0.9) 5%, rgba(255, 120, 0, 0.5) 80%, transparent 100%);

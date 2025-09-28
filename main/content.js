@@ -1808,13 +1808,13 @@ export async function content(config, pack) {
 									}
 									return d;
 								}
-								cards.forEach(c => {
+								for (let i = 0; i < 5; i++) {
 									createElement("div", {
 										class: ["handcard"],
-										innerHTML: lib.translate[c.name].slice(0, 2),
+										innerHTML: i < cards.length ? lib.translate[cards[i].name].slice(0, 2) : "",
 										parentNode: player.node.showCards,
 									});
-								});
+								}
 							},
 							/*-------转换技，阴阳标记等----*/
 							//修改changezhuanhuanji函数
