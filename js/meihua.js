@@ -1104,7 +1104,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 	lib.clearAllSkillDisplay = clearAllSkillDisplay;
 	// 装备卡牌选择优化
-	const ep = "已装备";
+	const ep = "equipHand";
 	lib.hooks.checkBegin.add(async function (event) {
 		let player = event.player;
 		if (!player || !event.position || typeof event.position !== "string") return;
@@ -1150,6 +1150,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		cardCopies.forEach(function(card) {
 			card.node.gaintag.classList.remove("gaintag", "info");
 			card.node.gaintag.classList.add("epclick");
+			card.node.gaintag.textContent = "";
 		});
 		cardCopies.sort(function(a, b) {
 			if (a.name !== b.name) return lib.sort.card(a.name, b.name);
