@@ -1172,5 +1172,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		player?.getCards("s", card => card.hasGaintag(ep))
 			.forEach(card => card.delete());
 		event.copyCards = false;
+		if (player === game.me) {
+			ui.updatehl();
+		}
 	});
 });
