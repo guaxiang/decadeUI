@@ -252,16 +252,19 @@
 }
 .player>.camp-wrap>.avatar-name,
 /*主将名，根据部分群友需要，添加定位代码*/
-#arena>.player:not(.minskin)>.name.name {
-	display: flex;
-	align-items: center;
-	align-content: center;
-	justify-content: center;
+#arena>.player:not(.minskin)>.name.name,
+.player>.name.name2,
+#arena>.player:not(.minskin)>.name.name2 {
+	display: flex !important;
+	align-items: flex-start !important;
+	align-content: flex-start !important;
+	justify-content: flex-start !important;
 	left: 25% !important;
 	right: auto;
-	top: 30px;
+	top: 92px !important;
 	width: 18px;
-	height: 96px;
+	height: auto !important;
+	font-family: "yuanli" !important;
 	font-size: 16px;
 	line-height: 15px;
 	/*字体间距*/
@@ -269,7 +272,24 @@
 	z-index: 89;
 }
 .player>.camp-wrap>.avatar-name,
-.player>.camp-wrap>.avatar-name-default,
+.player>.camp-wrap>.avatar-name-default {
+	display: flex !important;
+	align-items: flex-start !important;
+	align-content: flex-start !important;
+	justify-content: flex-start !important;
+	font-size: 16px;
+	text-align: left !important;
+	text-shadow: none;
+	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
+	left: 26% !important;
+	top: 40% !important;
+	right: 26% !important;
+	bottom: 1% !important;
+	position: absolute !important;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
+}
 .player>.camp-wrap>.camp-back {
 	display: flex;
 	align-items: center;
@@ -359,23 +379,12 @@
 .player>.camp-wrap>.camp-name {
 	text-shadow: 0 0 5px #e0ea33, 0 0 15px #e0ea33, 0 0 25px #e0ea33;
 }
-/*副将名*/
+/*副将名特殊定位*/
 .player>.name.name2,
 #arena>.player:not(.minskin)>.name.name2 {
-	display: flex;
-	align-items: center;
-	align-content: center;
-	justify-content: center;
 	left: 50% !important;
-	right: auto;
-	top: 22px;
-	width: 18px;
-	height: 96px;
-	font-size: 16px;
-	text-shadow: none;
-	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
+	top: 47px !important;
 	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
-	z-index: 89;
 }
 .player>.name.name2:empty,
 #arena>.player:not(.minskin)>.name.name2:empty {
