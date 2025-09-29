@@ -49,6 +49,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				enable: ui.create.div(".enable", node),
 				trigger: ui.create.div(".trigger", node),
 			};
+			if (lib.config.phonelayout) {
+				node.node.enable.style.display = "flex";
+				node.node.enable.style.flexDirection = "row";
+				node.node.enable.style.alignItems = "flex-start";
+			}
 			for (const key in plugin.controlElement) {
 				node[key] = plugin.controlElement[key];
 			}
@@ -191,6 +196,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 		},
 		controlElement: {
+			_getOrCreateLeftColumn() {
+				let column = this.node.enable.firstChild;
+				if (!column || column.childNodes.length >= 3) {
+					column = ui.create.div(".skillcol", this.node.enable);
+					this.node.enable.insertBefore(column, this.node.enable.firstChild);
+					column.style.display = "flex";
+					column.style.flexDirection = "column";
+				}
+				return column;
+			},
 			add(skill, eSkills) {
 				if (Array.isArray(skill)) {
 					skill.forEach(item => this.add(item, eSkills));
@@ -223,7 +238,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const skillName = get.translation(item.name).slice(0, 2);
 				const isLimited = lib.skill[item.id].limited;
 				const className = isLimited ? ".xiandingji" : ".skillitem";
-				const node = ui.create.div(className, this.node.enable, skillName);
+				let node;
+				if (lib.config.phonelayout) {
+					const column = this._getOrCreateLeftColumn();
+					node = ui.create.div(className, column, skillName);
+					if (column.firstChild) {
+						column.insertBefore(node, column.firstChild);
+					}
+				} else {
+					node = ui.create.div(className, this.node.enable, skillName);
+				}
 				node.dataset.id = item.id;
 				node.addEventListener("click", () => {
 					if (lib.config["extension_十周年UI_Soundeffects"]) game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
@@ -236,6 +260,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const skillName = get.translation(item.name).slice(0, 2);
 				const targetNode = lib.config.phonelayout ? this.node.trigger : this.node.enable;
 				const node = ui.create.div(".skillitem", targetNode, skillName);
+				if (lib.config.phonelayout && targetNode.firstChild) {
+					targetNode.insertBefore(node, targetNode.firstChild);
+				}
 				node.dataset.id = item.id;
 			},
 			update() {
@@ -243,12 +270,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills) skills.addArray(ui.skills.skills);
 				if (ui.skills2) skills.addArray(ui.skills2.skills);
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
-				Array.from(this.node.enable.childNodes).forEach(item => {
+				Array.from(this.node.enable.querySelectorAll('.skillitem, .xiandingji')).forEach(item => {
 					item.classList.toggle("usable", skills.includes(item.dataset.id));
 					item.classList.toggle("select", _status.event.skill === item.dataset.id);
 				});
 				const level1 = Math.min(4, this.node.trigger.childNodes.length);
-				const level2 = this.node.enable.childNodes.length > 2 ? 4 : this.node.enable.childNodes.length > 0 ? 2 : 0;
+				let level2 = 0;
+				if (lib.config.phonelayout) {
+					const enableCount = this.node.enable.querySelectorAll('.skillitem, .xiandingji').length;
+					level2 = enableCount > 2 ? 4 : enableCount > 0 ? 2 : 0;
+				} else {
+					level2 = this.node.enable.childNodes.length > 2 ? 4 : this.node.enable.childNodes.length > 0 ? 2 : 0;
+				}
 				const level = Math.max(level1, level2);
 				ui.arena.dataset.sclevel = level;
 			},
