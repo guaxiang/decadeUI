@@ -120,10 +120,11 @@
 	padding: 0;
 }
 .epclick {
-	bottom: 20%;
-    left: 25px;
-    width: 85px;
-    height: 110px;
-    background: url(../image/decoration/equipHand.png);
-    background-size: 100% 100%;
+	width: 106px;
+	height: 150px;
+	left: 2px;
+	top: 2px;
+	position: absolute;
+	background-image: url(../image/decoration/equipHand.png);
+	background-size: 100% 100%;
 }

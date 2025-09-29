@@ -1104,76 +1104,135 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 	lib.clearAllSkillDisplay = clearAllSkillDisplay;
 	// 装备卡牌选择优化
-	lib.hooks.checkBegin.add(async function (event) {
-		let player = event.player;
-		if (!player || !event.position || typeof event.position !== "string") return;
-		if (!event.position.includes("e") || !player.countCards("e")) return;
-		if (event.copyCards) return;
-		if (!["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard", "chooseToGive"].includes(event.name)) return;
-		event.copyCards = true;
-		if (!event.position.includes("s")) {
-			event.position += "s";
-		}
-		let equipCards = player.getCards("e");
-		let cardCopies = equipCards.map(function(originalCard) {
-			let card = ui.create.card(ui.special);
-			card.init([originalCard.suit, originalCard.number, originalCard.name, originalCard.nature]);
-			card.cardid = originalCard.cardid;
-			card.wunature = originalCard.wunature;
-			card.storage = originalCard.storage;
-			card.relatedCard = originalCard;
-			card.owner = get.owner(originalCard);
-			card.addEventListener("click", async function() {
-				let isSelected = ui.selected.cards.includes(card.relatedCard);
+	function createEquipCardCopy(originalCard) {
+		const card = ui.create.card(ui.special);
+		card.init([originalCard.suit, originalCard.number, originalCard.name, originalCard.nature]);
+		card.cardid = originalCard.cardid;
+		card.wunature = originalCard.wunature;
+		card.storage = originalCard.storage;
+		card.relatedCard = originalCard;
+		card.owner = get.owner(originalCard);
+		card.addEventListener("click", () => {
+			const isSelected = ui.selected.cards.includes(card.relatedCard);
+			if (!isSelected) {
 				ui.selected.cards.remove(card);
-				if (!isSelected) {
-					ui.selected.cards.add(card.relatedCard);
-					card.relatedCard.classList.add("selected");
-				} else {
-					card.relatedCard.classList.remove("selected");
+				ui.selected.cards.add(card.relatedCard);
+				card.relatedCard.classList.add("selected");
+			} else {
+				ui.selected.cards.remove(card.relatedCard);
+				card.relatedCard.classList.remove("selected");
+			}
+			game.check();
+		});
+
+		return card;
+	}
+	function createFilterCard(originalFilter, includeS) {
+		return function (card, player, target) {
+			const relatedCard = card.relatedCard || card;
+			if (get.position(card) === "e") return false;
+			if (includeS && get.position(card) === "s" && get.itemtype(card) === "card" && !card.hasGaintag("equipHand")) {
+				return false;
+			}
+			return originalFilter(relatedCard, player, target);
+		};
+	}
+	function processCardSelection(event, player, cardx, cardxF, cardxF2) {
+		const hasFilter = !!event.filterCard;
+		const isMultiSelect = typeof event.selectCard === "object" || event.selectCard > 1;
+		if (hasFilter) {
+			if (isMultiSelect) {
+				cardxF2.addArray(cardxF);
+				for (const cardF of player.getCards("he", function (j) {
+					const relatedCard = j.relatedCard || j;
+					return event.position.includes(get.position(relatedCard)) && event.filterCard(relatedCard, player, event.target);
+				})) {
+					if (!ui.selected.cards) ui.selected.cards = [];
+					ui.selected.cards.add(cardF);
+					cardxF2.addArray(
+						cardx.filter(function (j) {
+							if (cardxF2.includes(j)) return false;
+							const relatedCard = j.relatedCard || j;
+							return event.position.includes(get.position(relatedCard)) && event.filterCard(relatedCard, player, event.target);
+						})
+					);
+					ui.selected.cards.remove(cardF);
 				}
-				await game.check();
-			});
-			return card;
-		});
-		if (event.filterCard) {
-			let originalFilterCard = event.filterCard;
-			event.filterCard = function(card, player, target) {
-				let relatedCard = card.relatedCard || card;
-				if (get.position(card) === "e") return false;
-				if (get.position(card) === "s" && get.itemtype(card) === "card" && !card.hasGaintag("equipHand")) return false;
-				return originalFilterCard(relatedCard, player, target);
-			};
+			}
 		}
-		player.directgains(cardCopies, null, "equipHand");
-		cardCopies.forEach(function(card) {
+		const cardsToGive = isMultiSelect ? cardxF2 : hasFilter ? cardxF : cardx;
+		if (cardsToGive.length) {
+			player.directgains(cardsToGive, null, "equipHand");
+		}
+	}
+	function setupCardStyles(cards) {
+		cards.forEach(card => {
 			card.node.gaintag.classList.remove("gaintag", "info");
-			card.node.gaintag.classList.add("epclick");
-			card.node.gaintag.textContent = "";
+			card.node.gaintag.innerHTML = '<div class="epclick"></div>';
 		});
-		cardCopies.sort(function(a, b) {
+	}
+	function sortCards(cards) {
+		cards.sort((b, a) => {
 			if (a.name !== b.name) return lib.sort.card(a.name, b.name);
 			if (a.suit !== b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
 			return a.number - b.number;
 		});
+	}
+	lib.hooks.checkBegin.add(async function (event) {
+		const player = event.player;
+		const isValidEvent = event.position && typeof event.position === "string" && event.position.includes("e") && player.countCards("e") && !event.copyCards && ["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard", "chooseCardTarget", "chooseToGive"].includes(event.name);
+
+		if (!isValidEvent) return;
+		event.copyCards = true;
+		const includeS = !event.position.includes("s");
+		if (includeS) {
+			event.position += "s";
+		}
+		let eventFilterCard;
+		if (event.filterCard) {
+			eventFilterCard = createFilterCard(event.filterCard, includeS);
+		}
+		const originalCards = player.getCards("e");
+		const cardx = originalCards.map(createEquipCardCopy);
+		let cardxF = [];
+		let cardxF2 = [];
+		if (event.filterCard) {
+			cardxF = cardx.filter(card => {
+				const relatedCard = card.relatedCard || card;
+				return event.filterCard(relatedCard, player, event.target);
+			});
+		}
+		processCardSelection(event, player, cardx, cardxF, cardxF2);
+		if (eventFilterCard) {
+			event.filterCard = eventFilterCard;
+		}
+		const allCards = [...cardx, ...cardxF, ...cardxF2];
+		setupCardStyles(allCards);
+		sortCards(cardx);
 	});
-	lib.hooks.uncheckBegin.add(async (event, args) => {
-		const { player } = event;
-		if (!args.includes("card") || !event.copyCards) return;
-		if (!event.result && !(["chooseToUse", "chooseToRespond"].includes(event.name) && !event.skill)) return;
+	function cleanupEquipCards(event, player) {
 		const cards = event.result?.cards;
 		if (cards) {
-			cards.forEach((card, i) => {
+			cards.forEach((card, index) => {
 				if (card.hasGaintag("equipHand")) {
-					cards[i] = player.getCards("e", c => c.cardid === card.cardid)[0];
+					const originalCard = player.getCards("e", c => c.cardid === card.cardid)[0];
+					if (originalCard) cards[index] = originalCard;
 				}
 			});
 		}
-		player?.getCards("s", card => card.hasGaintag("equipHand"))
-			.forEach(card => card.delete());
+		if (player) {
+			player.getCards("s", card => card.hasGaintag("equipHand")).forEach(card => card.delete());
+		}
 		event.copyCards = false;
 		if (player === game.me) {
 			ui.updatehl();
+		}
+	}
+	lib.hooks.uncheckBegin.add(async function (event, args) {
+		const player = event.player;
+		const shouldCleanup = args.includes("card") && event.copyCards && (event.result || (["chooseToUse", "chooseToRespond"].includes(event.name) && !event.skill && !event.result));
+		if (shouldCleanup) {
+			cleanupEquipCards(event, player);
 		}
 	});
 });
