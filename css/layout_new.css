@@ -590,8 +590,8 @@ body > .background {
 	position: static;
 	height: calc(100% - 4px);
 	line-height: normal;
-	margin-left: 10px;
-	margin-right: 10px;
+	margin-left: 6px !important;
+	margin-right: 6px !important;
 	text-shadow: none;
 	font-size: inherit;
 	cursor: pointer;
@@ -616,8 +616,8 @@ body > .background {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	height: 100%;
-	margin-left: 5px;
-	margin-right: 5px;
+	margin-left: 8px !important;
+	margin-right: 8px !important;
 	opacity: 1;
 }
 #arena > #dui-controls > .control > div:only-child {
