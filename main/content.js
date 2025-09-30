@@ -1270,18 +1270,12 @@ export async function content(config, pack) {
 										}
 										player.node.judges.insertBefore(cardx, player.node.judges.firstChild);
 										// 判定标记美化
-										let map = [
-											"bingliang", "lebu", "shandian", "fulei", "hongshui", "huoshan", "caomu",
-											"jlsgqs_shuiyanqijun", "jydiy_zouhuorumo", "jydiy_yungongliaoshang",
-											"xwjh_biguanqingxiu", "xwjh_wushisanke", "xumou_jsrg",
-											"dczixi_bingliang", "dczixi_lebu", "dczixi_shandian",
-										];
+										let map = ["bingliang", "lebu", "shandian", "fulei", "hongshui", "huoshan", "caomu", "jlsgqs_shuiyanqijun", "jydiy_zouhuorumo", "jydiy_yungongliaoshang", "xwjh_biguanqingxiu", "xwjh_wushisanke", "xumou_jsrg", "dczixi_bingliang", "dczixi_lebu", "dczixi_shandian"];
 										if (map.includes(cardx.name)) {
 											let imageName = cardx.name;
 											cardx.node.judgeMark.node.judge.innerHTML = "";
 											cardx.node.judgeMark.node.judge.style.fontSize = "0px";
-											const ext = (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") &&
-												["bingliang", "lebu", "shandian"].includes(imageName) ? "1.png" : ".png";
+											const ext = (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") && ["bingliang", "lebu", "shandian"].includes(imageName) ? "1.png" : ".png";
 											cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${lib.assetURL}extension/十周年UI/image/judgeMark/${imageName}${ext}")`;
 											cardx.node.judgeMark.node.judge.style.zIndex = "99";
 											cardx.node.judgeMark.node.judge.parentElement.children[0].style.background = "none";
@@ -1655,7 +1649,7 @@ export async function content(config, pack) {
 									cards = new Array(cards);
 								} else {
 									itemtype = get.itemtype(cards);
-									var playCardAudio = function() {
+									var playCardAudio = function () {
 										if (lib.config["extension_十周年UI_Soundeffects"]) {
 											game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
 										}
@@ -2381,7 +2375,7 @@ export async function content(config, pack) {
 								game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[0]);
 								game.delay(2);
 								if (!event.noJudgeTrigger) event.trigger("judge");
-								"step 1";
+								("step 1");
 								event.result = {
 									card: player.judging[0],
 									name: player.judging[0].name,
@@ -2846,7 +2840,7 @@ export async function content(config, pack) {
 											time += 500;
 										}
 									}
-									"step 1";
+									("step 1");
 									var [top, bottom] = [event.cards1, event.cards2];
 									event.result = {
 										bool: true,
@@ -2875,7 +2869,7 @@ export async function content(config, pack) {
 												const dialog = decadeUI.create.compareDialog();
 												dialog.caption = get.translation(eventName) + "拼点";
 												dialog.player = player;
-												dialog.target = (typeof target === "string") ? player : target;
+												dialog.target = typeof target === "string" ? player : target;
 												dialog.open();
 												decadeUI.delay(400);
 												ui.dialogs[compareId] = dialog;
@@ -2925,7 +2919,7 @@ export async function content(config, pack) {
 												}
 											} else {
 												ui.arena.classList.add("thrownhighlight");
-												player.$compare(playerCard, (typeof target === "string") ? player : target, targetCard);
+												player.$compare(playerCard, typeof target === "string" ? player : target, targetCard);
 											}
 										},
 										event.compareId,
@@ -4434,28 +4428,31 @@ export async function content(config, pack) {
 					],
 					tempSkills: {},
 					storage: {
-						counttrigger: new Proxy({}, {
-							get(_, prop) {
-								return player.getStat("triggerSkill")[prop];
-							},
-							set(_, prop, value) {
-								player.getStat("triggerSkill")[prop] = value;
-								return true;
-							},
-							deleteProperty(_, prop) {
-								delete player.getStat("triggerSkill")[prop];
-								return true;
-							},
-							has(_, prop) {
-								return prop in player.getStat("triggerSkill");
-							},
-							ownKeys() {
-								return Reflect.ownKeys(player.getStat("triggerSkill"));
-							},
-							getOwnPropertyDescriptor(_, prop) {
-								return Object.getOwnPropertyDescriptor(player.getStat("triggerSkill"), prop);
+						counttrigger: new Proxy(
+							{},
+							{
+								get(_, prop) {
+									return player.getStat("triggerSkill")[prop];
+								},
+								set(_, prop, value) {
+									player.getStat("triggerSkill")[prop] = value;
+									return true;
+								},
+								deleteProperty(_, prop) {
+									delete player.getStat("triggerSkill")[prop];
+									return true;
+								},
+								has(_, prop) {
+									return prop in player.getStat("triggerSkill");
+								},
+								ownKeys() {
+									return Reflect.ownKeys(player.getStat("triggerSkill"));
+								},
+								getOwnPropertyDescriptor(_, prop) {
+									return Object.getOwnPropertyDescriptor(player.getStat("triggerSkill"), prop);
+								},
 							}
-						}),
+						),
 					},
 					marks: {},
 					expandedSlots: {},
@@ -6902,9 +6899,9 @@ export async function content(config, pack) {
 			filter(event, player) {
 				if (!event.card) return false;
 				var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
-				return cname == card && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+				return cname == card && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 			},
-			content() {
+			async content(event, trigger, player) {
 				lib.removeFirstByClass(player, "tipskill");
 				if (player.getElementsByClassName(tipClass).length <= 0) {
 					player.appendChild(lib.createTipImg(tipClass, lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/" + img, style));
@@ -6926,7 +6923,7 @@ export async function content(config, pack) {
 				}
 				return event.respondix > 0;
 			},
-			content() {
+			async content(event, trigger, player) {
 				for (var i = 0; i < game.players.length; i++) {
 					lib.removeFirstByClass(game.players[i], tipClass);
 				}
@@ -6947,12 +6944,12 @@ export async function content(config, pack) {
 			},
 			filter(event, player) {
 				if (document.querySelector("#jindutiaoAI") == false) return false;
-				return player != game.me && _status.currentPhase == player;
+				return player != (_status.event.player || game.me) && _status.currentPhase == player;
 			},
 			forced: true,
 			silent: true,
 			charlotte: true,
-			content() {
+			async content(event, trigger, player) {
 				lib.removeFirstByClass(player, "timePhase");
 				game.JindutiaoAIplayer();
 				window.boxContentAI.classList.add("timePhase");
@@ -6966,12 +6963,12 @@ export async function content(config, pack) {
 						player: ["phaseEnd", "dieBegin", "phaseJieshuBegin"],
 					},
 					filter(event, player) {
-						return player != game.me && _status.currentPhase == player;
+						return player != (_status.event.player || game.me) && _status.currentPhase == player;
 					},
 					forced: true,
 					silent: true,
 					charlotte: true,
-					content() {
+					async content(event, trigger, player) {
 						if (window.timerai) {
 							clearInterval(window.timerai);
 							delete window.timerai;
@@ -6994,9 +6991,9 @@ export async function content(config, pack) {
 			charlotte: true,
 			filter(event, player) {
 				if (document.querySelector("#jindutiaoAI") == false) return false;
-				return _status.currentPhase != player && player != game.me;
+				return _status.currentPhase != player && player != (_status.event.player || game.me);
 			},
-			content() {
+			async content(event, trigger, player) {
 				lib.removeFirstByClass(player, "timeai");
 				game.JindutiaoAIplayer();
 				window.boxContentAI.classList.add("timeai");
@@ -7012,9 +7009,9 @@ export async function content(config, pack) {
 					silent: true,
 					charlotte: true,
 					filter(event, player) {
-						return player != game.me && _status.currentPhase != player;
+						return player != (_status.event.player || game.me) && _status.currentPhase != player;
 					},
-					content() {
+					async content(event, trigger, player) {
 						if (window.timerai) {
 							clearInterval(window.timerai);
 							delete window.timerai;
@@ -7036,7 +7033,7 @@ export async function content(config, pack) {
 			filter(event, player) {
 				return event.card && event.targets && event.targets.length;
 			},
-			content() {
+			async content(event, trigger, player) {
 				var boxContent = document.createElement("div");
 				var boxTime = document.createElement("div");
 				var imgBg = document.createElement("img");
@@ -7060,7 +7057,7 @@ export async function content(config, pack) {
 				}
 				boxContent.appendChild(boxTime);
 				boxContent.appendChild(imgBg);
-				if (trigger.target != game.me) {
+				if (trigger.target != (_status.event.player || game.me)) {
 					var ab = trigger.target.getElementsByClassName("timeai");
 					if (!ab[0]) trigger.target.appendChild(boxContent);
 				}
@@ -7093,7 +7090,7 @@ export async function content(config, pack) {
 					silent: true,
 					priority: -1,
 					charlotte: true,
-					content() {
+					async content(event, trigger, player) {
 						for (var i = 0; i < game.players.length; i++) {
 							lib.removeFirstByClass(game.players[i], "timeai");
 						}
@@ -7113,7 +7110,7 @@ export async function content(config, pack) {
 			filter(event, player) {
 				return true;
 			},
-			content() {
+			async content(event, trigger, player) {
 				var boxContent = document.createElement("div");
 				var boxTime = document.createElement("div");
 				var imgBg = document.createElement("img");
@@ -7167,7 +7164,7 @@ export async function content(config, pack) {
 					silent: true,
 					priority: -1,
 					charlotte: true,
-					content() {
+					async content(event, trigger, player) {
 						for (var i = 0; i < game.players.length; i++) {
 							lib.removeFirstByClass(game.players[i], "timeai");
 						}
@@ -7183,12 +7180,12 @@ export async function content(config, pack) {
 					player: ["phaseEnd", "useCardAfter", "gainEnd", "loseEnd", "damageAfter"],
 				},
 				filter(event, player) {
-					return player != game.me && _status.currentPhase != player;
+					return player != (_status.event.player || game.me) && _status.currentPhase != player;
 				},
 				forced: true,
 				priority: -1,
 				charlotte: true,
-				content() {
+				async content(event, trigger, player) {
 					lib.removeFirstByClass(player, "timeai");
 				},
 			},
@@ -7203,9 +7200,9 @@ export async function content(config, pack) {
 		filter(event, player) {
 			if (!event.card) return false;
 			var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
-			return cname == "shan" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+			return cname == "shan" && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 		},
-		content() {
+		async content(event, trigger, player) {
 			lib.removeFirstByClass(player, "tipskill");
 			if (player.getElementsByClassName("playertipshan").length <= 0) {
 				player.appendChild(lib.createTipImg("playertipshan", lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipshan.png", "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"));
@@ -7220,9 +7217,9 @@ export async function content(config, pack) {
 		filter(event, player) {
 			if (!event.card) return false;
 			var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
-			return cname == "sha" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+			return cname == "sha" && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 		},
-		content() {
+		async content(event, trigger, player) {
 			lib.removeFirstByClass(player, "tipskill");
 			if (player.getElementsByClassName("playertipsha").length <= 0) {
 				player.appendChild(lib.createTipImg("playertipsha", lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipsha.png", "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"));
@@ -7237,9 +7234,9 @@ export async function content(config, pack) {
 		filter(event, player) {
 			if (!event.card) return false;
 			var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
-			return cname == "tao" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+			return cname == "tao" && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 		},
-		content() {
+		async content(event, trigger, player) {
 			lib.removeFirstByClass(player, "tipskill");
 			if (player.getElementsByClassName("playertiptao").length <= 0) {
 				player.appendChild(lib.createTipImg("playertiptao", lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tiptao.png", "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"));
@@ -7254,9 +7251,9 @@ export async function content(config, pack) {
 		filter(event, player) {
 			if (!event.card) return false;
 			var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
-			return cname == "jiu" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+			return cname == "jiu" && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 		},
-		content() {
+		async content(event, trigger, player) {
 			lib.removeFirstByClass(player, "tipskill");
 			if (player.getElementsByClassName("playertipjiu").length <= 0) {
 				player.appendChild(lib.createTipImg("playertipjiu", lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipjiu.png", "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"));
@@ -7276,7 +7273,7 @@ export async function content(config, pack) {
 			}
 			return event.respondix > 0;
 		},
-		content() {
+		async content(event, trigger, player) {
 			for (var i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertipshan");
 			}
@@ -7294,7 +7291,7 @@ export async function content(config, pack) {
 			}
 			return event.respondix > 0;
 		},
-		content() {
+		async content(event, trigger, player) {
 			for (var i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertipsha");
 			}
@@ -7312,7 +7309,7 @@ export async function content(config, pack) {
 			}
 			return event.respondix > 0;
 		},
-		content() {
+		async content(event, trigger, player) {
 			for (var i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertiptao");
 			}
@@ -7330,7 +7327,7 @@ export async function content(config, pack) {
 			}
 			return event.respondix > 0;
 		},
-		content() {
+		async content(event, trigger, player) {
 			for (var i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertipjiu");
 			}
@@ -7346,9 +7343,9 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			var a = player.getElementsByClassName("playertip");
-			return player != game.me && _status.currentPhase == player && player.isPhaseUsing() && a.length <= 0;
+			return player != (_status.event.player || game.me) && _status.currentPhase == player && player.isPhaseUsing() && a.length <= 0;
 		},
-		content() {
+		async content(event, trigger, player) {
 			lib.removeFirstByClass(player, "tipskill");
 			var a = player.getElementsByClassName("playertip");
 			if (a.length <= 0) {
@@ -7381,7 +7378,7 @@ export async function content(config, pack) {
 			}
 			return event.respondix > 0;
 		},
-		content() {
+		async content(event, trigger, player) {
 			for (var i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertip");
 			}
@@ -7395,9 +7392,9 @@ export async function content(config, pack) {
 		forced: true,
 		charlotte: true,
 		filter(event, player) {
-			return player != game.me;
+			return player != (_status.event.player || game.me);
 		},
-		content() {
+		async content(event, trigger, player) {
 			lib.removeFirstByClass(player, "tipskill");
 			var a = player.getElementsByClassName("playertipQP");
 			if (a.length <= 0) {
@@ -7429,7 +7426,7 @@ export async function content(config, pack) {
 			}
 			return event.respondix > 0;
 		},
-		content() {
+		async content(event, trigger, player) {
 			for (var i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertipQP");
 			}
@@ -7452,7 +7449,7 @@ export async function content(config, pack) {
 			}
 			return event.respondix > 0;
 		},
-		content() {
+		async content(event, trigger, player) {
 			for (var i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "tipskill");
 			}
@@ -7705,10 +7702,10 @@ export async function content(config, pack) {
 			silent: true,
 			filter(event, player) {
 				if (document.querySelector("#jindutiaopl") == false) return false;
-				return player == game.me && _status.currentPhase == player;
+				return player == (_status.event.player || game.me) && _status.currentPhase == player;
 			},
 			forced: true,
-			content() {
+			async content(event, trigger, player) {
 				game.Jindutiaoplayer();
 			},
 			group: ["_jindutiao_jieshu"],
@@ -7719,9 +7716,9 @@ export async function content(config, pack) {
 					},
 					forced: true,
 					filter(event, player) {
-						return player == game.me;
+						return player == (_status.event.player || game.me);
 					},
-					content() {
+					async content(event, trigger, player) {
 						if (window.timer) {
 							clearInterval(window.timer);
 							delete window.timer;
@@ -7749,9 +7746,9 @@ export async function content(config, pack) {
 			filter(event, player) {
 				if (document.querySelector("#jindutiaopl") == false) return false;
 				if (event.name == "gameStart" && lib.config["extension_无名补丁_enable"]) return false;
-				return _status.currentPhase != player && player == game.me;
+				return _status.currentPhase != player && player == (_status.event.player || game.me);
 			},
-			content() {
+			async content(event, trigger, player) {
 				game.Jindutiaoplayer();
 			},
 			group: ["_jindutiao_out_jieshu"],
@@ -7764,10 +7761,10 @@ export async function content(config, pack) {
 					silent: true,
 					charlotte: true,
 					filter(event, player) {
-						if (document.querySelector("#jindutiaopl")) return _status.currentPhase != game.me;
+						if (document.querySelector("#jindutiaopl")) return _status.currentPhase != (_status.event.player || game.me);
 						return false;
 					},
-					content() {
+					async content(event, trigger, player) {
 						if (window.timer) {
 							clearInterval(window.timer);
 							delete window.timer;

@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	decadeUI.animateSkill = {
 		//涉及game.start自定义brawl模式无法播放开局动画，故搬运到此处做成技能播放
@@ -255,6 +255,37 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				} else if (!event.isMine()) {
 					event.switchToAuto();
 				}
+			},
+		},
+		olddanshou: {
+			audio: "danshou",
+			trigger: { source: "damageSource" },
+			check(event, player) {
+				return get.attitude(player, event.player) <= 0;
+			},
+			content() {
+				"step 0";
+				player.draw();
+				var cards = Array.from(ui.ordering.childNodes);
+				while (cards.length) {
+					cards.shift().discard();
+				}
+				"step 1";
+				var evt = _status.event.getParent("phase", true);
+				if (evt) {
+					if (window.decadeUI && decadeUI.eventDialog) {
+						decadeUI.eventDialog.finished = true;
+						decadeUI.eventDialog.finishing = false;
+						decadeUI.eventDialog = undefined;
+					}
+					game.resetSkills();
+					_status.event = evt;
+					_status.event.finish();
+					_status.event.untrigger(true);
+				}
+			},
+			ai: {
+				jueqing: true,
 			},
 		},
 	};
