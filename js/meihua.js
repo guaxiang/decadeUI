@@ -1103,7 +1103,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		}
 	}
 	lib.clearAllSkillDisplay = clearAllSkillDisplay;
-	// 装备卡牌选择优化
+	// 装备入手
 	function createEquipCardCopy(originalCard) {
 		const card = ui.create.card(ui.special);
 		card.init([originalCard.suit, originalCard.number, originalCard.name, originalCard.nature]);
@@ -1124,7 +1124,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			}
 			game.check();
 		});
-
 		return card;
 	}
 	function createFilterCard(originalFilter, includeS) {
@@ -1181,7 +1180,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	lib.hooks.checkBegin.add(async function (event) {
 		const player = event.player;
 		const isValidEvent = event.position && typeof event.position === "string" && event.position.includes("e") && player.countCards("e") && !event.copyCards && ["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard", "chooseCardTarget", "chooseToGive"].includes(event.name);
-
 		if (!isValidEvent) return;
 		event.copyCards = true;
 		const includeS = !event.position.includes("s");
@@ -1221,7 +1219,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			});
 		}
 		if (player) {
-			player.getCards("s", card => card.hasGaintag("equipHand")).forEach(card => card.delete());
+			player.getCards("s", card => card.hasGaintag("equipHand")).forEach(card => {
+				card.discard();
+				card.delete();
+			});
 		}
 		event.copyCards = false;
 		if (player === game.me) {
