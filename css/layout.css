@@ -471,7 +471,7 @@ body > .background {
 }
 /*牌堆牌数 游戏时间*/
 .touchinfo {
-	top: 1%;
+	top: 10%;
 	color: rgb(250, 250, 200);
 	font-family: xinwei;
 	text-shadow: rgb(51, 51, 51) 1px 0 0, rgb(51, 51, 51) 0 1px 0, rgb(51, 51, 51) -1px 0 0, rgb(51, 51, 51) 0 -1px 0;
@@ -479,7 +479,7 @@ body > .background {
 	z-index: 4;
 }
 .touchinfo.left {
-	left: 2%;
+	left: 3%;
 }
 .touchinfo.right {
 	right: 2%;

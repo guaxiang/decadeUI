@@ -957,9 +957,9 @@
 .player>.judges,
 #arena>.player:not(.minskin)>.judges {
 	display: flex;
-	justify-content: flex-end;
-	left: auto;
-	right: -1%;
+	justify-content: flex-start;
+	left: 0;
+	right: auto;
 	top: auto;
 	bottom: -1%;
 	width: auto;
@@ -969,8 +969,13 @@
 }
 .player[data-position="0"]>.judges,
 #arena>.player[data-position="0"]:not(.minskin)>.judges {
+	display: flex;
+	justify-content: flex-start;
+	left: 0;
+	right: auto;
 	top: -24px;
 	bottom: auto;
+	width: auto;
 }
 .player>.judges>.card,
 #window:not(.nopointer).player.judges>.card {
@@ -996,17 +1001,7 @@
 	position: relative;
 	width: 100%;
 	height: 100%;
-	left: 5px;
-	top: 10px;
-}
-.player[data-position="0"]>.judges>.card>.judge-mark {
-	display: block;
-	position: relative;
-	width: 100%;
-	height: 100%;
-	bottom: 25px;
-	left: -149px;
-	top: 30px;
+	top: -10px;
 }
 .player>.judges>.card>.judge-mark>.back {
 	display: block;
@@ -1048,8 +1043,8 @@
 	position: absolute;
 	background-position: center;
 	background-size: 100% 100%;
-	left: -16px;
-	top: -16px;
+	left: -15px;
+	top: -10px;
 	width: 45px;
 	height: 45px;
 	font-family: xinwei, xingkai;
@@ -1058,8 +1053,7 @@
 	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000; */
 }
 .player[data-position="0"]>.judges>.card>.judge-mark>.judge {
-	width: 50px;
-	height: 50px;
+    left: 15px;
 }
 .player>.judges>.card.feichu>.judge-mark>.judge::before {
 	content: "";
