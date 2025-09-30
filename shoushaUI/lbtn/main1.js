@@ -577,6 +577,29 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					});
 				}
+				//添加重铸按钮素材
+				if (ui.skills2 && ui.skills2.skills.length) {
+					var skills = ui.skills2.skills;
+					confirm.skills2 = [];
+					for (var i = 0; i < skills.length; i++) {
+						var item = document.createElement("div");
+						item.link = skills[i];
+						if (skills[i] == "_recasting") {
+							item.innerHTML = "<img style=width:70px height:15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/CZ.png>";
+						} else {
+							item.innerHTML = get.translation(skills[i]);
+						}
+						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
+							if (_status.event?.skill === "_recasting") return;
+							e.stopPropagation();
+							ui.click.skill(this.link);
+							if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
+						});
+						item.dataset.type = "skill2";
+						confirm.skills2.push(item);
+						confirm.insertBefore(item, confirm.firstChild);
+					}
+				}
 				confirm.update = function () {
 					//鹿鹿修改 限定技专属按钮开始
 					var skisxdj = function () {
