@@ -6,7 +6,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		content(next) { },
 		precontent() {
-			// 添加小黄点样式
 			if (!document.getElementById("skill-yellow-dot-style")) {
 				var style = document.createElement("style");
 				style.id = "skill-yellow-dot-style";
@@ -187,18 +186,24 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					return this;
 				}
 				var self = this;
-				// 国战模式下，获取所有原生技能
-				let nativeSkills = [];
+				let nativeSkillSet = new Set();
 				if (game.me) {
-					if (get.mode() == "guozhan") {
-						// 国战模式下，获取所有原生技能
-						nativeSkills = game.me.getSkills("invisible", null, false);
-					} else {
-						let info1 = game.me.name && lib.character[game.me.name];
-						let info2 = game.me.name2 && lib.character[game.me.name2];
-						if (info1 && Array.isArray(info1[3])) nativeSkills = nativeSkills.concat(info1[3]);
-						if (info2 && Array.isArray(info2[3])) nativeSkills = nativeSkills.concat(info2[3]);
+					let nativeSkillsRaw = [];
+					let info1 = game.me.name && lib.character[game.me.name];
+					let info2 = game.me.name2 && lib.character[game.me.name2];
+					if (info1 && Array.isArray(info1[3])) nativeSkillsRaw = nativeSkillsRaw.concat(info1[3]);
+					if (info2 && Array.isArray(info2[3])) nativeSkillsRaw = nativeSkillsRaw.concat(info2[3]);
+					if (nativeSkillsRaw.length === 0 && get.mode() == "guozhan") {
+						try {
+							let tmp = game.me.getSkills("invisible", null, false) || [];
+							nativeSkillsRaw = nativeSkillsRaw.concat(tmp);
+						} catch (e) { }
 					}
+					nativeSkillsRaw.forEach(function (s) {
+						let expanded = game.expandSkills([s]) || [];
+						expanded.forEach(function (es) { nativeSkillSet.add(es); });
+						nativeSkillSet.add(s);
+					});
 				}
 				var skills = game.expandSkills([skill]).map(function (item) {
 					return app.get.skillInfo(item);
@@ -230,8 +235,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable);
 						node.innerHTML = finalName;
 						node.dataset.id = item.id;
-						// 不是当前武将原生技能才加小黄点
-						if (lib.skill[item.id] && nativeSkills.indexOf(item.id) === -1 && node) {
+						if (lib.skill[item.id] && !nativeSkillSet.has(item.id) && node) {
 							var dot = document.createElement("span");
 							dot.className = "skill-yellow-dot";
 							dot.textContent = "+";
@@ -249,8 +253,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (eSkills && eSkills.includes(item.id)) return;
 					node = ui.create.div(".skillitem", self.node[lib.config.phonelayout ? "trigger" : "enable"], finalName);
 					node.dataset.id = item.id;
-					// 不是当前武将原生技能才加小黄点（这里也要用nativeSkills判断！）
-					if (lib.skill[item.id] && nativeSkills.indexOf(item.id) === -1 && node) {
+					if (lib.skill[item.id] && !nativeSkillSet.has(item.id) && node) {
 						var dot = document.createElement("span");
 						dot.className = "skill-yellow-dot";
 						dot.textContent = "+";
