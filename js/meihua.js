@@ -331,6 +331,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					const { bool } = await new Promise(resolve => {
 						const dialog = ui.create.dialog(str);
 						ui.create.confirm("oc");
+						if (ui.confirm && ui.confirm.childNodes.length > 0 && lib.config.extension_十周年UI_newDecadeStyle !== "off") {
+							const okButton = ui.confirm.childNodes[0];
+							if (okButton && okButton.link === "ok") {
+								okButton.innerHTML = "换牌";
+							}
+						}
 						event.custom.replace.confirm = function (ok) {
 							dialog.close();
 							if (ui.confirm && ui.confirm.close) ui.confirm.close();
