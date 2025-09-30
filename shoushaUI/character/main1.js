@@ -82,56 +82,87 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					ui.create.button(name, "character", parent, true);
 				};
 				container.show = function (player) {
-					let name = player.name1 || player.name;
-					let name2 = player.name2;
-					if (player.classList.contains("unseen") && player !== game.me) {
-						name = "unknown";
+					function createLeftPane(parent) {
+						const skin = lib.config["extension_十周年UI_outcropSkin"];
+						if (skin === "shizhounian") return ui.create.div(".left3", parent);
+						if (skin === "shousha") return ui.create.div(".left2", parent);
+						return ui.create.div(".left", parent);
 					}
-					if (player.classList.contains("unseen2") && player !== game.me) {
-						name2 = "unknown";
+					function createStars(container, rarity) {
+						const num = { legend: 5, epic: 4, rare: 3, junk: 2 }[rarity] || 1;
+						for (let i = 0; i < num; i++) ui.create.div(".item", container);
+						for (let i = 0; i < (5 - num); i++) ui.create.div(".item.huixing", container);
 					}
-					let biankuang;
-					biankuang = ui.create.div(".biankuang2", blackBg2);
-					biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_${player.group}.png`);
-					let leftPane;
-					if (lib.config["extension_十周年UI_outcropSkin"] == "shizhounian") {
-						leftPane = ui.create.div(".left3", biankuang);
-					} else if (lib.config["extension_十周年UI_outcropSkin"] == "shousha") {
-						leftPane = ui.create.div(".left2", biankuang);
+					if (!player.name2) {
+						// 处理单武将情况
+						let name = player.name1 || player.name;
+						let name2 = player.name2;
+						if (player.classList.contains("unseen") && player !== game.me) name = "unknown";
+						if (player.classList.contains("unseen2") && player !== game.me) name2 = "unknown";
+
+						let biankuang = ui.create.div(".biankuang", blackBg2);
+						let leftPane = createLeftPane(biankuang);
+						if (player.classList.contains("unseen") && player !== game.me) {
+							biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_unknown.png`);
+							leftPane.style.backgroundImage = "url('image/character/hidden_image.jpg')";
+						} else {
+							biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_${player.group}.png`);
+							leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
+						}
+						createButton(name, leftPane.firstChild);
+						createButton(name2, leftPane.firstChild);
+						const biankuangname = ui.create.div(".biankuangname", biankuang);
+						if (!(player.classList.contains("unseen") && player !== game.me)) {
+							const xing = ui.create.div(".xing", biankuang);
+							createStars(xing, game.getRarity(player.name));
+						}
+						biankuangname.innerHTML = get.slimName(name);
 					} else {
-						leftPane = ui.create.div(".left", biankuang);
+						// 处理双将
+						rightPane.style.left = "280px";
+						rightPane.style.width = "calc(100% - 300px)";
+						let name = player.name1 || player.name;
+						let name2 = player.name2;
+						let group1 = lib.character[name][1];
+						let group2 = lib.character[name2][1];
+						if (player.classList.contains("unseen") && player !== game.me) name = "unknown";
+						if (player.classList.contains("unseen2") && player !== game.me) name2 = "unknown";
+
+						let biankuang = ui.create.div(".biankuang", blackBg2);
+						let biankuang2 = ui.create.div(".biankuang2", blackBg2);
+						let leftPane = createLeftPane(biankuang);
+						let leftPane2 = createLeftPane(biankuang2);
+						if (player.classList.contains("unseen") && player !== game.me) {
+							biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_unknown.png`);
+							leftPane.style.backgroundImage = "url('image/character/hidden_image.jpg')";
+						} else {
+							biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_${group1}.png`);
+							leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
+						}
+
+						if (player.classList.contains("unseen2") && player !== game.me) {
+							biankuang2.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_unknown.png`);
+							leftPane2.style.backgroundImage = "url('image/character/hidden_image.jpg')";
+						} else {
+							biankuang2.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_${group2}.png`);
+							leftPane2.setBackground(name2, "character");
+						}
+						createButton(name, leftPane.firstChild);
+						createButton(name2, leftPane2.firstChild);
+						const biankuangname = ui.create.div(".biankuangname", biankuang);
+						const biankuangname2 = ui.create.div(".biankuangname2", biankuang2);
+						if (!(player.classList.contains("unseen") && player !== game.me)) {
+							const xing = ui.create.div(".xing", biankuang);
+							createStars(xing, game.getRarity(player.name));
+						}
+						if (!(player.classList.contains("unseen2") && player !== game.me)) {
+							const xing2 = ui.create.div(".xing", biankuang2);
+							createStars(xing2, game.getRarity(player.name2));
+						}
+						biankuangname.innerHTML = get.slimName(name);
+						biankuangname2.innerHTML = get.slimName(name2);
 					}
-					if (player.classList.contains("unseen") && player !== game.me) {
-						leftPane.style.backgroundImage = "url('image/character/hidden_image.jpg')";
-					} else {
-						leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
-					}
-					createButton(name, leftPane.firstChild);
-					createButton(name2, leftPane.firstChild);
-					const biankuangname = ui.create.div(".biankuangname", biankuang);
-					const xing = ui.create.div(".xing", biankuang);
-					let num = 1;
-					const rarity = game.getRarity(player.name);
-					switch (rarity) {
-						case "legend":
-							num = 5;
-							break;
-						case "epic":
-							num = 4;
-							break;
-						case "rare":
-							num = 3;
-							break;
-						case "junk":
-							num = 2;
-							break;
-						default:
-							num = 1;
-							break;
-					}
-					for (let i = 0; i < num; i++) ui.create.div(".item", xing);
-					biankuangname.innerText = get.translation(player.name);
-					mingcheng.innerText = get.translation(player.name);
+					mingcheng.innerHTML = player.nickname || (player == game.me ? lib.config.connect_nickname : get.translation(player.name));
 					dengji.innerText = `Lv：${Math.floor(Math.random() * 200 + 1)}`;
 					shenglv.innerHTML = `<span style="font-size: 20px;">胜率：</span>${Math.floor(Math.random() * 100)}.${Math.floor(Math.random() * 100)}%`;
 					taolv.innerHTML = `<span style="font-size: 20px;">逃率：</span>${Math.floor(Math.random() * 100)}.${Math.floor(Math.random() * 100)}%`;
@@ -327,6 +358,9 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 								break;
 							case "single":
 								captionText = "武将技能·1v1";
+								break;
+							case "guozhan":
+								captionText = "武将技能·国战";
 								break;
 						}
 						ui.create.div(".xcaption", captionText, rightPane.firstChild);

@@ -1269,6 +1269,24 @@ export async function content(config, pack) {
 											if (window.decadeUI) cardx.node.judgeMark.node.judge.innerHTML = lib.translate[cardx.name + "_bg"] || get.translation(cardx.name)[0];
 										}
 										player.node.judges.insertBefore(cardx, player.node.judges.firstChild);
+										// 判定标记美化
+										let map = [
+											"bingliang", "lebu", "shandian", "fulei", "hongshui", "huoshan", "caomu",
+											"jlsgqs_shuiyanqijun", "jydiy_zouhuorumo", "jydiy_yungongliaoshang",
+											"xwjh_biguanqingxiu", "xwjh_wushisanke", "xumou_jsrg",
+											"dczixi_bingliang", "dczixi_lebu", "dczixi_shandian",
+										];
+										if (map.includes(cardx.name)) {
+											let imageName = cardx.name;
+											cardx.node.judgeMark.node.judge.innerHTML = "";
+											cardx.node.judgeMark.node.judge.style.fontSize = "0px";
+											const ext = (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") &&
+												["bingliang", "lebu", "shandian"].includes(imageName) ? "1.png" : ".png";
+											cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${lib.assetURL}extension/十周年UI/image/judgeMark/${imageName}${ext}")`;
+											cardx.node.judgeMark.node.judge.style.zIndex = "99";
+											cardx.node.judgeMark.node.judge.parentElement.children[0].style.background = "none";
+											cardx.node.judgeMark.node.judge.parentElement.children[0].style.display = "none";
+										}
 										ui.updatej(player);
 									},
 									player,

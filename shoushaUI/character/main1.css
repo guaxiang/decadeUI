@@ -86,10 +86,10 @@
 }
 .character-dialog .offical-bg .offical-icon {
 	position: absolute;
-	top: -13px;
-	left: -21px;
-	height: 60px;
-	width: 60px;
+	top: -18px;
+	left: -20px;
+	height: 70px;
+	width: 70px;
 	/* background-image: url("./images/offical_icon/offical_icon_11.png"); */
 	background-size: contain;
 	background-position: center;
@@ -160,16 +160,7 @@
 	height: 100%;
 	position: absolute;
 }
-.character-dialog > div.biankuang {
-	width: 21%;
-	height: 40%;
-	top: 47%;
-	left: 3.6%;
-	background-size: 100% 100%;
-	z-index: 68;
-	position: relative;
-}
-.character-dialog > .blackBg.two > div.biankuang2 {
+.character-dialog > .blackBg.two > div.biankuang {
 	width: 120px;
 	height: 160px;
 	top: calc(50% - 73px);
@@ -178,11 +169,20 @@
 	z-index: 68;
 	position: absolute;
 }
+.character-dialog > .blackBg.two > div.biankuang2 {
+	width: 120px;
+	height: 160px;
+	top: calc(50% - 73px);
+	left: 150px;
+	background-size: 100% 100%;
+	z-index: 68;
+	position: absolute;
+}
 .xing {
 	position: absolute;
 	width: 15px;
 	height: 100%;
-	left: 1.5%;
+	left: 1%;
 	bottom: 6%;
 	z-index: 99;
 	display: inline-flex;
@@ -190,32 +190,17 @@
 }
 .xing > .item {
 	position: relative;
-	background: url("./images/shousha/xing.png");
+	background: url("./images/shousha/pubui_starm.png");
 	background-size: cover;
-	width: 18px;
-	height: 18px;
-	margin-bottom:-4px;
+	width: 20px;
+	height: 20px;
+	margin-bottom:-5px;
 	z-index: 99;
 }
-.xing2 {
-	position: relative;
-	width: 15px;
-	height: 24%;
-	left: 4.5%;
-	z-index: 99;
-	display: inline-flex;
-	flex-direction: column-reverse;
-}
-.xing2 > .item {
-	position: relative;
-	background: url("./images/shousha/xing.png");
+.xing > .item.huixing {
+	background: url("./images/shousha/pubui_starm.png");
+	filter: grayscale(100%);
 	background-size: cover;
-	width: 18px;
-	height: 18px;
-	margin-bottom:-4px;
-	left: 60%;
-	top: -16%;
-	z-index: 99;
 }
 .bigdialog {
 	position: relative;
@@ -398,23 +383,35 @@
 	z-index: 99;
 }
 /*武将名字*/
-.character-dialog .biankuang2 > div.biankuangname {
+.character-dialog .biankuang > div.biankuangname {
 	position: absolute;
 	line-height: 14px; /*换行间距*/
 	width: 15px;
-	left: 3%;
-	top: 14%;
+	left: 2.5%;
+	top: 12%;
 	font-size: 16px;
+	letter-spacing: -2px;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
+	-webkit-text-stroke: 0.1px rgba(43,31,25,0.4);/*描边*/
+	text-shadow:2px 0px 3px rgba(0,0,0,0.3),2px 0px 3px rgba(0,0,0,0.3);
 	font-family: shousha;
 	z-index: 99;
 }
-.character-dialog > div.biankuangname2 {
+.character-dialog .biankuang2 > div.biankuangname2 {
 	position: absolute;
 	line-height: 14px; /*换行间距*/
 	width: 15px;
-	left: 5.8%;
-	top: 52%;
-	font-size: 1.8vw;
+	left: 2.5%;
+	top: 12%;
+	font-size: 16px;
+	letter-spacing: -2px;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
+	-webkit-text-stroke: 0.1px rgba(43,31,25,0.4);/*描边*/
+	text-shadow:2px 0px 3px rgba(0,0,0,0.3),2px 0px 3px rgba(0,0,0,0.3);
 	font-family: shousha;
 	z-index: 99;
 }
@@ -422,6 +419,20 @@
 	z-index: 68;
 }
 /*武将牌不露头*/
+.character-dialog .biankuang > div.left {
+	left: 18%;
+	top: auto;
+	bottom: 2%;
+	width: 80%;
+	height: 96%;
+	opacity: 1;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top;
+	border-radius: 8px;
+	transition-property: opacity, transform;
+	z-index: 69;
+}
 .character-dialog .biankuang2 > div.left {
 	left: 18%;
 	top: auto;
@@ -437,6 +448,21 @@
 	z-index: 69;
 }
 /*武将牌手杀露头*/
+.character-dialog .biankuang > div.left2 {
+	left: 19%;
+	top: auto;
+	bottom: 2%;
+	width: 78.5%;
+	height: 110%;
+	opacity: 1;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top;
+	border-radius: 8px;
+	-webkit-clip-path: url(#solo-clip);
+	transition-property: opacity, transform;
+	z-index: 69;
+}
 .character-dialog .biankuang2 > div.left2 {
 	left: 19%;
 	top: auto;
@@ -453,6 +479,22 @@
 	z-index: 69;
 }
 /*武将牌十周年露头*/
+.character-dialog .biankuang > div.left3 {
+	left: 20.5%;
+	top: auto;
+	bottom: 2%;
+	left: 20.5px;
+    width: 81%;
+    height: 103%;
+	opacity: 1;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top;
+	border-radius: 8px;
+	-webkit-clip-path: url(#solo-clip);
+	transition-property: opacity, transform;
+	z-index: 69;
+}
 .character-dialog .biankuang2 > div.left3 {
 	left: 20.5%;
 	top: auto;
