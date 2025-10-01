@@ -67,6 +67,43 @@ export let config = {
             game.reload();
         },
     },
+    cardScale: {
+        name: "卡牌大小",
+        intro: "输入0.10~1.00的小数，回车保存并生效",
+        init: "0.18",
+        input: true,
+        onblur: function () {
+            this.innerHTML = this.innerHTML.replace(/<br>/g, "");
+            var value = parseFloat(this.innerHTML);
+            if (isNaN(value)) value = 0.18;
+            if (value < 0.1) value = 0.1;
+            if (value > 1) value = 1;
+            this.innerHTML = value.toFixed(2);
+            game.saveConfig("extension_十周年UI_cardScale", value);
+            if (window.decadeUI) {
+                decadeUI.zooms.card = decadeUI.getCardBestScale();
+                decadeUI.layout.resize();
+            }
+        },
+    },
+    discardScale: {
+        name: "弃牌堆卡牌大小",
+        intro: "输入0.10~1.00的小数，回车保存并生效",
+        init: "0.14",
+        input: true,
+        onblur: function () {
+            this.innerHTML = this.innerHTML.replace(/<br>/g, "");
+            var value = parseFloat(this.innerHTML);
+            if (isNaN(value)) value = 0.18;
+            if (value < 0.1) value = 0.1;
+            if (value > 1) value = 1;
+            this.innerHTML = value.toFixed(2);
+            game.saveConfig("extension_十周年UI_discardScale", value);
+            if (window.decadeUI) {
+                decadeUI.layout.updateDiscard();
+            }
+        },
+    },
     FL120: {
         name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
         intro: "",
@@ -392,25 +429,6 @@ export let config = {
         },
         update: () => {
             if (window.decadeUI) decadeUI.layout.updateHand();
-        },
-    },
-    cardScale: {
-        name: "电脑卡牌大小",
-        intro: "输入0.10~1.00的小数，回车保存并生效",
-        init: "0.18",
-        input: true,
-        onblur: function () {
-            this.innerHTML = this.innerHTML.replace(/<br>/g, "");
-            var value = parseFloat(this.innerHTML);
-            if (isNaN(value)) value = 0.18;
-            if (value < 0.1) value = 0.1;
-            if (value > 1) value = 1;
-            this.innerHTML = value.toFixed(2);
-            game.saveConfig("extension_十周年UI_cardScale", value);
-            if (window.decadeUI) {
-                decadeUI.zooms.card = decadeUI.getCardBestScale();
-                decadeUI.layout.resize();
-            }
         },
     },
     playerMarkStyle: {

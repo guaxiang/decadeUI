@@ -9,7 +9,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			direct: true,
 			priority: Infinity + 114514 + 1919810,
 			firstDo: true,
-			content() {
+			async content(event, trigger, player) {
 				game.removeGlobalSkill("mx_start");
 				const style = lib.config.extension_十周年UI_newDecadeStyle;
 				const isShousha = style === "off";
@@ -38,7 +38,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event, player) {
 				return ["sex", "seven"].includes(lib.config.extension_十周年UI_longLevel);
 			},
-			content: function () {
+			async content(event, trigger, player) {
 				game.removeGlobalSkill("mx_longLevel");
 				const longLevel = lib.config.extension_十周年UI_longLevel;
 				const createAndAppendDragon = (target, src, styles) => {
@@ -103,7 +103,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event) {
 				return !ui.clear.delay && event.card.name != "wuxie";
 			},
-			content() {
+			async content(event, trigger, player) {
 				ui.clear.delay = "usecard";
 			},
 		},
@@ -117,7 +117,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -100,
 			lastDo: true,
 			silent: true,
-			content() {
+			async content(event, trigger, player) {
 				if (!(trigger.source && trigger.player)) return;
 				game.broadcastAll(
 					function (source, player) {
@@ -145,7 +145,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event) {
 				return ui.clear.delay === "usecard" && event.card.name != "wuxie";
 			},
-			content() {
+			async content(event, trigger, player) {
 				ui.clear.delay = false;
 				game.broadcastAll(function () {
 					ui.clear();
@@ -163,7 +163,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			silent: true,
 			popup: false,
 			priority: -100,
-			content() {
+			async content(event, trigger, player) {
 				game.broadcastAll(function (id) {
 					if (window.decadeUI) {
 						ui.todiscard = [];

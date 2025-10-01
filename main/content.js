@@ -5477,7 +5477,10 @@ export async function content(config, pack) {
 				var ph = bounds.height;
 				var cw = bounds.cardWidth;
 				var ch = bounds.cardHeight;
-				var cs = bounds.cardScale;
+				var discardScale = (lib && lib.config && lib.config.extension_十周年UI_discardScale) || 0.14;
+				var bodySize = decadeUI.get.bodySize();
+				var base = discardScale;
+				var cs = Math.min((bodySize.height * base) / ch, 1);
 				var csw = cw * cs;
 				var x;
 				var y = Math.round((ph - ch) / 2);
@@ -6075,9 +6078,9 @@ export async function content(config, pack) {
 		getCardBestScale(size) {
 			if (!(size && size.height)) size = decadeUI.getHandCardSize();
 			var bodySize = decadeUI.get.bodySize();
-			// 读取用户配置的缩放基准，默认0.18；移动端仍使用0.23以保证可点按性
+			// 读取用户配置的缩放基准，默认0.18；移动端和桌面端都使用配置的数值
 			var cfg = (lib && lib.config && lib.config.extension_十周年UI_cardScale) || 0.18;
-			var base = decadeUI.isMobile() ? 0.23 : cfg;
+			var base = cfg;
 			return Math.min((bodySize.height * base) / size.height, 1);
 		},
 		getHandCardSize(canUseDefault) {
