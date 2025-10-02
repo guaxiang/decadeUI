@@ -141,7 +141,6 @@
 	/*可选内容位置*/
 	position: absolute;
 	overflow: scroll;
-	left: 300px !important;
 	max-height: auto;
 	bottom: 10px;
 	transition-property: opacity;
