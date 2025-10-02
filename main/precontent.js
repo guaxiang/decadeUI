@@ -114,7 +114,7 @@ export async function precontent() {
 					this.css(cssPath);
 					// js加载
 					this.js(
-						`${layoutPath}${pack}/${pack}/main${listmap}.js`,
+						`${layoutPath}${pack}/main${listmap}.js`,
 						null,
 						function () {},
 						function () {}
