@@ -401,7 +401,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 
 								underlinenode.link = name;
 								underlinenode.listen(ui.click.autoskill2);
-							} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true)) {
+							} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true) && player === game.me) {
 								const id = ui.create.div(".xskill", baseIcon + `<div data-color>${skillName}</div><div>${skillInfo}<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px;color: rgba(255, 203, 0, 1);">点击发动</div></div>`, rightPane.firstChild);
 								const intronode = id.querySelector(".skillbutton");
 

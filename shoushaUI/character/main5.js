@@ -343,7 +343,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player, false) + "</span>" + "</div>", container);
 			} else if (lib.skill[skillName].frequent || lib.skill[skillName].subfrequent) {
 				this.createFrequentSkillElement(skillName, player, container);
-			} else if (lib.skill[skillName].clickable && player.isIn() && player.isUnderControl(true)) {
+			} else if (lib.skill[skillName].clickable && player.isIn() && player.isUnderControl(true) && player === game.me) {
 				this.createClickableSkillElement(skillName, player, container, dialogContainer);
 			} else {
 				ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player, false) + "</div>", container);

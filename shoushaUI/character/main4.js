@@ -462,7 +462,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				this.createNormalSkillItem(container, name, player, typeText);
 			} else if (lib.skill[name].frequent || lib.skill[name].subfrequent) {
 				this.createFrequentSkillItem(container, name, player, typeText);
-			} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true)) {
+			} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true) && player === game.me) {
 				this.createClickableSkillItem(container, name, player, typeText);
 			} else {
 				this.createNormalSkillItem(container, name, player, typeText);

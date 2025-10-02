@@ -217,12 +217,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (translation && lib.translate[skillName + "_info"] && translation !== "" && lib.translate[skillName + "_info"] !== "") {
 							const isAwakened = !this.getSkills().includes(skillName) || this.awakenedSkills.includes(skillName);
 							let skillContent = `<div data-color>${isAwakened ? '<span style="opacity:0.5">' + translation + "： </span>" : translation + "： "}</div><div>${isAwakened ? '<span style="opacity:0.5;text-indent:10px">' + get.skillInfoTranslation(skillName, this, false) + "</span>" : '<span style="text-indent:10px">' + get.skillInfoTranslation(skillName, this, false) + "</span>"}`;
-							if (lib.skill[skillName].clickable) {
+							if (lib.skill[skillName].clickable && this === game.me) {
 								skillContent += '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>';
 							}
 							skillContent += "</div>";
 							const skillDiv = ui.create.div(".xskill", skillContent, rightPane.firstChild);
-							if (lib.skill[skillName].clickable) {
+							if (lib.skill[skillName].clickable && this === game.me) {
 								const skillButton = skillDiv.querySelector(".skillbutton");
 								if (skillButton) {
 									if (!_status.gameStarted || (lib.skill[skillName].clickableFilter && !lib.skill[skillName].clickableFilter(this))) {

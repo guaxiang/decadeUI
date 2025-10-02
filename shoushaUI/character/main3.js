@@ -502,7 +502,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 									if (lib.config.autoskilllist.includes(name)) underlinenode.classList.remove("on");
 									underlinenode.link = name;
 									underlinenode.listen(ui.click.autoskill2);
-								} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true)) {
+								} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true) && player === game.me) {
 									var id = name + "_idy";
 									id = ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player, false) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", rightPane.firstChild);
 									var intronode = id.querySelector(".skillbutton");
