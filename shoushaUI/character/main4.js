@@ -520,7 +520,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				intronode.link = player;
 				intronode.func = lib.skill[name].clickable;
 				intronode.classList.add("pointerdiv");
-				intronode.listen(() => {
+				if (name != 'oldianzan') intronode.listen(() => {
 					container.parentNode.parentNode.parentNode.parentNode.hide();
 					game.resume2();
 				});

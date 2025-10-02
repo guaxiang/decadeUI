@@ -400,7 +400,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				intronode.link = player;
 				intronode.func = lib.skill[skillName].clickable;
 				intronode.classList.add("pointerdiv");
-				intronode.listen(() => {
+				if (skillName != 'oldianzan') intronode.listen(() => {
 					dialogContainer.hide();
 					game.resume2();
 				});

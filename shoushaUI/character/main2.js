@@ -232,7 +232,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 										skillButton.link = this;
 										skillButton.func = lib.skill[skillName].clickable;
 										skillButton.classList.add("pointerdiv");
-										skillButton.listen(() => {
+										if (skillName != 'oldianzan') skillButton.listen(() => {
 											container.hide();
 											game.resume2();
 										});
