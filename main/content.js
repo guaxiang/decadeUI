@@ -3,11 +3,15 @@ import { ChildNodesWatcher } from "../../../noname/library/cache/childNodesWatch
 export async function content(config, pack) {
 	if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
 	//菜单栏错位bugfix
-	// game.menuZoom = 1; 
-	// 让menuZoom使用系统的documentZoom值，确保菜单定位正确
-	if (typeof game.menuZoom === 'undefined' || game.menuZoom === null) {
-		// 如果menuZoom未设置，让系统使用默认的documentZoom
-		delete game.menuZoom;
+	// 检测是否开启皮肤切换扩展，开了就使用game.menuZoom = 1
+	if (game.hasExtension && game.hasExtension('皮肤切换')) {
+		game.menuZoom = 1;
+	} else {
+		// 让menuZoom使用系统的documentZoom值，确保菜单定位正确
+		if (typeof game.menuZoom === 'undefined' || game.menuZoom === null) {
+			// 如果menuZoom未设置，让系统使用默认的documentZoom
+			delete game.menuZoom;
+		}
 	}
 	//单独装备栏
 	_status.nopopequip = lib.config.extension_十周年UI_aloneEquip;
