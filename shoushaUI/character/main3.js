@@ -1,4 +1,6 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
+	// 不关闭武将信息页面的特殊技能列表
+	const specialcare = ['oldianzan'];
 	var plugin = {
 		name: "character",
 		filter: function () {
@@ -513,7 +515,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 										intronode.link = player;
 										intronode.func = lib.skill[name].clickable;
 										intronode.classList.add("pointerdiv");
-										if (name != 'oldianzan') intronode.listen(() => {
+										if (!specialcare.includes(name)) intronode.listen(() => {
 											container.hide();
 											game.resume2();
 										});
