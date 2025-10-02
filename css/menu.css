@@ -1,11 +1,12 @@
 .menu-container>.menu.main {
 	/*框整体*/
 	width: 80%;
-	margin-left: 9%;
 	height: 85%;
-	margin-top: 2%;
+	/* 使用真正的居中定位 */
+	left: calc(50% - 40%); /* 50% - width/2 = 50% - 80%/2 = 50% - 40% */
+	top: calc(50% - 42.5%); /* 50% - height/2 = 50% - 85%/2 = 50% - 42.5% */
 	transition: all 0.3s;
-	transform-origin: 2px -35px;
+	transform-origin: center center;
 	background-image: url("../image/button/background.png");
 	background-size: 100% 100%;
 	border: 3px solid #5c4033;
