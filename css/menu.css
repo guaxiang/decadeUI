@@ -216,3 +216,13 @@ html .menu-container.center {
 	max-height: 40px !important;
 	margin-top: -13px !important;
 }
+#window .dialog.popped,
+body .dialog.popped,
+html .dialog.popped {
+	z-index: 1003 !important;
+}
+#window .poplayer,
+body .poplayer,
+html .poplayer {
+	z-index: 1003 !important;
+}
