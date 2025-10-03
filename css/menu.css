@@ -5,10 +5,20 @@
 	height: 85%;
 	margin-top: 2%;
 	transition: all 0.3s;
-	transform-origin: 2px -35px;
+	transform-origin: center center;
 	background-image: url("../image/button/background.png");
 	background-size: 100% 100%;
 	border: 3px solid #5c4033;
+}
+/* 非触屏布局样式 */
+.menu-container:not(.phonelayout)>.menu.main {
+	left: calc(50% - 48%);
+	top: calc(50% - 45%);
+	transform-origin: center center;
+}
+.menu-container>.menu.main.center {
+    top: 12px !important;
+    left: 10px !important;
 }
 .menu.main>.menu-tab>div {
 	/*标题栏文字显示*/
@@ -19,6 +29,8 @@
 	padding-top: 0px;
 	width: 60px;
 	color: #ffffff;
+	font-size: 20px;
+	font-family: "yuanli";
 	margin-left: 5px;
 	margin-right: 5px;
 	transition: color 0.5s;
@@ -41,7 +53,7 @@
 	transition: all 0.3s;
 	height: 15px;
 	font-size: 22.5px;
-	font-family: "shousha";
+	font-family: "yuanli";
 	color: #ffffff;
 	text-align: center;
 	padding-top: 20.5px;
@@ -135,17 +147,8 @@
 	position: relative;
 	width: 100%;
 	text-shadow: #333333 0 0 3px;
-	font-size: 18px;
-}
-.popup-container>.menu {
-	/*可选内容位置*/
-	position: absolute;
-	overflow: scroll;
-	max-height: auto;
-	bottom: 10px;
-	transition-property: opacity;
-	background-color: #ffdab9;
-	border: 2px solid #000000;
+	font-family: "yuanli";
+	font-size: 20px;
 }
 .config.config.toggle>div {
 	/*开关按钮-关闭*/
