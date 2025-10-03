@@ -465,6 +465,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						item.link = skills[i];
 						if (skills[i] == "_recasting") {
 							item.innerHTML = "<img style=width:70px height:15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/CZ.png>";
+							// 为重铸按钮设置单独的背景图
+							item.style.backgroundImage = "url(" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/confirm-bg-c.png)";
+							item.style.backgroundSize = "100% 100%";
 						} else {
 							item.innerHTML = get.translation(skills[i]);
 						}
