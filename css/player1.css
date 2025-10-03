@@ -744,7 +744,7 @@
 	left: auto;
 	top: 34px;
 	/*下移*/
-	right: -3px;
+	right: 0px;
 	/*左移*/
 	width: auto;
 	max-width: 80px;
@@ -769,9 +769,10 @@
 	border-radius: 0;
 	width: auto;
 	height: auto;
+	font-family: yuanli;
 	line-height: 18px;
 	/*换行高度*/
-	font-size: 11px;
+	font-size: 12px;
 	/*字体大小*/
 	color: white;
 	/*字体颜色*/
@@ -792,7 +793,7 @@
 	height: auto;
 	line-height: 18px;
 	border-radius: 0;
-	font-size: 11px;
+	font-size: 9px;
 	/*字体大小*/
 	font-weight: inherit;
 	color: white;
