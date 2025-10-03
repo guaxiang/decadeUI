@@ -4720,11 +4720,7 @@ export async function content(config, pack) {
 								var html = "";
 								for (var i = 0; i < sender.skills.length; i++) {
 									/*-----------------分割线-----------------*/
-									if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
-										html += "[" + lib.translate[sender.skills[i]] + "]";
-									} else {
-										html += "" + lib.translate[sender.skills[i]] + " ";
-									}
+									html += "" + lib.translate[sender.skills[i]] + " ";
 									sender.innerHTML = html;
 								}
 							}
@@ -4737,11 +4733,7 @@ export async function content(config, pack) {
 								var html = "";
 								for (var i = 0; i < sender.skills.length; i++) {
 									/*-----------------分割线-----------------*/
-									if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
-										html += "[" + lib.translate[sender.skills[i]] + "]";
-									} else {
-										html += "" + lib.translate[sender.skills[i]] + " ";
-									}
+									html += "" + lib.translate[sender.skills[i]] + " ";
 								}
 								sender.innerHTML = html;
 							}
