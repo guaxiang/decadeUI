@@ -1,20 +1,78 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
+	const LBTN_CONST = {
+		guozhanIdentities: [
+			{ key: "unknown", color: "#FFFFDE" },
+			{ key: "wei", color: "#0075FF" },
+			{ key: "shu", color: "#ff0000" },
+			{ key: "wu", color: "#00ff00" },
+			{ key: "qun", color: "#ffff00" },
+			{ key: "jin", color: "#9e00ff" },
+			{ key: "ye", color: "#9e00ff" },
+			{ key: "key", color: "#9e00ff" },
+		],
+		identityColors: {
+			zhu: "#ae5f35",
+			zhong: "#e9d765",
+			fan: "#87a671",
+			nei: "#9581c4",
+		},
+	};
+	function buildModeWinTranslations(mode, versusMode) {
+		if (mode === "doudizhu") {
+			return { zhu: "击败所有农民", fan: "击败地主", undefined: "未选择阵营" };
+		}
+		if (mode === "single") {
+			return { zhu: "击败对手", fan: "击败对手", undefined: "未选择阵营" };
+		}
+		if (mode === "boss") {
+			return { zhu: "击败盟军", cai: "击败神祇", undefined: "未选择阵营" };
+		}
+		if (mode === "guozhan") {
+			const map = { undefined: "未选择势力", unknown: "保持隐蔽", ye: "   击败场上<br>所有其他角色", key: "   击败所有<br>非键势力角色" };
+			for (var i = 0; i < lib.group.length; i++) {
+				map[lib.group[i]] = "击败所有<br>非" + get.translation(lib.group[i]) + "势力角色";
+			}
+			return map;
+		}
+		if (mode === "versus") {
+			if (versusMode === "standard") return null;
+			if (versusMode === "two" || versusMode === "three") {
+				return { undefined: get.config("replace_character_two") ? "抢先击败敌人<br>所有上场角色" : "   协同队友<br>击败所有敌人" };
+			}
+			if (versusMode === "jiange") {
+				return { wei: "击败所有<br>蜀势力角色", shu: "击败所有<br>魏势力角色" };
+			}
+			if (versusMode === "siguo") {
+				const map = {};
+				for (var i = 0; i < lib.group.length; i++) {
+					map[lib.group[i]] = "获得龙船或击败<br>非" + get.translation(lib.group[i]) + "势力角色";
+				}
+				return map;
+			}
+		}
+		return {
+			rZhu: "击败冷方主公<br>与所有野心家",
+			rZhong: "保护暖方主公<br>击败冷方主公<br>与所有野心家",
+			rYe: "联合冷方野心家<br>击败其他角色",
+			rNei: "协助冷方主公<br>击败暖方主公<br>与所有野心家",
+			bZhu: "击败暖方主公<br>与所有野心家",
+			bZhong: "保护冷方主公<br>击败暖方主公<br>与所有野心家",
+			bYe: "联合暖方野心家<br>击败其他角色",
+			bNei: "协助暖方主公<br>击败冷方主公<br>与所有野心家",
+			zhu: "推测场上身份<br>击败反贼内奸",
+			zhong: "保护主公<br>取得最后胜利",
+			fan: "找出反贼队友<br>全力击败主公",
+			nei: "找出反贼忠臣<br>最后击败主公",
+			mingzhong: "保护主公<br>取得最后胜利",
+			undefined: "胜利条件",
+		};
+	}
 	game.ui_identityShow_update = function () {
 		var identityShow = game.ui_identityShow; /*图层1*/
 		var identityShowx = game.ui_identityShowx; /*图层2 在图层1下面*/
 		var str = "";
 		if (lib.config.mode == "guozhan" || (lib.config.mode == "versus" && get.config("versus_mode") == "siguo") || (lib.config.mode == "versus" && get.config("versus_mode") == "jiange")) {
-			const identities = [
-				{ key: "unknown", color: "#FFFFDE" },
-				{ key: "wei", color: "#0075FF" },
-				{ key: "shu", color: "#ff0000" },
-				{ key: "wu", color: "#00ff00" },
-				{ key: "qun", color: "#ffff00" },
-				{ key: "jin", color: "#9e00ff" },
-				{ key: "ye", color: "#9e00ff" },
-				{ key: "key", color: "#9e00ff" },
-			];
-			identities.forEach(({ key, color }) => {
+			LBTN_CONST.guozhanIdentities.forEach(({ key, color }) => {
 				const count = game.countPlayer(current => current.identity === key);
 				if (count > 0) str += `<font color="${color}">${get.translation(key)}</font> x ${count}  `;
 			});
@@ -40,10 +98,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			var nei = game.countPlayer(function (current) {
 				return current.identity == "nei" || current.identity == "rNei" || current.identity == "bNei";
 			});
-			if (zhu > 0) str += '<font color="#ae5f35">' + get.translation("zhu") + "</font> x " + zhu + "  ";
-			if (zhong > 0) str += '<font color="#e9d765">' + get.translation("zhong") + "</font> x " + zhong + "  ";
-			if (fan > 0) str += '<font color="#87a671">' + get.translation("fan") + "</font> x " + fan + "  ";
-			if (nei > 0) str += '<font color="#9581c4">' + get.translation("nei") + "</font> x " + nei;
+			if (zhu > 0) str += '<font color="' + LBTN_CONST.identityColors.zhu + '">' + get.translation("zhu") + "</font> x " + zhu + "  ";
+			if (zhong > 0) str += '<font color="' + LBTN_CONST.identityColors.zhong + '">' + get.translation("zhong") + "</font> x " + zhong + "  ";
+			if (fan > 0) str += '<font color="' + LBTN_CONST.identityColors.fan + '">' + get.translation("fan") + "</font> x " + fan + "  ";
+			if (nei > 0) str += '<font color="' + LBTN_CONST.identityColors.nei + '">' + get.translation("nei") + "</font> x " + nei;
 		}
 		str += "<br>" + (game.me?.identity ? lib.translate[game.me.identity + "_win_option"] ?? "" : "");
 		/*尽量保持字体大小，行高一致，不然会产生偏移*/
@@ -94,83 +152,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		/*---------------------*/
 		if (lib.config.mode == "identity" || lib.config.mode == "guozhan" || lib.config.mode == "versus" || lib.config.mode == "single" || lib.config.mode == "boss" || lib.config.mode == "doudizhu") {
-			var translate = {};
-			switch (lib.config.mode) {
-				case "doudizhu":
-					translate = {
-						zhu: "击败所有农民",
-						fan: "击败地主",
-						undefined: "未选择阵营",
-					};
-					break;
-				case "single":
-					translate = {
-						zhu: "击败对手",
-						fan: "击败对手",
-						undefined: "未选择阵营",
-					};
-					break;
-				case "boss":
-					translate = {
-						zhu: "击败盟军",
-						cai: "击败神祇",
-						undefined: "未选择阵营",
-					};
-					break;
-				case "guozhan":
-					translate = {
-						undefined: "未选择势力",
-						unknown: "保持隐蔽",
-						ye: "   击败场上<br>所有其他角色",
-						key: "   击败所有<br>非键势力角色",
-					};
-					for (var i = 0; i < lib.group.length; i++) {
-						translate[lib.group[i]] = "击败所有<br>非" + get.translation(lib.group[i]) + "势力角色";
-					}
-					break;
-				case "versus":
-					const config = get.config("versus_mode");
-					if (config == "standard") {
-						return;
-					}
-					if (config == "two" || config == "three") {
-						translate = {
-							undefined: get.config("replace_character_two") ? "抢先击败敌人<br>所有上场角色" : "   协同队友<br>击败所有敌人",
-						};
-					}
-					if (config == "jiange") {
-						translate = {
-							wei: "击败所有<br>蜀势力角色",
-							shu: "击败所有<br>魏势力角色",
-						};
-					}
-					if (config == "siguo") {
-						for (var i = 0; i < lib.group.length; i++) {
-							translate[lib.group[i]] = "获得龙船或击败<br>非" + get.translation(lib.group[i]) + "势力角色";
-						}
-					}
-					break;
-				default:
-					translate = {
-						rZhu: "击败冷方主公<br>与所有野心家",
-						rZhong: "保护暖方主公<br>击败冷方主公<br>与所有野心家",
-						rYe: "联合冷方野心家<br>击败其他角色",
-						rNei: "协助冷方主公<br>击败暖方主公<br>与所有野心家",
-						bZhu: "击败暖方主公<br>与所有野心家",
-						bZhong: "保护冷方主公<br>击败暖方主公<br>与所有野心家",
-						bYe: "联合暖方野心家<br>击败其他角色",
-						bNei: "协助暖方主公<br>击败冷方主公<br>与所有野心家",
-						zhu: "推测场上身份<br>击败反贼内奸",
-						zhong: "保护主公<br>取得最后胜利",
-						fan: "找出反贼队友<br>全力击败主公",
-						nei: "找出反贼忠臣<br>最后击败主公",
-						mingzhong: "保护主公<br>取得最后胜利",
-						undefined: "胜利条件",
-					};
-					break;
-			}
-			for (var i in translate) {
-				lib.translate[i + "_win_option"] = translate[i];
+			var map = buildModeWinTranslations(lib.config.mode, get.config("versus_mode"));
+			if (map === null) return;
+			for (var i in map) {
+				lib.translate[i + "_win_option"] = map[i];
 			}
 			game.ui_identityShow_init();
 			setInterval(() => {
@@ -296,10 +281,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				noDeprive: true,
 				priority: -Infinity,
 				filter(event, player) {
-					return player == game.me;
+					return !!player;
 				},
-				content() {
-					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
+				async content(event, trigger, player) {
+					var me = player || (_status.event && _status.event.player) || game.me;
+					if (ui.updateSkillControl) ui.updateSkillControl(me, true);
 				},
 			};
 		},
@@ -319,7 +305,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				updateCardnumber(opts) {
 					if (!ui.handcardNumber) return;
-					// ui.handcardNumber.setNumberAnimation(opts.cardNumber);
 				},
 			});
 			app.reWriteFunction(ui.create, {
@@ -576,15 +561,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				node.node.cardNumber.interval = setInterval(() => {
 					ui.handcardNumber.updateCardnumber();
 				}, 1000);
-				//    game.addVideo('createCardRoundTime');
 				game.addVideo("createhandcardNumber");
 				return node;
 			},
 			cardRoundTime() {
 				var node = ui.create.div(".cardRoundNumber", ui.arena).hide();
 				node.node = {
-					/*cardPileNumber: ui.create.div('.cardPileNumber', node),*/
-					//牌堆可点击
 					cardPileNumber: ui.create.div(".cardPileNumber", node, plugin.click.paidui),
 					roundNumber: ui.create.div(".roundNumber", node),
 					time: ui.create.div(".time", node),
@@ -655,18 +637,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 		},
 		click: {
-			setting() {
-				if (lib.extensionMenu.extension_概念武将.zyile_skin_Menu) {
-					lib.extensionMenu.extension_概念武将.zyile_skin_Menu.onclick();
-				} else {
-					// head.remove()
-					game.closePopped();
-					game.pause2();
-					ui.click.configMenu();
-					ui.system1.classList.remove("shown");
-					ui.system2.classList.remove("shown");
-				}
-			},
 			paixu() {
 				if (!game.me || game.me.hasSkillTag("noSortCard")) return;
 				var cards = game.me.getCards("hs");
