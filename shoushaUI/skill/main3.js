@@ -198,7 +198,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		controlElement: {
 			_getOrCreateLeftColumn() {
 				let column = this.node.enable.firstChild;
-				if (!column || column.childNodes.length >= 3) {
+				// 单列技能超过4个时，向左新开一列
+				if (!column || column.childNodes.length >= 4) {
 					column = ui.create.div(".skillcol", this.node.enable);
 					this.node.enable.insertBefore(column, this.node.enable.firstChild);
 					column.style.display = "flex";
