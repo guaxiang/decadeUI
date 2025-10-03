@@ -319,7 +319,7 @@
 	line-height: var(--sh);
 	margin: 0px 5px !important;
 	/*元素离边缘的距离，外边距，简单说就是确定与取消之间的距离*/
-	background-image: url("./images/uibutton/huanpai.png");
+	background-image: url("./images/uibutton/huanpai2.png");
 	padding: 12px 36px !important;
 	/*按钮高度+宽度 建议别调*/
 	min-height: 20px;
@@ -331,9 +331,6 @@
 	text-shadow: 1px 1px 2.5px rgba(62, 57, 38, 0.1);
 	margin-top: 20px !important;
 	position: relative;
-}
-.control>div.huan.huan2 {
-	background-image: url("./images/uibutton/huanpai2.png");
 }
 .control>div.qi {
 	--sh: calc(var(--h) - 6px);

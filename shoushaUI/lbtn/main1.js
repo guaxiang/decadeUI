@@ -383,6 +383,25 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.updatec();
 				confirm.update();
 			};
+			// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
+			(function(){
+				var originalCancel = ui.click.cancel;
+				ui.click.cancel = function(node){
+					var event = _status.event;
+					if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)){
+						ui.confirm.classList.add("removing");
+						event.restore();
+						var cards = event.player.getCards("hej");
+						for (var i = 0; i < cards.length; i++){
+							cards[i].recheck("useSkill");
+						}
+						game.uncheck();
+						game.check();
+						return;
+					}
+					return originalCancel.call(this, node);
+				};
+			})();
 		},
 		create: {
 			control() {},
@@ -641,7 +660,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (!game.me || game.me.hasSkillTag("noSortCard")) return;
 				var cards = game.me.getCards("hs");
 				var sort2 = function (a, b) {
-					var order = { basic: 0, equip: 1, trick: 2, delay: 3 };
+					var order = { basic: 0, trick: 1, delay: 1, equip: 2 };
 					var ta = get.type(a), tb = get.type(b);
 					var ca = order[ta] == undefined ? 99 : order[ta];
 					var cb = order[tb] == undefined ? 99 : order[tb];
@@ -683,7 +702,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 						var cards = game.me.getCards("hs");
 						var sort2 = function (a, b) {
-							var order = { basic: 0, equip: 1, trick: 2, delay: 3 };
+						var order = { basic: 0, trick: 1, delay: 1, equip: 2 };
 							var ta = get.type(a), tb = get.type(b);
 							var ca = order[ta] == undefined ? 99 : order[ta];
 							var cb = order[tb] == undefined ? 99 : order[tb];

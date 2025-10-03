@@ -4211,8 +4211,17 @@ export async function content(config, pack) {
 				if (ui.confirm && ui.confirm.lastChild.link == "cancel") {
 					if (_status.event.type == "phase") {
 						const isOnlineUI = lib.config.extension_十周年UI_newDecadeStyle === "onlineUI";
-						const innerHTML = isOnlineUI ? "取消" : lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌";
-						ui.confirm.lastChild.innerHTML = _status.event.skill ? "取消" : innerHTML;
+						const hasSelectedCard = ui.selected && ui.selected.cards && ui.selected.cards.length > 0;
+						const isOffStyle = decadeUI && decadeUI.config && decadeUI.config.newDecadeStyle == "off";
+						const baseText = lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌";
+							let innerHTML = baseText;
+							if (_status.event.skill || hasSelectedCard) {
+								innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
+							}
+							else if (isOffStyle) {
+								innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jscp.png>";
+							}
+						ui.confirm.lastChild.innerHTML = innerHTML;
 					}
 				}
 			});
