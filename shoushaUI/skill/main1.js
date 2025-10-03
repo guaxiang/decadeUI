@@ -428,7 +428,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var info = lib.skill[k];
 				var item = node.querySelector('[data-id="' + k + '"]');
 				if (!item) {
-					if (!info.zhuanhuanji) {
+					if (!info.zhuanhuanji && !info.zhuanhuanji2) {
 						item = ui.create.div(".skillMarkItem.xiandingji", node, get.skillTranslation(k, player).slice(0, 2));
 					} else {
 						const url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + k + "_yang.png";
