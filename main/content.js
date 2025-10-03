@@ -4216,7 +4216,9 @@ export async function content(config, pack) {
 						const baseText = lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌";
 							let innerHTML = baseText;
 							if (_status.event.skill || hasSelectedCard) {
-								innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
+								if (isOnlineUI) innerHTML = "取消";
+								else if (isOffStyle) innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
+								else innerHTML = "取消";
 							}
 							else if (isOffStyle) {
 								innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jscp.png>";
