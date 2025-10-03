@@ -572,6 +572,9 @@ export async function content(config, pack) {
 										mark.text.style.animation = "none";
 										mark.text.classList.add("before-hidden");
 									}
+									if (markText && markText.includes("☯")) {
+										mark.style.setProperty("display", "none", "important");
+									}
 									mark.text.innerHTML = markText;
 								}
 								mark.name = item;
@@ -617,11 +620,18 @@ export async function content(config, pack) {
 								if (!info.name) info.name = get.translation(name);
 								if (!info.content) info.content = get.skillintro(name, learn, learn2);
 								if (name.indexOf("unknown") == 0) {
-									nodeMarkText.innerHTML = get.translation(name)[0];
+									var unknownText = get.translation(name)[0];
+									if (unknownText && unknownText.includes("☯")) {
+										nodeMark.style.setProperty("display", "none", "important");
+									}
+									nodeMarkText.innerHTML = unknownText;
 								} else {
 									if (!get.character(name)) return console.error(name);
 									var text = info.name.substr(0, 2);
 									if (text.length == 2) nodeMarkText.classList.add("small-text");
+									if (text && text.includes("☯")) {
+										nodeMark.style.setProperty("display", "none", "important");
+									}
 									nodeMarkText.innerHTML = text;
 								}
 								nodeMark.name = name + "_charactermark";
