@@ -66,131 +66,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.arena.appendChild(game.ui_identityShowx);
 		}
 	};
-	// 重写手牌自动整理逻辑，改为监听模式
-	lib.arenaReady.push(function () {
-		// 手牌自动整理监听器
-		var originalGain = game.gain;
-		game.gain = function (player, cards, from, to, reason, skill, log, noAnimation, noLog, noEvent, noGain, noLose, noDeprive, noVideo, noUpdate, noSort, noUpdateControl) {
-			var result = originalGain.apply(this, arguments);
-			// 检查是否需要自动整理手牌
-			if (window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard") && (to == "h" || to == "hs") && cards && cards.length > 1) {
-				// 延迟执行整理，确保卡牌已经添加到手牌中
-				setTimeout(function () {
-					if (player && player.getCards && player.getCards("hs").length > 1) {
-						var handCards = player.getCards("hs");
-						handCards.sort((a, b) => {
-							// 位置排序
-							var p1 = get.position(a);
-							var p2 = get.position(b);
-							if (p1 != p2) return p1 == "h" ? 1 : -1;
-							// 卡牌排序
-							if (a.name != b.name) return lib.sort.card(b.name, a.name);
-							if (a.suit != b.suit) return lib.suit.indexOf(b.suit) - lib.suit.indexOf(a.suit);
-							if (a.number != b.number) return b.number - a.number;
-							if (a.nature != b.nature) return b.nature - a.nature;
-							return parseInt(b.cardid) - parseInt(a.cardid);
-						});
-						if (window.dui && dui.queueNextFrameTick) {
-							handCards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
-							dui.queueNextFrameTick(dui.layoutHand, dui);
-						} else {
-							game.addVideo("lose", player, [get.cardsInfo(handCards), [], []]);
-							handCards.forEach(card => card.goto(ui.special));
-							player.directgain(handCards, false);
-						}
-					}
-				}, 10);
-			}
-			return result;
-		};
-		// 监听失去手牌事件
-		var originalLose = game.lose;
-		game.lose = function (player, cards, from, to, reason, skill, log, noAnimation, noLog, noEvent, noGain, noLose, noDeprive, noVideo, noUpdate, noSort, noUpdateControl) {
-			var result = originalLose.apply(this, arguments);
-			// 检查是否需要自动整理手牌
-			if (window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard") && (from == "h" || from == "hs") && player.getCards && player.getCards("hs").length > 1) {
-				// 延迟执行整理，确保卡牌已经从手牌中移除
-				setTimeout(function () {
-					if (player && player.getCards && player.getCards("hs").length > 1) {
-						var handCards = player.getCards("hs");
-						handCards.sort((a, b) => {
-							// 位置排序
-							var p1 = get.position(a);
-							var p2 = get.position(b);
-							if (p1 != p2) return p1 == "h" ? 1 : -1;
-							// 卡牌排序
-							if (a.name != b.name) return lib.sort.card(b.name, a.name);
-							if (a.suit != b.suit) return lib.suit.indexOf(b.suit) - lib.suit.indexOf(a.suit);
-							if (a.number != b.number) return b.number - a.number;
-							if (a.nature != b.nature) return b.nature - a.nature;
-							return parseInt(b.cardid) - parseInt(a.cardid);
-						});
-						if (window.dui && dui.queueNextFrameTick) {
-							handCards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
-							dui.queueNextFrameTick(dui.layoutHand, dui);
-						} else {
-							game.addVideo("lose", player, [get.cardsInfo(handCards), [], []]);
-							handCards.forEach(card => card.goto(ui.special));
-							player.directgain(handCards, false);
-						}
-					}
-				}, 10);
-			}
-			return result;
-		};
-	});
-	// 手牌区DOM变化自动整理
-	lib.arenaReady.push(function () {
-		var observer;
-		function autoSortHandcards() {
-			var player = game.me;
-			if (!player || !player.node || !player.node.handcards1) return;
-			if (window.paixuxx !== false) return;
-			if (player.hasSkillTag && player.hasSkillTag("noSortCard")) return;
-			var cards = player.getCards && player.getCards("hs");
-			if (!cards || cards.length <= 1) return;
-			// 整理前断开监听，防止死循环
-			if (observer) observer.disconnect();
-			cards.sort(function (a, b) {
-				var p1 = get.position(a);
-				var p2 = get.position(b);
-				if (p1 != p2) return p1 == "h" ? 1 : -1;
-				if (a.name != b.name) return lib.sort.card(b.name, a.name);
-				if (a.suit != b.suit) return lib.suit.indexOf(b.suit) - lib.suit.indexOf(a.suit);
-				if (a.number != b.number) return b.number - a.number;
-				if (a.nature != b.nature) return b.nature - a.nature;
-				return parseInt(b.cardid) - parseInt(a.cardid);
-			});
-			if (window.dui && dui.queueNextFrameTick) {
-				cards.forEach(function (card) {
-					player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild);
-				});
-				dui.queueNextFrameTick(dui.layoutHand, dui);
-			} else {
-				game.addVideo("lose", player, [get.cardsInfo(cards), [], []]);
-				cards.forEach(function (card) {
-					card.goto(ui.special);
-				});
-				player.directgain(cards, false);
-			}
-			// 整理后恢复监听
-			if (observer && player.node && player.node.handcards1) {
-				observer.observe(player.node.handcards1, { childList: true, subtree: false });
-			}
-		}
-		// 只监听自己的手牌区
-		observer = new MutationObserver(function (mutationsList, observerInstance) {
-			autoSortHandcards();
-		});
-		var tryObserve = function () {
-			if (game.me && game.me.node && game.me.node.handcards1) {
-				observer.observe(game.me.node.handcards1, { childList: true, subtree: false });
-			} else {
-				setTimeout(tryObserve, 500);
-			}
-		};
-		tryObserve();
-	});
 	lib.arenaReady.push(function () {
 		//更新轮次
 		var originUpdateRoundNumber = game.updateRoundNumber;
@@ -655,13 +530,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var jilu = ui.create.div(".latn-jilu1", ui.arena, ui.click.pause);
 				}
 				paixuauto.onclick = function () {
-					if (window.paixuxx == false) {
-						plugin.click.paixu();
-						paixuauto.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/btn-paixu.png");
+					if (window.paixuxx == undefined || window.paixuxx == false) {
+						plugin.click.startAutoPaixu();
+						paixuauto.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/zidongpaixu.png");
 						window.paixuxx = true;
 					} else {
-						plugin.click.paixu();
-						paixuauto.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/zidongpaixu.png");
+						plugin.click.stopAutoPaixu();
+						paixuauto.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/btn-paixu.png");
 						window.paixuxx = false;
 					}
 				};
@@ -795,10 +670,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			paixu() {
 				if (!game.me || game.me.hasSkillTag("noSortCard")) return;
 				var cards = game.me.getCards("hs");
-				var sort2 = function (b, a) {
+				var sort2 = function (a, b) {
+					var order = { basic: 0, equip: 1, trick: 2, delay: 3 };
+					var ta = get.type(a), tb = get.type(b);
+					var ca = order[ta] == undefined ? 99 : order[ta];
+					var cb = order[tb] == undefined ? 99 : order[tb];
+					if (ca !== cb) return ca - cb;
 					if (a.name != b.name) return lib.sort.card(a.name, b.name);
-					else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
-					else return a.number - b.number;
+					if (a.suit != b.suit) return lib.suit.indexOf(a.suit) - lib.suit.indexOf(b.suit);
+					return a.number - b.number;
 				};
 				if (cards.length > 1) {
 					cards.sort(sort2);
@@ -807,6 +687,106 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					});
 					dui.queueNextFrameTick(dui.layoutHand, dui);
 				}
+			},
+			// 开启自动牌序（监听手牌变化自动整理）
+			startAutoPaixu() {
+				if (!game.me || game.me.hasSkillTag("noSortCard")) return;
+				var container = game.me.node && game.me.node.handcards1;
+				if (!container) return;
+				if (ui._autoPaixuObserver) {
+					try { ui._autoPaixuObserver.disconnect(); } catch (e) {}
+				}
+				ui._autoPaixuDebounce = null;
+				ui._autoPaixuSorting = false;
+				ui._autoPaixuEnabled = true;
+				ui._autoPaixuContainer = container;
+				ui._autoPaixuLastCount = container.childNodes.length || 0;
+				ui._autoPaixuObserver = new MutationObserver(function () {
+					if (ui._autoPaixuSorting) return;
+					if (ui._autoPaixuDebounce) clearTimeout(ui._autoPaixuDebounce);
+					ui._autoPaixuDebounce = setTimeout(function () {
+						if (!game.me || !game.me.node || !game.me.node.handcards1) return;
+						var curCount = game.me.node.handcards1.childNodes.length || 0;
+						if (ui._autoPaixuLastCount != null && curCount < ui._autoPaixuLastCount) {
+							ui._autoPaixuLastCount = curCount;
+							return;
+						}
+						var cards = game.me.getCards("hs");
+						var sort2 = function (a, b) {
+							var order = { basic: 0, equip: 1, trick: 2, delay: 3 };
+							var ta = get.type(a), tb = get.type(b);
+							var ca = order[ta] == undefined ? 99 : order[ta];
+							var cb = order[tb] == undefined ? 99 : order[tb];
+							if (ca !== cb) return ca - cb;
+							if (a.name != b.name) return lib.sort.card(a.name, b.name);
+							if (a.suit != b.suit) return lib.suit.indexOf(a.suit) - lib.suit.indexOf(b.suit);
+							return a.number - b.number;
+						};
+						if (cards.length > 1) {
+							ui._autoPaixuSorting = true;
+							var sorted = cards.slice().sort(sort2);
+							var container = game.me.node.handcards1;
+							var unchanged = true;
+							for (var idx = 0; idx < sorted.length; idx++) {
+								if (container.childNodes[idx] !== sorted[idx]) { unchanged = false; break; }
+							}
+							if (!unchanged) {
+								for (var k = 0; k < sorted.length; k++) {
+									var nodeExpect = sorted[k];
+									if (container.childNodes[k] !== nodeExpect) {
+										container.insertBefore(nodeExpect, container.childNodes[k] || null);
+									}
+								}
+							}
+							dui.queueNextFrameTick(function(){
+								dui.layoutHand();
+								setTimeout(function(){ ui._autoPaixuSorting = false; }, 0);
+							}, dui);
+							ui._autoPaixuLastCount = game.me.node.handcards1.childNodes.length || 0;
+							ui._autoPaixuSuppressOnce = true;
+						}
+					}, 180);
+				});
+				ui._autoPaixuObserver.observe(container, { childList: true, subtree: true });
+				if (ui._autoPaixuKeeper) try { clearInterval(ui._autoPaixuKeeper); } catch(e) {}
+				ui._autoPaixuKeeper = setInterval(function(){
+					if (!ui._autoPaixuEnabled) return;
+					if (!game.me || !game.me.node) return;
+					var cur = game.me.node.handcards1;
+					if (!cur) return;
+					if (cur !== ui._autoPaixuContainer) {
+						ui._autoPaixuContainer = cur;
+						ui._autoPaixuLastCount = cur.childNodes.length || 0;
+						try { ui._autoPaixuObserver.disconnect(); } catch(e) {}
+						ui._autoPaixuObserver.observe(cur, { childList: true, subtree: true });
+					}
+					var nowCount = cur.childNodes.length || 0;
+					if (nowCount !== ui._autoPaixuLastCount) {
+						var prev = ui._autoPaixuLastCount;
+						ui._autoPaixuLastCount = nowCount;
+						if (nowCount > prev && !ui._autoPaixuSorting) {
+							if (ui._autoPaixuSuppressOnce) { ui._autoPaixuSuppressOnce = false; }
+							else setTimeout(function(){ plugin.click.paixu(); }, 120);
+						}
+					}
+				}, 600);
+				plugin.click.paixu();
+			},
+			stopAutoPaixu() {
+				if (ui._autoPaixuObserver) {
+					try { ui._autoPaixuObserver.disconnect(); } catch (e) {}
+					ui._autoPaixuObserver = null;
+				}
+				if (ui._autoPaixuDebounce) {
+					clearTimeout(ui._autoPaixuDebounce);
+					ui._autoPaixuDebounce = null;
+				}
+				if (ui._autoPaixuKeeper) {
+					try { clearInterval(ui._autoPaixuKeeper); } catch(e) {}
+					ui._autoPaixuKeeper = null;
+				}
+				ui._autoPaixuSorting = false;
+				ui._autoPaixuEnabled = false;
 			},
 			//可点击函数（牌堆）
 			paidui() {
