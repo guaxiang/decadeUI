@@ -284,17 +284,17 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			if (_status.brawl && _status.brawl.noGameDraw) return;
 			const end = player;
 			let currentPlayer = player;
-				do {
-					let numx = typeof num === "function" ? num(currentPlayer) : num;
-					const cards = [];
-					const otherGetCards = event.otherPile?.[currentPlayer.playerid]?.getCards;
-					if (otherGetCards) {
-						cards.addArray(otherGetCards(numx));
-					} else if (currentPlayer.getTopCards) {
-						cards.addArray(currentPlayer.getTopCards(numx));
-					} else {
-						cards.addArray(get.cards(numx));
-					}
+			do {
+				let numx = typeof num === "function" ? num(currentPlayer) : num;
+				const cards = [];
+				const otherGetCards = event.otherPile?.[currentPlayer.playerid]?.getCards;
+				if (otherGetCards) {
+					cards.addArray(otherGetCards(numx));
+				} else if (currentPlayer.getTopCards) {
+					cards.addArray(currentPlayer.getTopCards(numx));
+				} else {
+					cards.addArray(get.cards(numx));
+				}
 				if (event.gaintag?.[currentPlayer.playerid]) {
 					const gaintag = event.gaintag[currentPlayer.playerid];
 					const list = typeof gaintag === "function" ? gaintag(numx, cards) : [[cards, gaintag]];
@@ -1225,10 +1225,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			});
 		}
 		if (player) {
-			player.getCards("s", card => card.hasGaintag("equipHand")).forEach(card => {
-				card.discard();
-				card.delete();
-			});
+			player
+				.getCards("s", card => card.hasGaintag("equipHand"))
+				.forEach(card => {
+					card.discard();
+					card.delete();
+				});
 		}
 		event.copyCards = false;
 		if (player === game.me) {
@@ -1242,4 +1244,101 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			cleanupEquipCards(event, player);
 		}
 	});
+	// 卡牌选中提示
+	if (lib.config["extension_十周年UI_cardPrompt"]) {
+		window.getDecPrompt = function (text) {
+			if (typeof text !== "string") {
+				return text;
+			}
+			return text.replace(/＃/g, "");
+		};
+		lib.hooks.checkButton.add(function (event) {
+			const dialog = event.dialog;
+			if (!dialog || !dialog.buttons) return;
+			const range = get.select(event.selectButton);
+			let selectableButtons = false;
+			for (let i = 0; i < dialog.buttons.length; i++) {
+				const button = dialog.buttons[i];
+				if (button.classList.contains("unselectable")) continue;
+				const isFiltered = event.filterButton(button, event.player) && lib.filter.buttonIncluded(button);
+				if (isFiltered) {
+					if (ui.selected.buttons.length < range[1]) {
+						button.classList.add("selectable");
+					} else if (range[1] === -1) {
+						button.classList.add("selected");
+						ui.selected.buttons.add(button);
+					} else {
+						button.classList.remove("selectable");
+					}
+				} else {
+					button.classList.remove("selectable");
+					if (range[1] === -1) {
+						button.classList.remove("selected");
+						ui.selected.buttons.remove(button);
+					}
+				}
+				if (button.classList.contains("selected")) {
+					button.classList.add("selectable");
+				} else if (!selectableButtons && button.classList.contains("selectable")) {
+					selectableButtons = true;
+				}
+			}
+			if (event.custom?.add?.button) {
+				event.custom.add.button();
+			}
+		});
+		lib.hooks.checkEnd.add(function (event) {
+			if (event.type === "phase") {
+				if (event.player === game.me) {
+					if (!event.skill && event.name === "chooseToUse") {
+						if (ui.cardDialog) ui.cardDialog.close();
+						delete ui.cardDialog;
+							if (ui.selected.cards.length === 1 && lib.myprompt.card[get.name(ui.selected.cards[0])]) {
+								const handTip1 = (ui.cardDialog = dui.showHandTip());
+								const info = lib.myprompt.card[get.name(ui.selected.cards[0])];
+								let tipText = info;
+								tipText = tipText.replace(/<\/?.+?\/?>/g, "");
+								tipText = window.getDecPrompt(tipText);
+								handTip1.appendText(tipText);
+								handTip1.strokeText();
+								handTip1.show();
+							} else {
+								const handTip2 = (ui.cardDialog = dui.showHandTip());
+								handTip2.appendText("出牌阶段");
+								let tipText = "，请选择1张卡牌";
+								tipText = tipText.replace(/<\/?.+?\/?>/g, "");
+								tipText = window.getDecPrompt(tipText);
+								handTip2.appendText(tipText);
+								handTip2.strokeText();
+								handTip2.show();
+							}
+					}
+				} else {
+					if (ui.cardDialog) ui.cardDialog.close();
+					delete ui.cardDialog;
+				}
+			}
+		});
+		if (!lib.prompt) {
+			lib.prompt = new Map();
+		}
+		// 卡牌提示直接使用本体的卡牌翻译
+		const cardPrompts = {};
+		const cleanText = (text) => text
+		// 隐藏卡牌的特殊字符
+			.replace(/出牌阶段，/g, '')
+			.replace(/锁定技。/g, '')
+			.replace(/锁定技，/g, '');
+		Object.keys(lib.card).forEach(cardName => {
+			if (lib.translate[cardName + "_info"]) {
+				lib.prompt.set(cardName, () => {
+					return cleanText(get.translation(cardName, "info"));
+				});
+				cardPrompts[cardName] = cleanText(get.translation(cardName, "info"));
+			}
+		});
+		lib.myprompt = {
+			card: cardPrompts,
+		};
+	}
 });

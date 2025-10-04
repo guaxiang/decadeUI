@@ -128,3 +128,11 @@
 	background-image: url(../image/decoration/equipHand.png);
 	background-size: 100% 100%;
 }
+/* 修改手牌提示字体 */
+#arena > .hand-tip,
+#arena > .hand-tip-info,
+#arena > .hand-tip span {
+	font-family: "yuanli" !important;
+	font-size: 17px !important;
+	bottom: calc(20% + 10px) !important;
+}

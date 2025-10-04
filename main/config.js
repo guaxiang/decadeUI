@@ -331,6 +331,11 @@ export let config = {
             if (window.decadeUI) ui.arena.dataset.forcestyle = lib.config["extension_十周年UI_forcestyle"];
         },
     },
+    cardPrompt: {
+        name: "卡牌提示",
+        init: true,
+        intro: "开启后，在出牌阶段选择手牌时会显示卡牌描述提示",
+    },
     luckycard: {
         name: "手气卡美化",
         init: false,
