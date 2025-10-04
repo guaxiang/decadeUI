@@ -56,19 +56,21 @@ export async function content(config, pack) {
 				},
 				true
 			);
-			// 防误触：点击空白区域不触发全局取消选择
-			document.addEventListener(
-				"click",
-				function (e) {
-					var target = e && e.target;
-					if (!target) return;
-					var interactive = target.closest && (target.closest(".button") || target.closest(".card") || target.closest(".player") || target.closest(".dialog") || target.closest(".control"));
-					if (!interactive) {
-						_status.clicked = true;
-					}
-				},
-				true
-			);
+			// 防误触：点击空白区域不触发全局取消选择（仅PC端）
+			if (!decadeUI.isMobile()) {
+				document.addEventListener(
+					"click",
+					function (e) {
+						var target = e && e.target;
+						if (!target) return;
+						var interactive = target.closest && (target.closest(".button") || target.closest(".card") || target.closest(".player") || target.closest(".dialog") || target.closest(".control"));
+						if (!interactive) {
+							_status.clicked = true;
+						}
+					},
+					true
+				);
+			}
 			this.initOverride();
 			if (window.get && typeof window.get.cardsetion === "function") {
 				const oldCardsetion = window.get.cardsetion;
