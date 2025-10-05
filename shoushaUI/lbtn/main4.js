@@ -1067,6 +1067,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	function createPolie() {
 		//右上角计时器
 		const createTimeNode = () => {
+			if (ui.cardRoundTimeNode) {
+				ui.cardRoundTimeNode.remove();
+			}
 			ui.cardRoundTimeNode = ui.create.div(".cardRoundNumber", ui.window);
 			var cardPileNumberNode = ui.create.div(".cardPileNumber", ui.cardRoundTimeNode);
 			var roundNumberNode = ui.create.div(".roundNumber", ui.cardRoundTimeNode);

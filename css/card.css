@@ -252,3 +252,8 @@
 .dui-mobile .card > .tempsuitnum > .suit {
 	font-size: 16px;
 }
+.card.dctuoyu-fengtian-glow:before,
+.card.dctuoyu-qingqu-glow:before,
+.card.dctuoyu-junshan-glow:before{
+    opacity: 0.2;
+}
