@@ -318,7 +318,7 @@ export let config = {
     shiliyouhua: {
         name: "官方势力",
         init: false,
-        intro: "开启后，非魏蜀吴群晋势力的角色将会重新选择势力",
+        intro: "开启后，非魏蜀吴群晋势力的角色将会重新选择势力，且美化势力选择框的展示效果",
     },
     forcestyle: {
         name: "势力样式",

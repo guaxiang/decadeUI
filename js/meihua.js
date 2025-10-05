@@ -84,101 +84,76 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		};
 		const originalChooseControl = lib.element.player.chooseControl;
 		lib.element.player.chooseControl = function (...args) {
-			const next = game.createEvent("chooseControl");
-			next.controls = [];
-			for (const arg of args) {
-				if (typeof arg === "string") {
-					if (arg === "dialogcontrol") next.dialogcontrol = true;
-					else if (arg === "seperate") next.seperate = true;
-					else next.controls.push(arg);
-				} else if (Array.isArray(arg)) {
-					next.controls = next.controls.concat(arg);
-				} else if (typeof arg === "function") {
-					next.ai = arg;
-				} else if (typeof arg === "number") {
-					next.choice = arg;
-				} else if (get.itemtype(arg) === "dialog") {
-					next.dialog = arg;
-				}
-			}
-			next.player = this;
-			next.choice = next.choice || 0;
-			const groupTranslations = lib.group.map(i => get.translation(i));
-			const isFactionChoice = next.controls.length && next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val));
-			if (this !== game.me || !isFactionChoice) {
-				next.setContent("chooseControl");
-				return next;
-			}
-			next.setContent(async function () {
-				"step 0";
-				const event = get.event();
-				const list = event.controls;
-				if (!list?.length) {
-					event.finish();
-					return;
-				}
-				const dialog = ui.create.dialog("hidden", [list, "vcard"]);
-				dialog.classList.add("noupdate", "faction-choice");
-				dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
-				if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
-				ui.skepk.innerHTML = "请选择势力";
-				for (const button of dialog.buttons) {
-					if (!button) continue;
-					const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : lib.config.extension_十周年UI_newDecadeStyle === "off" ? `extension/十周年UI/image/group/off/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
-					button.setBackgroundImage(imagePath);
-					button.style.setProperty("box-shadow", "unset", "important");
-					button.innerHTML = "";
-					button.addEventListener("click", () => {
+			const next = originalChooseControl(...args);
+			if (this === game.me) {
+				const groupTranslations = lib.group.map(i => get.translation(i));
+				if (next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
+					next.setContent(async function (event, trigger, player) {
+						const list = event.controls;
+						if (!list?.length) return;
+						const dialog = ui.create.dialog("hidden", [list, "vcard"]);
+						dialog.classList.add("noupdate", "faction-choice");
+						dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
+						if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
+						ui.skepk.innerHTML = "请选择势力";
+						for (const button of dialog.buttons) {
+							if (!button) continue;
+							const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : lib.config.extension_十周年UI_newDecadeStyle === "off" ? `extension/十周年UI/image/group/off/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
+							button.setBackgroundImage(imagePath);
+							button.style.setProperty("box-shadow", "unset", "important");
+							button.innerHTML = "";
+							button.addEventListener("click", () => {
+								const dcs = document.getElementById("dui-controls");
+								if (dcs) {
+									dcs.style.scale = "1";
+								}
+							});
+						}
+						if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
+						const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
+						progressBarBg.setBackgroundImage("extension/十周年UI/image/group/TimeBarBg.png");
+						progressBarBg.style.height = "13px";
+						const progressBar = ui.create.div(".groupJindutiao2", ui.dialogbar);
+						progressBar.setBackgroundImage("extension/十周年UI/image/group/TimeBarFull.png");
+						progressBar.style.height = "13px";
+						progressBar.style.width = "0%";
+						if (!ui.dialogtext) ui.dialogtext = ui.create.div(".groupJindutiaoText", ui.dialogbar);
+						ui.dialogtext.innerHTML = "";
+						progressBar.data = 100;
+						if (event.progressInterval) {
+							clearInterval(event.progressInterval);
+							delete event.progressInterval;
+						}
+						event.progressInterval = setInterval(() => {
+							progressBar.data -= 100 / 150; // 15秒 * 10次/秒
+							if (progressBar.data <= 0) {
+								progressBar.data = 0;
+								clearInterval(event.progressInterval);
+								delete event.progressInterval;
+							}
+							progressBar.style.width = progressBar.data + "%";
+						}, 100);
+						event.nextx = game.createEvent("chooseGroup");
+						event.nextx.dialog = dialog;
+						event.nextx.setContent(() => {
+							game.me.chooseButton(1, event.dialog, true).set("newconfirm1", true);
+						});
 						const dcs = document.getElementById("dui-controls");
-						if (dcs) {
-							dcs.style.scale = "1";
+						if (dcs) dcs.style.scale = "0";
+						const dcs2 = document.getElementById("dui-controls");
+						if (dcs2) dcs2.style.scale = "1";
+						await event.nextx;
+						const val = event.nextx._result?.links?.[0]?.[2];
+						if (val) {
+							event.result = {
+								bool: true,
+								control: val,
+								index: event.controls.indexOf(val),
+							};
 						}
 					});
 				}
-				if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
-				const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
-				progressBarBg.setBackgroundImage("extension/十周年UI/image/group/TimeBarBg.png");
-				progressBarBg.style.height = "13px";
-				const progressBar = ui.create.div(".groupJindutiao2", ui.dialogbar);
-				progressBar.setBackgroundImage("extension/十周年UI/image/group/TimeBarFull.png");
-				progressBar.style.height = "13px";
-				progressBar.style.width = "0%";
-				if (!ui.dialogtext) ui.dialogtext = ui.create.div(".groupJindutiaoText", ui.dialogbar);
-				ui.dialogtext.innerHTML = "";
-				progressBar.data = 100;
-				if (event.progressInterval) {
-					clearInterval(event.progressInterval);
-					delete event.progressInterval;
-				}
-				event.progressInterval = setInterval(() => {
-					progressBar.data -= 100 / 150; // 15秒 * 10次/秒
-					if (progressBar.data <= 0) {
-						progressBar.data = 0;
-						clearInterval(event.progressInterval);
-						delete event.progressInterval;
-					}
-					progressBar.style.width = progressBar.data + "%";
-				}, 100);
-				event.nextx = game.createEvent("chooseGroup");
-				event.nextx.dialog = dialog;
-				event.nextx.setContent(() => {
-					game.me.chooseButton(1, event.dialog, true).set("newconfirm1", true);
-				});
-				const dcs = document.getElementById("dui-controls");
-				if (dcs) dcs.style.scale = "0";
-				("step 1");
-				const dcs2 = document.getElementById("dui-controls");
-				if (dcs2) dcs2.style.scale = "1";
-				await event.nextx;
-				const val = event.nextx._result?.links?.[0]?.[2];
-				if (val) {
-					event.result = {
-						bool: true,
-						control: val,
-						index: event.controls.indexOf(val),
-					};
-				}
-			});
+			}
 			return next;
 		};
 	}
@@ -1247,9 +1222,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	// 卡牌选中提示
 	if (lib.config["extension_十周年UI_cardPrompt"]) {
 		window.getDecPrompt = function (text) {
-			if (typeof text !== "string") {
-				return text;
-			}
+			if (typeof text !== "string") return text;
 			return text.replace(/＃/g, "");
 		};
 		lib.hooks.checkButton.add(function (event) {
@@ -1289,13 +1262,20 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 		lib.hooks.checkEnd.add(function (event) {
 			if (event.name === "chooseToUse" && event.type === "phase" && event.player === game.me && !event.skill) {
-				if (ui.cardDialog) ui.cardDialog.close();
-				delete ui.cardDialog;
-				if (ui.selected.cards.length === 1 && lib.myprompt.card[get.name(ui.selected.cards[0])]) {
+				if (ui.cardDialog) {
+					ui.cardDialog.close();
+					delete ui.cardDialog;
+				}
+				if ((ui.selected?.cards ?? []).length === 1) {
 					const handTip1 = (ui.cardDialog = dui.showHandTip());
-					const info = lib.myprompt.card[get.name(ui.selected.cards[0])];
-					let tipText = info;
-					tipText = tipText.replace(/<\/?.+?\/?>/g, "");
+					//隐藏卡牌的特殊字符
+					let tipText = get
+						.plainText(get.translation[`${get.name(ui.selected.cards[0])}_info`])
+						.replace(/出牌阶段，/g, "")
+						.replace(/出牌阶段。/g, "")
+						.replace(/锁定技。/g, "")
+						.replace(/锁定技，/g, "")
+						.replace(/<\/?.+?\/?>/g, "");
 					tipText = window.getDecPrompt(tipText);
 					handTip1.appendText(tipText);
 					handTip1.strokeText();
@@ -1311,31 +1291,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					handTip2.show();
 				}
 			} else {
-				if (ui.cardDialog) ui.cardDialog.close();
-				delete ui.cardDialog;
+				if (ui.cardDialog) {
+					ui.cardDialog.close();
+					delete ui.cardDialog;
+				}
 			}
 		});
-		if (!lib.prompt) {
-			lib.prompt = new Map();
-		}
-		// 卡牌提示直接使用本体的卡牌翻译
-		const cardPrompts = {};
-		const cleanText = (text) => text
-		// 隐藏卡牌的特殊字符
-			.replace(/出牌阶段，/g, '')
-			.replace(/出牌阶段。/g, '')
-			.replace(/锁定技。/g, '')
-			.replace(/锁定技，/g, '');
-		Object.keys(lib.card).forEach(cardName => {
-			if (lib.translate[cardName + "_info"]) {
-				lib.prompt.set(cardName, () => {
-					return cleanText(get.translation(cardName, "info"));
-				});
-				cardPrompts[cardName] = cleanText(get.translation(cardName, "info"));
-			}
-		});
-		lib.myprompt = {
-			card: cardPrompts,
-		};
 	}
 });

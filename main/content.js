@@ -4210,25 +4210,26 @@ export async function content(config, pack) {
 			//根据手杀ui选项开关调用不同结束出牌阶段的弹出样式
 			//为onlineUI样式单独改为取消
 			lib.hooks["checkEnd"].push(function decadeUI_UIconfirm() {
-				if (ui.confirm && ui.confirm.lastChild.link == "cancel") {
-					if (_status.event.type == "phase") {
-						const isOnlineUI = lib.config.extension_十周年UI_newDecadeStyle === "onlineUI";
-						const hasSelectedCard = ui.selected && ui.selected.cards && ui.selected.cards.length > 0;
-						const isOffStyle = decadeUI && decadeUI.config && decadeUI.config.newDecadeStyle == "off";
-						const baseText = lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌";
-							let innerHTML = baseText;
-							if (isOnlineUI) {
-								innerHTML = "取消";
-							}
-							else if (_status.event.skill || hasSelectedCard) {
-								if (isOffStyle) innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
-								else innerHTML = "取消";
-							}
-							else if (isOffStyle) {
-								innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jscp.png>";
-							}
-						ui.confirm.lastChild.innerHTML = innerHTML;
+				if (_status.event?.name == "chooseToUse" && _status.event.type == "phase" && ui.confirm?.lastChild.link == "cancel") {
+					const UIconfig = lib.config.extension_十周年UI_newDecadeStyle;
+					let innerHTML = UIconfig !== "othersOff" || UIconfig === "on" ? "回合结束" : "结束出牌";
+					if (UIconfig === "onlineUI") innerHTML = "取消";
+					else if (_status.event.skill || (ui.selected?.cards ?? []).length > 0) {
+						if (UIconfig === "off") innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
+						else innerHTML = "取消";
 					}
+					else if (UIconfig === "off") {
+						innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jscp.png>";
+					}
+					ui.confirm.lastChild.innerHTML = innerHTML;
+					const UIcustom = ui.confirm.custom;
+					ui.confirm.custom = function (...args) {
+						if (typeof UIcustom === "function") UIcustom(...args);
+						if (ui.cardDialog) {
+							ui.cardDialog.close();
+							delete ui.cardDialog;
+						}
+					};
 				}
 			});
 			//game.uncheck修改
