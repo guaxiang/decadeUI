@@ -1270,7 +1270,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					const handTip1 = (ui.cardDialog = dui.showHandTip());
 					//隐藏卡牌的特殊字符
 					let tipText = get
-						.plainText(get.translation[`${get.name(ui.selected.cards[0])}_info`])
+						.plainText(get.translation(`${get.name(ui.selected.cards[0])}_info`))
 						.replace(/出牌阶段，/g, "")
 						.replace(/出牌阶段。/g, "")
 						.replace(/锁定技。/g, "")
