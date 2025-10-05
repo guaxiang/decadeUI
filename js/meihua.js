@@ -1288,35 +1288,31 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			}
 		});
 		lib.hooks.checkEnd.add(function (event) {
-			if (event.type === "phase") {
-				if (event.player === game.me) {
-					if (!event.skill && event.name === "chooseToUse") {
-						if (ui.cardDialog) ui.cardDialog.close();
-						delete ui.cardDialog;
-							if (ui.selected.cards.length === 1 && lib.myprompt.card[get.name(ui.selected.cards[0])]) {
-								const handTip1 = (ui.cardDialog = dui.showHandTip());
-								const info = lib.myprompt.card[get.name(ui.selected.cards[0])];
-								let tipText = info;
-								tipText = tipText.replace(/<\/?.+?\/?>/g, "");
-								tipText = window.getDecPrompt(tipText);
-								handTip1.appendText(tipText);
-								handTip1.strokeText();
-								handTip1.show();
-							} else {
-								const handTip2 = (ui.cardDialog = dui.showHandTip());
-								handTip2.appendText("出牌阶段");
-								let tipText = "，请选择1张卡牌";
-								tipText = tipText.replace(/<\/?.+?\/?>/g, "");
-								tipText = window.getDecPrompt(tipText);
-								handTip2.appendText(tipText);
-								handTip2.strokeText();
-								handTip2.show();
-							}
-					}
+			if (event.name === "chooseToUse" && event.type === "phase" && event.player === game.me && !event.skill) {
+				if (ui.cardDialog) ui.cardDialog.close();
+				delete ui.cardDialog;
+				if (ui.selected.cards.length === 1 && lib.myprompt.card[get.name(ui.selected.cards[0])]) {
+					const handTip1 = (ui.cardDialog = dui.showHandTip());
+					const info = lib.myprompt.card[get.name(ui.selected.cards[0])];
+					let tipText = info;
+					tipText = tipText.replace(/<\/?.+?\/?>/g, "");
+					tipText = window.getDecPrompt(tipText);
+					handTip1.appendText(tipText);
+					handTip1.strokeText();
+					handTip1.show();
 				} else {
-					if (ui.cardDialog) ui.cardDialog.close();
-					delete ui.cardDialog;
+					const handTip2 = (ui.cardDialog = dui.showHandTip());
+					handTip2.appendText("出牌阶段");
+					let tipText = "，请选择一张卡牌";
+					tipText = tipText.replace(/<\/?.+?\/?>/g, "");
+					tipText = window.getDecPrompt(tipText);
+					handTip2.appendText(tipText);
+					handTip2.strokeText();
+					handTip2.show();
 				}
+			} else {
+				if (ui.cardDialog) ui.cardDialog.close();
+				delete ui.cardDialog;
 			}
 		});
 		if (!lib.prompt) {
@@ -1327,6 +1323,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		const cleanText = (text) => text
 		// 隐藏卡牌的特殊字符
 			.replace(/出牌阶段，/g, '')
+			.replace(/出牌阶段。/g, '')
 			.replace(/锁定技。/g, '')
 			.replace(/锁定技，/g, '');
 		Object.keys(lib.card).forEach(cardName => {
