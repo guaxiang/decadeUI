@@ -84,7 +84,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		};
 		const originalChooseControl = lib.element.player.chooseControl;
 		lib.element.player.chooseControl = function (...args) {
-			const next = originalChooseControl(...args);
+			const next = originalChooseControl.apply(this, args);
 			if (this === game.me) {
 				const groupTranslations = lib.group.map(i => get.translation(i));
 				if (next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
@@ -1272,7 +1272,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					let tipText = get
 						.plainText(get.translation(`${get.name(ui.selected.cards[0])}_info`))
 						.replace(/出牌阶段，/g, "")
-						.replace(/出牌阶段。/g, "")
+						.replace(/每回合限一次。/g, "")
+						.replace(/准备阶段，/g, "")
 						.replace(/锁定技。/g, "")
 						.replace(/锁定技，/g, "")
 						.replace(/<\/?.+?\/?>/g, "");
