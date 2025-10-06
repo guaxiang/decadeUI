@@ -384,15 +384,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				confirm.update();
 			};
 			// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
-			(function(){
+			(function () {
 				var originalCancel = ui.click.cancel;
-				ui.click.cancel = function(node){
+				ui.click.cancel = function (node) {
 					var event = _status.event;
-					if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)){
+					if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)) {
 						ui.confirm.classList.add("removing");
 						event.restore();
 						var cards = event.player.getCards("hej");
-						for (var i = 0; i < cards.length; i++){
+						for (var i = 0; i < cards.length; i++) {
 							cards[i].recheck("useSkill");
 						}
 						game.uncheck();
@@ -404,7 +404,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			})();
 		},
 		create: {
-			control() {},
+			control() { },
 			confirm() {
 				//确定文本
 				var confirm = ui.create.control("<span></span>", "cancel");
@@ -464,10 +464,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						var item = document.createElement("div");
 						item.link = skills[i];
 						if (skills[i] == "_recasting") {
-							item.innerHTML = "<img style=width:70px height:15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/CZ.png>";
+							item.innerHTML = "<img draggable='false' src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/CZ.png>";
 							// 为重铸按钮设置单独的背景图
-							item.style.backgroundImage = "url(" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/confirm-bg-c.png)";
-							item.style.backgroundSize = "100% 100%";
+							item.style.backgroundImage = "url(" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/game_btn_bg2.png)";
+							item.style.transform = "scale(0.75,0.75)";
+							item.style.setProperty("padding", "25px 10px", "important");
 						} else {
 							item.innerHTML = get.translation(skills[i]);
 						}
@@ -686,7 +687,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var container = game.me.node && game.me.node.handcards1;
 				if (!container) return;
 				if (ui._autoPaixuObserver) {
-					try { ui._autoPaixuObserver.disconnect(); } catch (e) {}
+					try { ui._autoPaixuObserver.disconnect(); } catch (e) { }
 				}
 				ui._autoPaixuDebounce = null;
 				ui._autoPaixuSorting = false;
@@ -705,7 +706,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 						var cards = game.me.getCards("hs");
 						var sort2 = function (a, b) {
-						var order = { basic: 0, trick: 1, delay: 1, equip: 2 };
+							var order = { basic: 0, trick: 1, delay: 1, equip: 2 };
 							var ta = get.type(a), tb = get.type(b);
 							var ca = order[ta] == undefined ? 99 : order[ta];
 							var cb = order[tb] == undefined ? 99 : order[tb];
@@ -730,9 +731,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 									}
 								}
 							}
-							dui.queueNextFrameTick(function(){
+							dui.queueNextFrameTick(function () {
 								dui.layoutHand();
-								setTimeout(function(){ ui._autoPaixuSorting = false; }, 0);
+								setTimeout(function () { ui._autoPaixuSorting = false; }, 0);
 							}, dui);
 							ui._autoPaixuLastCount = game.me.node.handcards1.childNodes.length || 0;
 							ui._autoPaixuSuppressOnce = true;
@@ -740,8 +741,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}, 180);
 				});
 				ui._autoPaixuObserver.observe(container, { childList: true, subtree: true });
-				if (ui._autoPaixuKeeper) try { clearInterval(ui._autoPaixuKeeper); } catch(e) {}
-				ui._autoPaixuKeeper = setInterval(function(){
+				if (ui._autoPaixuKeeper) try { clearInterval(ui._autoPaixuKeeper); } catch (e) { }
+				ui._autoPaixuKeeper = setInterval(function () {
 					if (!ui._autoPaixuEnabled) return;
 					if (!game.me || !game.me.node) return;
 					var cur = game.me.node.handcards1;
@@ -749,7 +750,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (cur !== ui._autoPaixuContainer) {
 						ui._autoPaixuContainer = cur;
 						ui._autoPaixuLastCount = cur.childNodes.length || 0;
-						try { ui._autoPaixuObserver.disconnect(); } catch(e) {}
+						try { ui._autoPaixuObserver.disconnect(); } catch (e) { }
 						ui._autoPaixuObserver.observe(cur, { childList: true, subtree: true });
 					}
 					var nowCount = cur.childNodes.length || 0;
@@ -758,7 +759,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						ui._autoPaixuLastCount = nowCount;
 						if (nowCount > prev && !ui._autoPaixuSorting) {
 							if (ui._autoPaixuSuppressOnce) { ui._autoPaixuSuppressOnce = false; }
-							else setTimeout(function(){ plugin.click.paixu(); }, 120);
+							else setTimeout(function () { plugin.click.paixu(); }, 120);
 						}
 					}
 				}, 600);
@@ -766,7 +767,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 			stopAutoPaixu() {
 				if (ui._autoPaixuObserver) {
-					try { ui._autoPaixuObserver.disconnect(); } catch (e) {}
+					try { ui._autoPaixuObserver.disconnect(); } catch (e) { }
 					ui._autoPaixuObserver = null;
 				}
 				if (ui._autoPaixuDebounce) {
@@ -774,7 +775,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					ui._autoPaixuDebounce = null;
 				}
 				if (ui._autoPaixuKeeper) {
-					try { clearInterval(ui._autoPaixuKeeper); } catch(e) {}
+					try { clearInterval(ui._autoPaixuKeeper); } catch (e) { }
 					ui._autoPaixuKeeper = null;
 				}
 				ui._autoPaixuSorting = false;

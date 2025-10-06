@@ -203,10 +203,18 @@
 	box-shadow: none;
 	line-height: normal;
 	padding: 0;
+	margin-top: 7.5px;
+	margin-bottom: 7.5px;
+}
+#arena > #dui-controls {
+	bottom: calc(20% + 50px);
+}
+#arena.dui-mobile:not(.choose-character) > #dui-controls {
+	bottom: calc(23% + 50px);
 }
 /*无懈按钮位置*/
 #arena>#dui-controls>.control.stayleft {
-	left: calc(50% - 420px) !important;
+	left: calc(50% - 450px) !important;
 	margin-bottom: 0px !important;
 	order: 3;
 }
@@ -222,14 +230,14 @@
 	/*限制最小宽度*/
 	min-height: 18px !important;
 	/*限制最大高度*/
-	/*margin: 0px 5px !important;/*与其他按钮之间的距离，越小越靠近0 5*/
+	/*margin: 0px 10px !important;/*与其他按钮之间的距离，越小越靠近0 5*/
 	margin-left: 2px !important;
 	margin-right: 2px !important;
 	margin-top: 20px !important;
 	margin-bottom: 0px !important;
-	-webkit-text-stroke: 0.1px #5b6727;
+	-webkit-text-stroke: 0.5px #5b6727;
 	text-shadow: 1px 1px 0px #5b6727, -1px -1px 0px #5b6727, 2px 2px 0px #5b6727, -2px -2px 0px #5b6727;
-	color: #c2c374;
+	color: #e3d08b;
 	font-family: "HYZLSJ";
 	font-size: 30px;
 	font-weight: 500;
@@ -260,18 +268,20 @@
 	font-size: 30px;
 	/*字体大小*/
 	border-radius: 4px;
-	color: #c2c374;
-	-webkit-text-stroke: 0.1px #5b6727;
+	-webkit-text-stroke: 0.5px #5b6727;
 	text-shadow: 1px 1px 0px #5b6727, -1px -1px 0px #5b6727, 2px 2px 0px #5b6727, -2px -2px 0px #5b6727;
+	color: #e3d08b;
 	overflow: visible;
 	transition: none;
 }
 /*取消按键*/
 .control>div.primary2 {
-	font-size: 30px !important;
+	font-size: 35px !important;
 	/*字体大小*/
-	background-image: url("./images/uibutton/confirm-bg-c.png");
-	padding: 8px 12px !important;
+	background-image: url("./images/uibutton/game_btn_bg2.png");
+	transform:scale(0.75);
+	padding: 25px 10px !important;
+	margin-top: 18px !important;
 }
 .control>div+div {
 	margin-left: 15px;
@@ -279,8 +289,8 @@
 /*按钮虚化*/
 .control>div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
-	filter: grayscale(100%);
-	-webkit-filter: grayscale(100%);
+	filter: grayscale(100%) !important;
+	-webkit-filter: grayscale(100%) !important;
 	/*按钮变灰*/
 }
 .control>div.primary>span {
@@ -290,18 +300,18 @@
 	font-size: 40px;
 	line-height: var(--sh);
 	/*top: calc(100% - 44px);/*按钮位置数字越小越往下*/
-	margin: 0px 5px !important;
+	margin: 0px 10px !important;
 	/*0 35*/
 	background-image: url("./images/uibutton/btn.png");
-	padding: 20px 60px !important;
+	padding: 22px 66px !important;
 	/*按钮高度+宽度 建议别调22 68*/
-	min-height: 20px;
+	min-height: 22px;
 	/*限制最小高度*/
-	min-width: 60px;
+	min-width: 66px;
 	/*限制最小宽度*/
-	background-size: 100% 108%;
+	background-size: 100% 100%;
 	text-shadow: 1px 1px 2.5px rgba(62, 57, 38, 0.1);
-	bottom: 0px;
+	bottom: -3px;
 	position: relative;
 }
 /*鹿鹿修改 限定技专属按钮*/
@@ -317,19 +327,14 @@
 	display: block;
 	font-size: 40px;
 	line-height: var(--sh);
-	margin: 0px 5px !important;
+	margin: 0px 30px !important;
 	/*元素离边缘的距离，外边距，简单说就是确定与取消之间的距离*/
 	background-image: url("./images/uibutton/huanpai2.png");
-	padding: 12px 36px !important;
-	/*按钮高度+宽度 建议别调*/
-	min-height: 20px;
-	/*限制最小高度*/
-	min-width: 60px;
-	/*限制最小宽度*/
-	background-size: 100% 108%;
+	transform:scale(1.15);
+	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	text-shadow: 1px 1px 2.5px rgba(62, 57, 38, 0.1);
-	margin-top: 20px !important;
+	margin-top: 26px !important;
 	position: relative;
 }
 .control>div.qi {
@@ -337,19 +342,24 @@
 	display: block;
 	font-size: 40px;
 	line-height: var(--sh);
-	margin: 0px 5px !important;
+	margin: 0px 10px !important;
 	/*元素离边缘的距离，外边距，简单说就是确定与取消之间的距离*/
 	background-image: url("./images/uibutton/qipai.png");
-	padding: 15px 30px !important;
-	/*按钮高度+宽度 建议别调*/
-	min-height: 20px;
-	/*限制最小高度*/
-	min-width: 60px;
-	/*限制最小宽度*/
+	transform:scale(1.15);
 	background-size: 100% 100%;
+	background-repeat: no-repeat;
 	text-shadow: 1px 1px 2.5px rgba(62, 57, 38, 0.1);
-	margin-top: 21px !important;
+	margin-top: 26px !important;
 	position: relative;
+}
+.control>div.primary2:active {
+	transform: scale(0.7) !important;
+	filter: brightness(1.1);
+	-webkit-filter: brightness(1.1);
+}
+.control>div.huan:active,
+.control>div.qi:active {
+	transform: scale(1.1) !important;
 }
 /*手牌*/
 /*这里给这个元素设置了一些默认值，如果在这个标签下的元素，不再设置其他值时，将调用这些默认值*/
