@@ -1113,9 +1113,9 @@ export async function content(config, pack) {
 											c.copy()._customintro = c._customintro;
 										});
 										if (e.type == "mouseover") {
-											player.node.showCards.onmouseleave = function () {};
+											player.node.showCards.onmouseleave = function () { };
 										} else {
-											ui.window.addEventListener("touchend", function touch() {}, { once: true });
+											ui.window.addEventListener("touchend", function touch() { }, { once: true });
 										}
 									};
 									// 监听手牌区变化
@@ -2801,9 +2801,9 @@ export async function content(config, pack) {
 															let j = judges[i],
 																cardj = j.viewAs
 																	? {
-																			name: j.viewAs,
-																			cards: j.cards || [j],
-																	  }
+																		name: j.viewAs,
+																		cards: j.cards || [j],
+																	}
 																	: j;
 															if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
 																wuxie--;
@@ -3292,7 +3292,7 @@ export async function content(config, pack) {
 							}
 						}
 					},
-					updatem(player) {},
+					updatem(player) { },
 					updatez() {
 						window.documentZoom = game.documentZoom;
 						document.body.style.zoom = game.documentZoom;
@@ -4215,11 +4215,11 @@ export async function content(config, pack) {
 					let innerHTML = UIconfig !== "othersOff" || UIconfig === "on" ? "回合结束" : "结束出牌";
 					if (UIconfig === "onlineUI") innerHTML = "取消";
 					else if (_status.event.skill || (ui.selected?.cards ?? []).length > 0) {
-						if (UIconfig === "off") innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
+						if (UIconfig === "off") innerHTML = "<img draggable='false' src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
 						else innerHTML = "取消";
 					}
 					else if (UIconfig === "off") {
-						innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jscp.png>";
+						innerHTML = "<img draggable='false' src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jscp.png>";
 					}
 					ui.confirm.lastChild.innerHTML = innerHTML;
 					const UIcustom = ui.confirm.custom;
@@ -6129,13 +6129,13 @@ export async function content(config, pack) {
 			if (style == null)
 				return canUseDefault
 					? {
-							width: 108,
-							height: 150,
-					  }
+						width: 108,
+						height: 150,
+					}
 					: {
-							width: 0,
-							height: 0,
-					  };
+						width: 0,
+						height: 0,
+					};
 			var size = {
 				width: parseFloat(style.width),
 				height: parseFloat(style.height),
@@ -6876,7 +6876,7 @@ export async function content(config, pack) {
 			if (parentNode) parentNode.appendChild(element);
 			return element;
 		},
-		clone(element) {},
+		clone(element) { },
 	};
 	decadeUI.game = {
 		wait() {
