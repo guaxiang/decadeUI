@@ -509,14 +509,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 					// 创建武将边框
 					var { biankuang, leftPane } = plugin.ui.createCharacterFrame(blackBg1, player);
-					
-					// 确保leftPane有子元素
-					if (!leftPane.firstChild) {
-						ui.create.div(leftPane);
-					}
-					
-					plugin.utils.createCharacterButton(name, leftPane.firstChild);
-					plugin.utils.createCharacterButton(name2, leftPane.firstChild);
 
 					// 创建装饰元素
 					var { biankuang3, biankuang4 } = plugin.ui.createDecorations(blackBg1, player);
