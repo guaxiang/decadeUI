@@ -3155,9 +3155,23 @@ export async function content(config, pack) {
 													return;
 												}
 												var dialog = ui.dialogs[eventName];
-												dialog.show();
-												dialog.target = target;
-												dialog.targetCard = targetCard.copy();
+												if (!dialog && window.decadeUI) {
+													dialog = decadeUI.create.compareDialog();
+													var __captionName = typeof eventName === "string" ? eventName.split("_")[0] : "";
+													dialog.caption = get.translation(__captionName) + "拼点";
+													dialog.player = player;
+													dialog.playerCard = playerCard.copy();
+													dialog.open();
+													ui.dialogs[eventName] = dialog;
+												}
+												if (dialog) {
+													if (typeof dialog.show === "function") dialog.show();
+													dialog.target = target;
+													dialog.targetCard = targetCard.copy();
+												} else {
+													player.$compare(playerCard, target, targetCard);
+													return;
+												}
 											},
 											event.compareId,
 											player,
@@ -3193,7 +3207,7 @@ export async function content(config, pack) {
 											dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
 											setTimeout(
 												function (dialog) {
-													dialog.hide();
+													dialog.close();
 													dialog.$playerCard.dataset.result = "";
 													setTimeout(
 														function (dialog) {
@@ -3202,6 +3216,9 @@ export async function content(config, pack) {
 														180,
 														dialog
 													);
+													if (typeof eventName !== "undefined") {
+														ui.dialogs[eventName] = undefined;
+													}
 												},
 												1400,
 												dialog,
