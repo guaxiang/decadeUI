@@ -4402,6 +4402,9 @@ export async function content(config, pack) {
 					ediv.dataset.type = repetition;
 				}
 				ui.arena.insertBefore(equipSolts, ui.me);
+				if (!lib.config.extension_十周年UI_aloneEquip) {
+					equipSolts.style.display = "none";
+				}
 				decadeUI.bodySensor.addListener(decadeUI.layout.resize);
 				decadeUI.layout.resize();
 				ui.handcards1Container.ontouchstart = ui.click.touchStart;

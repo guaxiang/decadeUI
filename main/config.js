@@ -350,6 +350,9 @@ export let config = {
             if (window.decadeUI) ui.arena.dataset.aloneEquip = config ? "on" : "off";
             _status.nopopequip = config;
             if (_status.gameStarted && ui && ui.equipSolts) {
+                try {
+                    ui.equipSolts.style.display = config ? "" : "none";
+                } catch (e) { }
                 if (config && game.me != ui.equipSolts.me) {
                     if (ui.equipSolts.me) {
                         ui.equipSolts.me.appendChild(ui.equipSolts.equips);
