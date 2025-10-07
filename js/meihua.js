@@ -87,7 +87,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			const next = originalChooseControl.apply(this, args);
 			if (this === game.me) {
 				const groupTranslations = lib.group.map(i => get.translation(i));
-				if (next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
+				if (Array.isArray(next.controls) && next.controls.length > 0 && next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
 					next.setContent(async function (event, trigger, player) {
 						const list = event.controls;
 						if (!list?.length) return;
