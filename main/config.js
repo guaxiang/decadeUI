@@ -194,9 +194,9 @@ export let config = {
             setTimeout(() => game.reload(), 100);
         },
     },
-    Soundeffects: {
-        name: "交互音效",
-        intro: "开启后，对局内点击卡牌或按钮会有交互音效",
+    bettersound: {
+        name: "更多音效",
+        intro: "开启后，对局内点击卡牌或按钮和出牌弃牌会有音效播放",
         init: true,
     },
     dynamicBackground: {

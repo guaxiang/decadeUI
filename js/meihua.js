@@ -194,7 +194,17 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 	}
 	// 局内交互优化
-	if (lib.config["extension_十周年UI_Soundeffects"]) {
+	if (lib.config["extension_十周年UI_bettersound"]) {
+		// 拦截本体音效
+		game._decadeUI_blockedEquipAudios = game._decadeUI_blockedEquipAudios || new Set(["equip1", "equip2", "equip3", "equip4", "equip5", "loseHp"]);
+		if (!game._decadeUI_playAudioWrapped) {
+			const originalPlayAudio = game.playAudio;
+			game.playAudio = function (...args) {
+				if (args[0] === "effect" && game._decadeUI_blockedEquipAudios?.has && game._decadeUI_blockedEquipAudios.has(args[1])) return;
+				return originalPlayAudio.apply(this, args);
+			};
+			game._decadeUI_playAudioWrapped = true;
+		}
 		lib.skill._useCardAudio = {
 			trigger: {
 				player: "useCard",
@@ -224,18 +234,27 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 			},
 		};
-		document.body.addEventListener("mousedown", function (e) {
-			const target = e.target;
-			let audioToPlay = null;
-			if (target.closest("#dui-controls") && (target.classList.contains("control") || target.parentElement.classList.contains("control"))) {
-				audioToPlay = "BtnSure";
-			} else if (target.matches(".menubutton, .button, .card")) {
-				audioToPlay = "card_click";
-			}
-			if (audioToPlay) {
-				game.playAudio("..", "extension", "十周年UI", `audio/${audioToPlay}`);
-			}
-		});
+		if (!game._decadeUI_uiClickAudioHandler) {
+			const uiClickAudioHandler = function (e) {
+				if (e.button !== 0) return;
+				const target = e.target;
+				let audioToPlay = null;
+				if (target.closest("#dui-controls") && (target.classList?.contains("control") || target.parentElement?.classList?.contains("control"))) {
+					audioToPlay = "BtnSure";
+				} else if (target.closest(".menubutton, .button, .card")) {
+					audioToPlay = "card_click";
+				}
+				if (audioToPlay) {
+					const now = Date.now();
+					const last = game._decadeUI_lastUIAudioAt || 0;
+					if (now - last < 60) return;
+					game._decadeUI_lastUIAudioAt = now;
+					game.playAudio("..", "extension", "十周年UI", `audio/${audioToPlay}`);
+				}
+			};
+			document.body.addEventListener("pointerdown", uiClickAudioHandler, { capture: true, passive: true });
+			game._decadeUI_uiClickAudioHandler = uiClickAudioHandler;
+		}
 		// 自己准备阶段音效
 		lib.skill._preparePhaseAudio = {
 			trigger: { player: ["phaseZhunbeiBefore"] },
@@ -247,6 +266,19 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			async content() {
 				game.playAudio("..", "extension", "十周年UI", `audio/seatRoundState_start`);
+			},
+		};
+		// 失去体力音效
+		lib.skill._hpLossAudio = {
+			trigger: { player: "loseHpEnd" },
+			forced: true,
+			popup: false,
+			charlotte: true,
+			filter(event) {
+				return !!event.num;
+			},
+			async content() {
+				game.playAudio("..", "extension", "十周年UI", "audio/hpLossSund.mp3");
 			},
 		};
 	}
