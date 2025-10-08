@@ -961,9 +961,9 @@
 .player>.judges,
 #arena>.player:not(.minskin)>.judges {
 	display: flex;
-	justify-content: flex-start;
-	left: 0;
-	right: auto;
+	justify-content: flex-end;
+	left: auto;
+	right: -1%;
 	top: auto;
 	bottom: -1%;
 	width: auto;
@@ -973,16 +973,11 @@
 }
 .player[data-position="0"]>.judges,
 #arena>.player[data-position="0"]:not(.minskin)>.judges {
-	display: flex;
-	justify-content: flex-start;
-	left: 0;
-	right: auto;
 	top: -24px;
 	bottom: auto;
-	width: auto;
 }
 .player>.judges>.card,
-#window:not(.nopointer) .player .judges>.card {
+#window:not(.nopointer).player.judges>.card {
 	position: static;
 	left: auto;
 	top: auto;
@@ -1005,7 +1000,17 @@
 	position: relative;
 	width: 100%;
 	height: 100%;
-	top: -10px;
+	left: 5px;
+	top: 10px;
+}
+.player[data-position="0"]>.judges>.card>.judge-mark {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	bottom: 25px;
+	left: -150px;
+	top: 30px;
 }
 .player>.judges>.card>.judge-mark>.back {
 	display: block;
@@ -1016,9 +1021,9 @@
 	height: 100%;
 	/* background: rgb(240, 220, 160); */
 	transition: none;
-	transform: rotate(45deg);
+	/* transform: rotate(45deg);
 	border-radius: 4px;
-	/* box-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 0 0 8px rgba(0, 0, 0, 0.8); */
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 0 0 8px rgba(0, 0, 0, 0.8); */
 	z-index: -1;
 }
 .player>.judges>.card>.judge-mark>.back::before {
@@ -1030,8 +1035,8 @@
 	top: 12%;
 	right: 12%;
 	bottom: 12%;
-	border-radius: 2px;
-	/* box-shadow: 0 0 1px black; */
+	/* border-radius: 2px;
+	box-shadow: 0 0 1px black; */
 	z-index: -1;
 }
 .player>.judges>.card>.judge-mark>div:not(.back) .player>.judges>.card>.judge-mark>div:not(.judge) {
@@ -1047,14 +1052,18 @@
 	position: absolute;
 	background-position: center;
 	background-size: 100% 100%;
-	left: -15px;
-	top: -10px;
+	left: -16px;
+	top: -16px;
 	width: 45px;
 	height: 45px;
 	font-family: xinwei, xingkai;
-	font-size: 15px;
-	/* color: white;
-	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000; */
+	font-size: 16px;
+	color: white;
+	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000;
+}
+.player[data-position="0"]>.judges>.card>.judge-mark>.judge {
+	width: 50px;
+	height: 50px;
 }
 .player>.judges>.card.feichu>.judge-mark>.judge::before {
 	content: "";

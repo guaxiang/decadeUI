@@ -4,7 +4,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			Object.assign(ui.create, {
 				skills(skills) {
@@ -359,6 +359,22 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const enableCount = this.node.enable.childNodes.length;
 				const enableWidth = enableCount > 2 ? "200px" : enableCount > 0 ? "114px" : "0px";
 				ui.skillControl.node.enable.style.width = enableWidth;
+				//技能超过2个按钮左移
+				ui.skillControl.node.enable.style.setProperty("transform", `translateX(-${(ui.skillControl.node.enable.childNodes.length > 2 ? "20" : "0")}px)`, "important");
+				//自动调整判断图标位置，代码源自子琪
+				var num = this.node.enable.childNodes.length;
+				const num2 = this.node.trigger.childNodes.length;
+				const playerx = game.players.concat(game.dead);
+				for (var i of playerx) {
+					var numx = 75;
+					if (game.me && game.me == i) {
+						if (num == 2) num = 4;
+						numx = numx - ((Math.ceil(num / 2) * 44) + ((Math.ceil(num2 / 3) - 1) * 28));
+					} else numx = -17;
+					for (var j of i.getCards('j')) {
+						j.node.judgeMark.node.judge.style.setProperty("top", `${numx}px`, "important");
+					}
+				}
 				var level1 = Math.min(4, this.node.trigger.childNodes.length);
 				var level2 = enableCount > 2 ? 4 : enableCount > 0 ? 2 : 0;
 				var level = Math.max(level1, level2);

@@ -1344,6 +1344,8 @@ export async function content(config, pack) {
 											cardx.node.judgeMark.node.judge.style.zIndex = "99";
 											cardx.node.judgeMark.node.judge.parentElement.children[0].style.background = "none";
 											cardx.node.judgeMark.node.judge.parentElement.children[0].style.display = "none";
+										} else {
+											cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${lib.assetURL}extension/十周年UI/image/judgeMark/tongyong.png")`;
 										}
 										ui.updatej(player);
 									},
@@ -1776,7 +1778,7 @@ export async function content(config, pack) {
 								}
 								try {
 									if (lib.config["extension_十周年UI_bettersound"]) game.playAudio("..", "extension", "十周年UI", `audio/GameShowCard`);
-								} catch (e) {}
+								} catch (e) { }
 								if (game.chess) this.chessFocus();
 								return cards[cards.length - 1];
 							},
