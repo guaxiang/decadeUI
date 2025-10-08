@@ -874,8 +874,12 @@
 	left: 23px;
 	/*右移*/
 	width: auto;
-	max-width: 80px;
-	/*最大宽度*/
+	flex-direction: column;
+	flex-wrap: wrap;
+	height: 80px;
+	/*设置高度以控制换列*/
+	align-content: flex-start;
+	/*新列向右对齐*/
 }
 #arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark {
 	display: flex;

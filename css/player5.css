@@ -491,9 +491,8 @@
 	font-size: 16px;
 	text-shadow: none;
 	color: #ffffff;
-	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
 	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
-	z-index: 89;
+	z-index: 80;
 }
 .player>.name.name2:empty,
 #arena>.player:not(.minskin)>.name.name2:empty {
@@ -931,8 +930,12 @@
 	right: 60px;
 	/*左移*/
 	width: auto;
-	max-width: 80px;
-	/*最大宽度*/
+	flex-direction: column;
+	flex-wrap: wrap;
+	height: 60px;
+	/*设置高度以控制换列*/
+	align-content: flex-start;
+	/*新列向右对齐*/
 }
 #arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark {
 	display: flex;

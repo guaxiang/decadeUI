@@ -370,7 +370,7 @@
 	text-shadow: none;
 	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
 	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
-	z-index: 89;
+	z-index: 80;
 }
 .player>.name.name2:empty,
 #arena>.player:not(.minskin)>.name.name2:empty {
@@ -747,17 +747,23 @@
 	right: 0px;
 	/*左移*/
 	width: auto;
-	max-width: 80px;
-	/*最大宽度*/
+	flex-direction: column;
+	flex-wrap: wrap-reverse;
+	height: 80px;
+	/*设置高度以控制换列*/
+	align-content: flex-end;
+	z-index: 88;
+	/*新列向左对齐*/
 }
 #arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark {
 	display: flex;
-	width: 40px;
+	width: 45px;
 	/*宽度*/
-	height: 18px;
+	height: 23px;
 	/*高度*/
 	white-space: nowrap;
 	background-image: url("../assets/image/player_mark.png");
+	background-size: 100% 100%;
 	animation: fade-in 0.5s;
 	margin-bottom: 1px;
 	/*标记纵向间隔*/
@@ -772,7 +778,7 @@
 	font-family: yuanli;
 	line-height: 18px;
 	/*换行高度*/
-	font-size: 12px;
+	font-size: 13px;
 	/*字体大小*/
 	color: white;
 	/*字体颜色*/
@@ -793,7 +799,7 @@
 	height: auto;
 	line-height: 18px;
 	border-radius: 0;
-	font-size: 9px;
+	font-size: 10px;
 	/*字体大小*/
 	font-weight: inherit;
 	color: white;
