@@ -127,24 +127,6 @@
 .player[data-position="0"]>.card-count {
 	visibility: hidden;
 }
-/* .player[data-position="0"]>.card-count {
-	position: absolute;
-	bottom: 4%;
-	left: 1%;
-	transform: translateX(-50%);
-	width: 27px;
-	height: 27px;
-	background: url('image/decoration/new_card_count6.png');
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-	z-index: 89;
-	pointer-events: none;
-	transition: all 0.3s;
-	color: transparent !important;
-}
-.player[data-position="0"]>.card-count::before {
-	display: none !important;
-} */
 /*主玩家位置*/
 .player[data-position="0"],
 #arena>.player[data-position="0"],
@@ -1059,7 +1041,7 @@
 	line-height: 28px;
 	height: 28px;
 	width: 28px;
-	background: url("../image/decoration/new_card_count5.png");
+	background: url("../image/decoration/new_card_count6.png");
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	background-position: 0 -1px;

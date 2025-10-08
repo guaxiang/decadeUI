@@ -542,9 +542,9 @@ export async function content(config, pack) {
 								return state;
 							},
 							mark(item, info, skill) {
-								if (item && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
-									const info = get.info(item);
-									if (info && (info.zhuanhuanji || info.zhuanhuanji2 || info.limited)) return;
+								if (item) {
+									const itemInfo = get.info(item);
+									if (itemInfo && (itemInfo.zhuanhuanji || itemInfo.zhuanhuanji2 || itemInfo.limited)) return;
 								}
 								if (get.itemtype(item) == "cards") {
 									var marks = new Array(item.length);
@@ -692,7 +692,6 @@ export async function content(config, pack) {
 												nodeMark.style.setProperty("display", "none", "important");
 											}
 											nodeMarkText.innerHTML = text;
-											
 											nodeMark.name = name + "_skillmark";
 											nodeMark.info = {
 												name: name,
