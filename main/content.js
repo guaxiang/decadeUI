@@ -594,6 +594,11 @@ export async function content(config, pack) {
 								}
 								mark.name = item;
 								mark.skill = skill || item;
+								if (skill && skill.source && skill.source !== this.name) {
+									mark.classList.add("other-skill");
+								} else {
+									mark.classList.add("own-skill");
+								}
 								if (typeof info == "object") {
 									mark.info = info;
 								} else if (typeof info == "string") {
@@ -699,6 +704,7 @@ export async function content(config, pack) {
 												id: id,
 											};
 											nodeMark.text = nodeMarkText;
+											nodeMark.classList.add("other-skill");
 											nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
 											if (!lib.config.touchscreen) {
 												if (lib.config.hover_all) {
@@ -710,7 +716,6 @@ export async function content(config, pack) {
 											}
 											player.node.marks.appendChild(nodeMark);
 											player.marks[id] = nodeMark;
-											
 											game.addVideo("markCharacter", player, {
 												name: name,
 												content: content,

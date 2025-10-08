@@ -768,6 +768,18 @@
 	margin-bottom: 1px;
 	/*标记纵向间隔*/
 }
+#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark.own-skill {
+	background-image: url("../assets/image/player_mark.png");
+}
+#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark.other-skill {
+	background-image: url("../assets/image/new_player_mark.png");
+}
+#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark.other-skill>.mark-text {
+	color: #FFD700;
+}
+#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark.other-skill>.mark-count {
+	color: #FFD700;
+}
 /*文字文本显示*/
 #arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-text {
 	display: inline;
