@@ -185,19 +185,19 @@
 /* * * * * 新版布局 * * * * */
 /*--------------------分割线--------------------*/
 #arena[data-new-decade-style="on"]>.player {
-	--w: 120px;
+	--w: 120px !important;
 }
 #arena[data-new-decade-style="off"]>.player {
 	--w: 128px !important;
 }
 #arena[data-new-decade-style="othersOff"]>.player {
-	--w: 120px;
+	--w: 120px !important;
 }
 #arena[data-new-decade-style="onlineUI"]>.player {
-	--w: 120px;
+	--w: 120px !important;
 }
 #arena[data-new-decade-style="babysha"]>.player {
-	--w: 120px;
+	--w: 120px !important;
 }
 /*--------------------分割线--------------------*/
 /*8人座*/
