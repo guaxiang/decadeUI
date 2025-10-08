@@ -542,9 +542,9 @@ export async function content(config, pack) {
 								return state;
 							},
 							mark(item, info, skill) {
-								if (item) {
-									const itemInfo = get.info(item);
-									if (itemInfo && (itemInfo.zhuanhuanji || itemInfo.zhuanhuanji2 || itemInfo.limited)) return;
+								if (item && lib.config.extension_十周年UI_newDecadeStyle != "Off") {
+									const info = get.info(item);
+									if (info && (info.zhuanhuanji || info.zhuanhuanji2 || info.limited)) return;
 								}
 								if (get.itemtype(item) == "cards") {
 									var marks = new Array(item.length);
@@ -614,14 +614,14 @@ export async function content(config, pack) {
 								return mark;
 							},
 							markSkill(name, info, card, nobroadcast) {
-								if (name && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
+								if (name && lib.config.extension_十周年UI_newDecadeStyle != "Off") {
 									const info = get.info(name);
 									if (info && (info.zhuanhuanji || info.zhuanhuanji2 || info.limited)) return;
 								}
 								return base.lib.element.player.markSkill.apply(this, arguments);
 							},
 							unmarkSkill(name, info, card, nobroadcast) {
-								if (name && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
+								if (name && lib.config.extension_十周年UI_newDecadeStyle != "Off") {
 									const info = get.info(name);
 									if (info && (info.zhuanhuanji || info.zhuanhuanji2 || info.limited)) return;
 								}
