@@ -594,7 +594,13 @@ export async function content(config, pack) {
 								}
 								mark.name = item;
 								mark.skill = skill || item;
-								if (skill && skill.source && skill.source !== this.name) {
+								var skillSource = null;
+								if (skill && skill.source) {
+									skillSource = skill.source;
+								} else if (_status.event && _status.event.player) {
+									skillSource = _status.event.player.name;
+								}
+								if (skillSource && skillSource !== this.name) {
 									mark.classList.add("other-skill");
 								} else {
 									mark.classList.add("own-skill");
