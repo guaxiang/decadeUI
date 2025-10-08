@@ -594,17 +594,16 @@ export async function content(config, pack) {
 								}
 								mark.name = item;
 								mark.skill = skill || item;
-								var skillSource = null;
-								if (skill && skill.source) {
-									skillSource = skill.source;
-								} else if (_status.event && _status.event.player) {
-									skillSource = _status.event.player.name;
-								}
-								if (skillSource && skillSource !== this.name) {
-									mark.classList.add("other-skill");
-								} else {
-									mark.classList.add("own-skill");
-								}
+								try {
+									var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(mark.skill) : null;
+									if (parentSkill && parentSkill !== mark.skill) {
+										if (!this.hasSkill(parentSkill, null, null, false)) {
+											mark.classList.add("other-skill");
+										} else {
+											mark.classList.add("own-skill");
+										}
+									}
+								} catch (e) {}
 								if (typeof info == "object") {
 									mark.info = info;
 								} else if (typeof info == "string") {
