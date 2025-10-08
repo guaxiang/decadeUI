@@ -1016,7 +1016,7 @@
 	height: 100%;
 	/* background: rgb(240, 220, 160); */
 	transition: none;
-	transform: rotate(45deg);
+	/* transform: rotate(45deg);
 	border-radius: 4px;
 	/* box-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 0 0 8px rgba(0, 0, 0, 0.8); */
 	z-index: -1;
@@ -1030,8 +1030,8 @@
 	top: 12%;
 	right: 12%;
 	bottom: 12%;
-	border-radius: 2px;
-	/* box-shadow: 0 0 1px black; */
+	/* border-radius: 2px;
+	box-shadow: 0 0 1px black; */
 	z-index: -1;
 }
 .player>.judges>.card>.judge-mark>div:not(.back) .player>.judges>.card>.judge-mark>div:not(.judge) {
@@ -1053,8 +1053,8 @@
 	height: 45px;
 	font-family: xinwei, xingkai;
 	font-size: 16px;
-	/* color: white;
-	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000; */
+	color: white;
+	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000;
 }
 .player[data-position="0"]>.judges>.card>.judge-mark>.judge {
     left: 15px;
