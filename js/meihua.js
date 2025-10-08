@@ -1283,7 +1283,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					handTip1.show();
 				} else {
 					const handTip2 = (ui.cardDialog = dui.showHandTip());
-					handTip2.appendText("出牌阶段");
+					handTip2.appendText("出牌阶段", 'phase');
 					let tipText = "，请选择一张卡牌";
 					tipText = tipText.replace(/<\/?.+?\/?>/g, "");
 					tipText = window.getDecPrompt(tipText);
