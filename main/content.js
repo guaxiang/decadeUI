@@ -670,7 +670,7 @@ export async function content(config, pack) {
 								game.broadcastAll(
 									function (player, target, name, content, id) {
 										if (player.marks[id]) {
-											player.marks[id].name = name + "_charactermark";
+											player.marks[id].name = name + "_skillmark";
 											player.marks[id].info = {
 												name: name,
 												content: content,
@@ -683,11 +683,35 @@ export async function content(config, pack) {
 												target: target,
 											});
 										} else {
-											player.marks[id] = player.markCharacter(target, {
+											var nodeMark = ui.create.div(".card.mark");
+											var nodeMarkText = ui.create.div(".mark-text", nodeMark);
+											var skillName = get.translation(name);
+											var text = skillName.substr(0, 2);
+											if (text.length == 2) nodeMarkText.classList.add("small-text");
+											if (text && text.includes("☯")) {
+												nodeMark.style.setProperty("display", "none", "important");
+											}
+											nodeMarkText.innerHTML = text;
+											
+											nodeMark.name = name + "_skillmark";
+											nodeMark.info = {
 												name: name,
 												content: content,
 												id: id,
-											});
+											};
+											nodeMark.text = nodeMarkText;
+											nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
+											if (!lib.config.touchscreen) {
+												if (lib.config.hover_all) {
+													lib.setHover(nodeMark, ui.click.hoverplayer);
+												}
+												if (lib.config.right_info) {
+													nodeMark.oncontextmenu = ui.click.rightplayer;
+												}
+											}
+											player.node.marks.appendChild(nodeMark);
+											player.marks[id] = nodeMark;
+											
 											game.addVideo("markCharacter", player, {
 												name: name,
 												content: content,
@@ -695,10 +719,9 @@ export async function content(config, pack) {
 												target: target,
 											});
 										}
-										player.marks[id].setBackground(target, "character");
-										player.marks[id]._name = target;
-										player.marks[id].style.setProperty("background-size", "cover", "important");
-										player.marks[id].text.style.setProperty("font-size", "0px", "important");
+										player.marks[id].classList.add("skillmark");
+										player.marks[id]._name = name;
+										ui.updatem(player);
 									},
 									this,
 									target,
