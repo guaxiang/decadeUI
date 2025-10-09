@@ -675,14 +675,4 @@ export let config = {
         intro: "<li>手杀样式下在游戏中，隐藏左下角的聊天按钮<li>需重启",
         name: "聊天按钮隐藏",
     },
-    mx_decade_characterDialog: {
-        name: "自由选将筛选框",
-        init: "default",
-        intro: "更改自由选将筛选框",
-        item: {
-            default: "默认本体框",
-            "extension-OL-system": "扩展内置框",
-            offDialog: "关闭筛选框",
-        },
-    },
 }

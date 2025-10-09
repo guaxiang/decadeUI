@@ -94,8 +94,8 @@ export async function precontent() {
 			if (lib.config["extension_十周年UI_choosecharboder"]) {
 				this.css(decadeUIPath + "css/style.css");
 			}
-			// JS加载
-			["js/spine.js", "js/component.js", "js/skill.js", "js/content.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"].forEach(path => this.js(decadeUIPath + path));
+			// JS异步加载
+			["js/spine.js", "js/component.js", "js/skill.js", "js/content.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"].forEach(path => this.jsAsync(decadeUIPath + path));
 			// 原手杀UI内容加载
 			if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
 			const layoutPath = decadeUIPath + "shoushaUI/";
@@ -110,14 +110,10 @@ export async function precontent() {
 			if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode == "hs_hearthstone")) {
 				["character", "lbtn", "skill"].forEach(pack => {
 					// css加载
-					const cssPath = pack === "character" ? `${layoutPath}${pack}/main${listmap}.css` : `${layoutPath}${pack}/main${listmap}${lib.config.touchscreen ? "" : "_window"}.css`;
+					const cssPath = pack === "character" ? `${layoutPath}${pack}/main${listmap}.css` : `${layoutPath}${pack}/main${listmap}${lib.config.phonelayout ? "" : "_window"}.css`;
 					this.css(cssPath);
-					// js加载
-					this.js(
-						`${layoutPath}${pack}/main${listmap}.js`,
-						null,
-						function () {},
-						function () {}
+					this.jsAsync(
+						`${layoutPath}${pack}/main${listmap}.js`
 					);
 				});
 			}
@@ -126,6 +122,22 @@ export async function precontent() {
 		decadeModule.js = function (path) {
 			if (!path) return console.error("path");
 			const script = document.createElement("script");
+			script.onload = function () {
+				this.remove();
+			};
+			script.onerror = function () {
+				this.remove();
+				console.error(`${this.src}not found`);
+			};
+			script.src = `${path}?v=${version}`;
+			document.head.appendChild(script);
+			return script;
+		};
+		decadeModule.jsAsync = function (path) {
+			if (!path) return console.error("path");
+			const script = document.createElement("script");
+			script.async = true;
+			script.defer = true;
 			script.onload = function () {
 				this.remove();
 			};
@@ -529,12 +541,15 @@ export async function precontent() {
 		var packs = [/*'card',*/ "character", "lbtn", "skill"];
 		var listmap = styleMap[lib.config.extension_十周年UI_newDecadeStyle] || 2;
 		packs.forEach(function (pack) {
-			lib.init.js(
-				layoutPath + pack + "/main" + listmap + ".js",
-				null,
-				function () {},
-				function () {}
-			);
+			const script = document.createElement("script");
+			script.async = true;
+			script.defer = true;
+			script.src = layoutPath + pack + "/main" + listmap + ".js?v=" + lib.extensionPack.十周年UI.version;
+			script.onerror = function () {
+				console.error(`Failed to load ${this.src}`);
+			};
+			document.head.appendChild(script);
+			
 			if (pack === "character") {
 				lib.init.css(layoutPath + pack + "/main" + listmap + ".css");
 			} else {
@@ -882,15 +897,7 @@ export async function precontent() {
 		window.chatBg.show = true;
 		window.chatBg.style.cssText = "display: block;--w: 420px;--h: calc(var(--w) * 430/911);width: var(--w);height: var(--h);position: fixed;left:30%;bottom:5%;opacity: 1;background-size: 100% 100%;background-color: transparent;z-index:99;";
 		window.chatBg.style.transition = "all 1.5s";
-		/*window.chatBg.style.height='170px';//调整对话框背景大小，位置
-window.chatBg.style.width='550px';
-  window.chatBg.style.left='calc(50%-130px)';
-window.chatBg.style.top='calc(100% - 470px)';
-window.chatBg.style.opacity=1;*/
 		window.chatBg.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/chat.png");
-		/*window.chatBg.style.backgroundSize="100% 100%";
-window.chatBg.style.transition='all 0.5s';
-window.chatBg.style['box-shadow']='none';*/
 		ui.window.appendChild(window.chatBg);
 		var clickFK = function (div) {
 			div.style.transition = "opacity 0.5s";
@@ -993,12 +1000,6 @@ window.chatBg.style['box-shadow']='none';*/
 		//常用语按钮
 		window.chatButton1 = ui.create.div("hidden", "", game.open_lifesay);
 		window.chatButton1.style.cssText = "display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:40px;bottom:25px;transition:none;background-size:100% 100%";
-		/*window.chatButton1.style.height='70px';
-        window.chatButton1.style.width='80px';
-        window.chatButton1.style.left='40px';
-        window.chatButton1.style.bottom='10px';
-        window.chatButton1.style.transition='none';
-        window.chatButton1.style.backgroundSize="100% 100%";*/
 		window.chatButton1.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/lifesay.png");
 		lib.setScroll(window.chatButton1);
 		window.chatBg.appendChild(window.chatButton1);
@@ -1325,12 +1326,6 @@ window.chatBg.style['box-shadow']='none';*/
 		};
 		window.chatButton2 = ui.create.div("hidden", "", game.open_emoji);
 		window.chatButton2.style.cssText = "display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:150px;bottom:25px;transition:none;background-size:100% 100%";
-		/*window.chatButton2.style.height='70px';
-        window.chatButton2.style.width='80px';
-        window.chatButton2.style.left='150px';
-        window.chatButton2.style.bottom='10px';
-        window.chatButton2.style.transition='none';
-        window.chatButton2.style.backgroundSize="100% 100%";*/
 		window.chatButton2.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/emoji.png");
 		lib.setScroll(window.chatButton2);
 		window.chatBg.appendChild(window.chatButton2);
@@ -1341,12 +1336,6 @@ window.chatBg.style['box-shadow']='none';*/
 		};
 		window.chatButton3 = ui.create.div("hidden", "", game.open_jilu);
 		window.chatButton3.style.cssText = "display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:260px;bottom:25px;transition:none;background-size:100% 100%";
-		/*window.chatButton3.style.height='70px';
-        window.chatButton3.style.width='80px';
-        window.chatButton3.style.left='260px';
-        window.chatButton3.style.bottom='10px';
-        window.chatButton3.style.transition='none';
-        window.chatButton3.style.backgroundSize="100% 100%";*/
 		window.chatButton3.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/jilu.png");
 		lib.setScroll(window.chatButton3);
 		window.chatBg.appendChild(window.chatButton3);
@@ -1358,14 +1347,6 @@ window.chatBg.style['box-shadow']='none';*/
 			window.sendInfo(window.input.value);
 		});
 		window.chatSendBottom.style.cssText = "display: block;--w: 91px;--h: calc(var(--w) * 62/160);width: var(--w);height: var(--h);left:70%;top:33px;transition:none;background-size:100% 100%;text-align:center;border-randius:8px;";
-		/*window.chatSendBottom.style.height='50px';
-        window.chatSendBottom.style.width='25%';
-        window.chatSendBottom.style.left='calc( 60% + 62px )';
-        window.chatSendBottom.style.top='23px';
-        window.chatSendBottom.style.transition='none';
-        window.chatSendBottom.style['text-align']='center';
-        window.chatSendBottom.style.borderRadius='8px';
-        window.chatSendBottom.style.backgroundSize="100% 100%";*/
 		window.chatSendBottom.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/buttonsend.png");
 		window.chatSendBottom.innerHTML = '<span style="color:white;font-size:22px;line-height:32px;font-weight:400;font-family:shousha">发送</span>';
 		window.chatBg.appendChild(window.chatSendBottom);
@@ -1381,12 +1362,6 @@ window.chatBg.style['box-shadow']='none';*/
 		//房间
 		window.chatInputOut = ui.create.div("hidden");
 		window.chatInputOut.style.cssText = "display: block;--w: 265px;--h: calc(var(--w) * 50/280);width: var(--w);height: var(--h);left:30px;top:30px;transition:none;background-size:100% 100%;pointer-events:none;z-index:6;";
-		/*window.chatInputOut.style.height='22px';
-        window.chatInputOut.style.width='60%';
-        window.chatInputOut.style.left='40px';
-        window.chatInputOut.style.top='40px';
-        window.chatInputOut.style.transition='none';
-        window.chatInputOut.style.backgroundSize="100% 100%";*/
 		window.chatInputOut.style.backgroundImage = "url('" + lib.assetURL + "extension/十周年UI/shoushaUI/sayplay/sayX.png')";
 		window.chatBg.appendChild(window.chatInputOut);
 		//输入框

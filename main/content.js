@@ -1776,9 +1776,6 @@ export async function content(config, pack) {
 										player.$throwordered2(card, nosource);
 									})(cards[i]);
 								}
-								try {
-									if (lib.config["extension_十周年UI_bettersound"]) game.playAudio("..", "extension", "十周年UI", `audio/GameShowCard`);
-								} catch (e) { }
 								if (game.chess) this.chessFocus();
 								return cards[cards.length - 1];
 							},
@@ -3548,81 +3545,6 @@ export async function content(config, pack) {
 							return dialog;
 						},
 						//发动技能函数
-						//武将搜索代码摘抄至扩展ol
-						characterDialog() {
-							const dialog = base.ui.create.characterDialog.apply(this, arguments);
-							const control = lib.config.extension_十周年UI_mx_decade_characterDialog || "default";
-							if (control != "default") {
-								const Searcher = dialog.querySelector(".searcher.caption");
-								if (Searcher) Searcher.parentNode.removeChild(Searcher);
-								if (control == "extension-OL-system") {
-									var content_container = dialog.childNodes[0];
-									var content = content_container.childNodes[0];
-									var switch_con = content.childNodes[0];
-									var buttons = content.childNodes[1];
-									var div = ui.create.div("extension-OL-system");
-									div.style.height = "35px";
-									div.style.width = "calc(100%)";
-									div.style.top = "-2px";
-									div.style.left = "0px";
-									div.style["white-space"] = "nowrap";
-									div.style["text-align"] = "center";
-									div.style["line-height"] = "26px";
-									div.style["font-size"] = "24px";
-									div.style["font-family"] = "xinwei";
-									div.innerHTML = "搜索：" + '<select size="1" style="width:75px;height:21px;">' + '<option value="name">名称翻译</option>' + '<option value="name1">名称ID</option>' + '<option value="name2">名称ID(精确匹配)</option>' + '<option value="skill">技能翻译</option>' + '<option value="skill1">技能ID</option>' + '<option value="skill2">技能ID(精确匹配)</option>' + '<option value="skill3">技能描述/翻译</option>' + "→" + '<input type="text" style="width:150px;"></input>' + "</select>";
-									var input = div.querySelector("input");
-									input.placeholder = "非精确匹配支持正则搜索";
-									input.onkeydown = function (e) {
-										e.stopPropagation();
-										if (e.keyCode == 13) {
-											var value = this.value;
-											if (value == "") {
-												game.alert("搜索不能为空");
-												input.focus();
-												return;
-											}
-											var choice = div.querySelector("select").options[div.querySelector("select").selectedIndex].value;
-											if (value) {
-												for (var i = 0; i < buttons.childNodes.length; i++) {
-													buttons.childNodes[i].classList.add("nodisplay");
-													var name = buttons.childNodes[i].link;
-													var skills = get.character(name).skills || [];
-													if (
-														(function (choice, value, name, skills) {
-															if (choice.endsWith("2")) return choice === "name2" ? value === name : skills.includes(value);
-															value = new RegExp(value, "g");
-															const goon = (value, text) => text && value.test(text);
-															if (choice == "name1") return goon(value, name);
-															else if (choice == "name") return goon(value, get.translation(name)) || goon(value, get.translation(name + "_ab"));
-															else if (choice == "skill1") return skills.some(skill => goon(value, skill));
-															else if (choice == "skill") return skills.some(skill => goon(value, get.translation(skill)));
-															else return skills.some(skill => goon(value, get.translation(skill + "_info")));
-														})(choice, value, name, skills)
-													) {
-														buttons.childNodes[i].classList.remove("nodisplay");
-													}
-												}
-											}
-											if (dialog.paginationMaxCount.get("character")) {
-												const buttons = dialog.content.querySelector(".buttons");
-												const p = dialog.paginationMap.get(buttons);
-												if (p) {
-													const array = dialog.buttons.filter(item => !item.classList.contains("nodisplay"));
-													p.state.data = array;
-													p.setTotalPageCount(Math.ceil(array.length / dialog.paginationMaxCount.get("character")));
-												}
-											}
-										}
-									};
-									input.onmousedown = function (e) {
-										e.stopPropagation();
-									};
-									switch_con.insertBefore(div, switch_con.firstChild);
-								}
-							}
-							return dialog;
-						},
 						buttonPresets: {
 							character(item, type, position, noclick, node) {
 								if (node) {
@@ -5604,73 +5526,61 @@ export async function content(config, pack) {
 					card
 				);
 			},
-			delayClear() {
-				var timestamp = 500;
+			// 通用防抖辅助方法
+			_debounce(config) {
+				var timestamp = config.defaultDelay;
 				var nowTime = new Date().getTime();
-				if (this._delayClearTimeout) {
-					clearTimeout(this._delayClearTimeout);
-					timestamp = nowTime - this._delayClearTimeoutTime;
-					if (timestamp > 1000) {
-						this._delayClearTimeout = null;
-						this._delayClearTimeoutTime = null;
-						ui.clear();
+				if (this[config.timeoutKey]) {
+					clearTimeout(this[config.timeoutKey]);
+					timestamp = nowTime - this[config.timeKey];
+					if (timestamp > config.maxDelay) {
+						this[config.timeoutKey] = null;
+						this[config.timeKey] = null;
+						config.immediateCallback();
 						return;
 					}
 				} else {
-					this._delayClearTimeoutTime = nowTime;
+					this[config.timeKey] = nowTime;
 				}
-				this._delayClearTimeout = setTimeout(function () {
-					decadeUI.layout._delayClearTimeout = null;
-					decadeUI.layout._delayClearTimeoutTime = null;
-					ui.clear();
+				this[config.timeoutKey] = setTimeout(function () {
+					decadeUI.layout[config.timeoutKey] = null;
+					decadeUI.layout[config.timeKey] = null;
+					config.callback();
 				}, timestamp);
+			},
+			delayClear() {
+				this._debounce({
+					defaultDelay: 500,
+					maxDelay: 1000,
+					timeoutKey: '_delayClearTimeout',
+					timeKey: '_delayClearTimeoutTime',
+					immediateCallback: function() { ui.clear(); },
+					callback: function() { ui.clear(); }
+				});
 			},
 			invalidate() {
 				this.invalidateHand();
 				this.invalidateDiscard();
 			},
 			invalidateHand(debugName) {
-				//和上下面的有点重复，有空合并
-				var timestamp = 40;
-				var nowTime = new Date().getTime();
-				if (this._handcardTimeout) {
-					clearTimeout(this._handcardTimeout);
-					timestamp = nowTime - this._handcardTimeoutTime;
-					if (timestamp > 180) {
-						this._handcardTimeout = null;
-						this._handcardTimeoutTime = null;
-						this.updateHand();
-						return;
-					}
-				} else {
-					this._handcardTimeoutTime = nowTime;
-				}
-				this._handcardTimeout = setTimeout(function () {
-					decadeUI.layout._handcardTimeout = null;
-					decadeUI.layout._handcardTimeoutTime = null;
-					decadeUI.layout.updateHand();
-				}, timestamp);
+				this._debounce({
+					defaultDelay: 40,
+					maxDelay: 180,
+					timeoutKey: '_handcardTimeout',
+					timeKey: '_handcardTimeoutTime',
+					immediateCallback: function() { this.updateHand(); },
+					callback: function() { decadeUI.layout.updateHand(); }
+				});
 			},
 			invalidateDiscard() {
-				var timestamp = ui.thrown && ui.thrown.length > 15 ? 80 : 40;
-				var nowTime = new Date().getTime();
-				if (this._discardTimeout) {
-					clearTimeout(this._discardTimeout);
-					timestamp = nowTime - this._discardTimeoutTime;
-					if (timestamp > 180) {
-						this._discardTimeout = null;
-						this._discardTimeoutTime = null;
-						this.updateDiscard();
-						return;
-					}
-				} else {
-					this._discardTimeoutTime = nowTime;
-				}
-				this._discardTimeout = setTimeout(function () {
-					decadeUI.layout._discardTimeout = null;
-					decadeUI.layout._discardTimeoutTime = null;
-					decadeUI.layout.updateDiscard();
-				}, timestamp);
+				this._debounce({
+					defaultDelay: ui.thrown && ui.thrown.length > 15 ? 80 : 40,
+					maxDelay: 180,
+					timeoutKey: '_discardTimeout',
+					timeKey: '_discardTimeoutTime',
+					immediateCallback: function() { this.updateDiscard(); },
+					callback: function() { decadeUI.layout.updateDiscard(); }
+				});
 			},
 			resize() {
 				if (decadeUI.isMobile()) ui.arena.classList.add("dui-mobile");
