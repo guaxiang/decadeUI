@@ -73,7 +73,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (get.is.zhuanhuanji(skill, player) || info.limited || (info.intro && info.intro.content === "limited")) {
 							xiandingji[skill] = player.awakenedSkills.includes(skill);
 						}
-						if (info.juexingji || info.dutySkill) juexingji[skill] = player.awakenedSkills.includes(skill);
+						// 修改觉醒技显示逻辑：只在觉醒后才显示
+						if ((info.juexingji || info.dutySkill) && player.awakenedSkills.includes(skill)) {
+							juexingji[skill] = true;
+						}
 					});
 					plugin.updateSkillMarks(player, xiandingji, juexingji);
 				},
