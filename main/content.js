@@ -872,7 +872,7 @@ export async function content(config, pack) {
 									} else if (Array.isArray(this.storage[name])) {
 										num = this.storage[name].length;
 									}
-									if (num > 1) {
+									if (num && num !== 1) {
 										if (!mark.markcount) mark.markcount = decadeUI.element.create("mark-count", mark);
 										mark.markcount.textContent = num;
 									} else if (mark.markcount) {
