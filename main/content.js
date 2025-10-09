@@ -595,8 +595,9 @@ export async function content(config, pack) {
 								mark.name = item;
 								mark.skill = skill || item;
 								var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(mark.skill) : null;
-								if (parentSkill && parentSkill !== mark.skill) {
-									if (!this.hasSkill(parentSkill, null, null, false)) {
+								if (!mark.classList.contains("own-skill") && !mark.classList.contains("other-skill")) {
+									var effectiveSkill = parentSkill && parentSkill !== mark.skill ? parentSkill : mark.skill;
+									if (!this.hasSkill(effectiveSkill, null, null, false)) {
 										mark.classList.add("other-skill");
 									} else {
 										mark.classList.add("own-skill");
@@ -5568,7 +5569,7 @@ export async function content(config, pack) {
 					maxDelay: 180,
 					timeoutKey: '_handcardTimeout',
 					timeKey: '_handcardTimeoutTime',
-					immediateCallback: function() { this.updateHand(); },
+					immediateCallback: function() { decadeUI.layout.updateHand(); },
 					callback: function() { decadeUI.layout.updateHand(); }
 				});
 			},
@@ -5578,7 +5579,7 @@ export async function content(config, pack) {
 					maxDelay: 180,
 					timeoutKey: '_discardTimeout',
 					timeKey: '_discardTimeoutTime',
-					immediateCallback: function() { this.updateDiscard(); },
+					immediateCallback: function() { decadeUI.layout.updateDiscard(); },
 					callback: function() { decadeUI.layout.updateDiscard(); }
 				});
 			},
