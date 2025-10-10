@@ -996,6 +996,13 @@ export async function content(config, pack) {
 							$init(character, character2) {
 								base.lib.element.player.$init.apply(this, arguments);
 								this.doubleAvatar = (character2 && lib.character[character2]) != undefined;
+								// 在othersOff一将成名样式下，检查武将原画是否存在，如果不存在则添加•体验后缀
+								if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
+									this.checkAndAddExperienceSuffix(character);
+									if (character2) {
+										this.checkAndAddExperienceSuffix(character2);
+									}
+								}
 								var CUR_DYNAMIC = decadeUI.CUR_DYNAMIC;
 								var MAX_DYNAMIC = decadeUI.MAX_DYNAMIC;
 								if (CUR_DYNAMIC == undefined) {
@@ -1189,6 +1196,26 @@ export async function content(config, pack) {
 									if (!player.node.seat) player.node.seat = decadeUI.element.create("seat", player);
 									player.node.seat.innerHTML = get.cnNumber(player.seat, true);
 								}, this);
+							},
+							checkAndAddExperienceSuffix(characterName) {
+								const characterData = lib.character[characterName];
+								if (!characterData) return;
+								// 使用武将指定的图片路径，或默认路径
+								const imagePath = characterData.img || `image/character/${characterName}.jpg`;
+								const img = new Image();
+								img.onload = () => {
+									// 图片存在，无需添加体验后缀
+								};
+								img.onerror = () => {
+									// 图片不存在，添加体验后缀
+									if (this.node?.name) {
+										const currentName = this.node.name.innerHTML;
+										if (!currentName.includes('•体验')) {
+											this.node.name.innerHTML = currentName + '•体验';
+										}
+									}
+								};
+								img.src = lib.assetURL + imagePath;
 							},
 							$update() {
 								base.lib.element.player.$update.apply(this, arguments);
