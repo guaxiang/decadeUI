@@ -58,7 +58,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
 			get: () => ["wei", "shu", "wu", "qun", "jin"],
-			set: () => {},
+			set: () => { },
 		});
 		lib.skill._slyh = {
 			trigger: { global: "gameStart", player: "enterGame" },
@@ -898,16 +898,19 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		};
 	}
 	// 数字特效
-	if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff" || lib.config.extension_十周年UI_newDecadeStyle === "on") {
+	if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff" || lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "off") {
 		window._WJMHHUIFUSHUZITEXIAO = { shuzi2: { name: "../../../十周年UI/assets/animation/globaltexiao/huifushuzi/shuzi2" } };
 		window._WJMHXUNISHUZITEXIAO = { SS_PaiJu_xunishanghai: { name: "../../../十周年UI/assets/animation/globaltexiao/xunishuzi/SS_PaiJu_xunishanghai" } };
-		window._WJMHSHANGHAISHUZITEXIAO = { SZN_shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi" } };
+		window._WJMHSHANGHAISHUZITEXIAO = {
+			shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/shuzi" },
+			SZN_shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi" }
+		};
 		lib.skill._wjmh_huifushuzi_ = {
 			priority: 10,
 			forced: true,
 			trigger: { player: "recoverBegin" },
 			filter(event) {
-				return event.num && event.num > 0 && event.num <= 9;
+				return event.num && event.num > 0 && event.num <= 9 && lib.config.extension_十周年UI_newDecadeStyle !== "off";
 			},
 			async content(event, trigger, player) {
 				const action = trigger.num.toString();
@@ -941,14 +944,18 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			forced: true,
 			trigger: { player: "damageBegin4" },
 			filter(event) {
-				return event.num && event.num > 1 && event.num <= 9;
+				return event.num && event.num > 1 && event.num <= 9 && lib.config.extension_十周年UI_newDecadeStyle;
 			},
 			async content(event, trigger, player) {
 				const action = trigger.num.toString();
 				if (action) {
-					dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.name, "skel", () => {
-						window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi.action = action;
-						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO.SZN_shuzi, { speed: 0.6, scale: 0.5, parent: player, y: 20 });
+					var anim = "SZN_shuzi";
+					if (lib.config.extension_十周年UI_newDecadeStyle === "off") {
+						anim = "shuzi";
+					}
+					dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO[anim].name, "skel", () => {
+						window._WJMHSHANGHAISHUZITEXIAO[anim].action = action;
+						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO[anim], { speed: 0.6, scale: 0.5, parent: player });
 					});
 				}
 			},
@@ -964,8 +971,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			biaoqijiangjun: { name: "SF_xuanzhong_eff_biaoqijiangjun", scale: 0.5 },
 			dajiangjun: { name: "SF_xuanzhong_eff_dajiangjun", scale: 0.6 },
 			dasima: { name: "SF_xuanzhong_eff_dasima", scale: 0.6 },
-			shoushaX: { name: "aar_chupaizhishiX", scale: 0.6 },
-			shousha: { name: "aar_chupaizhishi", scale: 0.6 },
+			shoushaX: { name: "aar_chupaizhishiX", scale: 0.55 },
+			shousha: { name: "aar_chupaizhishi", scale: 0.55 },
 		};
 		const DELAY_TIME = 300;
 		let timer = null;
