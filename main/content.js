@@ -2018,21 +2018,14 @@ export async function content(config, pack) {
 							trySkillAnimate(name) {
 								base.lib.element.player.trySkillAnimate.apply(this, arguments);
 								var that = this;
-								//------技能进度条------------//
+								//------AI技能提示条------------//
 								if (lib.config["extension_十周年UI_enable"] && lib.config.extension_十周年UI_jindutiao == true) {
-									if (!document.querySelector("#jindutiaopl") && that == game.me) {
-										game.Jindutiaoplayer();
-									} else if (that != game.me) {
-										var ab = that.getElementsByClassName("timeai"); //进度条
+									if (that != game.me) {
 										var cd = that.getElementsByClassName("tipshow"); //阶段，出牌提示条
 										var ef = that.getElementsByClassName("tipskill"); //技能提示条
 										//-------初始化-----//
-										if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
 										if (cd[0]) cd[0].parentNode.removeChild(cd[0]);
 										if (ef[0]) ef[0].parentNode.removeChild(ef[0]);
-										game.JindutiaoAIplayer();
-										window.boxContentAI.classList.add("timeai");
-										that.appendChild(window.boxContentAI);
 										var tipbanlist = ["_recasting", "jiu"]; //过滤部分触发技能，可以自己添加
 										if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
 											var tipskillbox = document.createElement("div"); //盒子
@@ -6935,79 +6928,48 @@ export async function content(config, pack) {
 				document.getElementById("jindutiaoAI").remove();
 			}
 		});
-		//--------AI回合内进度条-------类名timePhase------//
-		lib.skill._jindutiaoO = {
+		lib.skill._jindutiaoAI_operation = {
 			trigger: {
-				player: ["phaseZhunbeiBegin", "phaseBegin", "phaseJudgeBegin", "phaseDrawBegin", "useCardAfter", "phaseDiscardBegin", "useSkillBefore", "loseAfter"],
-			},
-			filter(event, player) {
-				if (document.querySelector("#jindutiaoAI") == false) return false;
-				return player != (_status.event.player || game.me) && _status.currentPhase == player;
-			},
-			forced: true,
-			silent: true,
-			charlotte: true,
-			async content(event, trigger, player) {
-				lib.removeFirstByClass(player, "timePhase");
-				game.JindutiaoAIplayer();
-				window.boxContentAI.classList.add("timePhase");
-				player.appendChild(window.boxContentAI);
-			},
-			group: ["_jindutiaoO_jieshuA"],
-			subSkill: {
-				//进度条消失
-				jieshuA: {
-					trigger: {
-						player: ["phaseEnd", "dieBegin", "phaseJieshuBegin"],
-					},
-					filter(event, player) {
-						return player != (_status.event.player || game.me) && _status.currentPhase == player;
-					},
-					forced: true,
-					silent: true,
-					charlotte: true,
-					async content(event, trigger, player) {
-						if (window.timerai) {
-							clearInterval(window.timerai);
-							delete window.timerai;
-						}
-						if (document.getElementById("jindutiaoAI")) {
-							document.getElementById("jindutiaoAI").remove();
-						}
-						lib.removeFirstByClass(player, "timePhase");
-					},
-				},
-			},
-		};
-		//------------AI回合外进度条-----类名timeai 以下都是-----//
-		lib.skill._jindutiaoA = {
-			trigger: {
-				player: ["useCardBegin", "respondBegin", "chooseToRespondBegin", "damageEnd", "judgeEnd"],
+				player: [
+					"chooseToUseBegin", "chooseToRespondBegin", "chooseToDiscardBegin", 
+					"chooseToTargetBegin", "chooseToButtonBegin", "chooseToMoveBegin",
+					"chooseToGainBegin", "chooseToLoseBegin", "chooseToExchangeBegin"
+				],
 			},
 			silent: true,
-			forced: true,
-			charlotte: true,
 			filter(event, player) {
-				if (document.querySelector("#jindutiaoAI") == false) return false;
-				return _status.currentPhase != player && player != (_status.event.player || game.me);
+				return player != game.me;
 			},
+			forced: true,
 			async content(event, trigger, player) {
 				lib.removeFirstByClass(player, "timeai");
+				lib.removeFirstByClass(player, "timePhase");
+				if (window.timerai) {
+					clearInterval(window.timerai);
+					delete window.timerai;
+				}
 				game.JindutiaoAIplayer();
-				window.boxContentAI.classList.add("timeai");
+				if (_status.currentPhase == player) {
+					window.boxContentAI.classList.add("timePhase");
+				} else {
+					window.boxContentAI.classList.add("timeai");
+				}
+				
 				player.appendChild(window.boxContentAI);
 			},
-			group: ["_jindutiaoA_jieshuB"],
+			group: ["_jindutiaoAI_operation_end"],
 			subSkill: {
-				jieshuB: {
+				end: {
 					trigger: {
-						player: ["useCardEnd", "respondEnd", "dieBegin"],
+						player: [
+							"chooseToUseAfter", "chooseToRespondAfter", "chooseToDiscardAfter",
+							"chooseToTargetAfter", "chooseToButtonAfter", "chooseToMoveAfter",
+							"chooseToGainAfter", "chooseToLoseAfter", "chooseToExchangeAfter"
+						],
 					},
 					forced: true,
-					silent: true,
-					charlotte: true,
 					filter(event, player) {
-						return player != (_status.event.player || game.me) && _status.currentPhase != player;
+						return player != game.me;
 					},
 					async content(event, trigger, player) {
 						if (window.timerai) {
@@ -7015,6 +6977,11 @@ export async function content(config, pack) {
 							delete window.timerai;
 						}
 						lib.removeFirstByClass(player, "timeai");
+						lib.removeFirstByClass(player, "timePhase");
+						
+						if (document.getElementById("jindutiaoAI")) {
+							document.getElementById("jindutiaoAI").remove();
+						}
 					},
 				},
 			},
@@ -7185,6 +7152,70 @@ export async function content(config, pack) {
 				charlotte: true,
 				async content(event, trigger, player) {
 					lib.removeFirstByClass(player, "timeai");
+				},
+			},
+		};
+	}
+	//玩家进度条
+	if (get.mode() != "connect" && config.jindutiao == true) {
+		lib.onover.push(function () {
+			var bar = document.getElementById("jindutiaopl");
+			if (bar) bar.remove();
+		});
+		lib.skill._jindutiao_operation = {
+			trigger: {
+				player: [
+					"chooseToUseBegin", "chooseToRespondBegin", "chooseToDiscardBegin", 
+					"chooseToTargetBegin", "chooseToButtonBegin", "chooseToMoveBegin",
+					"chooseToGainBegin", "chooseToLoseBegin", "chooseToExchangeBegin"
+				],
+			},
+			silent: true,
+			filter(event, player) {
+				return player == game.me;
+			},
+			forced: true,
+			async content(event, trigger, player) {
+				var existingBar = document.getElementById("jindutiaopl");
+				if (existingBar) {
+					existingBar.remove();
+				}
+				if (window.timer) {
+					clearInterval(window.timer);
+					delete window.timer;
+				}
+				if (window.timer2) {
+					clearInterval(window.timer2);
+					delete window.timer2;
+				}
+				game.Jindutiaoplayer();
+			},
+			group: ["_jindutiao_operation_end"],
+			subSkill: {
+				end: {
+					trigger: {
+						player: [
+							"chooseToUseAfter", "chooseToRespondAfter", "chooseToDiscardAfter",
+							"chooseToTargetAfter", "chooseToButtonAfter", "chooseToMoveAfter",
+							"chooseToGainAfter", "chooseToLoseAfter", "chooseToExchangeAfter"
+						],
+					},
+					forced: true,
+					filter(event, player) {
+						return player == game.me;
+					},
+					async content(event, trigger, player) {
+						if (window.timer) {
+							clearInterval(window.timer);
+							delete window.timer;
+						}
+						if (window.timer2) {
+							clearInterval(window.timer2);
+							delete window.timer2;
+						}
+						var bar = document.getElementById("jindutiaopl");
+						if (bar) bar.remove();
+					},
 				},
 			},
 		};
@@ -7685,97 +7716,5 @@ export async function content(config, pack) {
 				setInterval(showGTBB, parseFloat(lib.config["extension_十周年UI_GTBBTime"]));
 			}
 		}, 5000);
-	}
-	//玩家进度条
-	if (get.mode() != "connect" && config.jindutiao == true) {
-		lib.onover.push(function () {
-			var bar = document.getElementById("jindutiaopl");
-			if (bar) bar.remove();
-		});
-		//玩家回合内进度条
-		lib.skill._jindutiao = {
-			trigger: {
-				player: ["phaseZhunbeiBegin", "phaseBegin", "phaseJudgeBegin", "phaseDrawBegin", "useCardAfter", "phaseDiscardBegin", "useSkillBefore", "loseAfter"],
-			},
-			silent: true,
-			filter(event, player) {
-				if (document.querySelector("#jindutiaopl") == false) return false;
-				return player == (_status.event.player || game.me) && _status.currentPhase == player;
-			},
-			forced: true,
-			async content(event, trigger, player) {
-				game.Jindutiaoplayer();
-			},
-			group: ["_jindutiao_jieshu"],
-			subSkill: {
-				jieshu: {
-					trigger: {
-						player: ["phaseEnd", "phaseJieshuBegin"],
-					},
-					forced: true,
-					filter(event, player) {
-						return player == (_status.event.player || game.me);
-					},
-					async content(event, trigger, player) {
-						if (window.timer) {
-							clearInterval(window.timer);
-							delete window.timer;
-						}
-						if (window.timer2) {
-							clearInterval(window.timer2);
-							delete window.timer2;
-						}
-						var bar = document.getElementById("jindutiaopl");
-						if (bar) bar.remove();
-					},
-				},
-			},
-		};
-		/*------回合外进度条玩家----*/
-		lib.skill._jindutiao_out = {
-			trigger: {
-				global: ["gameStart"],
-				player: ["useCardToBegin", "respondBegin", "chooseToRespondBegin", "damageEnd", "damageAfter", "judgeEnd"],
-				target: "useCardToTargeted",
-			},
-			silent: true,
-			forced: true,
-			charlotte: true,
-			filter(event, player) {
-				if (document.querySelector("#jindutiaopl") == false) return false;
-				if (event.name == "gameStart" && lib.config["extension_无名补丁_enable"]) return false;
-				return _status.currentPhase != player && player == (_status.event.player || game.me);
-			},
-			async content(event, trigger, player) {
-				game.Jindutiaoplayer();
-			},
-			group: ["_jindutiao_out_jieshu"],
-			subSkill: {
-				jieshu: {
-					trigger: {
-						global: ["useCardAfter", "useCardBefore", "phaseBefore", "loseEnd", "phaseBegin", "phaseDradBegin", "phaseUseBegin", "phaseUseEnd", "phaseEnd", "phaseDiscardAfter", "phaseDiscardBegin", "useSkillBefore", "judgeAfter"],
-					},
-					forced: true,
-					silent: true,
-					charlotte: true,
-					filter(event, player) {
-						if (document.querySelector("#jindutiaopl")) return _status.currentPhase != (_status.event.player || game.me);
-						return false;
-					},
-					async content(event, trigger, player) {
-						if (window.timer) {
-							clearInterval(window.timer);
-							delete window.timer;
-						}
-						if (window.timer2) {
-							clearInterval(window.timer2);
-							delete window.timer2;
-						}
-						var bar = document.getElementById("jindutiaopl");
-						if (bar) bar.remove();
-					},
-				},
-			},
-		};
 	}
 }

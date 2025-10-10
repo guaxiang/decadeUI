@@ -501,23 +501,6 @@ export let config = {
             game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
         },
     },
-    /*进度条说明*/
-    JDTSM: {
-        name: '<div class="shousha_menu">进度条&阶段提示·查看</div>',
-        clear: true,
-        onclick() {
-            if (this.JDTSM == undefined) {
-                var more = ui.create.div(".JDTSM", '<div class="shousha_text"><li><b>进度条</b>:完善时机包括玩家回合内、人机回合内、玩家回合外、人机回合外。<li><b>进度条时间间隔</b>:设置玩家进度条的时间间隔，默认100毫秒/次<li><b>时间间隔</b>：通俗点说，就是进度条刷新的自定义时间单位/次。时间间隔越小，进度条总时间越少，反之亦然。<li><b>切换不生效？</b>:在游戏里切换时间间隔后不会马上生效，会在下一次进度条出现时生效。<li><b>进度条高度百分比</b>:现在可以在游戏里动态调节进度条高度了，变化发生在每次刷新时，建议开启<b>进度条刷新</b>功能搭配使用。可调节的范围在10%-40%左右。<li><b>进度条刷新</b>:在游戏里开启后，进度条会在每个节点进行刷新（也就是大伙说的旧版进度条）。</div>');
-                this.parentNode.insertBefore(more, this.nextSibling);
-                this.JDTSM = more;
-                this.innerHTML = '<div class="shousha_menu">进度条&阶段提示·关闭</div>';
-            } else {
-                this.parentNode.removeChild(this.JDTSM);
-                delete this.JDTSM;
-                this.innerHTML = '<div class="shousha_menu">进度条&阶段提示·查看</div>';
-            }
-        },
-    },
     /*-----进度条-------*/
     jindutiao: {
         init: true,
@@ -607,23 +590,6 @@ export let config = {
         clear: true,
         onclick: function () {
             game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
-        },
-    },
-    /*狗托播报说明*/
-    GTBBSM: {
-        name: '<div class="shousha_menu">狗托播报·查看</div>',
-        clear: true,
-        onclick() {
-            if (this.GTBBSM == undefined) {
-                var more = ui.create.div(".GTBBSM", '<div class="shousha_text"><li><b>狗托播报</b>:开启后，顶部会出现滚动播报栏。PS:狗托误我啊!<li><b>播报样式</b>：新增一种样式，可选择切换，需重启。【手杀/十周年】<li><b>播报时间间隔</b>:需重启，调整每条播报的出现频率。</div>');
-                this.parentNode.insertBefore(more, this.nextSibling);
-                this.GTBBSM = more;
-                this.innerHTML = '<div class="shousha_menu">狗托播报·关闭</div>';
-            } else {
-                this.parentNode.removeChild(this.GTBBSM);
-                delete this.GTBBSM;
-                this.innerHTML = '<div class="shousha_menu">狗托播报·查看</div>';
-            }
         },
     },
     /*-------狗托播报-----*/

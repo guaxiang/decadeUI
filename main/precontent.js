@@ -62,7 +62,6 @@ export async function precontent() {
 		decadeModule.init = function () {
 			// 基础CSS加载
 			["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"].forEach(path => this.css(decadeUIPath + path));
-			// newDecadeStyle相关CSS加载
 			const style = lib.config.extension_十周年UI_newDecadeStyle;
 			const styleIndex = ["on", "off", "othersOff", "onlineUI", "babysha"].indexOf(style);
 			if (style !== void 0) {
@@ -70,22 +69,16 @@ export async function precontent() {
 			} else {
 				this.css(decadeUIPath + "css/player2.css");
 			}
-			// equip与layout相关CSS加载
-			let equipCss = "css/equip_new.css",
-				layoutCss = "css/layout.css";
+			let layoutCss = "css/layout.css";
 			if (style === "othersOff") {
-				equipCss = "css/equip_new_new.css";
 				layoutCss = "css/layout_new.css";
 			} else if (style === "onlineUI") {
-				equipCss = "css/equip_ol.css";
 				layoutCss = "css/layout_new.css";
 			} else if (style === "babysha") {
-				equipCss = "css/equip_baby.css";
 				layoutCss = "css/layout_new.css";
-			} else if (style === "on") {
-				equipCss = "css/equip.css";
 			}
-			this.css(decadeUIPath + equipCss);
+			this.css(decadeUIPath + "css/equip.css");
+			document.body.setAttribute("data-style", style || "on");
 			this.css(decadeUIPath + layoutCss);
 			// 其他条件CSS
 			if (lib.config.extension_十周年UI_meanPrettify) {
