@@ -649,7 +649,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var numbercolor = "white";
 					if (cardNumber2 > cardNumber) numbercolor = "red";
 					if (cardNumber == Infinity) cardNumber = "∞";
-					this.node.cardNumber.innerHTML = "<span>" + "<font color=" + numbercolor + " > " + cardNumber2 + "</font>" + '<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;">' + " / " + "</sp>" + cardNumber + "</span>";
+					this.node.cardNumber.innerHTML = "<span>" + "<font color=" + numbercolor + " > " + cardNumber2 + "</font>" + '<sp style="font-size:18px; font-family:yuanli; color:#FFFCF5;">' + "/" + "</sp>" + cardNumber + "</span>";
 					this.show();
 					game.addVideo("updateCardnumber", null, {
 						cardNumber: cardNumber,

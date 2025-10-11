@@ -691,7 +691,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					const cardLimit = game.me.getHandcardLimit() || 0;
 					const numberColor = currentCards > cardLimit ? "red" : "white";
 					const displayLimit = cardLimit === Infinity ? "∞" : cardLimit;
-					this.node.cardNumber.innerHTML = `<span><font color="${numberColor}">${currentCards}</font>` + `<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;"> / </sp>${displayLimit}</span>`;
+					this.node.cardNumber.innerHTML = `<span><font color="${numberColor}">${currentCards}</font>` + `<sp style="font-size:15px; font-family:yuanli; color:#FFFCF5;">/</sp>${displayLimit}</span>`;
 					this.show();
 					game.addVideo("updateCardnumber", null, {
 						cardNumber: cardLimit,

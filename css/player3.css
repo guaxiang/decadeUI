@@ -1049,8 +1049,8 @@
 	left: -5.5px;
 	bottom: -1px;
 	line-height: 28px;
-	height: 28px;
-	width: 28px;
+	height: 24px;
+	width: 24px;
 	background: url("../image/decoration/new_card_count6.png");
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
@@ -1082,10 +1082,10 @@
 /* 只隐藏主玩家的手牌数字显示 */
 .player[data-position="0"]>.card-count {
 	position: absolute;
-	bottom: 5px;
+	bottom: 7px;
 	left: -5px;
-	height: 28px;
-	width: 28px;
+	height: 24px;
+	width: 24px;
 	background: url("../image/decoration/new_card_count6.png");
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
