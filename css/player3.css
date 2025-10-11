@@ -232,8 +232,9 @@
 #arena.decadeUI[data-border-level="four"] .player>.camp-wrap>.camp-border {
 	background-image: url("../image/decoration/new_border_camp4.png");
 }
-.player>.camp-wrap>.avatar-name,
 /*主将名，根据部分群友需要，添加定位代码*/
+.player>.camp-wrap>.avatar-name,
+.player>.camp-wrap>.avatar-name-default,
 #arena>.player:not(.minskin)>.name.name,
 .player>.name.name2,
 #arena>.player:not(.minskin)>.name.name2 {
@@ -241,28 +242,12 @@
 	align-items: flex-start !important;
 	align-content: flex-start !important;
 	justify-content: flex-start !important;
-	left: 25% !important;
-	right: auto;
-	top: 92px !important;
-	width: 18px;
-	height: auto !important;
-	font-family: "yuanli" !important;
-	font-size: 18px;
-	line-height: 17px;
-	/*字体间距*/
+	font-size: 15px;
 	text-shadow: none;
-	z-index: 80;
 }
 .player>.camp-wrap>.avatar-name,
 .player>.camp-wrap>.avatar-name-default {
-	display: flex !important;
-	align-items: flex-start !important;
-	align-content: flex-start !important;
-	justify-content: flex-start !important;
-	font-size: 18px;
 	text-align: left !important;
-	text-shadow: none;
-	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
 	left: 26% !important;
 	top: 40% !important;
 	right: 26% !important;
@@ -271,6 +256,33 @@
 	white-space: nowrap;
 	writing-mode: vertical-rl;
 	-webkit-writing-mode: vertical-rl;
+}
+#arena>.player:not(.minskin)>.name.name,
+.player>.name.name2,
+#arena>.player:not(.minskin)>.name.name2 {
+	left: 25% !important;
+	right: auto;
+	top: 92px !important;
+	width: 18px;
+	height: auto !important;
+	font-family: "yuanli" !important;
+	line-height: 17px;
+	/*字体间距*/
+	z-index: 80;
+}
+/*副将名特殊定位*/
+.player>.name.name2,
+#arena>.player:not(.minskin)>.name.name2 {
+	left: 50% !important;
+	top: 47px !important;
+	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
+}
+.player>.name.name2:empty,
+#arena>.player:not(.minskin)>.name.name2:empty {
+	display: none;
+}
+.player.fullskin.fullskin2>.name.name2:empty::before {
+	content: "副将";
 }
 .player>.camp-wrap>.camp-back {
 	display: flex;
@@ -360,20 +372,6 @@
 }
 .player>.camp-wrap>.camp-name {
 	text-shadow: 0 0 5px #e0ea33, 0 0 15px #e0ea33, 0 0 25px #e0ea33;
-}
-/*副将名特殊定位*/
-.player>.name.name2,
-#arena>.player:not(.minskin)>.name.name2 {
-	left: 50% !important;
-	top: 47px !important;
-	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
-}
-.player>.name.name2:empty,
-#arena>.player:not(.minskin)>.name.name2:empty {
-	display: none;
-}
-.player.fullskin.fullskin2>.name.name2:empty::before {
-	content: "副将";
 }
 /*联机名称显示*/
 .player>.nameol {

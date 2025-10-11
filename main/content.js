@@ -596,12 +596,8 @@ export async function content(config, pack) {
 								mark.skill = skill || item;
 								var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(mark.skill) : null;
 								if (!mark.classList.contains("own-skill") && !mark.classList.contains("other-skill")) {
-									var effectiveSkill = parentSkill && parentSkill !== mark.skill ? parentSkill : mark.skill;
-									if (!this.hasSkill(effectiveSkill, null, null, false)) {
-										mark.classList.add("other-skill");
-									} else {
-										mark.classList.add("own-skill");
-									}
+									var isOwnSkill = decadeUI.game.checkSkillOwnership.call(this, mark.skill, parentSkill);
+									mark.classList.add(isOwnSkill ? "own-skill" : "other-skill");
 								}
 								if (typeof info == "object") {
 									mark.info = info;
@@ -6872,6 +6868,62 @@ export async function content(config, pack) {
 			} else {
 				_status.paused = false;
 			}
+		},
+		checkSkillOwnership(skillName, parentSkill) {
+			// 特殊标记处理：这些标记是其他玩家给技能的方式实现的，应该显示为other-skill
+			const otherPlayerMarks = [
+				'xinzhaofu_effect',
+				'reyanzhu2'
+			];
+			if (otherPlayerMarks.includes(skillName)) {
+				return false;
+			}
+			// 其他标记走正常流程判断
+			const skillTransformRules = [
+				{
+					name: 'xin前缀',
+					condition: (name) => name.startsWith("xin") && name.length > 3,
+					transform: (name) => name.substring(3)
+				},
+				{
+					name: 're前缀',
+					condition: (name) => name.startsWith("re") && name.length > 2,
+					transform: (name) => name.substring(2)
+				},
+				{
+					name: '_mark后缀',
+					condition: (name) => name.endsWith("_mark") && name.length > 5,
+					transform: (name) => name.substring(0, name.length - 5)
+				}
+			];
+			var effectiveSkill = parentSkill && parentSkill !== skillName ? parentSkill : skillName;
+			if (this.hasSkill(effectiveSkill, null, null, false)) {
+				return true;
+			}
+			if (this.hasSkill(skillName, null, null, false)) {
+				return true;
+			}
+			var playerSkills = this.getSkills();
+			for (var i = 0; i < playerSkills.length; i++) {
+				var skill = playerSkills[i];
+				if (skill.includes(skillName) || skillName.includes(skill)) {
+					return true;
+				}
+			}
+			var possibleSourceSkills = [];
+			for (var i = 0; i < skillTransformRules.length; i++) {
+				var rule = skillTransformRules[i];
+				if (rule.condition(skillName)) {
+					possibleSourceSkills.push(rule.transform(skillName));
+				}
+			}
+			for (var i = 0; i < possibleSourceSkills.length; i++) {
+				if (this.hasSkill(possibleSourceSkills[i], null, null, false)) {
+					return true;
+				}
+			}
+
+			return false;
 		},
 	};
 	decadeUI.config = config;
