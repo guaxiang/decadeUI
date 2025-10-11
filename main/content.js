@@ -56,21 +56,6 @@ export async function content(config, pack) {
 				},
 				true
 			);
-			// 防误触：点击空白区域不触发全局取消选择（仅PC端）
-			if (!decadeUI.isMobile()) {
-				document.addEventListener(
-					"click",
-					function (e) {
-						var target = e && e.target;
-						if (!target) return;
-						var interactive = target.closest && (target.closest(".button") || target.closest(".card") || target.closest(".player") || target.closest(".dialog") || target.closest(".control"));
-						if (!interactive) {
-							_status.clicked = true;
-						}
-					},
-					true
-				);
-			}
 			this.initOverride();
 			if (window.get && typeof window.get.cardsetion === "function") {
 				const oldCardsetion = window.get.cardsetion;
@@ -125,6 +110,7 @@ export async function content(config, pack) {
 					},
 					click: {
 						intro: ui.click.intro,
+						window:ui.click.window,
 					},
 					update: ui.update,
 				},
@@ -3852,6 +3838,86 @@ export async function content(config, pack) {
 						intro() {
 							if (this.classList.contains("infohidden")) return;
 							return base.ui.click.intro.apply(this, arguments);
+						},
+						window() {
+							var clicked = _status.clicked;
+							var dialogtouched = false;
+							if (_status.dialogtouched) {
+								_status.dialogtouched = false;
+								dialogtouched = true;
+							}
+							if (_status.dragged) {
+								return;
+							}
+							if (_status.touchpopping) {
+								return;
+							}
+							if (_status.reloading) {
+								return;
+							}
+							if (_status.clicked || _status.clicked2) {
+								_status.clicked = false;
+								_status.clicked2 = false;
+							} else {
+								if (_status.clickingidentity) {
+									for (var i = 0; i < _status.clickingidentity[1].length; i++) {
+										_status.clickingidentity[1][i].delete();
+										_status.clickingidentity[1][i].style.transform = "";
+									}
+									delete _status.clickingidentity;
+								}
+								if (!_status.event.isMine) {
+									return;
+								}
+								if (ui.controls.length) {
+									ui.updatec();
+								}
+								if (_status.editing) {
+									if (_status.editing.innerHTML.length) {
+										_status.editing.link = _status.editing.innerHTML;
+									}
+									_status.editing.innerHTML = get.translation(_status.editing.link);
+									delete _status.editing;
+								} else if (_status.choosing) {
+									if (!_status.choosing.expand) {
+										_status.choosing.parentNode.style.height = "";
+										_status.choosing.nextSibling.delete();
+										_status.choosing.previousSibling.show();
+										delete _status.choosing;
+									}
+								} else if (ui.intro) {
+									ui.intro.close();
+									delete ui.intro;
+									ui.control.show();
+									game.resume2();
+								} else if ((_status.event.isMine() || _status.event.forceMine) && !dialogtouched) {
+									if (typeof _status.event.custom?.replace?.window == "function") {
+										_status.event.custom.replace.window();
+									}
+								}
+								if (!ui.shortcut.classList.contains("hidden")) {
+									ui.click.shortcut(false);
+								}
+								if (get.is.phoneLayout() && ui.menuContainer && ui.menuContainer.classList.contains("hidden")) {
+									if (ui.system2.classList.contains("shown")) {
+										_status.removinground = true;
+										setTimeout(function () {
+											_status.removinground = false;
+										}, 200);
+									}
+									ui.arena.classList.remove("phonetop");
+									ui.system1.classList.remove("shown");
+									ui.system2.classList.remove("shown");
+								}
+							}
+							if (_status.tempunpop) {
+								_status.tempunpop = false;
+							} else {
+								game.closePopped();
+							}
+							if (typeof _status.event.custom?.add?.window == "function") {
+								_status.event.custom.add.window(clicked);
+							}
 						},
 					},
 				},
