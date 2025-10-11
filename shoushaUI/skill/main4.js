@@ -4,7 +4,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) { },
+		content(next) {},
 		precontent() {
 			if (!document.getElementById("skill-yellow-dot-style")) {
 				var style = document.createElement("style");
@@ -32,8 +32,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!ui.skillControl) {
 						var node = ui.create.div(".skill-control", ui.arena);
 						node.node = {
-							enable: ui.create.div(".enable", node),
-							trigger: ui.create.div(".trigger", node),
+							combined: ui.create.div(".combined", node), // 合并区域
 						};
 						for (var i in plugin.controlElement) {
 							node[i] = plugin.controlElement[i];
@@ -41,8 +40,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						ui.skillControl = node;
 					}
 					if (clear) {
-						ui.skillControl.node.enable.innerHTML = "";
-						ui.skillControl.node.trigger.innerHTML = "";
+						ui.skillControl.node.combined.innerHTML = "";
 					}
 					return ui.skillControl;
 				},
@@ -197,11 +195,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						try {
 							let tmp = game.me.getSkills("invisible", null, false) || [];
 							nativeSkillsRaw = nativeSkillsRaw.concat(tmp);
-						} catch (e) { }
+						} catch (e) {}
 					}
 					nativeSkillsRaw.forEach(function (s) {
 						let expanded = game.expandSkills([s]) || [];
-						expanded.forEach(function (es) { nativeSkillSet.add(es); });
+						expanded.forEach(function (es) {
+							nativeSkillSet.add(es);
+						});
 						nativeSkillSet.add(s);
 					});
 				}
@@ -216,6 +216,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 				if (!hasSame) enableSkills.unshift(skills[0]);
 				var showSkills = enableSkills.length ? enableSkills : skills;
+				// 对技能进行排序：主动技 > 限定技 > 被动技
+				showSkills.sort(function (a, b) {
+					var aIsEnable = a.type === "enable";
+					var bIsEnable = b.type === "enable";
+					// 主动技优先
+					if (aIsEnable && !bIsEnable) return -1;
+					if (!aIsEnable && bIsEnable) return 1;
+					return 0;
+				});
 				showSkills.forEach(function (item) {
 					var node = self.querySelector('[data-id="' + item.id + '"]');
 					if (node) return;
@@ -232,7 +241,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						finalName = '<img src="' + imgPath + '" style="vertical-align:middle;height:22px;margin-right:2px;">' + skillName;
 					}
 					if (item.type === "enable") {
-						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable);
+						// 主动技添加到合并区域，但保持enable样式类
+						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji.enable-skill" : ".skillitem.enable-skill", self.node.combined);
 						node.innerHTML = finalName;
 						node.dataset.id = item.id;
 						if (lib.skill[item.id] && !nativeSkillSet.has(item.id) && node) {
@@ -251,7 +261,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!item.info) return;
 					if (!item.translation) return;
 					if (eSkills && eSkills.includes(item.id)) return;
-					node = ui.create.div(".skillitem", self.node[lib.config.phonelayout ? "trigger" : "enable"], finalName);
+					// 被动技添加到合并区域，但保持trigger样式类
+					node = ui.create.div(".skillitem.trigger-skill", self.node.combined, finalName);
 					node.dataset.id = item.id;
 					if (lib.skill[item.id] && !nativeSkillSet.has(item.id) && node) {
 						var dot = document.createElement("span");
@@ -268,7 +279,29 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills) skills.addArray(ui.skills.skills);
 				if (ui.skills2) skills.addArray(ui.skills2.skills);
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
-				Array.from(this.node.enable.childNodes).forEach(function (item) {
+				// 重新排序合并区域中的技能
+				var combinedNodes = Array.from(this.node.combined.childNodes);
+				if (combinedNodes.length > 1) {
+					// 对技能节点进行排序：主动技 > 限定技 > 被动技
+					combinedNodes.sort(function (a, b) {
+						var aId = a.dataset.id;
+						var bId = b.dataset.id;
+						var aIsEnable = a.classList.contains("enable-skill");
+						var bIsEnable = b.classList.contains("enable-skill");
+						// 主动技优先
+						if (aIsEnable && !bIsEnable) return -1;
+						if (!aIsEnable && bIsEnable) return 1;
+						return 0;
+					});
+					// 重新排列DOM节点
+					combinedNodes.forEach(
+						function (node) {
+							this.node.combined.appendChild(node);
+						}.bind(this)
+					);
+				}
+				// 处理合并区域中的技能
+				Array.from(this.node.combined.childNodes).forEach(function (item) {
 					if (skills.includes(item.dataset.id)) {
 						item.classList.add("usable");
 					} else {
@@ -280,9 +313,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						item.classList.remove("select");
 					}
 				});
-				var level1 = Math.min(4, this.node.trigger.childNodes.length);
-				var level2 = this.node.enable.childNodes.length > 2 ? 4 : this.node.enable.childNodes.length > 0 ? 2 : 0;
-				var level = Math.max(level1, level2);
+				// 计算技能区域级别
+				var combinedCount = this.node.combined.childNodes.length;
+				var level = combinedCount > 2 ? 4 : combinedCount > 0 ? 2 : 0;
 				ui.arena.dataset.sclevel = level;
 			},
 		},

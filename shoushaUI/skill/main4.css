@@ -1,11 +1,11 @@
-#arena[data-right-layout="on"]>.skill-control {
+#arena[data-right-layout="on"] > .skill-control {
 	/*技能按钮*/
 	max-width: 200px;
 	bottom: 0px;
 	right: 190px;
 	z-index: 0;
 }
-#arena[data-right-layout="off"]>.skill-control {
+#arena[data-right-layout="off"] > .skill-control {
 	/*技能按钮左手布局*/
 	max-width: 200px;
 	bottom: 0px;
@@ -21,42 +21,88 @@
 	color: #f5d78e;
 	font-size: 18px;
 }
-.skill-control>div {
+.skill-control > div {
 	display: flex;
 	flex-wrap: wrap-reverse;
 	flex-direction: row-reverse;
 }
-.skill-control>div::after {
+.skill-control > div::after {
 	content: "";
 	display: block;
 	clear: both;
 }
 /*右手布局*/
-#arena[data-right-layout="on"]>.skill-control .trigger,
-#arena[data-right-layout="on"]>.skill-control .enable {
+#arena[data-right-layout="on"] > .skill-control .combined {
 	height: auto;
 	width: auto;
 	display: flex;
-	flex-direction: row-reverse;
-	/* 从右往左排列 */
-	align-items: flex-start;
-	margin-left: 5px;
+	flex-direction: column;
+	/* 改为单列排列 */
+	align-items: flex-end;
+	margin-right: 5px;
 	/* 技能间距 */
+	flex-wrap: wrap-reverse;
+	max-height: 180px; /* 4个技能的高度限制 */
 }
 /*左手布局*/
-#arena[data-right-layout="off"]>.skill-control .trigger,
-#arena[data-right-layout="off"]>.skill-control .enable {
+#arena[data-right-layout="off"] > .skill-control .combined {
 	height: auto;
 	width: auto;
 	display: flex;
-	flex-direction: row;
-	/* 从右往左排列 */
+	flex-direction: column;
+	/* 改为单列排列 */
 	align-items: flex-start;
 	margin-left: 5px;
 	/* 技能间距 */
+	flex-wrap: wrap-reverse;
+	max-height: 180px; /* 4个技能的高度限制 */
 }
-.skill-control>.trigger>.skillitem {
-	margin: 3px 4px;
+/* 合并区域中的主动技样式 - 保持原有背景图片 */
+.skill-control > .combined > .skillitem.enable-skill {
+	margin: 2px 4px;
+	width: 85px;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	font-size: 22px;
+	color: #e2aa7b;
+	font-family: "FZLBJW";
+	background-image: url("./online/btnnOL1.png");
+	background-size: 100% 100%;
+	letter-spacing: 2px;
+}
+.skill-control > .combined > .skillitem.enable-skill.select {
+	background-image: url("./online/btnnOL4.png");
+	filter: brightness(1.2);
+}
+.skill-control > .combined > .skillitem.enable-skill:not(.usable):not(.select) {
+	filter: grayscale(100%);
+	-webkit-filter: grayscale(100%);
+}
+/* 合并区域中的限定技样式 */
+.skill-control > .combined > .xiandingji.enable-skill {
+	margin: 2px 4px;
+	width: 85px;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	color: #ceb193;
+	font-family: "FZLBJW";
+	font-size: 22px;
+	background-image: url("./online/btnnOL1.png");
+	background-size: 100% 100%;
+	letter-spacing: 2px;
+}
+.skill-control > .combined > .xiandingji.enable-skill.select {
+	background-image: url("./online/btnnOL2.png");
+}
+.skill-control > .combined > .xiandingji.enable-skill:not(.usable):not(.select) {
+	filter: grayscale(100%);
+	-webkit-filter: grayscale(100%);
+}
+/* 合并区域中的被动技样式 - 保持原有背景图片 */
+.skill-control > .combined > .skillitem.trigger-skill {
+	margin: 2px 4px;
 	width: 85px;
 	height: 35px;
 	line-height: 35px;
@@ -68,58 +114,6 @@
 	background-size: 100% 100%;
 	letter-spacing: 2px;
 }
-.skill-control>.enable>.skillitem {
-	margin: 3px 4px;
-	/* 增加宽度 */
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
-	text-align: center;
-	font-size: 22px;
-	color: #e2aa7b;
-	font-family: "FZLBJW";
-	background-image: url("./online/btnnOL1.png");
-	background-size: 100% 100%;
-	letter-spacing: 2px;
-	/*border: 1px solid rgb(3,4,5);/*调试用*/
-}
-.skill-control>.enable>.xiandingji {
-	/*限定技按钮*/
-	margin: 3px 4px;
-	width: 85px;
-	height: 35px;
-	line-height: 35px;
-	text-align: center;
-	color: #ceb193;
-	font-family: "FZLBJW";
-	font-size: 22px;
-	background-image: url("./online/btnnOL1.png");
-	background-size: 100% 100%;
-	/*border: 1px solid rgb(3,4,5);/*调试用*/
-	letter-spacing: 2px;
-}
-.skill-control>.enable>.skillitem.select {
-	background-image: url("./online/btnnOL4.png");
-	filter: brightness(1.2);
-}
-.skill-control>.enable>.skillitem:not(.usable):not(.select) {
-	/*技能按钮不可用时变灰*/
-	filter: grayscale(100%);
-	-webkit-filter: grayscale(100%);
-}
-.skill-control>.enable>.xiandingji:not(.usable):not(.select) {
-	/*限定技按钮不可用时变灰*/
-	filter: grayscale(100%);
-	-webkit-filter: grayscale(90%);
-}
-.skill-control>.enable>.xiandingji.select {
-	background-image: url("./online/btnnOL2.png");
-}
-.skill-control>.enable>.xiandingji:not(.usable):not(.select) {
-	/*background-image: url("./online/btn5.png");*/
-	filter: grayscale(100%);
-	-webkit-filter: grayscale(100%);
-}
 .skillMarks {
 	max-height: 80px;
 	overflow-y: auto;
@@ -129,7 +123,7 @@
 	justify-content: center;
 	align-items: center;
 }
-.skillMarks>.skillMarkItem {
+.skillMarks > .skillMarkItem {
 	--h: 19px;
 	width: 28.5px !important;
 	height: 28.5px !important;
@@ -165,7 +159,7 @@
 	-webkit-filter: grayscale(1);
 	color: #888;
 }
-.skillMarkItem+.skillMarkItem {
+.skillMarkItem + .skillMarkItem {
 	margin-top: -6.5px;
 }
 .skillMarkItem.juexingji {

@@ -34,8 +34,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						ui.skillControl = plugin.createSkillControl();
 					}
 					if (clear) {
-						ui.skillControl.node.enable.innerHTML = "";
-						ui.skillControl.node.trigger.innerHTML = "";
+						ui.skillControl.node.combined.innerHTML = "";
 					}
 					return ui.skillControl;
 				},
@@ -46,8 +45,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			const className = isRightLayout ? ".skill-control" : ".skill-controlzuoshou";
 			const node = ui.create.div(className, ui.arena);
 			node.node = {
-				enable: ui.create.div(".enable", node),
-				trigger: ui.create.div(".trigger", node),
+				combined: ui.create.div(".combined", node), // 合并区域
 			};
 			for (const key in plugin.controlElement) {
 				node[key] = plugin.controlElement[key];
@@ -173,6 +171,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const skills = game.expandSkills([skill]).map(item => app.get.skillInfo(item));
 				const enableSkills = this.getEnableSkills(skills);
 				const showSkills = enableSkills.length ? enableSkills : skills;
+				// 对技能进行排序：主动技 > 限定技 > 被动技
+				showSkills.sort(function (a, b) {
+					const aIsEnable = a.type === "enable";
+					const bIsEnable = b.type === "enable";
+					// 主动技优先
+					if (aIsEnable && !bIsEnable) return -1;
+					if (!aIsEnable && bIsEnable) return 1;
+					return 0;
+				});
 				showSkills.forEach(item => {
 					if (this.hasExistingNode(item.id)) return;
 					if (item.type === "enable") {
@@ -198,8 +205,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 			createEnableSkillNode(item) {
 				const skillName = get.translation(item.name).slice(0, 2);
-				const className = lib.skill[item.id].limited ? ".xiandingji" : ".skillitem";
-				const node = ui.create.div(className, this.node.enable, skillName);
+				const className = lib.skill[item.id].limited ? ".xiandingji.enable-skill" : ".skillitem.enable-skill";
+				const node = ui.create.div(className, this.node.combined, skillName);
 				node.dataset.id = item.id;
 				node.addEventListener("click", () => {
 					if (lib.config["extension_十周年UI_bettersound"]) game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
@@ -210,14 +217,49 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (!item.info || !item.translation) return;
 				if (eSkills && eSkills.includes(item.id)) return;
 				const skillName = get.translation(item.name).slice(0, 2);
-				const targetNode = lib.config.phonelayout ? this.node.trigger : this.node.enable;
-				const node = ui.create.div(".skillitem", targetNode, skillName);
+				const node = ui.create.div(".skillitem.trigger-skill", this.node.combined, skillName);
 				node.dataset.id = item.id;
 			},
 			update() {
 				const skills = this.getAllSkills();
-				this.updateSkillNodes(skills);
-				this.updateSkillLevel();
+				// 重新排序合并区域中的技能
+				const combinedNodes = Array.from(this.node.combined.childNodes);
+				if (combinedNodes.length > 1) {
+					// 对技能节点进行排序：主动技 > 限定技 > 被动技
+					combinedNodes.sort(function (a, b) {
+						const aId = a.dataset.id;
+						const bId = b.dataset.id;
+						const aIsEnable = a.classList.contains("enable-skill");
+						const bIsEnable = b.classList.contains("enable-skill");
+						// 主动技优先
+						if (aIsEnable && !bIsEnable) return -1;
+						if (!aIsEnable && bIsEnable) return 1;
+						return 0;
+					});
+					// 重新排列DOM节点
+					combinedNodes.forEach(
+						function (node) {
+							this.node.combined.appendChild(node);
+						}.bind(this)
+					);
+				}
+				// 处理合并区域中的技能
+				Array.from(this.node.combined.childNodes).forEach(function (item) {
+					if (skills.includes(item.dataset.id)) {
+						item.classList.add("usable");
+					} else {
+						item.classList.remove("usable");
+					}
+					if (_status.event.skill === item.dataset.id) {
+						item.classList.add("select");
+					} else {
+						item.classList.remove("select");
+					}
+				});
+				// 计算技能区域级别
+				const combinedCount = this.node.combined.childNodes.length;
+				const level = combinedCount > 2 ? 4 : combinedCount > 0 ? 2 : 0;
+				ui.arena.dataset.sclevel = level;
 			},
 			getAllSkills() {
 				const skills = [];
@@ -225,22 +267,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills2) skills.addArray(ui.skills2.skills);
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
 				return skills;
-			},
-			updateSkillNodes(skills) {
-				Array.from(this.node.enable.childNodes).forEach(item => {
-					const isUsable = skills.includes(item.dataset.id);
-					const isSelected = _status.event.skill === item.dataset.id;
-					item.classList.toggle("usable", isUsable);
-					item.classList.toggle("select", isSelected);
-				});
-			},
-			updateSkillLevel() {
-				const triggerCount = this.node.trigger.childNodes.length;
-				const enableCount = this.node.enable.childNodes.length;
-				const level1 = Math.min(4, triggerCount);
-				const level2 = enableCount > 2 ? 4 : enableCount > 0 ? 2 : 0;
-				const level = Math.max(level1, level2);
-				ui.arena.dataset.sclevel = level;
 			},
 		},
 		checkSkill(skill) {
