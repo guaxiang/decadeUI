@@ -260,6 +260,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const combinedCount = this.node.combined.childNodes.length;
 				const level = combinedCount > 2 ? 4 : combinedCount > 0 ? 2 : 0;
 				ui.arena.dataset.sclevel = level;
+				// 检查技能数量，超过6个时启用滚动
+				if (combinedCount > 6) {
+					this.node.combined.classList.add("scroll-enabled");
+				} else {
+					this.node.combined.classList.remove("scroll-enabled");
+				}
 			},
 			getAllSkills() {
 				const skills = [];
