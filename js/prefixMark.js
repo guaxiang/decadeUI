@@ -1,3 +1,4 @@
+import { lib, get } from "../../../noname.js";
 export const prefixMarkModule = {
 	prefix_configs: {
 		界: { className: "jie-mark", property: "$jieMark" },
