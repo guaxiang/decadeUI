@@ -3565,6 +3565,81 @@ export async function content(config, pack) {
 							return dialog;
 						},
 						//发动技能函数
+						//武将搜索代码摘抄至扩展ol
+						characterDialog() {
+							const dialog = base.ui.create.characterDialog.apply(this, arguments);
+							const control = lib.config.extension_十周年UI_mx_decade_characterDialog || "default";
+							if (control != "default") {
+								const Searcher = dialog.querySelector(".searcher.caption");
+								if (Searcher) Searcher.parentNode.removeChild(Searcher);
+								if (control == "extension-OL-system") {
+									var content_container = dialog.childNodes[0];
+									var content = content_container.childNodes[0];
+									var switch_con = content.childNodes[0];
+									var buttons = content.childNodes[1];
+									var div = ui.create.div("extension-OL-system");
+									div.style.height = "35px";
+									div.style.width = "calc(100%)";
+									div.style.top = "-2px";
+									div.style.left = "0px";
+									div.style["white-space"] = "nowrap";
+									div.style["text-align"] = "center";
+									div.style["line-height"] = "26px";
+									div.style["font-size"] = "24px";
+									div.style["font-family"] = "xinwei";
+									div.innerHTML = "搜索：" + '<select size="1" style="width:75px;height:21px;">' + '<option value="name">名称翻译</option>' + '<option value="name1">名称ID</option>' + '<option value="name2">名称ID(精确匹配)</option>' + '<option value="skill">技能翻译</option>' + '<option value="skill1">技能ID</option>' + '<option value="skill2">技能ID(精确匹配)</option>' + '<option value="skill3">技能描述/翻译</option>' + "→" + '<input type="text" style="width:150px;"></input>' + "</select>";
+									var input = div.querySelector("input");
+									input.placeholder = "非精确匹配支持正则搜索";
+									input.onkeydown = function (e) {
+										e.stopPropagation();
+										if (e.keyCode == 13) {
+											var value = this.value;
+											if (value == "") {
+												game.alert("搜索不能为空");
+												input.focus();
+												return;
+											}
+											var choice = div.querySelector("select").options[div.querySelector("select").selectedIndex].value;
+											if (value) {
+												for (var i = 0; i < buttons.childNodes.length; i++) {
+													buttons.childNodes[i].classList.add("nodisplay");
+													var name = buttons.childNodes[i].link;
+													var skills = get.character(name).skills || [];
+													if (
+														(function (choice, value, name, skills) {
+															if (choice.endsWith("2")) return choice === "name2" ? value === name : skills.includes(value);
+															value = new RegExp(value, "g");
+															const goon = (value, text) => text && value.test(text);
+															if (choice == "name1") return goon(value, name);
+															else if (choice == "name") return goon(value, get.translation(name)) || goon(value, get.translation(name + "_ab"));
+															else if (choice == "skill1") return skills.some(skill => goon(value, skill));
+															else if (choice == "skill") return skills.some(skill => goon(value, get.translation(skill)));
+															else return skills.some(skill => goon(value, get.translation(skill + "_info")));
+														})(choice, value, name, skills)
+													) {
+														buttons.childNodes[i].classList.remove("nodisplay");
+													}
+												}
+											}
+											if (dialog.paginationMaxCount.get("character")) {
+												const buttons = dialog.content.querySelector(".buttons");
+												const p = dialog.paginationMap.get(buttons);
+												if (p) {
+													const array = dialog.buttons.filter(item => !item.classList.contains("nodisplay"));
+													p.state.data = array;
+													p.setTotalPageCount(Math.ceil(array.length / dialog.paginationMaxCount.get("character")));
+												}
+											}
+										}
+									};
+									input.onmousedown = function (e) {
+										e.stopPropagation();
+									};
+									switch_con.insertBefore(div, switch_con.firstChild);
+								}
+							}
+							return dialog;
+						},
 						buttonPresets: {
 							character(item, type, position, noclick, node) {
 								if (node) {
