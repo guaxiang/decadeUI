@@ -5609,7 +5609,7 @@ export async function content(config, pack) {
 					// 手牌折叠方式
 					if (get.is && typeof get.is.phoneLayout === "function" && lib.config.phonelayout) {
 						xStart += 0; // 触屏模式靠左
-					} else if (lib.config.extension_十周年UI_newDecadeStyle == "on") {
+					} else if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
 						xStart = (ui.arena.offsetWidth - totalW) / 2 - bounds.x;
 					}
 				}
