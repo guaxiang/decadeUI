@@ -1297,7 +1297,11 @@
 .player > .wei-mark,
 .player > .ji-mark,
 .player > .sk-mark,
-.player > .sr-mark {
+.player > .sr-mark,
+.player > .tao-mark,
+.player > .chang-mark,
+.player > .wn-mark,
+.player > .jing-mark {
 	position: absolute;
 	top: 108px;
 	left: -11px;
@@ -1423,4 +1427,19 @@
 }
 .player > .sr-mark {
 	background-image: url("../image/mark/mark_sr.png");
+}
+.player > .Mbaby-mark {
+	background-image: url("../image/mark/mark_Mbaby.png");
+}
+.player > .tao-mark {
+	background-image: url("../image/mark/mark_tao.png");
+}
+.player > .chang-mark {
+	background-image: url("../image/mark/mark_chang.png");
+}
+.player > .wn-mark {
+	background-image: url("../image/mark/mark_wn.png");
+}
+.player > .jing-mark {
+	background-image: url("../image/mark/mark_jing.png");
 }

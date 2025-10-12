@@ -1,4 +1,5 @@
 import { lib, game, ui, get, ai, _status } from "../../../noname.js";
+import { prefixMarkModule } from "../js/prefixMark.js";
 export async function precontent() {
 	if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
 	if (lib.config["extension_" + decadeUIName + "_eruda"]) {
@@ -27,8 +28,8 @@ export async function precontent() {
 			const currentVersion = lib.version;
 			const requiredVersion = lib.extensionPack.十周年UI.minNonameVersion;
 			function compareVersions(v1, v2) {
-				const parts1 = v1.split('.').map(Number);
-				const parts2 = v2.split('.').map(Number);
+				const parts1 = v1.split(".").map(Number);
+				const parts2 = v2.split(".").map(Number);
 				const maxLen = Math.max(parts1.length, parts2.length);
 				for (let i = 0; i < maxLen; i++) {
 					const p1 = parts1[i] || 0;
@@ -105,9 +106,7 @@ export async function precontent() {
 					// css加载
 					const cssPath = pack === "character" ? `${layoutPath}${pack}/main${listmap}.css` : `${layoutPath}${pack}/main${listmap}${lib.config.phonelayout ? "" : "_window"}.css`;
 					this.css(cssPath);
-					this.jsAsync(
-						`${layoutPath}${pack}/main${listmap}.js`
-					);
+					this.jsAsync(`${layoutPath}${pack}/main${listmap}.js`);
 				});
 			}
 			return this;
@@ -155,6 +154,8 @@ export async function precontent() {
 			if (typeof module != "function") return console.error("import failed");
 			this.modules.push(module);
 		};
+		// 添加角标模块
+		decadeModule.prefixMark = prefixMarkModule;
 		return decadeModule.init();
 	})({});
 	Object.defineProperties(_status, {
@@ -542,7 +543,7 @@ export async function precontent() {
 				console.error(`Failed to load ${this.src}`);
 			};
 			document.head.appendChild(script);
-			
+
 			if (pack === "character") {
 				lib.init.css(layoutPath + pack + "/main" + listmap + ".css");
 			} else {
