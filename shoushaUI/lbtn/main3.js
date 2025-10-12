@@ -68,9 +68,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		sortButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/new_zhengli.png";
 		// 根据布局设置按钮位置
 		if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-			sortButton.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 46px);left: calc(100% - 375px);background-color: transparent;z-index:2";
+			sortButton.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 46px);left: calc(100% - 375px);background-color: transparent;z-index:3";
 		} else {
-			sortButton.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:2;";
+			sortButton.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:3;";
 		}
 		sortButton.onclick = function () {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
