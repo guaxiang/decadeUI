@@ -1302,7 +1302,30 @@
 .player > .tao-mark,
 .player > .chang-mark,
 .player > .wn-mark,
-.player > .jing-mark {
+.player > .jing-mark,
+.player > .sxrm-mark,
+.player > .meng-mark,
+.player > .cheng-mark,
+.player > .zhuan-mark,
+.player > .he-mark,
+.player > .shuai-mark,
+.player > .xing-mark,
+.player > .scl-mark,
+.player > .jiang-mark,
+.player > .yongjian-mark,
+.player > .jun-mark,
+.player > .xia-mark,
+.player > .k-mark,
+.player > .zhijiang-mark,
+.player > .long-mark,
+.player > .eu-mark,
+.player > .jiding-mark,
+.player > .yy-mark,
+.player > .jianghua-mark,
+.player > .she-mark,
+.player > .qingshi-mark,
+.player > .xuyuan-mark,
+.player > .fengyun-mark {
 	position: absolute;
 	top: 108px;
 	left: -11px;
@@ -1446,4 +1469,73 @@
 }
 .player > .lao-mark {
 	background-image: url("../image/mark/mark_lao.png");
+}
+.player > .sxrm-mark {
+	background-image: url("../image/mark/mark_sxrm.png");
+}
+.player > .meng-mark {
+	background-image: url("../image/mark/mark_meng.png");
+}
+.player > .cheng-mark {
+	background-image: url("../image/mark/mark_cheng.png");
+}
+.player > .zhuan-mark {
+	background-image: url("../image/mark/mark_zhuan.png");
+}
+.player > .he-mark {
+	background-image: url("../image/mark/mark_he.png");
+}
+.player > .shuai-mark {
+	background-image: url("../image/mark/mark_shuai.png");
+}
+.player > .xing-mark {
+	background-image: url("../image/mark/mark_xing.png");
+}
+.player > .scl-mark {
+	background-image: url("../image/mark/mark_scl.png");
+}
+.player > .jiang-mark {
+	background-image: url("../image/mark/mark_jiang.png");
+}
+.player > .yongjian-mark {
+	background-image: url("../image/mark/mark_yongjian.png");
+}
+.player > .jun-mark {
+	background-image: url("../image/mark/mark_jun.png");
+}
+.player > .xia-mark {
+	background-image: url("../image/mark/mark_xia.png");
+}
+.player > .k-mark {
+	background-image: url("../image/mark/mark_k.png");
+}
+.player > .zhijiang-mark {
+	background-image: url("../image/mark/mark_zhijiang.png");
+}
+.player > .long-mark {
+	background-image: url("../image/mark/mark_long.png");
+}
+.player > .eu-mark {
+	background-image: url("../image/mark/mark_eu.png");
+}
+.player > .jiding-mark {
+	background-image: url("../image/mark/mark_jiding.png");
+}
+.player > .yy-mark {
+	background-image: url("../image/mark/mark_yy.png");
+}
+.player > .jianghua-mark {
+	background-image: url("../image/mark/mark_jianghua.png");
+}
+.player > .she-mark {
+	background-image: url("../image/mark/mark_she.png");
+}
+.player > .qingshi-mark {
+	background-image: url("../image/mark/mark_qingshi.png");
+}
+.player > .xuyuan-mark {
+	background-image: url("../image/mark/mark_xuyuan.png");
+}
+.player > .fengyun-mark {
+	background-image: url("../image/mark/mark_fengyun.png");
 }
