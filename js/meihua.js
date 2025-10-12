@@ -58,7 +58,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
 			get: () => ["wei", "shu", "wu", "qun", "jin"],
-			set: () => { },
+			set: () => {},
 		});
 		lib.skill._slyh = {
 			trigger: { global: "gameStart", player: "enterGame" },
@@ -903,7 +903,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		window._WJMHXUNISHUZITEXIAO = { SS_PaiJu_xunishanghai: { name: "../../../十周年UI/assets/animation/globaltexiao/xunishuzi/SS_PaiJu_xunishanghai" } };
 		window._WJMHSHANGHAISHUZITEXIAO = {
 			shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/shuzi" },
-			SZN_shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi" }
+			SZN_shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi" },
 		};
 		lib.skill._wjmh_huifushuzi_ = {
 			priority: 10,
@@ -1322,7 +1322,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					handTip1.show();
 				} else {
 					const handTip2 = (ui.cardDialog = dui.showHandTip());
-					handTip2.appendText("出牌阶段", 'phase');
+					handTip2.appendText("出牌阶段", "phase");
 					let tipText = "，请选择一张卡牌";
 					tipText = tipText.replace(/<\/?.+?\/?>/g, "");
 					tipText = window.getDecPrompt(tipText);

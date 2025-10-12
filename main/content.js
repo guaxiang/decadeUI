@@ -2453,7 +2453,7 @@ export async function content(config, pack) {
 								game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[0]);
 								game.delay(2);
 								if (!event.noJudgeTrigger) event.trigger("judge");
-								("step 1");
+								"step 1";
 								event.result = {
 									card: player.judging[0],
 									name: player.judging[0].name,
@@ -2918,7 +2918,7 @@ export async function content(config, pack) {
 											time += 500;
 										}
 									}
-									("step 1");
+									"step 1";
 									var [top, bottom] = [event.cards1, event.cards2];
 									event.result = {
 										bool: true,
@@ -3580,64 +3580,73 @@ export async function content(config, pack) {
 									var content = content_container.childNodes[0];
 									var switch_con = content.childNodes[0];
 									var buttons = content.childNodes[1];
-									var div = ui.create.div("extension-OL-system");
-									div.style.height = "35px";
-									div.style.width = "calc(100%)";
-									div.style.top = "-2px";
-									div.style.left = "0px";
-									div.style["white-space"] = "nowrap";
-									div.style["text-align"] = "center";
-									div.style["line-height"] = "26px";
-									div.style["font-size"] = "24px";
-									div.style["font-family"] = "xinwei";
-									div.innerHTML = "搜索：" + '<select size="1" style="width:75px;height:21px;">' + '<option value="name">名称翻译</option>' + '<option value="name1">名称ID</option>' + '<option value="name2">名称ID(精确匹配)</option>' + '<option value="skill">技能翻译</option>' + '<option value="skill1">技能ID</option>' + '<option value="skill2">技能ID(精确匹配)</option>' + '<option value="skill3">技能描述/翻译</option>' + "→" + '<input type="text" style="width:150px;"></input>' + "</select>";
-									var input = div.querySelector("input");
-									input.placeholder = "非精确匹配支持正则搜索";
-									input.onkeydown = function (e) {
-										e.stopPropagation();
-										if (e.keyCode == 13) {
-											var value = this.value;
-											if (value == "") {
-												game.alert("搜索不能为空");
-												input.focus();
-												return;
-											}
-											var choice = div.querySelector("select").options[div.querySelector("select").selectedIndex].value;
-											if (value) {
-												for (var i = 0; i < buttons.childNodes.length; i++) {
-													buttons.childNodes[i].classList.add("nodisplay");
-													var name = buttons.childNodes[i].link;
-													var skills = get.character(name).skills || [];
-													if (
-														(function (choice, value, name, skills) {
-															if (choice.endsWith("2")) return choice === "name2" ? value === name : skills.includes(value);
-															value = new RegExp(value, "g");
-															const goon = (value, text) => text && value.test(text);
-															if (choice == "name1") return goon(value, name);
-															else if (choice == "name") return goon(value, get.translation(name)) || goon(value, get.translation(name + "_ab"));
-															else if (choice == "skill1") return skills.some(skill => goon(value, skill));
-															else if (choice == "skill") return skills.some(skill => goon(value, get.translation(skill)));
-															else return skills.some(skill => goon(value, get.translation(skill + "_info")));
-														})(choice, value, name, skills)
-													) {
-														buttons.childNodes[i].classList.remove("nodisplay");
-													}
+									const div = ui.create.div("extension-OL-system");
+									div.style.cssText = "display: flex; justify-content: center; align-items: center; gap: 6px; height: 35px; width: 100%; padding: 0 5px; top: -2px; left: 0; font-size: 18px; font-family: xinwei, sans-serif; box-sizing: border-box;";
+									div.innerHTML = '<label style="font-size:20px;">搜索：</label><select style="height:26px; min-width:150px; font-size:15px; padding:1px 4px; border:1px solid #aaa; border-radius:4px; outline:none; flex-shrink:0;"><option value="name">名称翻译</option><option value="name1">名称ID</option><option value="name2">名称ID(精确匹配)</option><option value="skill">技能翻译</option><option value="skill1">技能ID</option><option value="skill2">技能ID(精确匹配)</option><option value="skill3">技能描述/翻译</option></select><input type="text" placeholder="非精确匹配支持正则搜索" style="height:24px; width:175px; font-size:15px; padding:1px 6px; border:1px solid #aaa; border-radius:4px; outline:none; flex-shrink:0; text-align:center;"/><button style="height:26px; padding:0 10px; font-size:15px; border:1px solid #aaa; border-radius:4px; background:#f5f5f5; cursor:pointer;">搜索</button>';
+									const input = div.querySelector("input");
+									const select = div.querySelector("select");
+									const button = div.querySelector("button");
+									//分离搜索函数
+									function doSearch() {
+										const value = input.value.trim();
+										if (!value) {
+											game.alert("搜索不能为空");
+											input.focus();
+											return;
+										}
+										const choice = select.value;
+										for (let i = 0; i < buttons.childNodes.length; i++) {
+											const node = buttons.childNodes[i];
+											node.classList.add("nodisplay");
+											const name = node.link;
+											const skills = get.character(name).skills || [];
+
+											const matched = (function (choice, value, name, skills) {
+												if (choice.endsWith("2")) {
+													return choice === "name2" ? value === name : skills.includes(value);
 												}
-											}
-											if (dialog.paginationMaxCount.get("character")) {
-												const buttons = dialog.content.querySelector(".buttons");
-												const p = dialog.paginationMap.get(buttons);
-												if (p) {
-													const array = dialog.buttons.filter(item => !item.classList.contains("nodisplay"));
-													p.state.data = array;
-													p.setTotalPageCount(Math.ceil(array.length / dialog.paginationMaxCount.get("character")));
+												let regex;
+												try {
+													regex = new RegExp(value, "i");
+												} catch {
+													game.alert("正则表达式无效");
+													return false;
 												}
+												const test = t => t && regex.test(t);
+												if (choice === "name1") return test(name);
+												if (choice === "name") return test(get.translation(name)) || test(get.translation(name + "_ab"));
+												if (choice === "skill1") return skills.some(skill => test(skill));
+												if (choice === "skill") return skills.some(skill => test(get.translation(skill)));
+												return skills.some(skill => test(get.translation(skill + "_info")));
+											})(choice, value, name, skills);
+
+											if (matched) node.classList.remove("nodisplay");
+										}
+										if (dialog.paginationMaxCount.get("character")) {
+											const buttonsNode = dialog.content.querySelector(".buttons");
+											const p = dialog.paginationMap.get(buttonsNode);
+											if (p) {
+												const array = dialog.buttons.filter(item => !item.classList.contains("nodisplay"));
+												p.state.data = array;
+												p.setTotalPageCount(Math.ceil(array.length / dialog.paginationMaxCount.get("character")));
 											}
 										}
-									};
-									input.onmousedown = function (e) {
+									}
+									input.addEventListener("keydown", e => {
 										e.stopPropagation();
-									};
+										if (e.key === "Enter" || e.keyCode === 13) {
+											e.preventDefault();
+											doSearch();
+										}
+									});
+									button.addEventListener("click", e => {
+										e.stopPropagation();
+										doSearch();
+										input.focus();
+									});
+									input.addEventListener("mousedown", e => {
+										e.stopPropagation();
+									});
 									switch_con.insertBefore(div, switch_con.firstChild);
 								}
 							}
