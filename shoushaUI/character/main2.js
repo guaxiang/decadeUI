@@ -1,6 +1,4 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
-	// 不关闭武将信息页面的特殊技能列表
-	const specialcare = ['oldianzan'];
 	// 工具函数区
 	const extensionPath = `${lib.assetURL}extension/十周年UI/shoushaUI/`;
 	// 获取武将分包
@@ -234,7 +232,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 										skillButton.link = this;
 										skillButton.func = lib.skill[skillName].clickable;
 										skillButton.classList.add("pointerdiv");
-										if (!specialcare.includes(skillName)) skillButton.listen(() => {
+										skillButton.listen(() => {
 											container.hide();
 											game.resume2();
 										});

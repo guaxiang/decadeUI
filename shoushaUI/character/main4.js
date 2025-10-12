@@ -1,8 +1,6 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
 	// 常量定义
 	const CONSTANTS = {
-		// 不关闭武将信息页面的特殊技能列表
-		specialcare: ['oldianzan'],
 		// 官阶翻译映射
 		GUANJIE_TRANSLATION: {
 			1: ["骁卒", ["步卒", "伍长", "什长", "队率", "屯长", "部曲"]],
@@ -522,7 +520,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				intronode.link = player;
 				intronode.func = lib.skill[name].clickable;
 				intronode.classList.add("pointerdiv");
-				if (!CONSTANTS.specialcare.includes(name)) intronode.listen(() => {
+				intronode.listen(() => {
 					container.parentNode.parentNode.parentNode.parentNode.hide();
 					game.resume2();
 				});

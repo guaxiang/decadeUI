@@ -1,6 +1,4 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
-	// 不关闭武将信息页面的特殊技能列表
-	const specialcare = ['oldianzan'];
 	// 第一页
 	var plugin = {
 		name: "character",
@@ -104,8 +102,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (!name || !lib.character[name]) return;
 				const button = ui.create.button(name, "character", parent, true);
 				if (button) {
-					button.style.pointerEvents = 'auto';
-					button.style.zIndex = '100';
+					button.style.pointerEvents = "auto";
+					button.style.zIndex = "100";
 				}
 				return button;
 			},
@@ -257,9 +255,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			createCloseButton(biankuang4, container) {
 				var diaozhui = ui.create.div(".diaozhui", biankuang4);
 				diaozhui.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/basebtn.png");
-				diaozhui.style.cursor = 'pointer';
-				diaozhui.style.pointerEvents = 'auto';
-				diaozhui.style.zIndex = '1000';
+				diaozhui.style.cursor = "pointer";
+				diaozhui.style.pointerEvents = "auto";
+				diaozhui.style.zIndex = "1000";
 				diaozhui.addEventListener("click", event => {
 					event.stopPropagation();
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
@@ -369,8 +367,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var underlinenode = id.querySelector(".underlinenode");
 				if (_status.prehidden_skills.includes(skillName)) underlinenode.classList.remove("on");
 				underlinenode.link = skillName;
-				underlinenode.style.pointerEvents = 'auto';
-				underlinenode.style.cursor = 'pointer';
+				underlinenode.style.pointerEvents = "auto";
+				underlinenode.style.cursor = "pointer";
 				underlinenode.listen(ui.click.hiddenskill);
 			} else {
 				ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + get.skillInfoTranslation(skillName, player, false) + "</span>" + "</div>", container);
@@ -397,8 +395,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			if (lib.config.autoskilllist.includes(skillName)) underlinenode.classList.remove("on");
 			underlinenode.link = skillName;
-			underlinenode.style.pointerEvents = 'auto';
-			underlinenode.style.cursor = 'pointer';
+			underlinenode.style.pointerEvents = "auto";
+			underlinenode.style.cursor = "pointer";
 			underlinenode.listen(ui.click.autoskill2);
 		},
 
@@ -411,20 +409,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (!_status.gameStarted || (lib.skill[skillName].clickableFilter && !lib.skill[skillName].clickableFilter(player))) {
 				intronode.classList.add("disabled");
 				intronode.style.opacity = 0.5;
-				intronode.style.pointerEvents = 'none';
+				intronode.style.pointerEvents = "none";
 			} else {
 				intronode.link = player;
 				intronode.func = lib.skill[skillName].clickable;
 				intronode.classList.add("pointerdiv");
-				intronode.style.pointerEvents = 'auto';
-				intronode.style.cursor = 'pointer';
-				
-				if (!specialcare.includes(skillName)) {
-					intronode.addEventListener('click', () => {
-						dialogContainer.hide();
-						game.resume2();
-					});
-				}
+				intronode.style.pointerEvents = "auto";
+				intronode.style.cursor = "pointer";
+				intronode.addEventListener("click", () => {
+					dialogContainer.hide();
+					game.resume2();
+				});
 				intronode.listen(ui.click.skillbutton);
 			}
 		},
