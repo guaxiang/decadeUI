@@ -114,8 +114,8 @@
 .skillMarks {
 	max-height: 80px;
 	overflow-y: auto;
-	left: -14.5px !important;
-	top: 96px !important;
+	left: 120px !important;
+	top: 0px !important;
 	z-index: 90 !important;
 	justify-content: center;
 	align-items: center;

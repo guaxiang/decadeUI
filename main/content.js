@@ -4,11 +4,11 @@ export async function content(config, pack) {
 	if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
 	//菜单栏错位bugfix
 	// 检测是否开启皮肤切换扩展，开了就使用game.menuZoom = 1
-	if (game.hasExtension && game.hasExtension('皮肤切换')) {
+	if (game.hasExtension && game.hasExtension("皮肤切换")) {
 		game.menuZoom = 1;
 	} else {
 		// 让menuZoom使用系统的documentZoom值，确保菜单定位正确
-		if (typeof game.menuZoom === 'undefined' || game.menuZoom === null) {
+		if (typeof game.menuZoom === "undefined" || game.menuZoom === null) {
 			// 如果menuZoom未设置，让系统使用默认的documentZoom
 			delete game.menuZoom;
 		}
@@ -110,7 +110,7 @@ export async function content(config, pack) {
 					},
 					click: {
 						intro: ui.click.intro,
-						window:ui.click.window,
+						window: ui.click.window,
 					},
 					update: ui.update,
 				},
@@ -1133,9 +1133,9 @@ export async function content(config, pack) {
 											c.copy()._customintro = c._customintro;
 										});
 										if (e.type == "mouseover") {
-											player.node.showCards.onmouseleave = function () { };
+											player.node.showCards.onmouseleave = function () {};
 										} else {
-											ui.window.addEventListener("touchend", function touch() { }, { once: true });
+											ui.window.addEventListener("touchend", function touch() {}, { once: true });
 										}
 									};
 									// 监听手牌区变化
@@ -1152,11 +1152,51 @@ export async function content(config, pack) {
 										observer.observe(player.node[handcardZone], { childList: true });
 									});
 								}
+								// 十周年角标
+								if (character && duicfg.showJieMark !== false) {
+									const prefixConfigs = {
+										界: { className: "jie-mark", property: "$jieMark" },
+										神: { className: "shen-mark", property: "$shenMark" },
+										武: { className: "wu-mark", property: "$wuMark" },
+										族: { className: "clan-mark", property: "$clanMark" },
+										标: { className: "std-mark", property: "$stdMark" },
+										新杀: { className: "dc-mark", property: "$dcMark" },
+									};
+									const prefixKey = `${character}_prefix`;
+									const refreshPrefix = lib.translate[prefixKey] || Object.keys(prefixConfigs).find(prefix => character.includes(prefix));
+									if (refreshPrefix && prefixConfigs[refreshPrefix]) {
+										const config = prefixConfigs[refreshPrefix];
+										if (!this[config.property]) {
+											this[config.property] = dui.element.create(config.className, this);
+										} else {
+											this.appendChild(this[config.property]);
+										}
+										let text = this.node.name.innerText;
+										if (text[1] === "\n") {
+											text = text.substr(2);
+										} else {
+											text = text.substr(1);
+										}
+										this.node.name.innerText = text;
+									}
+								}
 								// 刷新显示
 								this.decadeUI_updateShowCards();
 								return this;
 							},
 							$uninit() {
+								// 清理所有前缀标记
+								const prefixConfigs = {
+									界: { className: "jie-mark", property: "$jieMark" },
+									神: { className: "shen-mark", property: "$shenMark" },
+									武: { className: "wu-mark", property: "$wuMark" },
+									族: { className: "clan-mark", property: "$clanMark" },
+									标: { className: "std-mark", property: "$stdMark" },
+									新杀: { className: "dc-mark", property: "$dcMark" },
+								};
+								Object.values(prefixConfigs).forEach(config => {
+									if (this[config.property]) this[config.property].remove();
+								});
 								this.stopDynamic();
 								this.doubleAvatar = false;
 								delete this.node.campWrap.dataset.camp;
@@ -1185,15 +1225,12 @@ export async function content(config, pack) {
 								// 使用武将指定的图片路径，或默认路径
 								const imagePath = characterData.img || `image/character/${characterName}.jpg`;
 								const img = new Image();
-								img.onload = () => {
-									// 图片存在，无需添加体验后缀
-								};
 								img.onerror = () => {
 									// 图片不存在，添加体验后缀
 									if (this.node?.name) {
 										const currentName = this.node.name.innerHTML;
-										if (!currentName.includes('•体验')) {
-											this.node.name.innerHTML = currentName + '•体验';
+										if (!currentName.includes("•体验")) {
+											this.node.name.innerHTML = currentName + "•体验";
 										}
 									}
 								};
@@ -2825,9 +2862,9 @@ export async function content(config, pack) {
 															let j = judges[i],
 																cardj = j.viewAs
 																	? {
-																		name: j.viewAs,
-																		cards: j.cards || [j],
-																	}
+																			name: j.viewAs,
+																			cards: j.cards || [j],
+																	  }
 																	: j;
 															if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
 																wuxie--;
@@ -3333,7 +3370,7 @@ export async function content(config, pack) {
 							}
 						}
 					},
-					updatem(player) { },
+					updatem(player) {},
 					updatez() {
 						window.documentZoom = game.documentZoom;
 						document.body.style.zoom = game.documentZoom;
@@ -4263,8 +4300,7 @@ export async function content(config, pack) {
 					else if (_status.event.skill || (ui.selected?.cards ?? []).length > 0) {
 						if (UIconfig === "off") innerHTML = "<img draggable='false' src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
 						else innerHTML = "取消";
-					}
-					else if (UIconfig === "off") {
+					} else if (UIconfig === "off") {
 						innerHTML = "<img draggable='false' src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jscp.png>";
 					}
 					ui.confirm.lastChild.innerHTML = innerHTML;
@@ -5635,10 +5671,14 @@ export async function content(config, pack) {
 				this._debounce({
 					defaultDelay: 500,
 					maxDelay: 1000,
-					timeoutKey: '_delayClearTimeout',
-					timeKey: '_delayClearTimeoutTime',
-					immediateCallback: function() { ui.clear(); },
-					callback: function() { ui.clear(); }
+					timeoutKey: "_delayClearTimeout",
+					timeKey: "_delayClearTimeoutTime",
+					immediateCallback: function () {
+						ui.clear();
+					},
+					callback: function () {
+						ui.clear();
+					},
 				});
 			},
 			invalidate() {
@@ -5649,20 +5689,28 @@ export async function content(config, pack) {
 				this._debounce({
 					defaultDelay: 40,
 					maxDelay: 180,
-					timeoutKey: '_handcardTimeout',
-					timeKey: '_handcardTimeoutTime',
-					immediateCallback: function() { decadeUI.layout.updateHand(); },
-					callback: function() { decadeUI.layout.updateHand(); }
+					timeoutKey: "_handcardTimeout",
+					timeKey: "_handcardTimeoutTime",
+					immediateCallback: function () {
+						decadeUI.layout.updateHand();
+					},
+					callback: function () {
+						decadeUI.layout.updateHand();
+					},
 				});
 			},
 			invalidateDiscard() {
 				this._debounce({
 					defaultDelay: ui.thrown && ui.thrown.length > 15 ? 80 : 40,
 					maxDelay: 180,
-					timeoutKey: '_discardTimeout',
-					timeKey: '_discardTimeoutTime',
-					immediateCallback: function() { decadeUI.layout.updateDiscard(); },
-					callback: function() { decadeUI.layout.updateDiscard(); }
+					timeoutKey: "_discardTimeout",
+					timeKey: "_discardTimeoutTime",
+					immediateCallback: function () {
+						decadeUI.layout.updateDiscard();
+					},
+					callback: function () {
+						decadeUI.layout.updateDiscard();
+					},
 				});
 			},
 			resize() {
@@ -6166,13 +6214,13 @@ export async function content(config, pack) {
 			if (style == null)
 				return canUseDefault
 					? {
-						width: 108,
-						height: 150,
-					}
+							width: 108,
+							height: 150,
+					  }
 					: {
-						width: 0,
-						height: 0,
-					};
+							width: 0,
+							height: 0,
+					  };
 			var size = {
 				width: parseFloat(style.width),
 				height: parseFloat(style.height),
@@ -6913,7 +6961,7 @@ export async function content(config, pack) {
 			if (parentNode) parentNode.appendChild(element);
 			return element;
 		},
-		clone(element) { },
+		clone(element) {},
 	};
 	decadeUI.game = {
 		wait() {
@@ -6937,30 +6985,27 @@ export async function content(config, pack) {
 		},
 		checkSkillOwnership(skillName, parentSkill) {
 			// 特殊标记处理：这些标记是其他玩家给技能的方式实现的，应该显示为other-skill
-			const otherPlayerMarks = [
-				'xinzhaofu_effect',
-				'reyanzhu2'
-			];
+			const otherPlayerMarks = ["xinzhaofu_effect", "reyanzhu2"];
 			if (otherPlayerMarks.includes(skillName)) {
 				return false;
 			}
 			// 其他标记走正常流程判断
 			const skillTransformRules = [
 				{
-					name: 'xin前缀',
-					condition: (name) => name.startsWith("xin") && name.length > 3,
-					transform: (name) => name.substring(3)
+					name: "xin前缀",
+					condition: name => name.startsWith("xin") && name.length > 3,
+					transform: name => name.substring(3),
 				},
 				{
-					name: 're前缀',
-					condition: (name) => name.startsWith("re") && name.length > 2,
-					transform: (name) => name.substring(2)
+					name: "re前缀",
+					condition: name => name.startsWith("re") && name.length > 2,
+					transform: name => name.substring(2),
 				},
 				{
-					name: '_mark后缀',
-					condition: (name) => name.endsWith("_mark") && name.length > 5,
-					transform: (name) => name.substring(0, name.length - 5)
-				}
+					name: "_mark后缀",
+					condition: name => name.endsWith("_mark") && name.length > 5,
+					transform: name => name.substring(0, name.length - 5),
+				},
 			];
 			var effectiveSkill = parentSkill && parentSkill !== skillName ? parentSkill : skillName;
 			if (this.hasSkill(effectiveSkill, null, null, false)) {
@@ -7075,11 +7120,7 @@ export async function content(config, pack) {
 		});
 		lib.skill._jindutiaoAI_operation = {
 			trigger: {
-				player: [
-					"chooseToUseBegin", "chooseToRespondBegin", "chooseToDiscardBegin", 
-					"chooseToTargetBegin", "chooseToButtonBegin", "chooseToMoveBegin",
-					"chooseToGainBegin", "chooseToLoseBegin", "chooseToExchangeBegin"
-				],
+				player: ["chooseToUseBegin", "chooseToRespondBegin", "chooseToDiscardBegin", "chooseToTargetBegin", "chooseToButtonBegin", "chooseToMoveBegin", "chooseToGainBegin", "chooseToLoseBegin", "chooseToExchangeBegin"],
 			},
 			silent: true,
 			filter(event, player) {
@@ -7099,18 +7140,14 @@ export async function content(config, pack) {
 				} else {
 					window.boxContentAI.classList.add("timeai");
 				}
-				
+
 				player.appendChild(window.boxContentAI);
 			},
 			group: ["_jindutiaoAI_operation_end"],
 			subSkill: {
 				end: {
 					trigger: {
-						player: [
-							"chooseToUseAfter", "chooseToRespondAfter", "chooseToDiscardAfter",
-							"chooseToTargetAfter", "chooseToButtonAfter", "chooseToMoveAfter",
-							"chooseToGainAfter", "chooseToLoseAfter", "chooseToExchangeAfter"
-						],
+						player: ["chooseToUseAfter", "chooseToRespondAfter", "chooseToDiscardAfter", "chooseToTargetAfter", "chooseToButtonAfter", "chooseToMoveAfter", "chooseToGainAfter", "chooseToLoseAfter", "chooseToExchangeAfter"],
 					},
 					forced: true,
 					filter(event, player) {
@@ -7123,7 +7160,7 @@ export async function content(config, pack) {
 						}
 						lib.removeFirstByClass(player, "timeai");
 						lib.removeFirstByClass(player, "timePhase");
-						
+
 						if (document.getElementById("jindutiaoAI")) {
 							document.getElementById("jindutiaoAI").remove();
 						}
@@ -7309,11 +7346,7 @@ export async function content(config, pack) {
 		});
 		lib.skill._jindutiao_operation = {
 			trigger: {
-				player: [
-					"chooseToUseBegin", "chooseToRespondBegin", "chooseToDiscardBegin", 
-					"chooseToTargetBegin", "chooseToButtonBegin", "chooseToMoveBegin",
-					"chooseToGainBegin", "chooseToLoseBegin", "chooseToExchangeBegin"
-				],
+				player: ["chooseToUseBegin", "chooseToRespondBegin", "chooseToDiscardBegin", "chooseToTargetBegin", "chooseToButtonBegin", "chooseToMoveBegin", "chooseToGainBegin", "chooseToLoseBegin", "chooseToExchangeBegin"],
 			},
 			silent: true,
 			filter(event, player) {
@@ -7339,11 +7372,7 @@ export async function content(config, pack) {
 			subSkill: {
 				end: {
 					trigger: {
-						player: [
-							"chooseToUseAfter", "chooseToRespondAfter", "chooseToDiscardAfter",
-							"chooseToTargetAfter", "chooseToButtonAfter", "chooseToMoveAfter",
-							"chooseToGainAfter", "chooseToLoseAfter", "chooseToExchangeAfter"
-						],
+						player: ["chooseToUseAfter", "chooseToRespondAfter", "chooseToDiscardAfter", "chooseToTargetAfter", "chooseToButtonAfter", "chooseToMoveAfter", "chooseToGainAfter", "chooseToLoseAfter", "chooseToExchangeAfter"],
 					},
 					forced: true,
 					filter(event, player) {
