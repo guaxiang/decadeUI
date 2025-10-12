@@ -143,6 +143,7 @@ export async function content(config, pack) {
 							unmarkSkill: lib.element.player.unmarkSkill,
 							$init: lib.element.player.$init,
 							$uninit: lib.element.player.$uninit,
+							$reinit: lib.element.player.$reinit,
 							setSeatNum: lib.element.player.setSeatNum,
 							$update: lib.element.player.$update,
 							useCard: lib.element.player.useCard,
@@ -1177,6 +1178,17 @@ export async function content(config, pack) {
 								if (hujiat) hujiat.remove();
 								this.node.showCards?.hide();
 								base.lib.element.player.$uninit.apply(this, arguments);
+								return this;
+							},
+							$reinit(from, to, maxHp, online) {
+								base.lib.element.player.$reinit.apply(this, arguments);
+								if (window.decadeModule && window.decadeModule.prefixMark) {
+									window.decadeModule.prefixMark.clearPrefixMarks(this);
+									const currentCharacter = this.name1 || this.name;
+									if (currentCharacter) {
+										window.decadeModule.prefixMark.showPrefixMark(currentCharacter, this);
+									}
+								}
 								return this;
 							},
 							setSeatNum() {

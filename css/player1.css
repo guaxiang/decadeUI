@@ -1443,3 +1443,6 @@
 .player > .jing-mark {
 	background-image: url("../image/mark/mark_jing.png");
 }
+.player > .lao-mark {
+	background-image: url("../image/mark/mark_lao.png");
+}
