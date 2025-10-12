@@ -1134,9 +1134,9 @@ export async function content(config, pack) {
 											c.copy()._customintro = c._customintro;
 										});
 										if (e.type == "mouseover") {
-											player.node.showCards.onmouseleave = function () {};
+											player.node.showCards.onmouseleave = function () { };
 										} else {
-											ui.window.addEventListener("touchend", function touch() {}, { once: true });
+											ui.window.addEventListener("touchend", function touch() { }, { once: true });
 										}
 									};
 									// 监听手牌区变化
@@ -1195,8 +1195,11 @@ export async function content(config, pack) {
 								base.lib.element.player.setSeatNum.apply(this, arguments);
 								this.seat = this.getSeatNum();
 								game.broadcastAll(function (player) {
-									if (!player.node.seat) player.node.seat = decadeUI.element.create("seat", player);
-									player.node.seat.innerHTML = get.cnNumber(player.seat, true);
+									const actualSeat = player.getSeatNum ? player.getSeatNum() : player.seat;
+									if (!player.node.seat) {
+										player.node.seat = decadeUI.element.create("seat", player);
+									}
+									player.node.seat.innerHTML = get.cnNumber(actualSeat, true);
 								}, this);
 							},
 							checkAndAddExperienceSuffix(characterName) {
@@ -2842,9 +2845,9 @@ export async function content(config, pack) {
 															let j = judges[i],
 																cardj = j.viewAs
 																	? {
-																			name: j.viewAs,
-																			cards: j.cards || [j],
-																	  }
+																		name: j.viewAs,
+																		cards: j.cards || [j],
+																	}
 																	: j;
 															if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
 																wuxie--;
@@ -3350,7 +3353,7 @@ export async function content(config, pack) {
 							}
 						}
 					},
-					updatem(player) {},
+					updatem(player) { },
 					updatez() {
 						window.documentZoom = game.documentZoom;
 						document.body.style.zoom = game.documentZoom;
@@ -6269,13 +6272,13 @@ export async function content(config, pack) {
 			if (style == null)
 				return canUseDefault
 					? {
-							width: 108,
-							height: 150,
-					  }
+						width: 108,
+						height: 150,
+					}
 					: {
-							width: 0,
-							height: 0,
-					  };
+						width: 0,
+						height: 0,
+					};
 			var size = {
 				width: parseFloat(style.width),
 				height: parseFloat(style.height),
@@ -7016,7 +7019,7 @@ export async function content(config, pack) {
 			if (parentNode) parentNode.appendChild(element);
 			return element;
 		},
-		clone(element) {},
+		clone(element) { },
 	};
 	decadeUI.game = {
 		wait() {
