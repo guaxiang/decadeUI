@@ -6,12 +6,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		content(next) {},
 		precontent() {
-			if (!document.getElementById("skill-yellow-dot-style")) {
-				var style = document.createElement("style");
-				style.id = "skill-yellow-dot-style";
-				style.innerHTML = ".skill-yellow-dot{position:absolute;left:2px;top:2px;width:12px;height:12px;z-index:2;display:flex;align-items:center;justify-content:center;color:#FFD700;font-weight:bold;font-size:10px;background:none;border-radius:0;}";
-				document.head.appendChild(style);
-			}
 			Object.assign(ui.create, {
 				skills(skills) {
 					ui.skills = plugin.createSkills(skills, ui.skills);
@@ -237,18 +231,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (markNode && markNode.classList.contains("yin")) {
 							imgType = "ying";
 						}
-						let imgPath = "extension/十周年UI/shoushaUI/skill/online/mark_" + imgType + "OL.png";
-						finalName = '<img src="' + imgPath + '" style="vertical-align:middle;height:22px;margin-right:2px;">' + skillName;
+						let imgPath = "extension/十周年UI/shoushaUI/skill/online/skillitem_yinyang_" + (imgType === "yang" ? "1" : "2") + ".png";
+						finalName = '<img src="' + imgPath + '" class="skill-zhuanhuanji-img">' + skillName;
 					}
 					if (item.type === "enable") {
 						// 主动技添加到合并区域，但保持enable样式类
 						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji.enable-skill" : ".skillitem.enable-skill", self.node.combined);
 						node.innerHTML = finalName;
 						node.dataset.id = item.id;
+						
+						// 如果是限定机，添加左上角的pass图片
+						if (lib.skill[item.id].limited) {
+							var passImg = document.createElement("img");
+							passImg.className = "skill-xianding-pass";
+							passImg.src = "extension/十周年UI/shoushaUI/skill/online/skillitem_xianding_active.png";
+							node.style.position = "relative";
+							node.appendChild(passImg);
+						}
+						
 						if (lib.skill[item.id] && !nativeSkillSet.has(item.id) && node) {
-							var dot = document.createElement("span");
+							var dot = document.createElement("img");
 							dot.className = "skill-yellow-dot";
-							dot.textContent = "+";
+							dot.src = "extension/十周年UI/shoushaUI/skill/online/skillitem_extra_active.png";
 							node.style.position = "relative";
 							node.appendChild(dot);
 						}
@@ -264,10 +268,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					// 被动技添加到合并区域，但保持trigger样式类
 					node = ui.create.div(".skillitem.trigger-skill", self.node.combined, finalName);
 					node.dataset.id = item.id;
+					// 如果是限定机，添加左上角的pass图片
+					if (lib.skill[item.id].limited) {
+						var passImg = document.createElement("img");
+						passImg.className = "skill-xianding-pass";
+						passImg.src = "extension/十周年UI/shoushaUI/skill/online/skillitem_xianding_active.png";
+						node.style.position = "relative";
+						node.appendChild(passImg);
+					}
 					if (lib.skill[item.id] && !nativeSkillSet.has(item.id) && node) {
-						var dot = document.createElement("span");
+						var dot = document.createElement("img");
 						dot.className = "skill-yellow-dot";
-						dot.textContent = "+";
+						dot.src = "extension/十周年UI/shoushaUI/skill/online/skillitem_extra_active.png";
 						node.style.position = "relative";
 						node.appendChild(dot);
 					}
@@ -320,8 +332,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				// 检查技能数量，超过6个时启用滚动
 				if (combinedCount > 6) {
 					this.node.combined.classList.add("scroll-enabled");
+					this.classList.add("scroll-enabled");
 				} else {
 					this.node.combined.classList.remove("scroll-enabled");
+					this.classList.remove("scroll-enabled");
 				}
 			},
 		},
@@ -384,7 +398,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var item = node.querySelector('[data-id="' + k + '"]');
 				if (!item) {
 					if (!info.zhuanhuanji) {
-						item = ui.create.div(".skillMarkItem.xiandingji", node, get.translation(k).charAt(0));
+						item = ui.create.div(".skillMarkItem.xiandingji", node, get.translation(k).slice(0, 2));
 					} else item = ui.create.div(".skillMarkItem.zhuanhuanji", node, "");
 					//如果不是转换技就调用限定技的标记
 				}

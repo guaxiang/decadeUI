@@ -662,7 +662,7 @@
 }
 /*无懈按钮位置*/
 #arena>#dui-controls>.control.stayleft {
-	left: calc(50% - 420px) !important;
+	left: calc(70% - 20px) !important;
 	margin-bottom: 5px !important;
 	order: 3;
 }
