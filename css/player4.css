@@ -322,10 +322,10 @@
 }
 .player>.camp-wrap>.camp-border {
 	display: block;
-	left: -6px;
-	top: 38px;
-	width: 320%;
-	height: 85%;
+	left: -8px;
+	top: 28px;
+	width: 350%;
+	height: 95%;
 	position: absolute;
 	background-image: url("../image/decoration/border_campOL5.png");
 	background-size: 100% 100%;
@@ -336,10 +336,10 @@
 }
 #arena.decadeUI[data-border-level="two"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: 9px;
-	top: 52px;
-	width: 280%;
-	height: 79%;
+	left: -8px;
+	top: 28px;
+	width: 350%;
+	height: 95%;
 	position: absolute;
 	background-image: url("../image/decoration/border_campOL2.png");
 	background-size: 100% 100%;
@@ -347,10 +347,10 @@
 }
 #arena.decadeUI[data-border-level="three"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: 9px;
-	top: 52px;
-	width: 280%;
-	height: 79%;
+	left: -8px;
+	top: 28px;
+	width: 350%;
+	height: 95%;
 	position: absolute;
 	background-image: url("../image/decoration/border_campOL3.png");
 	background-size: 100% 100%;
@@ -358,10 +358,10 @@
 }
 #arena.decadeUI[data-border-level="four"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: 3px;
-	top: 50px;
-	width: 300%;
-	height: 80%;
+	left: -8px;
+	top: 28px;
+	width: 350%;
+	height: 95%;
 	position: absolute;
 	background-image: url("../image/decoration/border_campOL4.png");
 	background-size: 100% 100%;
@@ -888,13 +888,11 @@
 	height: 15px;
 	/* 高度 */
 	white-space: nowrap;
-	background: rgba(30, 30, 30, 0.7);
+	background-image: url("../assets/image/markOL.png");
 	animation: fade-in 0.5s;
 	margin-bottom: 1px;
 	/* 标记纵向间隔 */
 	border-radius: 2px;
-	/* 添加圆角 */
-	border: 1px solid rgba(255, 255, 255, 0.8);
 }
 /*文字文本显示*/
 #arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-text {
@@ -905,7 +903,7 @@
 	height: auto;
 	line-height: 17px;
 	/*换行高度*/
-	font-size: 13px;
+	font-size: 12px;
 	/*字体大小*/
 	color: white;
 	/*字体颜色*/

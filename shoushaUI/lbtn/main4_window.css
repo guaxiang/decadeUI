@@ -376,10 +376,10 @@
 	background-image: url("./images/OL_line/uibutton/caidan.png");
 	background-size: 100% 100%;
 	display: block;
-	width: 50px;
-	height: 45px;
+	width: 55px;
+	height: 58px;
 	position: absolute;
-	top: 43px;
+	top: 40px;
 	right: 70px;
 	background-color: transparent;
 	z-index: 1;
@@ -392,7 +392,7 @@
 	align-items: flex-start;
 	white-space: normal;
 	position: fixed;
-	top: 42px;
+	top: 40px;
 	right: 71px;
 	background-color: rgba(0, 0, 0, 0.7);
 	border-radius: 4px;
@@ -743,47 +743,53 @@
 .cardRoundNumber>.cardPileNumber {
 	left: 10px;
 	top: -15px;
-	--w: 90px;
-	--h: calc(var(--w) * 148 / 157);
+	--w: 105px;
+	--h: 55px;
 	width: var(--w);
 	height: var(--h);
-	background-image: url("./images/OL_line/uibutton/cardbackOL.png");
+	background-image: url("./images/OL_line/uibutton/round_info_time_bg.png");
 	background-size: 100% 100%;
 	background-color: transparent;
 	position: relative;
 	z-index: 1;
 }
 .cardRoundNumber>.cardPileNumber>span {
-	left: 12px;
+	left: -30px;
 	/*牌堆数右移，越大越靠右*/
-	top: 35px;
+	top: 25px;
 	width: 100%;
 	display: block;
 	position: absolute;
-	font-family: "shousha";
-	line-height: 20px;
+	font-family: "yuanli";
+	line-height: 25px;
 	text-align: center;
 	color: #b08463;
 	font-size: 16px;
+	-webkit-text-stroke: 0.1px #000;
+	text-shadow: -1px 0 0 #000, 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	left: 20px;
+	left: 50px;
 	/*牌堆数/时间右移，越大越靠右*/
 	top: 0px;
 	height: 20px;
-	line-height: 13px;
+	line-height: 5px;
 	/*游戏轮数/时间间隔*/
 	white-space: nowrap;
-	font-size: 22px;
+	font-size: 16px;
 	font-family: "shousha";
 	color: #b08463;
 	z-index: 3;
 }
+.cardRoundNumber>.roundNumber {
+	/* 仅将轮数显示整体向右移动一点 */
+	left: 60px;
+}
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	top: 45px;
+	top: 25px;
 	/* 使用flex布局，使子元素水平居中，即使它们的宽度不同 */
 	display: flex;
 	justify-content: center;

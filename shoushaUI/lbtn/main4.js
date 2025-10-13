@@ -1093,14 +1093,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var item = cardPileNumberNode;
 				clearTimeout(item.interval);
 				if (!item._num) {
-					item.innerHTML = '<span style="font-size: 16px;">' + num + "张</span>";
+					item.innerHTML = '<span style="font-size: 16px;">' + num + "</span>";
 					item._num = num;
 				} else {
 					if (item._num !== num) {
 						if (!step) step = 500 / Math.abs(item._num - num);
 						if (item._num > num) item._num--;
 						else item._num++;
-						item.innerHTML = '<span style="font-size: 16px;">' + item._num + "张</span>";
+						item.innerHTML = '<span style="font-size: 16px;">' + item._num + "</span>";
 						if (item._num !== num) {
 							item.interval = setTimeout(function () {
 								game.updateCardNum(num, step);

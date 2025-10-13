@@ -51,7 +51,7 @@
 	justify-content: flex-end; /* 右对齐 */
 	align-items: flex-start; /* 顶部对齐 */
 	align-content: flex-start; /* 内容顶部对齐 */
-	max-height: 140px; /* 限制高度以启用滚动 */
+	max-height: 145px; /* 限制高度以启用滚动 */
 	overflow-y: auto; /* 添加垂直滚动 */
 	overflow-x: hidden; /* 隐藏水平滚动 */
 }
@@ -75,14 +75,14 @@
 	justify-content: flex-start; /* 左对齐 */
 	align-items: flex-start; /* 顶部对齐 */
 	align-content: flex-start; /* 内容顶部对齐 */
-	max-height: 120px; /* 限制高度以启用滚动 */
+	max-height: 145px; /* 限制高度以启用滚动 */
 	overflow-y: auto; /* 添加垂直滚动 */
 	overflow-x: hidden; /* 隐藏水平滚动 */
 }
 /* 合并区域中的主动技样式 - 保持原有背景图片 */
 .skill-control > .combined > .skillitem.enable-skill {
 	margin: 2px 4px;
-	width: 90px;
+	width: 85px;
 	height: 45px;
 	line-height: 45px;
 	text-align: center;
@@ -112,7 +112,7 @@
 /* 合并区域中的限定技样式 */
 .skill-control > .combined > .xiandingji.enable-skill {
 	margin: 2px 4px;
-	width: 90px;
+	width: 85px;
 	height: 45px;
 	line-height: 45px;
 	text-align: center;
@@ -141,7 +141,7 @@
 /* 合并区域中的被动技样式 - 保持原有背景图片 */
 .skill-control > .combined > .skillitem.trigger-skill {
 	margin: 2px 4px;
-	width: 90px;
+	width: 85px;
 	height: 45px;
 	line-height: 45px;
 	text-align: center;
@@ -161,7 +161,7 @@
 	justify-content: center;
 }
 .skillMarks {
-	overflow-y: auto;
+    overflow: visible;
 	left: 105px !important;
 	top: 110px !important;
 	z-index: 90 !important;
@@ -200,7 +200,6 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	transform: translateX(-3px);
 }
 .skillMarkItem.xiandingji.used {
 	filter: grayscale(1);
@@ -243,21 +242,22 @@
 	width: var(--w);
 	/*按比例调节*/
 	height: var(--h);
+	/* 向右轻微偏移 */
+	margin-left: 2px;
 	/*同理*/
-	background-size: 100% 100%;
+	background-size: 95% 95%;
 	background-repeat: no-repeat;
 	transform-style: preserve-3d;
-	transform: rotateY(360deg);
-	background-image: url("./online/mark_yangOL.png");
+	background-image: url("./online/skillitem_yinyang_bg.png");
 }
 .skillMarkItem.zhuanhuanji.yang {
-	background-image: url("./online/mark_yangOL.png");
+	background-image: url("./online/skillitem_yinyang_bg.png");
 	/*transform:rotate(1turn);*/
 	/*transform:  rotateY(360deg);*/
 	animation: fanzhuan 1.5s;
 }
 .skillMarkItem.zhuanhuanji.yin {
-	background-image: url("./online/mark_yingOL.png");
+	background-image: url("./online/skillitem_yinyang_bg_1.png");
 	/*transform:rotate(1turn);*/
 	/*transform:  rotateY(360deg);*/
 	animation: fanzhuan 1.5s;
@@ -331,8 +331,6 @@
 .skill-control.scroll-enabled::after {
 	content: "";
 	position: absolute;
-	right: 5px;
-	bottom: 5px;
 	width: 30px;
 	height: 30px;
 	z-index: 10;
@@ -345,7 +343,8 @@
 }
 #arena[data-right-layout="on"] > .skill-control.scroll-enabled::after {
 	right: auto;
-	left: 100px;
+	left: 105px;
+	bottom: 0px;
 }
 /* 滚动指示器动画 */
 @keyframes scroll-bounce {
