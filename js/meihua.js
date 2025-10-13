@@ -268,7 +268,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.playAudio("..", "extension", "十周年UI", `audio/seatRoundState_start`);
 			},
 		};
-		// 失去体力音效
+		// 失去体力音效和动画
+		window._effect = { 
+			effect_loseHp: { 
+				name: "../../../十周年UI/assets/animation/effect_loseHp" 
+			} 
+		};
 		lib.skill._hpLossAudio = {
 			trigger: { player: "loseHpEnd" },
 			forced: true,
@@ -277,8 +282,15 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event) {
 				return !!event.num;
 			},
-			async content() {
+			async content(event, trigger, player) {
+				// 播放音效
 				game.playAudio("..", "extension", "十周年UI", "audio/hpLossSund.mp3");
+				dcdAnim.loadSpine(window._effect.effect_loseHp.name, "skel", () => {
+					window._effect.effect_loseHp.action = "play";
+					dcdAnim.playSpine(window._effect.effect_loseHp, { 
+						speed: 0.8, scale: 0.6, parent: player 
+					});
+				});
 			},
 		};
 	}

@@ -237,7 +237,7 @@ body > .background {
 #arena[data-new-decade-style="onlineUI"][data-right-layout="on"] > .hand-wrap,
 #arena[data-right-layout="on"] > .hand-back {
 	/*右手布局+单独装备栏*/
-	left: 265px;
+	left: 255px;
 	right: 410px;
 	bottom: 0%;
 }
@@ -251,7 +251,7 @@ body > .background {
 #arena[data-new-decade-style="onlineUI"][data-alone-equip="off"][data-right-layout="on"] > .hand-wrap,
 #arena[data-alone-equip="off"][data-right-layout="on"] > .hand-back {
 	/*右手布局+非单独装备栏*/
-	left: 140px;
+	left: 110px;
 	right: 405px;
 	bottom: 0%;
 }

@@ -15,9 +15,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			BEIJING: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/beijing.png",
 			TUOGUAN: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/tuoguan.png",
 			LIKAI: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/likai.png",
-			GIFT: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/gift.png",
-			TALK: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/talk.png",
-			CARDSORT: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/cardsort.png",
+			GIFT: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/gameview_tool_btn_prop.png",
+			TALK: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/gameview_tool_btn_chat.png",
+			CARDSORT: "extension/十周年UI/shoushaUI/lbtn/images/OL_line/uibutton/gameview_tool_btn_sort.png",
 		},
 		// 样式配置
 		STYLES: {

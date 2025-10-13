@@ -961,7 +961,7 @@
 .player>.judges,
 #arena>.player:not(.minskin)>.judges {
 	display: flex;
-	justify-content: flex-start;
+	justify-content: flex-end;
 	left: 0;
 	right: auto;
 	top: auto;
@@ -974,7 +974,7 @@
 .player[data-position="0"]>.judges,
 #arena>.player[data-position="0"]:not(.minskin)>.judges {
 	display: flex;
-	justify-content: flex-start;
+	justify-content: flex-end;
 	left: 0;
 	right: auto;
 	top: -24px;
@@ -1047,7 +1047,7 @@
 	position: absolute;
 	background-position: center;
 	background-size: 100% 100%;
-	left: -15px;
+	left: 90px;
 	top: -10px;
 	width: 45px;
 	height: 45px;
@@ -1057,7 +1057,8 @@
 	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000;
 }
 .player[data-position="0"]>.judges>.card>.judge-mark>.judge {
-    left: 15px;
+    left: -110px;
+	top: 30px;
 }
 .player>.judges>.card.feichu>.judge-mark>.judge::before {
 	content: "";
@@ -1119,7 +1120,7 @@
 	line-height: 24px;
 	height: 22px;
 	width: 25px;
-	background: url("../image/decoration/card_countX.png");
+	background: url("../image/decorationo/card_num_bg_new.png");
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	background-position: 0 -1px;
