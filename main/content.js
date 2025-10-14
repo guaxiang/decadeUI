@@ -899,19 +899,9 @@ export async function content(config, pack) {
 								image.onerror = function () {
 									that.node.dieidentity.innerHTML = decadeUI.getPlayerIdentity(that, that.identity, true) + "<br>阵亡";
 								};
-								// 随机离开效果
-								if ((that._trueMe || that) != game.me && that != game.me && Math.random() < 0.5) {
-									if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
-										// onlineUI样式固定使用第一个路径
-										that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:10px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
-									} else {
-										// 其他样式保持随机
-										if (goon) {
-											that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:10px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
-										} else {
-											that.node.dieidentity.innerHTML = '<div style="width:21px; height:81px; left:18px; top:-12px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_2.png);background-size: 100% 100%;"></div>';
-										}
-									}
+								// 离开效果仅在移动版样式下启用
+								if ((that._trueMe || that) != game.me && that != game.me && lib.config.extension_十周年UI_newDecadeStyle === "off") {
+									that.node.dieidentity.innerHTML = '<div style="width:21px; height:81px; left:18px; top:-12px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai.png);background-size: 100% 100%;"></div>';
 								} else {
 									that.node.dieidentity.innerHTML = "";
 								}
