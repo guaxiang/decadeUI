@@ -736,12 +736,12 @@
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="2"] {
 	left: auto;
 	top: 6%;
-	right: calc(24% - (var(--w) / 2));
+	right: calc(23% - (var(--w) / 2));
 }
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="3"] {
 	left: auto;
 	top: 0px;
-	right: calc(37% - (var(--w) / 2));
+	right: calc(36% - (var(--w) / 2));
 }
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="4"] {
 	left: calc(50% - (var(--w) / 2));

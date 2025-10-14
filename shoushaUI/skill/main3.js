@@ -29,6 +29,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					ui.skillControl.update();
 					return ui.skills3;
 				},
+				gskills(skills) {
+					ui.gskills = plugin.createGSkills(skills, ui.gskills);
+					if (lib.config.phonelayout) {
+						if (ui.skillControl) {
+							ui.skillControl.update();
+						}
+					} else {
+						if (ui.gskillControl) {
+							ui.gskillControl.update();
+						}
+					}
+					return ui.gskills;
+				},
 				skillControl(clear) {
 					if (!ui.skillControl) {
 						ui.skillControl = plugin.createSkillControl();
@@ -38,6 +51,40 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						ui.skillControl.node.trigger.innerHTML = "";
 					}
 					return ui.skillControl;
+				},
+				gskillControl(clear) {
+					if (lib.config.phonelayout) {
+						return null;
+					}
+					if (!ui.gskillControl) {
+						const node = ui.create.div(".gskill-control", ui.arena);
+						node.node = {
+							enable: ui.create.div(".enable", node),
+							trigger: ui.create.div(".trigger", node),
+						};
+						for (const key in plugin.controlElement) {
+							node[key] = plugin.controlElement[key];
+						}
+						node.update = function () {
+							const skills = [];
+							if (ui.skills2) skills.addArray(ui.skills2.skills);
+							Array.from(this.node.enable.childNodes).forEach(function (item) {
+								const skillId = item.dataset.id;
+								let isUsable = skills.includes(skillId);
+								if (isUsable && game.me && get.is.locked(skillId, game.me)) {
+									isUsable = false;
+								}
+								item.classList[isUsable ? "add" : "remove"]("usable");
+								item.classList[_status.event.skill === skillId ? "add" : "remove"]("select");
+							});
+						};
+						ui.gskillControl = node;
+					}
+					if (clear) {
+						ui.gskillControl.node.enable.innerHTML = "";
+						ui.gskillControl.node.trigger.innerHTML = "";
+					}
+					return ui.gskillControl;
 				},
 			});
 		},
@@ -83,8 +130,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (player === game.me) {
 						const skillControl = ui.create.skillControl(clear);
 						skillControl.add(skills, eSkills);
-						if (gSkills) skillControl.add(gSkills);
+						if (lib.config.phonelayout && gSkills && gSkills.length) {
+							skillControl.add(gSkills, eSkills);
+						}
 						skillControl.update();
+						if (!lib.config.phonelayout) {
+							const gskillControl = ui.create.gskillControl(clear);
+							if (gskillControl) {
+								if (gSkills && gSkills.length) {
+									gskillControl.add(gSkills, eSkills);
+								}
+								gskillControl.update();
+							}
+						}
+
 						game.addVideo("updateSkillControl", player, clear);
 					}
 					plugin.updateSkillMarksForPlayer(player);
@@ -170,6 +229,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 						if (ui.skillControl) {
 							ui.skillControl.update();
+						}
+						if (!lib.config.phonelayout && ui.gskillControl) {
+							ui.gskillControl.update();
+						}
+						if (!lib.config.phonelayout && game.me && !ui.gskillControl && ui.skills2 && ui.skills2.skills.length) {
+							ui.updateSkillControl(game.me);
 						}
 					},
 					null,
@@ -271,14 +336,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills) skills.addArray(ui.skills.skills);
 				if (ui.skills2) skills.addArray(ui.skills2.skills);
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
-				Array.from(this.node.enable.querySelectorAll('.skillitem, .xiandingji')).forEach(item => {
+				if (lib.config.phonelayout && ui.gskills) {
+					skills.addArray(ui.gskills.skills);
+				}
+				Array.from(this.node.enable.querySelectorAll(".skillitem, .xiandingji")).forEach(item => {
 					item.classList.toggle("usable", skills.includes(item.dataset.id));
 					item.classList.toggle("select", _status.event.skill === item.dataset.id);
 				});
 				const level1 = Math.min(4, this.node.trigger.childNodes.length);
 				let level2 = 0;
 				if (lib.config.phonelayout) {
-					const enableCount = this.node.enable.querySelectorAll('.skillitem, .xiandingji').length;
+					const enableCount = this.node.enable.querySelectorAll(".skillitem, .xiandingji").length;
 					level2 = enableCount > 2 ? 4 : enableCount > 0 ? 2 : 0;
 				} else {
 					level2 = this.node.enable.childNodes.length > 2 ? 4 : this.node.enable.childNodes.length > 0 ? 2 : 0;
@@ -307,6 +375,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			if (!skills || !skills.length) return;
 			const newNode = ui.create.div(".control.skillControl", ui.skillControlArea);
+			Object.assign(newNode, lib.element.control);
+			skills.forEach(skill => {
+				const item = ui.create.div(newNode);
+				item.link = skill;
+				item.dataset.id = skill;
+				item.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
+			});
+			newNode.skills = skills;
+			newNode.custom = ui.click.skill;
+			return newNode;
+		},
+		createGSkills(skills, node) {
+			if (lib.config.phonelayout) {
+				return null;
+			}
+			if (this.isSameSkills(skills, node)) return node;
+			if (node) {
+				node.close();
+				node.delete();
+			}
+			if (!skills || !skills.length) return;
+			const newNode = ui.create.div(".gskill-control", ui.skillControlArea);
 			Object.assign(newNode, lib.element.control);
 			skills.forEach(skill => {
 				const item = ui.create.div(newNode);

@@ -8,7 +8,14 @@
 	/*技能显示右移，越小越靠右，建议别调*/
 	z-index: 6;
 }
-.skill-control div {
+.gskill-control {
+	max-width: 120px;
+	bottom: 65px;
+	right: 210px;
+	z-index: 6;
+}
+.skill-control div,
+.gskill-control div {
 	position: relative;
 }
 .skill-control>div {
@@ -16,19 +23,28 @@
 	flex-wrap: wrap;
 	flex-direction: row;
 }
-.skill-control>div::after {
+.gskill-control>div {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+.skill-control>div::after,
+.gskill-control>div::after {
 	content: "";
 	display: block;
 	clear: both;
 }
 .skill-control .trigger,
-.skill-control .enable {
+.skill-control .enable,
+.gskill-control .trigger,
+.gskill-control .enable {
 	height: auto;
 	width: auto;
 	justify-content: flex-end;
 }
 /*技能按钮*/
-.skill-control>.enable>.skillitem {
+.skill-control>.enable>.skillitem,
+.gskill-control>.enable>.skillitem {
 	margin: 1px 2px;
 	--w: 45px;
 	--h: calc(var(--w) * 91 / 200);
@@ -44,7 +60,8 @@
 	background-size: 100% 100%;
 	opacity: 1;
 }
-.skill-control>.enable>.xiandingji {
+.skill-control>.enable>.xiandingji,
+.gskill-control>.enable>.xiandingji {
 	margin: 1px 2px;
 	--w: 45px;
 	--h: calc(var(--w) * 91 / 200);
@@ -62,12 +79,14 @@
 	opacity: 1;
 }
 /*技能按钮不可用时变灰*/
-.skill-control>.enable>.skillitem:not(.usable):not(.select) {
+.skill-control>.enable>.skillitem:not(.usable):not(.select),
+.gskill-control>.enable>.skillitem:not(.usable):not(.select) {
 	background-size: 100% 100%;
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 }
-.skill-control>.enable>.xiandingji:not(.usable):not(.select) {
+.skill-control>.enable>.xiandingji:not(.usable):not(.select),
+.gskill-control>.enable>.xiandingji:not(.usable):not(.select) {
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(90%);
 }
@@ -119,6 +138,7 @@
 	/*同理*/
 }
 .skillMarkItem.xiandingji.used {
+	filter: grayscale(1);
 	-webkit-filter: grayscale(1);
 }
 .skillMarkItem+.skillMarkItem {

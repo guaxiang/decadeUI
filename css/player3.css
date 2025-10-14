@@ -332,8 +332,9 @@
 	font-family: xinwei, xingkai;
 	font-display: swap;
 	font-size: 26px;
-	width: 100%;
+	width: 75%;
 	height: 33.5%;
+	left: 10%;
 	display: flex;
 	text-align: center;
 	align-items: center;
@@ -343,6 +344,10 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	transition: none;
+}
+#arena[data-forcestyle="2"][data-new-decade-style="othersOff"][data-border-level="one"] .player>.camp-wrap>.camp-name {
+	width: 100%;
+	left: 0%;
 }
 .player>.camp-wrap[data-camp="jin"]>.camp-name {
 	text-shadow: 1px 1px 0px #7f4f79, -1px -1px 0px #7f4f79, 1px -1px 0px #7f4f79, -1px 1px 0px #7f4f79;

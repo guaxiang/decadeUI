@@ -22,6 +22,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					ui.skillControl.update();
 					return ui.skills3;
 				},
+				gskills(skills) {
+					ui.gskills = plugin.createGSkills(skills, ui.gskills);
+					if (lib.config.phonelayout) {
+						if (ui.skillControl) {
+							ui.skillControl.update();
+						}
+					} else {
+						if (ui.gskillControl) {
+							ui.gskillControl.update();
+						}
+					}
+					return ui.gskills;
+				},
 				skillControl(clear) {
 					if (!ui.skillControl) {
 						var className = lib.config["extension_十周年UI_rightLayout"] == "on" ? ".skill-control" : ".skill-controlzuoshou";
@@ -40,6 +53,40 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						ui.skillControl.node.trigger.innerHTML = "";
 					}
 					return ui.skillControl;
+				},
+				gskillControl(clear) {
+					if (lib.config.phonelayout) {
+						return null;
+					}
+					if (!ui.gskillControl) {
+						var node = ui.create.div(".gskill-control", ui.arena);
+						node.node = {
+							enable: ui.create.div(".enable", node),
+							trigger: ui.create.div(".trigger", node),
+						};
+						for (var i in plugin.controlElement) {
+							node[i] = plugin.controlElement[i];
+						}
+						node.update = function () {
+							var skills = [];
+							if (ui.skills2) skills.addArray(ui.skills2.skills);
+							Array.from(this.node.enable.childNodes).forEach(function (item) {
+								var skillId = item.dataset.id;
+								var isUsable = skills.includes(skillId);
+								if (isUsable && game.me && get.is.locked(skillId, game.me)) {
+									isUsable = false;
+								}
+								item.classList[isUsable ? "add" : "remove"]("usable");
+								item.classList[_status.event.skill === skillId ? "add" : "remove"]("select");
+							});
+						};
+						ui.gskillControl = node;
+					}
+					if (clear) {
+						ui.gskillControl.node.enable.innerHTML = "";
+						ui.gskillControl.node.trigger.innerHTML = "";
+					}
+					return ui.gskillControl;
 				},
 			});
 			Object.assign(ui, {
@@ -67,8 +114,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (player === game.me) {
 						var skillControl = ui.create.skillControl(clear);
 						skillControl.add(skills, eSkills);
-						if (gSkills) skillControl.add(gSkills);
+						if (lib.config.phonelayout && gSkills && gSkills.length) {
+							skillControl.add(gSkills, eSkills);
+						}
 						skillControl.update();
+						if (!lib.config.phonelayout) {
+							var gskillControl = ui.create.gskillControl(clear);
+							if (gskillControl) {
+								if (gSkills && gSkills.length) {
+									gskillControl.add(gSkills, eSkills);
+								}
+								gskillControl.update();
+							}
+						}
+
 						game.addVideo("updateSkillControl", player, clear);
 					}
 					var juexingji = {};
@@ -150,6 +209,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (ui.skillControl) {
 							ui.skillControl.update();
 						}
+						if (!lib.config.phonelayout && ui.gskillControl) {
+							ui.gskillControl.update();
+						}
+						if (!lib.config.phonelayout && game.me && !ui.gskillControl && ui.skills2 && ui.skills2.skills.length) {
+							ui.updateSkillControl(game.me);
+						}
 					},
 					null,
 				],
@@ -225,6 +290,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills) skills.addArray(ui.skills.skills);
 				if (ui.skills2) skills.addArray(ui.skills2.skills);
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
+				if (lib.config.phonelayout && ui.gskills) {
+					skills.addArray(ui.gskills.skills);
+				}
 				Array.from(this.node.enable.childNodes).forEach(function (item) {
 					item.classList[skills.includes(item.dataset.id) ? "add" : "remove"]("usable");
 					item.classList[_status.event.skill === item.dataset.id ? "add" : "remove"]("select");
@@ -265,6 +333,37 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			if (!skills || !skills.length) return;
 			node = ui.create.div(".control.skillControl", ui.skillControlArea);
+			Object.assign(node, lib.element.control);
+			skills.forEach(function (skill) {
+				var item = ui.create.div(node);
+				item.link = skill;
+				item.dataset.id = skill;
+				item.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
+			});
+			node.skills = skills;
+			node.custom = ui.click.skill;
+			return node;
+		},
+		createGSkills(skills, node) {
+			if (lib.config.phonelayout) {
+				return null;
+			}
+			var same = true;
+			if (node) {
+				if (skills && skills.length) {
+					for (var i = 0; i < node.skills.length; i++) {
+						if (node.skills[i] !== skills[i]) {
+							same = false;
+							break;
+						}
+					}
+				}
+				if (same) return node;
+				node.close();
+				node.delete();
+			}
+			if (!skills || !skills.length) return;
+			node = ui.create.div(".gskill-control", ui.skillControlArea);
 			Object.assign(node, lib.element.control);
 			skills.forEach(function (skill) {
 				var item = ui.create.div(node);

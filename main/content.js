@@ -5065,7 +5065,7 @@ export async function content(config, pack) {
 								this.node.campWrap.node.campName.innerHTML = "";
 								this.node.campWrap.node.campName.style.backgroundImage = "";
 								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
+								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "othersOff" ? (lib.config.extension_十周年UI_borderLevel == "one" ? "image/decoration/name_" : "image/decoration/group_") : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
 								const create = () => {
 									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
@@ -5093,7 +5093,7 @@ export async function content(config, pack) {
 							}
 							if (decadeUI.config.newDecadeStyle == "off") {
 								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
+								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "othersOff" ? (lib.config.extension_十周年UI_borderLevel == "one" ? "image/decoration/name_" : "image/decoration/group_") : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
 								const create = () => {
 									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
