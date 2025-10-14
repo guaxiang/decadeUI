@@ -197,7 +197,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event, player) {
 				return get.population("qun") > 0;
 			},
-			content() {
+			async content(event, trigger, player) {
 				var num = get.population("qun");
 				if (player.hasSkill("hongfa", null, null, false)) {
 					num += player.getExpansions("huangjintianbingfu").length;
@@ -263,14 +263,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			check(event, player) {
 				return get.attitude(player, event.player) <= 0;
 			},
-			content() {
-				"step 0";
-				player.draw();
+			async content(event, trigger, player) {
+				await player.draw();
 				var cards = Array.from(ui.ordering.childNodes);
 				while (cards.length) {
 					cards.shift().discard();
 				}
-				"step 1";
 				var evt = _status.event.getParent("phase", true);
 				if (evt) {
 					if (window.decadeUI && decadeUI.eventDialog) {
@@ -291,344 +289,336 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	};
 	decadeUI.inheritSkill = {
 		identity_junshi: {
-			content() {
-				player.chooseToGuanxing(3);
+			async content(event, trigger, player) {
+				await player.chooseToGuanxing(3);
 			},
 		},
 		xinfu_zuilun: {
-			content() {
-				"step 0";
-				event.num = 0;
-				event.cards = get.cards(3);
-				if (
-					player.getHistory("lose", function (evt) {
-						return evt.type == "discard";
-					}).length
-				)
-					event.num++;
-				if (!player.isMinHandcard()) event.num++;
-				if (!player.getStat("damage")) event.num++;
-				"step 1";
-				if (event.num == 0) {
-					player.gain(event.cards, "draw");
-					event.finish();
-					return;
-				}
-				var cards = event.cards;
-				var gains = cards.length - event.num;
-				var zuiLun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, gains);
-				zuiLun.caption = "【罪论】";
-				zuiLun.header2 = "获得的牌";
-				zuiLun.tip = "可获得" + gains + "张牌<br>" + zuiLun.tip;
-				zuiLun.callback = function () {
-					return this.cards[1].length == gains;
-				};
-				game.broadcast(
-					function (player, cards, gains, callback) {
-						if (!window.decadeUI) return;
-						var zuiLun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, gains);
-						zuiLun.caption = "【罪论】";
-						zuiLun.header2 = "获得的牌";
-						zuiLun.tip = "可获得" + gains + "张牌<br>" + zuiLun.tip;
-						zuiLun.callback = callback;
-					},
-					player,
-					cards,
-					gains,
-					zuiLun.callback
-				);
-				var player = event.player;
-				event.switchToAuto = function () {
-					var cheats = [];
-					var cards = zuiLun.cards[0].concat();
-					var next = player.getNext();
-					var hasFriend = get.attitude(player, next) > 0;
-					// 判断下家是不是队友，令其生效或者失效
-					var judges = next.node.judges.childNodes;
-					if (judges.length > 0) cheats = decadeUI.get.cheatJudgeCards(cards, judges, hasFriend);
-					// 如果有【父荫】优先把好牌给队友
-					if (hasFriend && player.hasSkill("xinfu_fuyin")) {
-						cards = decadeUI.get.bestValueCards(cards, next);
-					} else {
-						cards.sort(function (a, b) {
-							return get.value(a, player) - get.value(b, player);
-						});
+			content: [
+				async (event, trigger, player) => {
+					event.num = 0;
+					event.cards = get.cards(3);
+					if (
+						player.getHistory("lose", function (evt) {
+							return evt.type == "discard";
+						}).length
+					)
+						event.num++;
+					if (!player.isMinHandcard()) event.num++;
+					if (!player.getStat("damage")) event.num++;
+					if (event.num == 0) {
+						await player.gain(event.cards, "draw");
+						return;
 					}
-					cards = cheats.concat(cards);
-					var time = 500;
-					var gainNum = gains;
-					for (var i = cards.length - 1; i >= 0; i--) {
-						setTimeout(
-							function (card, index, finished, moveDown) {
-								zuiLun.move(card, index, moveDown ? 1 : 0);
-								if (finished) zuiLun.finishTime(1000);
-							},
-							time,
-							cards[i],
-							i,
-							i == 0,
-							gainNum > 0
-						);
-						time += 500;
-						gainNum--;
+					var cards = event.cards;
+					var gains = cards.length - event.num;
+					var zuiLun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, gains);
+					zuiLun.caption = "【罪论】";
+					zuiLun.header2 = "获得的牌";
+					zuiLun.tip = "可获得" + gains + "张牌<br>" + zuiLun.tip;
+					zuiLun.callback = function () {
+						return this.cards[1].length == gains;
+					};
+					game.broadcast(
+						function (player, cards, gains, callback) {
+							if (!window.decadeUI) return;
+							var zuiLun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, gains);
+							zuiLun.caption = "【罪论】";
+							zuiLun.header2 = "获得的牌";
+							zuiLun.tip = "可获得" + gains + "张牌<br>" + zuiLun.tip;
+							zuiLun.callback = callback;
+						},
+						player,
+						cards,
+						gains,
+						zuiLun.callback
+					);
+					var player2 = event.player;
+					event.switchToAuto = function () {
+						var cheats = [];
+						var cards = zuiLun.cards[0].concat();
+						var next = player2.getNext();
+						var hasFriend = get.attitude(player2, next) > 0;
+						var judges = next.node.judges.childNodes;
+						if (judges.length > 0) cheats = decadeUI.get.cheatJudgeCards(cards, judges, hasFriend);
+						if (hasFriend && player2.hasSkill("xinfu_fuyin")) {
+							cards = decadeUI.get.bestValueCards(cards, next);
+						} else {
+							cards.sort(function (a, b) {
+								return get.value(a, player2) - get.value(b, player2);
+							});
+						}
+						cards = cheats.concat(cards);
+						var time = 500;
+						var gainNum = gains;
+						for (var i = cards.length - 1; i >= 0; i--) {
+							setTimeout(
+								function (card, index, finished, moveDown) {
+									zuiLun.move(card, index, moveDown ? 1 : 0);
+									if (finished) zuiLun.finishTime(1000);
+								},
+								time,
+								cards[i],
+								i,
+								i == 0,
+								gainNum > 0
+							);
+							time += 500;
+							gainNum--;
+						}
+					};
+					if (event.isOnline()) {
+						event.player.send(function () {
+							if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
+						}, event.player);
+						event.player.wait();
+						decadeUI.game.wait();
+					} else if (!event.isMine()) {
+						event.switchToAuto();
 					}
-				};
-				if (event.isOnline()) {
-					event.player.send(function () {
-						if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
-					}, event.player);
-					event.player.wait();
-					decadeUI.game.wait();
-				} else if (!event.isMine()) {
-					event.switchToAuto();
-				}
-				"step 2";
-				event.cards = event.cards2;
-				if (event.result && event.result.bool) {
-					var cards = event.cards1;
-					var first = ui.cardPile.firstChild;
-					for (var i = 0; i < cards.length; i++) {
-						ui.cardPile.insertBefore(cards[i], first);
+				},
+				async (event, trigger, player) => {
+					event.cards = event.cards2 || [];
+					if (event.result && event.result.bool) {
+						var cards1 = event.cards1 || [];
+						var first = ui.cardPile.firstChild;
+						for (var i = 0; i < cards1.length; i++) {
+							ui.cardPile.insertBefore(cards1[i], first);
+						}
 					}
-				}
-				"step 3";
-				game.updateRoundNumber();
-				if (event.cards.length) {
-					player.gain(event.cards, "draw");
-					event.finish();
-				} else {
-					player.chooseTarget("请选择一名角色，与其一同失去1点体力", true, function (card, player, target) {
+					game.updateRoundNumber();
+					if (event.cards.length) {
+						await player.gain(event.cards, "draw");
+						return;
+					}
+					let chooseTarget = player.chooseTarget("请选择一名角色，与其一同失去1点体力", true, function (card, player, target) {
 						return target != player;
-					}).ai = function (target) {
+					});
+					chooseTarget.ai = function (target) {
 						return -get.attitude(_status.event.player, target);
 					};
+					let { result: cRes } = await chooseTarget;
+					player.line(cRes.targets[0], "fire");
+					await player.loseHp();
+					await cRes.targets[0].loseHp();
 				}
-				"step 4";
-				player.line(result.targets[0], "fire");
-				player.loseHp();
-				result.targets[0].loseHp();
-			},
+			]
 		},
 		xinfu_pingcai: {
-			contentx() {
-				"step 0";
-				event.pingcai_delayed = true;
-				var name = lib.skill.xinfu_pingcai_backup.takara;
-				event.cardname = name;
-				event.videoId = lib.status.videoId++;
-				if (player.isUnderControl()) {
-					game.swapPlayerAuto(player);
-				}
-				var switchToAuto = function () {
-					game.pause();
-					game.countChoose();
-					event.timeout = setTimeout(function () {
-						_status.imchoosing = false;
-						event._result = {
-							bool: true,
-						};
-						game.resume();
-					}, 9000);
-				};
-				var createDialog = function (player, id, name) {
-					if (player == game.me) return;
-					var dialog = ui.create.dialog("forcebutton", "hidden");
-					var str = get.translation(player) + "正在擦拭宝物上的灰尘…";
-					var canSkip = !_status.connectMode;
-					if (canSkip) str += "<br>（点击宝物可以跳过等待AI操作）";
-					dialog.textPrompt = dialog.add('<div class="text center">' + str + "</div>");
-					dialog.classList.add("fixed");
-					dialog.classList.add("scroll1");
-					dialog.classList.add("scroll2");
-					dialog.classList.add("fullwidth");
-					dialog.classList.add("fullheight");
-					dialog.classList.add("noupdate");
-					dialog.videoId = id;
-					var canvas2 = document.createElement("canvas");
-					dialog.canvas_viewer = canvas2;
-					dialog.appendChild(canvas2);
-					canvas2.classList.add("grayscale");
-					canvas2.style.position = "absolute";
-					canvas2.style.width = "249px";
-					canvas2.style.height = "249px";
-					canvas2.style["border-radius"] = "6px";
-					canvas2.style.left = "calc(50% - 125px)";
-					canvas2.style.top = "calc(50% - 125px)";
-					canvas2.width = 249;
-					canvas2.height = 249;
-					canvas2.style.border = "3px solid";
-					var ctx2 = canvas2.getContext("2d");
-					var img = new Image();
-					img.src = lib.assetURL + "image/card/" + name + ".png";
-					img.onload = function () {
-						ctx2.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas2.width, canvas2.height);
-					};
-					if (canSkip) {
-						var skip = function () {
-							if (event.pingcai_delayed) {
-								delete event.pingcai_delayed;
-								clearTimeout(event.timeout);
-								event._result = {
-									bool: true,
-								};
-								game.resume();
-								canvas2.removeEventListener(lib.config.touchscreen ? "touchend" : "click", skip);
-							}
-						};
-						canvas2.addEventListener(lib.config.touchscreen ? "touchend" : "click", skip);
+			contentx: [
+				async (event, trigger, player) => {
+					event.pingcai_delayed = true;
+					var name = lib.skill.xinfu_pingcai_backup.takara;
+					event.cardname = name;
+					event.videoId = lib.status.videoId++;
+					if (player.isUnderControl()) {
+						game.swapPlayerAuto(player);
 					}
-					dialog.open();
-				};
-				var chooseButton = function (id, name) {
-					var event = _status.event;
-					_status.xinfu_pingcai_finished = false;
-					var dialog = ui.create.dialog("forcebutton", "hidden");
-					dialog.textPrompt = dialog.add('<div class="text center">擦拭掉宝物上的灰尘吧！</div>');
-					event.switchToAuto = function () {
-						event._result = {
-							bool: _status.xinfu_pingcai_finished,
+					var switchToAuto = function () {
+						game.pause();
+						game.countChoose();
+						event.timeout = setTimeout(function () {
+							_status.imchoosing = false;
+							event._result = {
+								bool: true,
+							};
+							game.resume();
+						}, 9000);
+					};
+					var createDialog = function (player, id, name) {
+						if (player == game.me) return;
+						var dialog = ui.create.dialog("forcebutton", "hidden");
+						var str = get.translation(player) + "正在擦拭宝物上的灰尘…";
+						var canSkip = !_status.connectMode;
+						if (canSkip) str += "<br>（点击宝物可以跳过等待AI操作）";
+						dialog.textPrompt = dialog.add('<div class="text center">' + str + "</div>");
+						dialog.classList.add("fixed");
+						dialog.classList.add("scroll1");
+						dialog.classList.add("scroll2");
+						dialog.classList.add("fullwidth");
+						dialog.classList.add("fullheight");
+						dialog.classList.add("noupdate");
+						dialog.videoId = id;
+						var canvas2 = document.createElement("canvas");
+						dialog.canvas_viewer = canvas2;
+						dialog.appendChild(canvas2);
+						canvas2.classList.add("grayscale");
+						canvas2.style.position = "absolute";
+						canvas2.style.width = "249px";
+						canvas2.style.height = "249px";
+						canvas2.style["border-radius"] = "6px";
+						canvas2.style.left = "calc(50% - 125px)";
+						canvas2.style.top = "calc(50% - 125px)";
+						canvas2.width = 249;
+						canvas2.height = 249;
+						canvas2.style.border = "3px solid";
+						var ctx2 = canvas2.getContext("2d");
+						var img = new Image();
+						img.src = lib.assetURL + "image/card/" + name + ".png";
+						img.onload = function () {
+							ctx2.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas2.width, canvas2.height);
 						};
-						game.resume();
-						_status.imchoosing = false;
-						_status.xinfu_pingcai_finished = true;
-					};
-					dialog.classList.add("fixed");
-					dialog.classList.add("scroll1");
-					dialog.classList.add("scroll2");
-					dialog.classList.add("fullwidth");
-					dialog.classList.add("fullheight");
-					dialog.classList.add("noupdate");
-					dialog.videoId = id;
-					var canvas = document.createElement("canvas");
-					var canvas2 = document.createElement("canvas");
-					dialog.appendChild(canvas2);
-					dialog.appendChild(canvas);
-					canvas.style.position = "absolute";
-					canvas.style.width = "249px";
-					canvas.style.height = "249px";
-					canvas.style["border-radius"] = "6px";
-					canvas.style.left = "calc(50% - 125px)";
-					canvas.style.top = "calc(50% - 125px)";
-					canvas.width = 249;
-					canvas.height = 249;
-					canvas.style.border = "3px solid";
-					canvas2.style.position = "absolute";
-					canvas2.style.width = "249px";
-					canvas2.style.height = "249px";
-					canvas2.style["border-radius"] = "6px";
-					canvas2.style.left = "calc(50% - 125px)";
-					canvas2.style.top = "calc(50% - 125px)";
-					canvas2.width = 249;
-					canvas2.height = 249;
-					canvas2.style.border = "3px solid";
-					var ctx = canvas.getContext("2d");
-					var ctx2 = canvas2.getContext("2d");
-					var img = new Image();
-					img.src = lib.assetURL + "image/card/" + name + ".png";
-					img.onload = function () {
-						ctx2.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas2.width, canvas2.height);
-					};
-					ctx.fillStyle = "lightgray";
-					ctx.fillRect(0, 0, canvas.width, canvas.height);
-					canvas.onmousedown = function (ev) {
-						//if(_status.xinfu_pingcai_finished) return;
-						canvas.onmousemove = function (e) {
-							if (_status.xinfu_pingcai_finished) return;
-							ctx.beginPath();
-							ctx.clearRect(e.offsetX / game.documentZoom - 16, e.offsetY / game.documentZoom - 16, 32, 32);
-							var data = ctx.getImageData(canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8).data;
-							var sum = 0;
-							for (var i = 3; i < data.length; i += 4) {
-								if (data[i] == 0) {
-									sum++;
+						if (canSkip) {
+							var skip = function () {
+								if (event.pingcai_delayed) {
+									delete event.pingcai_delayed;
+									clearTimeout(event.timeout);
+									event._result = {
+										bool: true,
+									};
+									game.resume();
+									canvas2.removeEventListener(lib.config.touchscreen ? "touchend" : "click", skip);
 								}
-							}
-							if (sum >= canvas.width * canvas.height * 0.6) {
-								//ctx.clearRect(0,0,canvas.width,canvas.height);
-								if (!_status.xinfu_pingcai_finished) {
-									_status.xinfu_pingcai_finished = true;
-									event.switchToAuto();
-								}
-							}
-						};
-					};
-					canvas.ontouchstart = function (ev) {
-						//if(_status.xinfu_pingcai_finished) return;
-						canvas.ontouchmove = function (e) {
-							if (_status.xinfu_pingcai_finished) return;
-							ctx.beginPath();
-							var rect = canvas.getBoundingClientRect();
-							var X = ((e.touches[0].clientX / game.documentZoom - rect.left) / rect.width) * canvas.width;
-							var Y = ((e.touches[0].clientY / game.documentZoom - rect.top) / rect.height) * canvas.height;
-							ctx.clearRect(X - 16, Y - 16, 32, 32);
-							var data = ctx.getImageData(canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8).data;
-							var sum = 0;
-							for (var i = 3; i < data.length; i += 4) {
-								if (data[i] == 0) {
-									sum++;
-								}
-							}
-							if (sum >= canvas.width * canvas.height * 0.6) {
-								if (!_status.xinfu_pingcai_finished) {
-									_status.xinfu_pingcai_finished = true;
-									event.switchToAuto();
-								}
-							}
-						};
-					};
-					canvas.onmouseup = function (ev) {
-						canvas.onmousemove = null;
-					};
-					canvas.ontouchend = function (ev) {
-						canvas.ontouchmove = null;
-					};
-					dialog.open();
-					game.pause();
-					game.countChoose();
-				};
-				//event.switchToAuto=switchToAuto;
-				game.broadcastAll(createDialog, player, event.videoId, name);
-				if (event.isMine()) {
-					chooseButton(event.videoId, name);
-				} else if (event.isOnline()) {
-					event.player.send(chooseButton, event.videoId, name);
-					event.player.wait();
-					game.pause();
-				} else {
-					switchToAuto();
-				}
-				"step 1";
-				var result = event.result || result;
-				if (!result)
-					result = {
-						bool: false,
-					};
-				event._result = result;
-				game.broadcastAll(
-					function (id, result, player) {
-						_status.xinfu_pingcai_finished = true;
-						var dialog = get.idDialog(id);
-						if (dialog) {
-							dialog.textPrompt.innerHTML = '<div class="text center">' + (get.translation(player) + "擦拭宝物" + (result.bool ? "成功！" : "失败…")) + "</div>";
-							if (result.bool && dialog.canvas_viewer) dialog.canvas_viewer.classList.remove("grayscale");
+							};
+							canvas2.addEventListener(lib.config.touchscreen ? "touchend" : "click", skip);
 						}
-						if (!_status.connectMode) delete event.pingcai_delayed;
-					},
-					event.videoId,
-					result,
-					player
-				);
-				game.delay(2.5);
-				"step 2";
-				game.broadcastAll("closeDialog", event.videoId);
-				if (result.bool) {
-					player.logSkill("pcaudio_" + event.cardname);
-					event.insert(lib.skill.xinfu_pingcai[event.cardname], {
-						player: player,
-					});
+						dialog.open();
+					};
+					var chooseButton = function (id, name) {
+						var event = _status.event;
+						_status.xinfu_pingcai_finished = false;
+						var dialog = ui.create.dialog("forcebutton", "hidden");
+						dialog.textPrompt = dialog.add('<div class="text center">擦拭掉宝物上的灰尘吧！</div>');
+						event.switchToAuto = function () {
+							event._result = {
+								bool: _status.xinfu_pingcai_finished,
+							};
+							game.resume();
+							_status.imchoosing = false;
+							_status.xinfu_pingcai_finished = true;
+						};
+						dialog.classList.add("fixed");
+						dialog.classList.add("scroll1");
+						dialog.classList.add("scroll2");
+						dialog.classList.add("fullwidth");
+						dialog.classList.add("fullheight");
+						dialog.classList.add("noupdate");
+						dialog.videoId = id;
+						var canvas = document.createElement("canvas");
+						var canvas2 = document.createElement("canvas");
+						dialog.appendChild(canvas2);
+						dialog.appendChild(canvas);
+						canvas.style.position = "absolute";
+						canvas.style.width = "249px";
+						canvas.style.height = "249px";
+						canvas.style["border-radius"] = "6px";
+						canvas.style.left = "calc(50% - 125px)";
+						canvas.style.top = "calc(50% - 125px)";
+						canvas.width = 249;
+						canvas.height = 249;
+						canvas.style.border = "3px solid";
+						canvas2.style.position = "absolute";
+						canvas2.style.width = "249px";
+						canvas2.style.height = "249px";
+						canvas2.style["border-radius"] = "6px";
+						canvas2.style.left = "calc(50% - 125px)";
+						canvas2.style.top = "calc(50% - 125px)";
+						canvas2.width = 249;
+						canvas2.height = 249;
+						canvas2.style.border = "3px solid";
+						var ctx = canvas.getContext("2d");
+						var ctx2 = canvas2.getContext("2d");
+						var img = new Image();
+						img.src = lib.assetURL + "image/card/" + name + ".png";
+						img.onload = function () {
+							ctx2.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas2.width, canvas2.height);
+						};
+						ctx.fillStyle = "lightgray";
+						ctx.fillRect(0, 0, canvas.width, canvas.height);
+						canvas.onmousedown = function (ev) {
+							canvas.onmousemove = function (e) {
+								if (_status.xinfu_pingcai_finished) return;
+								ctx.beginPath();
+								ctx.clearRect(e.offsetX / game.documentZoom - 16, e.offsetY / game.documentZoom - 16, 32, 32);
+								var data = ctx.getImageData(canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8).data;
+								var sum = 0;
+								for (var i = 3; i < data.length; i += 4) {
+									if (data[i] == 0) {
+										sum++;
+									}
+								}
+								if (sum >= canvas.width * canvas.height * 0.6) {
+									if (!_status.xinfu_pingcai_finished) {
+										_status.xinfu_pingcai_finished = true;
+										event.switchToAuto();
+									}
+								}
+							};
+						};
+						canvas.ontouchstart = function (ev) {
+							canvas.ontouchmove = function (e) {
+								if (_status.xinfu_pingcai_finished) return;
+								ctx.beginPath();
+								var rect = canvas.getBoundingClientRect();
+								var X = ((e.touches[0].clientX / game.documentZoom - rect.left) / rect.width) * canvas.width;
+								var Y = ((e.touches[0].clientY / game.documentZoom - rect.top) / rect.height) * canvas.height;
+								ctx.clearRect(X - 16, Y - 16, 32, 32);
+								var data = ctx.getImageData(canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8).data;
+								var sum = 0;
+								for (var i = 3; i < data.length; i += 4) {
+									if (data[i] == 0) {
+										sum++;
+									}
+								}
+								if (sum >= canvas.width * canvas.height * 0.6) {
+									if (!_status.xinfu_pingcai_finished) {
+										_status.xinfu_pingcai_finished = true;
+										event.switchToAuto();
+									}
+								}
+							};
+						};
+						canvas.onmouseup = function (ev) {
+							canvas.onmousemove = null;
+						};
+						canvas.ontouchend = function (ev) {
+							canvas.ontouchmove = null;
+						};
+						dialog.open();
+						game.pause();
+						game.countChoose();
+					};
+					game.broadcastAll(createDialog, player, event.videoId, name);
+					if (event.isMine()) {
+						chooseButton(event.videoId, name);
+					} else if (event.isOnline()) {
+						event.player.send(chooseButton, event.videoId, name);
+						event.player.wait();
+						game.pause();
+					} else {
+						switchToAuto();
+					}
+				},
+				async (event, trigger, player) => {
+					var result = event._result || event.result || { bool: false };
+					event._result = result;
+					game.broadcastAll(
+						function (id, result, player) {
+							_status.xinfu_pingcai_finished = true;
+							var dialog = get.idDialog(id);
+							if (dialog) {
+								dialog.textPrompt.innerHTML = '<div class="text center">' + (get.translation(player) + "擦拭宝物" + (result.bool ? "成功！" : "失败…")) + "</div>";
+								if (result.bool && dialog.canvas_viewer) dialog.canvas_viewer.classList.remove("grayscale");
+							}
+							if (!_status.connectMode) delete event.pingcai_delayed;
+						},
+						event.videoId,
+						result,
+						player
+					);
+					await game.delay(2.5);
+				},
+				async (event, trigger, player) => {
+					game.broadcastAll("closeDialog", event.videoId);
+					if (event._result && event._result.bool) {
+						player.logSkill("pcaudio_" + event.cardname);
+						event.insert(lib.skill.xinfu_pingcai[event.cardname], {
+							player: player,
+						});
+					}
 				}
-			},
-			ai: {
+			]
+			,ai: {
 				order: 7,
 				fireAttack: true,
 				threaten: 1.7,
@@ -638,67 +628,68 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 		xunxun: {
-			content() {
-				"step 0";
-				var cards = get.cards(4);
-				var player = event.player;
-				var xunxun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 2);
-				xunxun.caption = "【恂恂】";
-				xunxun.header1 = "牌堆底";
-				xunxun.header2 = "牌堆顶";
-				xunxun.callback = function () {
-					return this.cards[0].length == 2 && this.cards[1].length == 2;
-				};
-				game.broadcast(
-					function (player, cards, callback) {
-						if (!window.decadeUI) return;
-						var xunxun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 2);
-						xunxun.caption = "【恂恂】";
-						xunxun.header1 = "牌堆底";
-						xunxun.header2 = "牌堆顶";
-						xunxun.callback = callback;
-					},
-					player,
-					cards,
-					xunxun.callback
-				);
-				event.switchToAuto = function () {
-					var cards = decadeUI.get.bestValueCards(xunxun.cards[0].concat(), player);
-					var time = 500;
-					for (var i = 0; i < 2; i++) {
-						setTimeout(
-							function (card, index, finished) {
-								xunxun.move(card, index, 1);
-								if (finished) xunxun.finishTime(1000);
-							},
-							time,
-							cards[i],
-							i,
-							i >= 1
-						);
-						time += 500;
+			content: [
+				async (event, trigger, player) => {
+					var cards = get.cards(4);
+					var xunxun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 2);
+					xunxun.caption = "【恂恂】";
+					xunxun.header1 = "牌堆底";
+					xunxun.header2 = "牌堆顶";
+					xunxun.callback = function () {
+						return this.cards[0].length == 2 && this.cards[1].length == 2;
+					};
+					game.broadcast(
+						function (player, cards, callback) {
+							if (!window.decadeUI) return;
+							var xunxun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, 2);
+							xunxun.caption = "【恂恂】";
+							xunxun.header1 = "牌堆底";
+							xunxun.header2 = "牌堆顶";
+							xunxun.callback = callback;
+						},
+						player,
+						cards,
+						xunxun.callback
+					);
+					event.switchToAuto = function () {
+						var cards = decadeUI.get.bestValueCards(xunxun.cards[0].concat(), player);
+						var time = 500;
+						for (var i = 0; i < 2; i++) {
+							setTimeout(
+								function (card, index, finished) {
+									xunxun.move(card, index, 1);
+									if (finished) xunxun.finishTime(1000);
+								},
+								time,
+								cards[i],
+								i,
+								i >= 1
+							);
+							time += 500;
+						}
+					};
+					if (event.isOnline()) {
+						event.player.send(function () {
+							if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
+						}, event.player);
+						event.player.wait();
+						decadeUI.game.wait();
+					} else if (!event.isMine()) {
+						event.switchToAuto();
 					}
-				};
-				if (event.isOnline()) {
-					event.player.send(function () {
-						if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
-					}, event.player);
-					event.player.wait();
-					decadeUI.game.wait();
-				} else if (!event.isMine()) {
-					event.switchToAuto();
+				},
+				async (event, trigger, player) => {
+					var first = ui.cardPile.firstChild;
+					var cardsTop = event.cards2 || [];
+					for (var i = 0; i < cardsTop.length; i++) {
+						ui.cardPile.insertBefore(cardsTop[i], first);
+					}
+					var cardsBottom = event.cards1 || [];
+					for (var i = 0; i < cardsBottom.length; i++) {
+						ui.cardPile.appendChild(cardsBottom[i]);
+					}
 				}
-				"step 1";
-				var first = ui.cardPile.firstChild;
-				var cards = event.cards2;
-				for (var i = 0; i < cards.length; i++) {
-					ui.cardPile.insertBefore(cards[i], first);
-				}
-				cards = event.cards1;
-				for (var i = 0; i < cards.length; i++) {
-					ui.cardPile.appendChild(cards[i]);
-				}
-			},
+			],
 		},
 		xz_xunxun: {
 			inherit: "xunxun",
@@ -884,15 +875,17 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 		nk_shekong: {
-			content() {
-				"step 0";
-				event.cardsx = cards.slice(0);
-				var num = get.cnNumber(cards.length);
+			async content(event, trigger, player) {
+				var baseCards = event.cards || [];
+				var baseLen = baseCards.length;
+				event.cardsx = baseCards.slice(0);
+				var num = get.cnNumber(baseLen);
 				var trans = get.translation(player);
 				var prompt = "弃置" + num + "张牌，然后" + trans + "摸一张牌";
-				if (cards.length > 1) prompt += "；或弃置一张牌，然后" + trans + "摸" + num + "张牌";
+				if (baseLen > 1) prompt += "；或弃置一张牌，然后" + trans + "摸" + num + "张牌";
+				var target = event.target;
 				var next = target.chooseToDiscard(prompt, "he", true);
-				next.numx = cards.length;
+				next.numx = baseLen;
 				next.selectCard = function () {
 					if (ui.selected.cards.length > 1) return _status.event.numx;
 					return [1, _status.event.numx];
@@ -908,77 +901,73 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						return 7 - get.value(card);
 					return -1;
 				};
-				"step 1";
-				if (result.bool) {
-					if (result.cards.length == cards.length) player.draw();
-					else player.draw(cards.length);
-					event.cardsx.addArray(result.cards);
-					for (var i = 0; i < event.cardsx.length; i++) {
-						if (get.position(event.cardsx[i]) != "d") event.cardsx.splice(i--, 1);
+				let { result } = await next;
+				if (!result || !result.bool) return;
+				if (result.cards.length == baseLen) await player.draw();
+				else await player.draw(baseLen);
+				event.cardsx.addArray(result.cards);
+				for (var i = 0; i < event.cardsx.length; i++) {
+					if (get.position(event.cardsx[i]) != "d") event.cardsx.splice(i--, 1);
+				}
+				if (!event.cardsx.length) return;
+				var cards2 = event.cardsx;
+				var dialog = decadeUI.content.chooseGuanXing(player, cards2, cards2.length);
+				dialog.caption = "【设控】";
+				game.broadcast(
+					function (player, cards, callback) {
+						if (!window.decadeUI) return;
+						var dialog = decadeUI.content.chooseGuanXing(player, cards, cards.length);
+						dialog.caption = "【设控】";
+						dialog.callback = callback;
+					},
+					player,
+					cards2,
+					dialog.callback
+				);
+				event.switchToAuto = function () {
+					var cards = dialog.cards[0].concat();
+					var cheats = [];
+					var judges;
+					var next = player.getNext();
+					var friend = get.attitude(player, next) < 0 ? null : next;
+					judges = next.node.judges.childNodes;
+					if (judges.length > 0) cheats = decadeUI.get.cheatJudgeCards(cards, judges, friend != null);
+					if (friend) {
+						cards = decadeUI.get.bestValueCards(cards, friend);
+					} else {
+						cards.sort(function (a, b) {
+							return get.value(a, next) - get.value(b, next);
+						});
 					}
-				} else event.finish();
-				"step 2";
-				if (event.cardsx.length) {
-					var cards = event.cardsx;
-					var dialog = decadeUI.content.chooseGuanXing(player, cards, cards.length);
-					dialog.caption = "【设控】";
-					game.broadcast(
-						function (player, cards, callback) {
-							if (!window.decadeUI) return;
-							var dialog = decadeUI.content.chooseGuanXing(player, cards, cards.length);
-							dialog.caption = "【设控】";
-							dialog.callback = callback;
-						},
-						player,
-						cards,
-						dialog.callback
-					);
-					event.switchToAuto = function () {
-						var cards = dialog.cards[0].concat();
-						var cheats = [];
-						var judges;
-						var next = player.getNext();
-						var friend = get.attitude(player, next) < 0 ? null : next;
-						judges = next.node.judges.childNodes;
-						if (judges.length > 0) cheats = decadeUI.get.cheatJudgeCards(cards, judges, friend != null);
-						if (friend) {
-							cards = decadeUI.get.bestValueCards(cards, friend);
-						} else {
-							cards.sort(function (a, b) {
-								return get.value(a, next) - get.value(b, next);
-							});
-						}
-						cards = cheats.concat(cards);
-						var time = 500;
-						for (var i = 0; i < cards.length; i++) {
-							setTimeout(
-								function (card, index, finished) {
-									dialog.move(card, index, 0);
-									if (finished) dialog.finishTime(cards.length <= 1 ? 250 : 1000);
-								},
-								time,
-								cards[i],
-								i,
-								i >= cards.length - 1
-							);
-							time += 500;
-						}
-					};
-					if (event.isOnline()) {
-						event.player.send(function () {
-							if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
-						}, event.player);
-						event.player.wait();
-						decadeUI.game.wait();
-					} else if (!event.isMine()) {
-						event.switchToAuto();
+					cards = cheats.concat(cards);
+					var time = 500;
+					for (var i = 0; i < cards.length; i++) {
+						setTimeout(
+							function (card, index, finished) {
+								dialog.move(card, index, 0);
+								if (finished) dialog.finishTime(cards.length <= 1 ? 250 : 1000);
+							},
+							time,
+							cards[i],
+							i,
+							i >= cards.length - 1
+						);
+						time += 500;
 					}
-				} else event.finish();
+				};
+				if (event.isOnline()) {
+					event.player.send(function () {
+						if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
+					}, event.player);
+					event.player.wait();
+					decadeUI.game.wait();
+				} else if (!event.isMine()) {
+					event.switchToAuto();
+				}
 			},
 		},
 		kamome_huanmeng: {
-			content() {
-				"step 0";
+			async content(event, trigger, player) {
 				if (player.isUnderControl()) {
 					game.modeSwapPlayer(player);
 				}
@@ -1047,7 +1036,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				} else if (!event.isMine()) {
 					event.switchToAuto();
 				}
-				"step 1";
 				player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
 				game.log(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
 				game.updateRoundNumber();
@@ -1056,9 +1044,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		//注意：twtanfeng非版本不可用而修改，而是为了适配视为使用XX牌的转化写的以viewAs方法实现效果的技能的“示例”
 		//玩家可以以此chooseToUse为模板，对自己想要实现的“将XX牌当作XX牌使用”的技能写成支持viewAs的模板以实现萌修十周年对viewAs卡牌选中美化的支持
 		twtanfeng: {
-			content() {
-				"step 0";
-				player
+			async content(event, trigger, player) {
+				let choose = player
 					.chooseTarget(get.prompt2("twtanfeng"), function (card, player, target) {
 						return target != player && target.countDiscardableCards(player, "hej") > 0;
 					})
@@ -1091,15 +1078,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						);
 					})
 					.setHiddenSkill("twtanfeng");
-				"step 1";
-				if (result.bool) {
-					var target = result.targets[0];
-					event.target = target;
-					player.logSkill("twtanfeng", target);
-					player.discardPlayerCard(target, "hej", true);
-				} else event.finish();
-				"step 2";
-				var next = target.chooseToUse();
+				let { result } = await choose;
+				if (!result || !result.bool) return;
+				let target = result.targets[0];
+				event.target = target;
+				player.logSkill("twtanfeng", target);
+				await player.discardPlayerCard(target, "hej", true);
+				let next = target.chooseToUse();
 				next.set("openskilldialog", "###探锋：选择一张牌当作【杀】对" + get.translation(player) + "使用###或点击“取消”，受到其造成的1点火焰伤害，并令其跳过本回合的一个阶段（准备阶段和结束阶段除外）");
 				next.set("norestore", true);
 				next.set("_backupevent", "twtanfeng_backup");
@@ -1118,16 +1103,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				});
 				next.set("sourcex", player);
 				next.set("addCount", false);
-				"step 3";
-				if (!result.bool) {
+				let useRes = await next;
+				if (!useRes || !useRes.bool) {
 					player.line(target, "fire");
-					target.damage(1, "fire");
-				} else event.finish();
-				"step 4";
-				if (!target.isIn()) {
-					event.finish();
+					await target.damage(1, "fire");
+				} else {
 					return;
 				}
+				if (!target.isIn()) return;
 				var list = [],
 					list2 = [];
 				event.map = {
@@ -1143,7 +1126,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						if (i != "判定阶段" && i != "弃牌阶段") list2.push(i);
 					}
 				}
-				target
+				let ctrl = target
 					.chooseControl(list)
 					.set("prompt", "探锋：令" + get.translation(player) + "跳过一个阶段")
 					.set("ai", function () {
@@ -1163,13 +1146,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							return list2.randomGet();
 						})()
 					);
-				"step 5";
+				let { result: cResult } = await ctrl;
 				for (var i in event.map) {
-					if (event.map[i] == result.control) player.skip(i);
+					if (event.map[i] == cResult.control) player.skip(i);
 				}
-				target.popup(result.control);
+				target.popup(cResult.control);
 				target.line(player);
-				game.log(player, "跳过了", "#y" + result.control);
+				game.log(player, "跳过了", "#y" + cResult.control);
 			},
 			subSkill: {
 				backup: {
