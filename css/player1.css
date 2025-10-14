@@ -942,17 +942,13 @@
 	color: white;
 	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000;
 }
-.player > .judges > .card.feichu > .judge-mark > .judge::before {
+.player>.judges>.card.feichu>.judge-mark>.judge::before {
 	content: "";
 	position: absolute;
 	pointer-events: none;
-	background-image: url("../image/judgeMark/feichumark.png");
-	top: 13px;
-	left: -25px;
-	--w: 70px;
-	--h: calc(var(--w) * 41 / 110);
-	width: var(--w);
-	height: var(--h);
+	background-image: url("../image/judgeMark/feichumark.png");;
+	width: 50px;
+	height: 50px;
 	background-size: 100% 100%;
 	z-index: 3;
 }
