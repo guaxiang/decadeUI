@@ -184,7 +184,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			return originalCancel.call(this, node);
 		};
 	})();
-	lib.ui.create.pause = function () {
+	ui.create.pause = function () {
 		/*覆写历史记录*/
 		if (_status.pausing) return;
 		ui.click.shortcut(false);
@@ -209,7 +209,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		return node;
 	};
-	lib.ui.click.pause = function () {
+	ui.click.pause = function () {
 		/*覆写历史记录*/
 		if (_status.paused2 || _status.pausing || _status.nopause || !ui.pause) return;
 		if (!_status.video) {
