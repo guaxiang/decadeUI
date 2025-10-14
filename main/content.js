@@ -57,6 +57,9 @@ export async function content(config, pack) {
 				true
 			);
 			this.initOverride();
+			// 初始化手牌提示高度
+			const handTipHeight = lib.config["extension_十周年UI_handTipHeight"] || "20";
+			document.documentElement.style.setProperty('--hand-tip-bottom', `calc(${handTipHeight}% + 10px)`);
 			if (window.get && typeof window.get.cardsetion === "function") {
 				const oldCardsetion = window.get.cardsetion;
 				window.get.cardsetion = function (...args) {

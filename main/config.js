@@ -333,8 +333,32 @@ export let config = {
 	},
 	cardPrompt: {
 		name: "卡牌提示",
-		init: true,
+		init: false,
 		intro: "开启后，在出牌阶段选择手牌时会显示卡牌描述提示",
+	},
+	handTipHeight: {
+		name: "手牌提示高度",
+		init: "20",
+		intro: "输入0~100的数值，设置手牌提示框的底部高度百分比（默认值为20）",
+		input: true,
+		onblur: function () {
+			this.innerHTML = this.innerHTML.replace(/<br>/g, "");
+			var value = parseFloat(this.innerHTML);
+			if (isNaN(value)) value = 20;
+			if (value < 0) value = 0;
+			if (value > 100) value = 100;
+			this.innerHTML = value;
+			game.saveConfig("extension_十周年UI_handTipHeight", value);
+			if (window.decadeUI) {
+				document.documentElement.style.setProperty('--hand-tip-bottom', `calc(${value}% + 10px)`);
+			}
+		},
+		update() {
+			if (window.decadeUI) {
+				const height = lib.config["extension_十周年UI_handTipHeight"] || "20";
+				document.documentElement.style.setProperty('--hand-tip-bottom', `calc(${height}% + 10px)`);
+			}
+		},
 	},
 	luckycard: {
 		name: "手气卡美化",
