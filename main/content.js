@@ -1207,14 +1207,18 @@ export async function content(config, pack) {
 								let imgPrefixUrl = null;
 								let realName = name;
 								const mode = get.mode();
+								const addExperienceSuffix = () => {
+									if (this.node?.name) {
+										const currentName = this.node.name.innerHTML;
+										if (!currentName.includes("•体验")) this.node.name.innerHTML = currentName + "•体验";
+									}
+								};
 								if (lib.characterPack[`mode_${mode}`] && lib.characterPack[`mode_${mode}`][realName]) {
 									if (mode === "guozhan") {
 										if (realName.startsWith("gz_shibing")) {
 											realName = realName.slice(3, 11);
 										} else {
-											if (lib.config.mode_config.guozhan?.guozhanSkin && nameinfo && nameinfo.hasSkinInGuozhan) {
-												gzbool = true;
-											}
+											if (lib.config.mode_config.guozhan?.guozhanSkin && nameinfo && nameinfo.hasSkinInGuozhan) gzbool = true;
 											realName = realName.slice(3);
 										}
 									} else {
@@ -1231,22 +1235,30 @@ export async function content(config, pack) {
 									} else if (nameinfo.trashBin) {
 										for (const value of nameinfo.trashBin) {
 											if (typeof value !== "string") continue;
-											if (value.startsWith("img:")) {
-												imgPrefixUrl = value.slice(4);
-												break;
-											} else if (value.startsWith("ext:")) {
-												extimage = value;
-												break;
-											} else if (value.startsWith("db:")) {
-												dbimage = value;
-												break;
-											} else if (value.startsWith("mode:")) {
-												modeimage = value.slice(5);
-												break;
-											} else if (value.startsWith("character:")) {
-												realName = value.slice(10);
-												break;
+											const colonIndex = value.indexOf(":");
+											if (colonIndex <= 0) continue;
+											const prefix = value.slice(0, colonIndex);
+											const payload = value.slice(colonIndex + 1);
+											switch (prefix) {
+												case "img":
+													imgPrefixUrl = payload;
+													break;
+												case "ext":
+													extimage = value;
+													break;
+												case "db":
+													dbimage = value;
+													break;
+												case "mode":
+													modeimage = payload;
+													break;
+												case "character":
+													realName = payload;
+													break;
+												default:
+													break;
 											}
+											if (imgPrefixUrl || extimage || dbimage || modeimage || realName !== name) break;
 										}
 									}
 								}
@@ -1255,12 +1267,10 @@ export async function content(config, pack) {
 								} else if (extimage) {
 									src = extimage.replace(/^ext:/, "extension/");
 								} else if (dbimage) {
-									game.getDB("image", dbimage.slice(3)).then(()=>{
-									}).catch(()=>{
-										if (this.node?.name) {
-											const currentName = this.node.name.innerHTML;
-											if (!currentName.includes("•体验")) this.node.name.innerHTML = currentName + "•体验";
-										}
+									game.getDB("image", dbimage.slice(3)).then(() => {
+										return;
+									}).catch(() => {
+										addExperienceSuffix();
 									});
 									return;
 								} else if (modeimage) {
@@ -1270,12 +1280,10 @@ export async function content(config, pack) {
 								} else {
 									src = `image/character/${gzbool ? "gz_" : ""}${realName}.jpg`;
 								}
+
 								const testImg = new Image();
 								testImg.onerror = () => {
-									if (this.node?.name) {
-										const currentName = this.node.name.innerHTML;
-										if (!currentName.includes("•体验")) this.node.name.innerHTML = currentName + "•体验";
-									}
+									addExperienceSuffix();
 								};
 								testImg.src = URL.canParse(src) ? src : lib.assetURL + src;
 							},
