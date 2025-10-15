@@ -34,10 +34,28 @@
 	background: url("../assets/image/bj2.png") no-repeat center center !important;
 	background-size: 100% 100% !important;
 }
-/*新样式*/
-#arena[data-shadow-style="off"]>.player::before {
+.player::before {
+	left: -52px;
+	top: -42px;
+	width: 230px;
+	height: 262px;
+	opacity: 0;
+	background-image: url("../assets/image/sprites_glow_blue.png");
+	background-repeat: no-repeat;
+	animation-name: kf-sprites-glow;
+	animation-duration: 0s;
+	animation-delay: 0s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: forwards;
+	animation-timing-function: steps(1);
+	pointer-events: none;
+	box-shadow: none;
+	transition: opacity 0.1s linear;
+}
+.player.selected:not(.target):before,
+.player.glow_phase:not(.selectable):not(*[data-position="0"])::before {
 	left: -55px;
-	top: -40px;
+	top: -30px;
 	width: 228px;
 	height: 228px;
 	opacity: 0;
@@ -53,112 +71,25 @@
 	box-shadow: none;
 	transition: opacity 0s linear;
 }
-#arena[data-shadow-style="off"]>.player.selectable.selected.target:before,
-#arena[data-shadow-style="off"]>.player.selected:not(.target):before {
+.player.selectable.selected.target:before,
+.player.selected:not(.target):before {
 	animation-duration: 0.9s;
 	background-image: url("../assets/image/sprites_shadow_orange.png");
 	opacity: 1;
 	z-index: 79;
 }
-#arena[data-shadow-style="off"]>.player.glow_phase:not(.selectable)::before {
+.player.selectable:not(.selected):not(.target)::before {
 	animation-duration: 0.9s;
-	background-image: url("../assets/image/sprites_shadow_green1.png");
+	/*新增*/
 	opacity: 1;
-	z-index: 75;
 }
-#arena[data-shadow-style="off"]>.player.selectable:not(.selected):not(.target)::before {
-	animation-duration: 0.9s;
-	background-image: url("../assets/image/sprites_shadow_lvse.png");
-	opacity: 1;
-	z-index: 79;
-	top: -38.4px;
-	left: -55px;
-}
-#arena[data-shadow-style="off"]>.player::after,
-#arena[data-shadow-style="off"]>.player.selected::after,
-#arena[data-shadow-style="off"]>.player.selectable::after {
-	left: -55px;
-	top: -40px;
-	width: 228px;
-	height: 228px;
-	opacity: 0;
-	background-image: url("../assets/image/sprites_shadow_lvse.png");
-	background-repeat: no-repeat;
-	animation-name: kf-sprites-glow;
-	animation-duration: 0s;
-	animation-delay: 0s;
-	animation-iteration-count: infinite;
-	animation-fill-mode: forwards;
-	animation-timing-function: steps(1);
-	pointer-events: none;
-	box-shadow: none;
-	transition: opacity 0.1s linear;
-}
-#arena[data-shadow-style="off"]>.player.selectable:not(.selected):not(.target):not(*[data-position="0"])::before {
-	animation-duration: 0.9s;
-	background-image: url("../assets/image/sprites_shadow_red.png");
-	opacity: 1;
-	z-index: 89;
-	top: -38.4px;
-	left: -55px;
-}
-#arena[data-shadow-style="off"]>.player:not(*[data-position="0"])::after,
-#arena[data-shadow-style="off"]>.player.selected:not(*[data-position="0"])::after,
-#arena[data-shadow-style="off"]>.player.selectable:not(*[data-position="0"])::after {
-	left: -55px;
-	top: -40px;
-	width: 228px;
-	height: 228px;
-	opacity: 0;
-	background-image: url("../assets/image/sprites_shadow_red.png");
-	background-repeat: no-repeat;
-	animation-name: kf-sprites-glow;
-	animation-duration: 0s;
-	animation-delay: 0s;
-	animation-iteration-count: infinite;
-	animation-fill-mode: forwards;
-	animation-timing-function: steps(1);
-	pointer-events: none;
-	box-shadow: none;
-	transition: opacity 0.1s linear;
-}
-/*-----------------分割线-----------------*/
-/*原样式*/
-#arena[data-shadow-style="on"]>.player::before {
-	left: -56px;
+.player::after,
+.player.selected::after,
+.player.selectable::after {
+	left: -52px;
 	top: -42px;
-	width: 223px;
-	height: 254px;
-	opacity: 0;
-	background-image: url("../assets/image/sprites_glow_blue.png");
-	background-repeat: no-repeat;
-	animation-name: kf-sprites-glow;
-	animation-duration: 0s;
-	animation-delay: 0s;
-	animation-iteration-count: infinite;
-	animation-fill-mode: forwards;
-	animation-timing-function: steps(1);
-	pointer-events: none;
-	box-shadow: none;
-	transition: opacity 0.1s linear;
-}
-#arena[data-shadow-style="on"]>.player.selected:not(.target):before,
-#arena[data-shadow-style="on"]>.player.glow_phase:not(.selectable):not(*[data-position="0"])::before {
-	animation-duration: 0.9s;
-	background-image: url("../assets/image/sprites_glow_orange.png");
-	opacity: 1;
-}
-#arena[data-shadow-style="on"]>.player.selectable:not(.selected):not(.target)::before {
-	animation-duration: 0.9s;
-	opacity: 1;
-}
-#arena[data-shadow-style="on"]>.player::after,
-#arena[data-shadow-style="on"]>.player.selected::after,
-#arena[data-shadow-style="on"]>.player.selectable::after {
-	left: -56px;
-	top: -42px;
-	width: 223px;
-	height: 254px;
+	width: 230px;
+	height: 262px;
 	opacity: 0;
 	background-image: url("../assets/image/sprites_glow_red.png");
 	background-repeat: no-repeat;
@@ -172,33 +103,49 @@
 	box-shadow: none;
 	transition: opacity 0.1s linear;
 }
-#arena[data-shadow-style="on"]>.player.target:not(.glow_phase):not(.selectable):not(.selected)::after {
+.player.glow_phase:not(.selectable)::before {
 	animation-duration: 0.9s;
+	background-image: url("../assets/image/sprites_shadow_green1.png");
+	opacity: 1;
+	left: -55px;
+	top: -30px;
+	width: 228px;
+	height: 228px;
+	z-index: 75;
+}
+.player.target:not(.glow_phase):not(.selectable):not(.selected)::after {
+	animation-duration: 0.9s;
+	/*新增*/
 	opacity: 1;
 }
-#arena>.player {
+#arena > .player {
 	z-index: 4;
 }
-.player>.mask {
+.player > .mask {
 	position: absolute;
 	left: 0;
 	top: 0;
 	width: 100%;
 	height: 100%;
-	border-radius: 0 6px 6px 0;
+	border-radius: inherit;
 	background: rgba(0, 0, 0, 0.65);
 	opacity: 0;
 	transition: opacity 0.3s ease-in-out;
 	pointer-events: none;
 	z-index: 66;
 }
-.player.un-selectable:not(.selectable)>.mask {
+.player.un-selectable:not(.selectable) > .mask {
+	opacity: 1;
+	transition: opacity 0.3s linear;
+}
+.player.un-selectable:not(.selectable) > .mask {
 	opacity: 1;
 	transition: opacity 0.3s linear;
 }
 #arena:not(.fewplayer)>.player:not(.minskin),
 #arena:not(.fewplayer):not(*[data-player_height=""])>.player:not(.minskin) {
-	height: 171.5px !important;
+	height: 180px !important;
+	width: 130px !important;
 }
 /*玩家锁链*/
 .player>.chain {
@@ -238,9 +185,9 @@
 .player>.camp-wrap {
 	display: block;
 	left: -13px;
-	top: -55px;
+	top: -58px;
 	width: 45px;
-	height: 229px;
+	height: 239px;
 	transition: none;
 	z-index: 67;
 	pointer-events: none;
@@ -322,9 +269,9 @@
 }
 .player>.camp-wrap>.camp-border {
 	display: block;
-	left: -8px;
+	left: -10px;
 	top: 28px;
-	width: 350%;
+	width: 375%;
 	height: 95%;
 	position: absolute;
 	background-image: url("../image/decoration/border_campOL5.png");
@@ -336,9 +283,9 @@
 }
 #arena.decadeUI[data-border-level="two"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: -8px;
-	top: 28px;
-	width: 350%;
+	left: -12px;
+	top: 31px;
+	width: 382%;
 	height: 95%;
 	position: absolute;
 	background-image: url("../image/decoration/border_campOL2.png");
@@ -347,9 +294,9 @@
 }
 #arena.decadeUI[data-border-level="three"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: -8px;
-	top: 28px;
-	width: 350%;
+	left: -12px;
+	top: 31px;
+	width: 382%;
 	height: 95%;
 	position: absolute;
 	background-image: url("../image/decoration/border_campOL3.png");
@@ -358,9 +305,9 @@
 }
 #arena.decadeUI[data-border-level="four"] .player>.camp-wrap>.camp-border {
 	display: block;
-	left: -8px;
-	top: 28px;
-	width: 350%;
+	left: -12px;
+	top: 31px;
+	width: 382%;
 	height: 95%;
 	position: absolute;
 	background-image: url("../image/decoration/border_campOL4.png");
@@ -525,7 +472,7 @@
 }
 /* 为主玩家位置特别设置 */
 .player[data-position="0"]>.hp-wrap {
-	right: 117px;
+	right: 127px;
 	/* 左右位置 */
 	bottom: 10px;
 	/* 上下位置，从5px改为15px */
@@ -533,7 +480,7 @@
 /*玩家血量显示*/
 .player>.hp-wrap {
 	display: block;
-	right: 117px;
+	right: 127px;
 	bottom: 10px;
 	width: 10px;
 	height: 40px;
@@ -876,7 +823,7 @@
 	width: auto;
 	flex-direction: column;
 	flex-wrap: wrap;
-	height: 80px;
+	height: 60px;
 	/*设置高度以控制换列*/
 	align-content: flex-start;
 	/*新列向右对齐*/
@@ -1189,53 +1136,13 @@
 	height: 42px;
 }
 /*人物弹出文字*/
-/*新样式*/
-/*代码来自Empty city*/
-#arena[data-shadow-style="off"]>.player>.damage {
-	width: 100%;
-	transition: none;
-	color: transparent;
-	font-family: "HYZLSJ";
-	text-align: center;
-	white-space: nowrap;
-	font-weight: 500;
-	-webkit-text-stroke: 0.7px rgba(38, 37, 34, 0.5);
-	text-shadow: none;
-	background: linear-gradient(180deg, #f5df88 16%, #ab8d35 60%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	font-size: 24px;
-	z-index: 999;
-	display: flex;
-	justify-content: center;
-}
-#arena[data-shadow-style="off"]>.player>.damage>.damage-child {
-	-webkit-text-stroke: 4.5px #102030;
-	opacity: 0.5;
-}
-#arena[data-shadow-style="off"]>.player>.damage>.damage-child2 {
-	z-index: 1;
-	background-image: -webkit-linear-gradient(bottom, #c7a746 58%, #f0d775 22%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-}
-#arena[data-shadow-style="off"]>.player>.damage::before {
-	content: attr(data-text);
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 100%;
-	color: #ff1300;
-	z-index: -1;
-}
-/*原样式*/
-#arena[data-shadow-style="on"]>.player>.damage {
+.player > .damage {
 	width: 100%;
 	text-shadow: none;
 	transition: none;
 	z-index: 91;
 }
-#arena[data-shadow-style="on"]>.player>.damage::before {
+.player > .damage::before {
 	content: attr(data-text);
 	position: absolute;
 	left: 0;
