@@ -321,15 +321,18 @@
 .player>.camp-wrap>.avatar-name,
 .player>.camp-wrap>.avatar-name-default,
 #arena>.player:not(.minskin)>.name.name {
-	top: 30px;
-	left: 29px;
+	top: 29px;
+	left: 29.3px;
 	transform: translateX(-50%);
 	line-height: -3px;
 	font-family: "shousha" !important;
-	font-size: 15px;
+	font-size: 17px;
+	letter-spacing: -2px;
 	white-space: nowrap;
 	writing-mode: vertical-rl;
 	-webkit-writing-mode: vertical-rl;
+	-webkit-text-stroke: 0.1px rgba(43,31,25,0.4);/*描边*/
+	text-shadow:2px 0px 3px rgba(0,0,0,0.3),2px 0px 3px rgba(0,0,0,0.3);
 }
 /*隐匿状态“主将”显示*/
 .player>.camp-wrap>.avatar-name-default>.camp-back {
@@ -454,7 +457,7 @@
 /*玩家血量显示*/
 .player>.hp-wrap {
 	display: block;
-	right: 106.6px;
+	right: 108.6px;
 	/*左移*/
 	bottom: 9px;
 	/*上移*/
