@@ -1360,15 +1360,24 @@ export async function content(config, pack) {
 										let map = ["bingliang", "lebu", "shandian", "fulei", "hongshui", "huoshan", "caomu", "jlsgqs_shuiyanqijun", "jydiy_zouhuorumo", "jydiy_yungongliaoshang", "xwjh_biguanqingxiu", "xwjh_wushisanke", "xumou_jsrg", "dczixi_bingliang", "dczixi_lebu", "dczixi_shandian"];
 										if (map.includes(cardx.name)) {
 											let imageName = cardx.name;
-											cardx.node.judgeMark.node.judge.innerHTML = "";
-											cardx.node.judgeMark.node.judge.style.fontSize = "0px";
+											const judgeText = (lib.translate[cardx.name + "_bg"] || get.translation(cardx.name) || "");
+											cardx.node.judgeMark.node.judge.innerText = "";
+											cardx.node.judgeMark.node.judge.style.fontSize = "";
 											const ext = (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") && ["bingliang", "lebu", "shandian"].includes(imageName) ? "1.png" : ".png";
-											cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${lib.assetURL}extension/十周年UI/image/judgeMark/${imageName}${ext}")`;
+											const basePath = `${lib.assetURL}extension/十周年UI/image/judgeMark/`;
+											const tryImg = new Image();
+											tryImg.onload = function () {
+												cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${tryImg.src}")`;
+												cardx.node.judgeMark.node.judge.innerText = "";
+											};
+											tryImg.onerror = function () {
+												cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${basePath}tongyong.png")`;
+												cardx.node.judgeMark.node.judge.innerText = judgeText ? judgeText[0] : "";
+											};
+											tryImg.src = `${basePath}${imageName}${ext}`;
 											cardx.node.judgeMark.node.judge.style.zIndex = "99";
 											cardx.node.judgeMark.node.judge.parentElement.children[0].style.background = "none";
 											cardx.node.judgeMark.node.judge.parentElement.children[0].style.display = "none";
-										} else {
-											cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${lib.assetURL}extension/十周年UI/image/judgeMark/tongyong.png")`;
 										}
 										ui.updatej(player);
 									},
@@ -7045,7 +7054,7 @@ export async function content(config, pack) {
 		},
 		checkSkillOwnership(skillName, parentSkill) {
 			// 特殊标记处理：这些标记是其他玩家给技能的方式实现的，应该显示为other-skill
-			const otherPlayerMarks = ["xinzhaofu_effect", "reyanzhu2"];
+			const otherPlayerMarks = ["xinzhaofu_effect", "reyanzhu2", "rewangzun2"];
 			if (otherPlayerMarks.includes(skillName)) {
 				return false;
 			}
