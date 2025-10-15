@@ -1196,21 +1196,88 @@ export async function content(config, pack) {
 								}, this);
 							},
 							checkAndAddExperienceSuffix(characterName) {
-								const characterData = lib.character[characterName];
-								if (!characterData) return;
-								// 使用武将指定的图片路径，或默认路径
-								const imagePath = characterData.img || `image/character/${characterName}.jpg`;
-								const img = new Image();
-								img.onerror = () => {
-									// 图片不存在，添加体验后缀
-									if (this.node?.name) {
-										const currentName = this.node.name.innerHTML;
-										if (!currentName.includes("•体验")) {
-											this.node.name.innerHTML = currentName + "•体验";
+								const name = characterName;
+								const nameinfo = get.character(name);
+								if (!nameinfo) return;
+								let src = null;
+								let extimage = null;
+								let dbimage = null;
+								let modeimage = null;
+								let gzbool = false;
+								let imgPrefixUrl = null;
+								let realName = name;
+								const mode = get.mode();
+								if (lib.characterPack[`mode_${mode}`] && lib.characterPack[`mode_${mode}`][realName]) {
+									if (mode === "guozhan") {
+										if (realName.startsWith("gz_shibing")) {
+											realName = realName.slice(3, 11);
+										} else {
+											if (lib.config.mode_config.guozhan?.guozhanSkin && nameinfo && nameinfo.hasSkinInGuozhan) {
+												gzbool = true;
+											}
+											realName = realName.slice(3);
+										}
+									} else {
+										modeimage = mode;
+									}
+								} else if (realName.includes("::")) {
+									const arr = realName.split("::");
+									modeimage = arr[0];
+									realName = arr[1];
+								}
+								if (!modeimage && nameinfo) {
+									if (nameinfo.img) {
+										imgPrefixUrl = nameinfo.img;
+									} else if (nameinfo.trashBin) {
+										for (const value of nameinfo.trashBin) {
+											if (typeof value !== "string") continue;
+											if (value.startsWith("img:")) {
+												imgPrefixUrl = value.slice(4);
+												break;
+											} else if (value.startsWith("ext:")) {
+												extimage = value;
+												break;
+											} else if (value.startsWith("db:")) {
+												dbimage = value;
+												break;
+											} else if (value.startsWith("mode:")) {
+												modeimage = value.slice(5);
+												break;
+											} else if (value.startsWith("character:")) {
+												realName = value.slice(10);
+												break;
+											}
 										}
 									}
+								}
+								if (imgPrefixUrl) {
+									src = imgPrefixUrl;
+								} else if (extimage) {
+									src = extimage.replace(/^ext:/, "extension/");
+								} else if (dbimage) {
+									game.getDB("image", dbimage.slice(3)).then(()=>{
+									}).catch(()=>{
+										if (this.node?.name) {
+											const currentName = this.node.name.innerHTML;
+											if (!currentName.includes("•体验")) this.node.name.innerHTML = currentName + "•体验";
+										}
+									});
+									return;
+								} else if (modeimage) {
+									src = `image/mode/${modeimage}/character/${realName}.jpg`;
+								} else if (lib.config.skin[realName] && arguments[2] !== "noskin") {
+									src = `image/skin/${realName}/${lib.config.skin[realName]}.jpg`;
+								} else {
+									src = `image/character/${gzbool ? "gz_" : ""}${realName}.jpg`;
+								}
+								const testImg = new Image();
+								testImg.onerror = () => {
+									if (this.node?.name) {
+										const currentName = this.node.name.innerHTML;
+										if (!currentName.includes("•体验")) this.node.name.innerHTML = currentName + "•体验";
+									}
 								};
-								img.src = lib.assetURL + imagePath;
+								testImg.src = URL.canParse(src) ? src : lib.assetURL + src;
 							},
 							$update() {
 								base.lib.element.player.$update.apply(this, arguments);
