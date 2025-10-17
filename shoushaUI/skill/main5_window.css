@@ -2,7 +2,7 @@
 	/*技能按钮*/
 	max-width: 200px;
 	bottom: 0px;
-	right: 190px;
+	right: 160px;
 	z-index: 0;
 }
 #arena[data-right-layout="off"] > .skill-control {

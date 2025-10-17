@@ -1,61 +1,124 @@
 .lbtn-controls {
 	/*牌序，记录按钮*/
-	--width: 80px;
-	/*按钮宽度*/
-	--height: 58.6px;
-	/*按钮高度*/
-	left: 0;
-	/*左边距，越大越靠右*/
-	bottom: 15%;
-	/*整体上移*/
+	--width: 80px; /*按钮宽度*/
+	--height: 58.6px; /*按钮高度*/
+	left: 0; /*左边距，越大越靠右*/
+	bottom: 15%; /*整体上移*/
 	z-index: 3;
 }
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
+#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #mebg,
+#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #me {
 	left: 40px !important;
 }
-.lbtn-controls~#me #handcards1 {
+.lbtn-controls ~ #me #handcards1 {
 	--lessw: 40px;
 }
-.lbtn-controls>div {
+.lbtn-controls > div {
 	display: block;
 	position: relative;
 }
-.buttonyjcm {
-	--w: 56px;
-	--h: calc(var(--w) * 275 / 71);
+/*二级菜单页面*/
+.HOME {
+	--w: 69px;
+	--h: calc(var(--w) * 446 / 81); /*高和长*/
 	width: var(--w);
 	height: var(--h);
-	overflow-y: scroll;
-	/*  display: flex;*/
-	flex-direction: column;
-	align-items: flex-start;
-	white-space: normal;
-	position: fixed;
-	bottom: calc(100% - 280px);
-	left: calc(100% - 112.5px);
-	background-color: rgba(0, 0, 0, 0.5);
-}
-.buttonyjcm>.controls {
-	--w: 56px;
-	--h: calc(var(--w) * 55 / 71);
-	width: var(--w);
-	height: var(--h);
+	top: 0%;
+	left: 30px;
 	background-size: 100% 100%;
-	z-index: 99;
+	background-image: url("./images/CD/hs_cd.png");
+	z-index: 68;
 	position: relative;
-	margin-top: 10px;
-	font-size: 14.5px;
-	font-weight: 1000;
-	font-family: yuanli;
-	color: #ae8e7d;
-	display: flex;
-	align-items: flex-end;
-	justify-content: center;
-	/* border: 1px solid #624f42; /* 添加边框 */
-	/* box-shadow: 8px 8px 8px #624f42; /* 添加阴影，值可以根据需要调整 */
+	transition: all 1s;
 }
-/*---------新版小配件--------*/
+/*设置*/
+.SZ {
+	--w: 56px;
+	--h: calc(var(--w) * 73 / 71);
+	width: var(--w);
+	height: var(--h);
+	bottom: calc(100% - 128px);
+	left: 35px;
+	background-size: 100% 100%;
+	background-image: url(./images/CD/hs_shezhi.png);
+	z-index: 99;
+	position: fixed;
+}
+/*离开*/
+.LK {
+	--w: 56px;
+	--h: calc(var(--w) * 73 / 71);
+	width: var(--w);
+	height: var(--h);
+	bottom: calc(100% - 375px);
+	left: 35px;
+	background-size: 100% 100%;
+	background-image: url(./images/CD/hs_likai.png);
+	z-index: 99;
+	position: fixed;
+}
+/*背景*/
+.BJ {
+	--w: 56px;
+	--h: calc(var(--w) * 73 / 71);
+	width: var(--w);
+	height: var(--h);
+	bottom: calc(100% - 316px);
+	left: 35px;
+	background-size: 100% 100%;
+	background-image: url(./images/CD/hs_fankui.png);
+	z-index: 99;
+	position: fixed;
+}
+/*投降*/
+.TX {
+	--w: 56px;
+	--h: calc(var(--w) * 73 / 71);
+	width: var(--w);
+	height: var(--h);
+	bottom: calc(100% - 255px);
+	left: 35px;
+	background-size: 100% 100%;
+	background-image: url(./images/CD/hs_touxiang.png);
+	z-index: 99;
+	position: fixed;
+}
+/*托管*/
+.TG {
+	--w: 56px;
+	--h: calc(var(--w) * 74 / 71);
+	width: var(--w);
+	height: var(--h);
+	bottom: calc(100% - 191px);
+	left: 33px;
+	background-size: 100% 100%;
+	background-image: url(./images/CD/hs_tuoguan.png);
+	z-index: 99;
+	position: fixed;
+}
+.jiluButton_new {
+	display: block;
+	width: 85px;
+	height: 50px;
+	position: absolute;
+	bottom: 0.5%;
+	left: 0;
+	background-image: url("./images/uibutton/hs_jiaoliu.png");
+	background-size: 100% 100%;
+	border-radius: 1px;
+	z-index: 4;
+}
+.meiguiButton_new {
+	display: block;
+	width: 85px;
+	height: 50px;
+	position: absolute;
+	bottom: 9%;
+	left: 0px;
+	background-image: url("./images/uibutton/hs_meigui.png");
+	background-size: 100% 100%;
+	z-index: 3;
+}
 /*-----------------------------*/
 .lbtn-confirm:not(.closing).removing {
 	opacity: 1 !important;
@@ -68,7 +131,7 @@
 	line-height: normal;
 	padding: 0;
 }
-.control>div {
+.control > div {
 	background-image: url("./images/uibutton/new_btnnHS.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
@@ -86,12 +149,12 @@
 	font-size: 20px;
 }
 /*无懈按钮位置*/
-#arena>#dui-controls>.control.stayleft {
+#arena > #dui-controls > .control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: 5px !important;
 	order: 3;
 }
-.control>div.primary2 {
+.control > div.primary2 {
 	/*取消按钮*/
 	bottom: 1.8px;
 	color: #000000;
@@ -111,7 +174,7 @@
 	overflow: visible;
 	transition: none;
 }
-.control>div.primary {
+.control > div.primary {
 	/*确认按钮*/
 	color: #000000;
 	font-family: "yuanli";
@@ -129,15 +192,15 @@
 	background-size: 100% 100%;
 	background-image: url("./images/uibutton/new_btnnHS.png");
 }
-.control>div.disabled:not([data-type="endButton"]) {
+.control > div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 }
-.control>div.disabled:not([data-type="endButton"]) {
+.control > div.disabled:not([data-type="endButton"]) {
 	/*-webkit-filter: grayscale(100%);*/
 	filter: grayscale(100%);
 	/*-webkit-filter: brightness(100%);*/
 }
-.lbtn-confirm[data-skill]>[data-type="skill2"] {
+.lbtn-confirm[data-skill] > [data-type="skill2"] {
 	display: none;
 }
 /*------有点懒具体看main1.css---------------*/
@@ -150,65 +213,62 @@
 	z-index: 3;
 }
 /*手牌数参数*/
-.handcardNumber>.cardNumber {
+.handcardNumber > .cardNumber {
 	display: none !important;
 	/* 完全隐藏元素 */
 }
 .cardRoundNumber {
 	top: 16px;
-	left: 65px;
-	font-weight: 400;
+	left: 75px;
+	font-weight: 700;
 	font-family: "yuanli";
-	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;
 	z-index: 3;
 }
-.cardRoundNumber>.cardPileNumber {
+.cardRoundNumber > .cardPileNumber {
 	top: -15px;
-	--w: 150px;
-	--h: calc(var(--w) * 148 / 557);
-	width: var(--w);
-	height: var(--h);
-	background-image: url("./images/uibutton/cardbackhs.png");
+	width: 110px;
+	height: 75px;
+	background-image: url("./images/uibutton/hs_jilu.png");
 	background-size: 100% 100%;
 	background-color: transparent;
 	position: relative;
 	z-index: 1;
 }
-.cardRoundNumber>.cardPileNumber>span {
-	left: 55px;
+.cardRoundNumber > .cardPileNumber > span {
+	left: -5px;
 	/*牌堆数右移，越大越靠右*/
-	top: 10px;
+	top: 40px;
 	width: 100%;
 	display: block;
 	position: absolute;
 	line-height: 20px;
 	text-align: center;
-	color: #433c32;
+	color: #ffffff;
 	font-size: 18px;
 }
-.cardRoundNumber>.roundNumber,
-.cardRoundNumber>.time {
+.cardRoundNumber > .roundNumber,
+.cardRoundNumber > .time {
 	/*游戏时间*/
-	left: 15px;
+	left: 17px;
 	/*牌堆数/时间右移，越大越靠右*/
-	top: -3px;
+	top: 2px;
 	height: 20px;
 	line-height: 16px;
 	/*游戏轮数/时间间隔*/
 	white-space: nowrap;
-	color: #433c32;
+	color: #ffffff;
 	z-index: 3;
 }
-.cardRoundNumber>.time {
+.cardRoundNumber > .time {
 	/*游戏时间*/
-	top: -3px;
+	top: 2px;
 	/*高度*/
 	left: 55px;
 	font-size: 17px;
-	color: #433c32;
+	color: #ffffff;
 }
 /*托管中图片（）*/
-#autonode>div:last-child {
+#autonode > div:last-child {
 	z-index: 10;
 	margin-bottom: -75px !important;
 	left: calc(50% - 440px);
@@ -250,7 +310,7 @@
 	color: #f5d78e;
 	z-index: 1;
 }
-.handcardNumber1>.cardPicture {
+.handcardNumber1 > .cardPicture {
 	left: 130px;
 	bottom: -6px;
 	--w: 130px;
@@ -265,7 +325,7 @@
 	z-index: -1;
 }
 /*手牌数参数*/
-.handcardNumber1>.cardNumber {
+.handcardNumber1 > .cardNumber {
 	left: 160px;
 	bottom: 18px;
 	height: 8px;
@@ -276,4 +336,75 @@
 	white-space: nowrap;
 	letter-spacing: 0.35px;
 	/*字体间距*/
+}
+
+/* 背景选择器相关样式 */
+.bgdialog {
+	/*切换背景的背景图*/
+	position: absolute;
+	background: url("./images/OL_line/bg/bgdialog.png");
+	background-size: 100% 100%;
+	width: 70%;
+	height: 90%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+.backgroundsbg {
+	/*背景背景*/
+	width: 100%;
+	height: 82%;
+	top: 11.5%;
+	left: 0.5%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.backgrounds {
+	/*每一个背景图*/
+	background-size: 100% 100%;
+	left: 3.55%;
+	width: 29%;
+	height: 34%;
+	position: relative;
+	border: 2px solid #d2b48c;
+	min-width: 200px;
+	object-fit: cover;
+	margin-left: 1%;
+	margin-bottom: 1%;
+	border-radius: 6px;
+}
+.buttontext {
+	/* 每一个背景图的文字 */
+	position: absolute;
+	bottom: 0;
+	height: 20%;
+	background-color: #2e1e10;
+	width: 100%;
+	text-align: center;
+	font-weight: 500;
+	font-family: "shousha";
+	color: #efdbb6;
+	text-shadow: none;
+	font-size: 25px;
+}
+.bgback {
+	/*背景返回按钮*/
+	width: 80px;
+	height: 40px;
+	top: 5%;
+	right: 8%;
+	background-image: url("./images/OL_line/uibutton/back.png");
+	background-size: 100% 100%;
+	z-index: 100;
+	position: absolute;
+}
+.bgxuanzhong {
+	/*背景的选中效果*/
+	background: url("./images/OL_line/bg/gou.png");
+	background-size: 100% 100%;
+	width: 45%;
+	height: 60%;
+	left: 50%;
+	top: 40%;
+	transform: translate(-50%, -50%);
 }

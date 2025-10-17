@@ -139,268 +139,272 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		setInterval(updateSortButtonVisibility, 1000);
 		updateSortButtonVisibility();
 	}
-			// 创建右上角菜单
-		function createTopRightMenu() {
-			const isTouch = lib.config.phonelayout;
-			const topOffset = isTouch ? "10px" : "60px"; // 非触屏布局往下移动50px
-			// 背景阴影
-			const shadow = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png", "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-4");
-			document.body.appendChild(shadow);
-			// 菜单按钮
-			const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", `display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: ${topOffset};right: 55px;background-color: transparent;z-index:5`);
-			document.body.appendChild(menuBtn);
-			let menuPopup = null;
-			function openMenu() {
-				if (menuPopup) return;
-				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
-				menuPopup = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
-				menuPopup.addEventListener("click", event => {
-					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/back.mp3");
-					event.stopPropagation();
-					closeMenu();
-				});
-				// 创建菜单项
-				const home = ui.create.div(".HOME", menuPopup);
-				const settingsBtn = ui.create.div(".SZ", menuPopup);
-				settingsBtn.addEventListener("click", event => {
-					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-					if (!ui.click.configMenu) return;
-					game.closePopped();
-					game.pause2();
-					ui.click.configMenu();
-					ui.system1.classList.remove("shown");
-					ui.system2.classList.remove("shown");
-					closeMenu();
-				});
-				const leaveBtn = ui.create.div(".LK", menuPopup);
-				leaveBtn.addEventListener("click", event => {
-					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-					window.location.reload();
-				});
-				const bgBtn = ui.create.div(".BJ", menuPopup);
-				bgBtn.addEventListener("click", event => {
-					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-					openBackgroundSelector();
-				});
-				const surrenderBtn = ui.create.div(".TX", menuPopup);
-				surrenderBtn.addEventListener("click", event => {
-					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-					game.over();
-				});
-				const autoBtn = ui.create.div(".TG", menuPopup);
-				autoBtn.addEventListener("click", event => {
-					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-					ui.click.auto();
-				});
-			}
-			function openBackgroundSelector() {
-				var popuperContainer = ui.create.div(
-					".popup-container",
-					{
-						background: "rgba(0, 0, 0, 0.8)",
-					},
-					ui.window
-				);
-				var guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
-					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
-					popuperContainer.hide();
-					game.resume2();
-				});
-				var bigdialog = ui.create.div(".bgdialog", popuperContainer);
-				var bgbg = ui.create.div(".backgroundsbg", bigdialog);
-				loadBackgroundImages(bgbg);
-			}
-			function loadBackgroundImages(container) {
-				let path = "image/background/";
-				game.getFileList(path, function (folders, files) {
-					let systemFiles = [];
-					let customFiles = [];
-					// 获取隐藏的系统背景列表
-					let hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
-					for (let tempbackground of files) {
-						let fileName = tempbackground.replace(/\.[^/.]+$/, "");
-						let fileExtension = tempbackground.split(".").pop();
-						if (!fileExtension || fileName.startsWith("oltianhou_")) continue;
-						// 检查系统背景是否被隐藏
-						if (fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_")) {
-							customFiles.push(tempbackground);
-						} else {
-							// 系统背景：检查是否在隐藏列表中
-							if (!hiddenBgs.includes(fileName)) {
-								systemFiles.push(tempbackground);
-							}
+	// 创建右上角菜单
+	function createTopRightMenu() {
+		const isTouch = lib.config.phonelayout;
+		const topOffset = isTouch ? "10px" : "60px"; // 非触屏布局往下移动50px
+		// 背景阴影
+		const shadow = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png", "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-4");
+		document.body.appendChild(shadow);
+		// 菜单按钮
+		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", `display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: ${topOffset};right: 55px;background-color: transparent;z-index:5`);
+		document.body.appendChild(menuBtn);
+		let menuPopup = null;
+		function openMenu() {
+			if (menuPopup) return;
+			utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
+			menuPopup = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
+			menuPopup.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/back.mp3");
+				event.stopPropagation();
+				closeMenu();
+			});
+			// 创建菜单项
+			const home = ui.create.div(".HOME", menuPopup);
+			const settingsBtn = ui.create.div(".SZ", menuPopup);
+			settingsBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+				if (!ui.click.configMenu) return;
+				game.closePopped();
+				game.pause2();
+				ui.click.configMenu();
+				ui.system1.classList.remove("shown");
+				ui.system2.classList.remove("shown");
+				closeMenu();
+			});
+			const leaveBtn = ui.create.div(".LK", menuPopup);
+			leaveBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+				window.location.reload();
+			});
+			const bgBtn = ui.create.div(".BJ", menuPopup);
+			bgBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+				openBackgroundSelector();
+			});
+			const surrenderBtn = ui.create.div(".TX", menuPopup);
+			surrenderBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+				game.over();
+			});
+			const autoBtn = ui.create.div(".TG", menuPopup);
+			autoBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+				ui.click.auto();
+			});
+		}
+		function openBackgroundSelector() {
+			var popuperContainer = ui.create.div(
+				".popup-container",
+				{
+					background: "rgba(0, 0, 0, 0.8)",
+				},
+				ui.window
+			);
+			var guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
+				popuperContainer.hide();
+				game.resume2();
+			});
+			var bigdialog = ui.create.div(".bgdialog", popuperContainer);
+			var bgbg = ui.create.div(".backgroundsbg", bigdialog);
+			loadBackgroundImages(bgbg);
+		}
+		function loadBackgroundImages(container) {
+			let path = "image/background/";
+			game.getFileList(path, function (folders, files) {
+				let systemFiles = [];
+				let customFiles = [];
+				// 获取隐藏的系统背景列表
+				let hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
+				for (let tempbackground of files) {
+					let fileName = tempbackground.replace(/\.[^/.]+$/, "");
+					let fileExtension = tempbackground.split(".").pop();
+					if (!fileExtension || fileName.startsWith("oltianhou_")) continue;
+					// 检查系统背景是否被隐藏
+					if (fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_")) {
+						customFiles.push(tempbackground);
+					} else {
+						// 系统背景：检查是否在隐藏列表中
+						if (!hiddenBgs.includes(fileName)) {
+							systemFiles.push(tempbackground);
 						}
 					}
-					let orderedFiles = systemFiles.concat(customFiles);
-					for (let tempbackground of orderedFiles) {
-						let fileName = tempbackground.replace(/\.[^/.]+$/, "");
-						let img = ui.create.div(".backgrounds", container);
-						img.dataset.name = fileName;
-						img.setBackgroundImage(path + tempbackground);
-						if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
-						img.addEventListener("click", function () {
-							// 检查是否在编辑模式
-							var editItem = container.querySelector('.backgrounds:last-child');
-							var isEditMode = editItem && editItem.querySelector('.buttontext').innerHTML === "完成编辑";
-							if(isEditMode) {
-								// 编辑模式：执行删除或隐藏操作
-								utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-								// 检查是否为系统背景
-								if(!(fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_"))){
-									// 系统背景：隐藏而不是删除
-									// 获取隐藏背景列表
-									var hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
-									if(!hiddenBgs.includes(fileName)){
-										hiddenBgs.push(fileName);
-										lib.config.extension_十周年UI_hiddenSystemBackgrounds = hiddenBgs;
-										game.saveConfig("extension_十周年UI_hiddenSystemBackgrounds", hiddenBgs);
-									}
-									// 如果当前背景被隐藏，切换到默认背景
-									if(lib.config.image_background == fileName){
-										game.saveConfig("image_background", "default");
-										lib.init.background();
-										game.updateBackground();
-									}
-									// 重新加载背景列表但保持编辑模式
-									while(container.firstChild){ container.removeChild(container.firstChild); }
-									loadBackgroundImages(container);
-									// 重新进入编辑模式
-									setTimeout(function(){
-										var editItem = container.querySelector('.backgrounds:last-child');
-										if(editItem) {
-											editItem.click();
-										}
-									}, 100);
-									return;
+				}
+				let orderedFiles = systemFiles.concat(customFiles);
+				for (let tempbackground of orderedFiles) {
+					let fileName = tempbackground.replace(/\.[^/.]+$/, "");
+					let img = ui.create.div(".backgrounds", container);
+					img.dataset.name = fileName;
+					img.setBackgroundImage(path + tempbackground);
+					if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
+					img.addEventListener("click", function () {
+						// 检查是否在编辑模式
+						var editItem = container.querySelector(".backgrounds:last-child");
+						var isEditMode = editItem && editItem.querySelector(".buttontext").innerHTML === "完成编辑";
+						if (isEditMode) {
+							// 编辑模式：执行删除或隐藏操作
+							utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+							// 检查是否为系统背景
+							if (!(fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_"))) {
+								// 系统背景：隐藏而不是删除
+								// 获取隐藏背景列表
+								var hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
+								if (!hiddenBgs.includes(fileName)) {
+									hiddenBgs.push(fileName);
+									lib.config.extension_十周年UI_hiddenSystemBackgrounds = hiddenBgs;
+									game.saveConfig("extension_十周年UI_hiddenSystemBackgrounds", hiddenBgs);
 								}
-								// 自定义背景：删除
-								if(confirm("是否删除此背景？（此操作不可撤销）")){
-									var nameMap2 = lib.config.extension_十周年UI_customBackgroundNames || {};
-									if(nameMap2[fileName]){
-										delete nameMap2[fileName];
-										lib.config.extension_十周年UI_customBackgroundNames = nameMap2;
-										game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap2);
+								// 如果当前背景被隐藏，切换到默认背景
+								if (lib.config.image_background == fileName) {
+									game.saveConfig("image_background", "default");
+									lib.init.background();
+									game.updateBackground();
+								}
+								// 重新加载背景列表但保持编辑模式
+								while (container.firstChild) {
+									container.removeChild(container.firstChild);
+								}
+								loadBackgroundImages(container);
+								// 重新进入编辑模式
+								setTimeout(function () {
+									var editItem = container.querySelector(".backgrounds:last-child");
+									if (editItem) {
+										editItem.click();
 									}
-									if(fileName.startsWith("cdv_bg_")){
-										game.removeFile("image/background/" + fileName + ".jpg");
-									}else{
-										game.deleteDB("image", fileName);
+								}, 100);
+								return;
+							}
+							// 自定义背景：删除
+							if (confirm("是否删除此背景？（此操作不可撤销）")) {
+								var nameMap2 = lib.config.extension_十周年UI_customBackgroundNames || {};
+								if (nameMap2[fileName]) {
+									delete nameMap2[fileName];
+									lib.config.extension_十周年UI_customBackgroundNames = nameMap2;
+									game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap2);
+								}
+								if (fileName.startsWith("cdv_bg_")) {
+									game.removeFile("image/background/" + fileName + ".jpg");
+								} else {
+									game.deleteDB("image", fileName);
+								}
+								if (lib.config.image_background == fileName) {
+									game.saveConfig("image_background", "default");
+									lib.init.background();
+									game.updateBackground();
+								}
+								// 重新加载背景列表但保持编辑模式
+								while (container.firstChild) {
+									container.removeChild(container.firstChild);
+								}
+								loadBackgroundImages(container);
+								// 重新进入编辑模式
+								setTimeout(function () {
+									var editItem = container.querySelector(".backgrounds:last-child");
+									if (editItem) {
+										editItem.click();
 									}
-									if(lib.config.image_background == fileName){
-										game.saveConfig("image_background", "default");
+								}, 100);
+							}
+						} else {
+							// 正常模式：选择背景
+							let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
+							allSelectedElements.forEach(function (selectedElement) {
+								selectedElement.parentNode.removeChild(selectedElement);
+							});
+							ui.create.div(".bgxuanzhong", img);
+							game.saveConfig("image_background", fileName);
+							lib.init.background();
+							game.updateBackground();
+						}
+					});
+					let customNameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+					let backgroundName = lib.configMenu.appearence.config.image_background.item[fileName] ? lib.configMenu.appearence.config.image_background.item[fileName] : customNameMap[fileName] || fileName;
+					ui.create.div(".buttontext", backgroundName, img);
+				}
+				// 添加 "添加背景" 项（放在末尾）
+				(function (container) {
+					var addItem = ui.create.div(".backgrounds", container);
+					ui.create.div(".buttontext", "添加背景", addItem);
+					var input = document.createElement("input");
+					input.type = "file";
+					input.accept = "image/*";
+					input.multiple = true; // 支持多选
+					input.style.display = "none";
+					document.body.appendChild(input);
+					var write = (data, dir, name) => (game.promises && game.promises.writeFile ? game.promises.writeFile(data, dir, name) : new Promise(resolve => game.writeFile(data, dir, name, resolve)));
+					addItem.addEventListener("click", function () {
+						utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+						input.click();
+					});
+					input.onchange = function (e) {
+						var files = e.target.files;
+						if (!files || files.length === 0) return;
+						var processFiles = async function () {
+							var nameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+							for (var i = 0; i < files.length; i++) {
+								var file = files[i];
+								if (!file) continue;
+								var base = (game.writeFile ? "cdv_" : "custom_") + "bg_" + Date.now() + "_" + i;
+								var targetName = base + ".jpg";
+								var originName = (file.name || "").replace(/\.[^/.]+$/, "");
+								nameMap[base] = originName || base;
+								try {
+									await write(file, "image/background", targetName);
+									if (i === 0) {
+										game.saveConfig("image_background", base);
 										lib.init.background();
 										game.updateBackground();
 									}
-									// 重新加载背景列表但保持编辑模式
-									while(container.firstChild){ container.removeChild(container.firstChild); }
-									loadBackgroundImages(container);
-									// 重新进入编辑模式
-									setTimeout(function(){
-										var editItem = container.querySelector('.backgrounds:last-child');
-										if(editItem) {
-											editItem.click();
-										}
-									}, 100);
+								} catch (err) {
+									console && console.error && console.error("导入背景失败:", err);
+								}
+							}
+							lib.config.extension_十周年UI_customBackgroundNames = nameMap;
+							game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap);
+							while (container.firstChild) {
+								container.removeChild(container.firstChild);
+							}
+							loadBackgroundImages(container);
+						};
+						processFiles();
+					};
+					// 编辑背景按钮（使用本体逻辑）
+					var editItem = ui.create.div(".backgrounds", container);
+					ui.create.div(".buttontext", "编辑背景", editItem);
+					var isEditMode = false;
+					editItem.addEventListener("click", function () {
+						utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+						isEditMode = !isEditMode;
+						// 切换所有背景项的显示模式
+						var items = Array.from(container.querySelectorAll(".backgrounds"));
+						items.slice(0, Math.max(0, items.length - 3)).forEach(function (item) {
+							var fname = item.dataset.name;
+							if (!fname) return;
+							var textDiv = item.querySelector(".buttontext");
+							if (!textDiv) return;
+
+							if (isEditMode) {
+								// 编辑模式：显示删除或隐藏
+								if (fname.startsWith("cdv_bg_") || fname.startsWith("custom_bg_")) {
+									textDiv.innerHTML = "删除";
+								} else {
+									textDiv.innerHTML = "隐藏";
 								}
 							} else {
-								// 正常模式：选择背景
-								let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
-								allSelectedElements.forEach(function (selectedElement) {
-									selectedElement.parentNode.removeChild(selectedElement);
-								});
-								ui.create.div(".bgxuanzhong", img);
-								game.saveConfig("image_background", fileName);
-								lib.init.background();
-								game.updateBackground();
+								// 正常模式：显示背景名称
+								var customNameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+								var backgroundName = lib.configMenu.appearence.config.image_background.item[fname] ? lib.configMenu.appearence.config.image_background.item[fname] : customNameMap[fname] || fname;
+								textDiv.innerHTML = backgroundName;
 							}
 						});
-						let customNameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
-						let backgroundName = lib.configMenu.appearence.config.image_background.item[fileName] ? lib.configMenu.appearence.config.image_background.item[fileName] : (customNameMap[fileName] || fileName);
-						ui.create.div(".buttontext", backgroundName, img);
-					}
-					// 添加 "添加背景" 项（放在末尾）
-					(function(container){
-						var addItem = ui.create.div(".backgrounds", container);
-						ui.create.div(".buttontext", "添加背景", addItem);
-						var input = document.createElement("input");
-						input.type = "file";
-						input.accept = "image/*";
-						input.multiple = true; // 支持多选
-						input.style.display = "none";
-						document.body.appendChild(input);
-						var write = (data, dir, name) => (game.promises && game.promises.writeFile) ? game.promises.writeFile(data, dir, name) : new Promise(resolve => game.writeFile(data, dir, name, resolve));
-						addItem.addEventListener("click", function(){
-							utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-							input.click();
-						});
-						input.onchange = function(e){
-							var files = e.target.files;
-							if(!files || files.length === 0) return;
-							var processFiles = async function() {
-								var nameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
-								for(var i = 0; i < files.length; i++) {
-									var file = files[i];
-									if(!file) continue;
-									var base = (game.writeFile ? "cdv_" : "custom_") + "bg_" + Date.now() + "_" + i;
-									var targetName = base + ".jpg";
-									var originName = (file.name || "").replace(/\.[^/.]+$/, "");
-									nameMap[base] = originName || base;
-									try {
-										await write(file, "image/background", targetName);
-										if(i === 0) {
-											game.saveConfig("image_background", base);
-											lib.init.background();
-											game.updateBackground();
-										}
-									} catch(err) {
-										console && console.error && console.error("导入背景失败:", err);
-									}
-								}
-								lib.config.extension_十周年UI_customBackgroundNames = nameMap;
-								game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap);
-								while(container.firstChild){ container.removeChild(container.firstChild); }
-								loadBackgroundImages(container);
-							};
-							processFiles();
-						};
-						// 编辑背景按钮（使用本体逻辑）
-						var editItem = ui.create.div(".backgrounds", container);
-						ui.create.div(".buttontext", "编辑背景", editItem);
-						var isEditMode = false;
-						editItem.addEventListener("click", function(){
-							utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-							isEditMode = !isEditMode;
-							// 切换所有背景项的显示模式
-							var items = Array.from(container.querySelectorAll('.backgrounds'));
-							items.slice(0, Math.max(0, items.length - 3)).forEach(function(item){
-								var fname = item.dataset.name;
-								if(!fname) return;
-								var textDiv = item.querySelector('.buttontext');
-								if(!textDiv) return;
-								
-								if(isEditMode) {
-									// 编辑模式：显示删除或隐藏
-									if(fname.startsWith("cdv_bg_") || fname.startsWith("custom_bg_")) {
-										textDiv.innerHTML = "删除";
-									} else {
-										textDiv.innerHTML = "隐藏";
-									}
-								} else {
-									// 正常模式：显示背景名称
-									var customNameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
-									var backgroundName = lib.configMenu.appearence.config.image_background.item[fname] ? 
-										lib.configMenu.appearence.config.image_background.item[fname] : 
-										(customNameMap[fname] || fname);
-									textDiv.innerHTML = backgroundName;
-								}
-							});
-							// 更新编辑按钮文字
-							var editText = editItem.querySelector('.buttontext');
-							editText.innerHTML = isEditMode ? "完成编辑" : "编辑背景";
-						});
-					})(container);
-				});
-			}
+						// 更新编辑按钮文字
+						var editText = editItem.querySelector(".buttontext");
+						editText.innerHTML = isEditMode ? "完成编辑" : "编辑背景";
+					});
+				})(container);
+			});
+		}
 		function closeMenu() {
 			if (menuPopup) {
 				menuPopup.delete(200);
@@ -545,15 +549,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				confirm.update();
 			};
 			// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
-			(function(){
+			(function () {
 				var originalCancel = ui.click.cancel;
-				ui.click.cancel = function(node){
+				ui.click.cancel = function (node) {
 					var event = _status.event;
-					if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)){
+					if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)) {
 						ui.confirm.classList.add("removing");
 						event.restore();
 						var cards = event.player.getCards("hej");
-						for (var i = 0; i < cards.length; i++){
+						for (var i = 0; i < cards.length; i++) {
 							cards[i].recheck("useSkill");
 						}
 						game.uncheck();
