@@ -1043,10 +1043,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	if (lib.config.extension_十周年UI_newDecadeStyle === "babysha" && game.players.length < 5) {
 		const getAllPlayersCount = () => game.players.length + (game.dead ? game.dead.length : 0);
 		const skillDisplayManager = (() => {
-			const playerSkillArrays = new Map();
+			const playerSkillArrays = new WeakMap();
 			const isOtherSkill = skill => !!lib.translate?.[skill];
 			const getSkillName = skill => lib.translate?.[skill] || skill;
-			const updateSkillDisplay = async player => {
+			const updateSkillDisplay = player => {
 				if (getAllPlayersCount() >= 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
@@ -1061,6 +1061,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						uniqueSkills.push(skill);
 					}
 				}
+				const rect = avatar.getBoundingClientRect();
+				const isLeft = rect.left < window.innerWidth / 2;
+				const mode = get.mode();
+				const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode].double_character;
+				const baseOffset = isDoubleCharacter ? 130 : 75;
+				const frag = document.createDocumentFragment();
 				uniqueSkills.forEach((skill, idx) => {
 					const skillList = document.createElement("div");
 					Object.assign(skillList.style, {
@@ -1069,21 +1075,20 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						zIndex: "102",
 					});
 					skillList.className = "baby_skill";
-					const rect = avatar.getBoundingClientRect();
-					const isLeft = rect.left < window.innerWidth / 2;
 					Object.assign(skillList.style, {
-						right: isLeft ? `${avatar.offsetWidth + 75}px` : "",
-						left: isLeft ? "" : `${avatar.offsetWidth + 10}px`,
+						right: isLeft ? `${avatar.offsetWidth + baseOffset}px` : "",
+						left: isLeft ? "" : `${avatar.offsetWidth + (isDoubleCharacter ? 45 : 10)}px`,
 					});
 					const skillBox = document.createElement("div");
 					skillBox.className = "baby_skill_box";
 					skillBox.setAttribute("data-skill", skill);
 					skillBox.textContent = getSkillName(skill).slice(0, 2);
 					skillList.appendChild(skillBox);
-					avatar.parentNode.appendChild(skillList);
+					frag.appendChild(skillList);
 				});
+				avatar.parentNode.appendChild(frag);
 			};
-			const updateSkillArray = async (player, skill, add = true) => {
+			const updateSkillArray = (player, skill, add = true) => {
 				if (getAllPlayersCount() >= 5) return;
 				if (player === game.me || !isOtherSkill(skill)) return;
 				if (!playerSkillArrays.has(player)) playerSkillArrays.set(player, []);
@@ -1091,35 +1096,38 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const idx = arr.indexOf(skill);
 				if (add && idx === -1) arr.push(skill);
 				if (!add && idx > -1) arr.splice(idx, 1);
-				await updateSkillDisplay(player);
+				updateSkillDisplay(player);
 			};
-			const refreshPlayerSkills = async player => {
+			const refreshPlayerSkills = player => {
 				if (getAllPlayersCount() >= 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
-				playerSkillArrays.delete(player);
-				for (const skill of [...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])]) {
-					await updateSkillArray(player, skill, true);
-				}
+				const merged = [...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])].filter(isOtherSkill);
+				playerSkillArrays.set(player, merged);
+				updateSkillDisplay(player);
 			};
 			["showCharacterEnd", "hideCharacter", "changeCharacter", "removeCharacter"].forEach(eventName => {
 				const oldHandler = lib.element.player[eventName];
 				if (!oldHandler) return;
-				lib.element.player[eventName] = async function (...args) {
+				lib.element.player[eventName] = function (...args) {
 					if (typeof oldHandler === "function") oldHandler.apply(this, args);
-					await refreshPlayerSkills(this);
+					refreshPlayerSkills(this);
 				};
 			});
 			const origAdd = lib.element.player.addSkill;
 			const origRemove = lib.element.player.removeSkill;
-			lib.element.player.addSkill = async function (skill, ...args) {
+			lib.element.player.addSkill = function (skill, ...args) {
 				const res = origAdd.apply(this, [skill, ...args]);
-				requestAnimationFrame(async () => await updateSkillArray(this, skill, true));
+				const applyAdd = s => requestAnimationFrame(() => updateSkillArray(this, s, true));
+				if (Array.isArray(skill)) skill.forEach(applyAdd);
+				else applyAdd(skill);
 				return res;
 			};
-			lib.element.player.removeSkill = async function (skill, ...args) {
+			lib.element.player.removeSkill = function (skill, ...args) {
 				const res = origRemove.apply(this, [skill, ...args]);
-				requestAnimationFrame(async () => await updateSkillArray(this, skill, false));
+				const applyRemove = s => requestAnimationFrame(() => updateSkillArray(this, s, false));
+				if (Array.isArray(skill)) skill.forEach(applyRemove);
+				else applyRemove(skill);
 				return res;
 			};
 			lib.onover.push(() => playerSkillArrays.clear());
@@ -1130,7 +1138,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	async function clearAllSkillDisplay() {
 		for (const player of [...game.players, ...(game.dead || [])]) {
 			const avatar = player.node.avatar;
-			if (!avatar) return;
+			if (!avatar) continue;
 			avatar.parentNode.querySelectorAll(".baby_skill").forEach(list => list.remove());
 		}
 	}

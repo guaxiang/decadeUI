@@ -29,7 +29,7 @@
 	background-size: 100% 100% !important;
 }
 .player::before {
-	left: -55px;
+	left: -52px;
 	top: -42px;
 	width: 230px;
 	height: 262px;
@@ -61,7 +61,7 @@
 .player::after,
 .player.selected::after,
 .player.selectable::after {
-	left: -55px;
+	left: -52px;
 	top: -42px;
 	width: 230px;
 	height: 262px;
@@ -83,10 +83,10 @@
 	/*新增*/
 	opacity: 1;
 }
-#arena>.player {
+#arena > .player {
 	z-index: 4;
 }
-.player>.mask {
+.player > .mask {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -99,17 +99,18 @@
 	pointer-events: none;
 	z-index: 66;
 }
-.player.un-selectable:not(.selectable)>.mask {
+.player.un-selectable:not(.selectable) > .mask {
 	opacity: 1;
 	transition: opacity 0.3s linear;
 }
-.player.un-selectable:not(.selectable)>.mask {
+.player.un-selectable:not(.selectable) > .mask {
 	opacity: 1;
 	transition: opacity 0.3s linear;
 }
-#arena:not(.fewplayer)>.player:not(.minskin),
-#arena:not(.fewplayer):not(*[data-player_height=""])>.player:not(.minskin) {
+#arena:not(.fewplayer) > .player:not(.minskin),
+#arena:not(.fewplayer):not(*[data-player_height=""]) > .player:not(.minskin) {
 	height: 180px !important;
+	width: 125px !important;
 }
 /*玩家锁链*/
 .player>.chain {
@@ -166,7 +167,7 @@
 /* 势力条 */
 .player>.camp-wrap>.camp-back {
 	background-image: url("../image/decoration/babyshen.png");
-	width: 350%;
+	width: 370%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -175,7 +176,7 @@
 }
 .player.unseen>.camp-wrap>.camp-back {
 	background-image: url("../image/decoration/babyshen.png");
-	width: 350%;
+	width: 370%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -184,7 +185,7 @@
 }
 .player>.camp-wrap[data-camp="wei"]>.camp-back {
 	background-image: url("../image/decoration/babywei.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -193,7 +194,7 @@
 }
 .player>.camp-wrap[data-camp="shu"]>.camp-back {
 	background-image: url("../image/decoration/babyshu.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -202,7 +203,7 @@
 }
 .player>.camp-wrap[data-camp="wu"]>.camp-back {
 	background-image: url("../image/decoration/babywu.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -211,7 +212,7 @@
 }
 .player>.camp-wrap[data-camp="qun"]>.camp-back {
 	background-image: url("../image/decoration/babyqun.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -220,7 +221,7 @@
 }
 .player>.camp-wrap[data-camp="shen"]>.camp-back {
 	background-image: url("../image/decoration/babyshen.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -229,7 +230,7 @@
 }
 .player>.camp-wrap[data-camp="shen2"]>.camp-back {
 	background-image: url("../image/decoration/babyshen.png");
-	width: 365%;
+	width: 380%;
 	height: 147%;
 	top: 3px;
 	left: 5px;
@@ -238,7 +239,7 @@
 }
 .player>.camp-wrap[data-camp="ye"]>.camp-back {
 	background-image: url("../image/decoration/babyjin.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -247,7 +248,7 @@
 }
 .player>.camp-wrap[data-camp="key"]>.camp-back {
 	background-image: url("../image/decoration/babyshen.png");
-	width: 365%;
+	width: 380%;
 	height: 147%;
 	top: 3px;
 	left: 5px;
@@ -257,7 +258,7 @@
 .player>.camp-wrap[data-camp="western"]>.camp-back {}
 .player>.camp-wrap[data-camp="jin"]>.camp-back {
 	background-image: url("../image/decoration/babyjin.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -266,7 +267,7 @@
 }
 .player>.camp-wrap[data-camp="devil"]>.camp-back {
 	background-image: url("../image/decoration/babyjin.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -275,7 +276,7 @@
 }
 .player>.camp-wrap[data-camp="daqin"]>.camp-back {
 	background-image: url("../image/decoration/babyjin.png");
-	width: 365%;
+	width: 380%;
 	height: 150%;
 	top: 0px;
 	left: 5px;
@@ -490,7 +491,6 @@
 	height: 96px;
 	font-size: 16px;
 	text-shadow: none;
-	color: #ffffff;
 	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
 	z-index: 80;
 }
@@ -500,6 +500,10 @@
 }
 .player.fullskin.fullskin2>.name.name2:empty::before {
 	content: "副将";
+}
+.player>.camp-wrap[data-camp]~.name.name2,
+#arena>.player:not(.minskin)>.camp-wrap[data-camp]~.name.name2 {
+	color: #fdfdfd !important;
 }
 /*联机名称显示*/
 .player>.nameol {
