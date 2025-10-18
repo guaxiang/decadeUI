@@ -285,14 +285,14 @@
 	pointer-events: none;
 }
 .player > .camp-wrap > .camp-border {
-    display: block;
-    left: 7px;
-    top: 22px;
-    width: 95%;
-    height: 15%;
-    position: absolute;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+	display: block;
+	left: 7px;
+	top: 22px;
+	width: 95%;
+	height: 15%;
+	position: absolute;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
 	z-index: 88;
 }
 #arena.decadeUI[data-border-level="five"] .player > .camp-wrap > .camp-border {
@@ -435,10 +435,10 @@
 	font-family: xinwei, xingkai;
 	font-display: swap;
 	font-size: 26px;
-    width: 80%;
-    height: 25%;
-    left: 26%;
-    top: 4px;
+	width: 80%;
+	height: 25%;
+	left: 26%;
+	top: 4px;
 	display: flex;
 	text-align: center;
 	align-items: center;
@@ -1115,7 +1115,7 @@
 	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000;
 }
 .player[data-position="0"] > .judges > .card > .judge-mark > .judge {
-    left: -120px;
+	left: -120px;
 	top: 40px;
 }
 .player > .judges > .card.feichu > .judge-mark > .judge::before {

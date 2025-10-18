@@ -3798,6 +3798,7 @@ export async function content(config, pack) {
 										hp: decadeUI.element.create("hp", node),
 										group: decadeUI.element.create("identity", node),
 										intro: decadeUI.element.create("intro", node),
+										info: decadeUI.element.create("info", node),
 									};
 									var infoitem = get.character(item);
 									node.node.name.innerHTML = get.slimName(item);
