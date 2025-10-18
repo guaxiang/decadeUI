@@ -15,15 +15,20 @@ export async function content(config, pack) {
 	}
 	//单独装备栏
 	_status.nopopequip = lib.config.extension_十周年UI_aloneEquip;
-	//布局
-	switch (lib.config.layout) {
-		case "long2":
-		case "nova":
-		case "mobile":
-			break;
-		default:
-			alert("十周年UI提醒您，请使用<默认>、<手杀>、<新版>布局以获得良好体验（在选项-外观-布局中调整）。");
-			break;
+	// 布局检查与自动切换
+	const recommendedLayouts = ["nova"];
+	const currentLayout = lib.config.layout;
+	if (!recommendedLayouts.includes(currentLayout)) {
+		const shouldSwitch = confirm(
+			"十周年UI提醒您，请使用<新版>布局以获得良好体验。\n" +
+			"点击确定自动切换到<新版>布局，点击取消保持当前布局。"
+		);
+		if (shouldSwitch) {
+			lib.config.layout = "nova";
+			game.saveConfig("layout", "nova");
+			alert("布局已切换为<新版>布局，游戏将自动重启以应用新布局。");
+			setTimeout(() => location.reload(), 1000);
+		}
 	}
 	console.time(decadeUIName);
 	window.duicfg = config;

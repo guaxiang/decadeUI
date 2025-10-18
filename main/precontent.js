@@ -40,25 +40,32 @@ export async function precontent() {
 				return 0;
 			}
 			const comparison = compareVersions(currentVersion, requiredVersion);
-			if (comparison < 0) {
-				const message = `版本不匹配警告！\n\n十周年UI要求无名杀版本：${requiredVersion}\n当前无名杀版本：${currentVersion}\n\n请更新无名杀到 ${requiredVersion} 版本以确保十周年UI正常运行。\n\n点击确定继续游戏，但是所遇到的bug均不受理。`;
-				setTimeout(() => {
-					if (confirm(message)) {
-						game.print("已确认版本不匹配，继续游戏...");
-					}
-				}, 1000);
-			} else if (comparison > 0) {
-				const message = `版本不匹配警告！\n\n当前无名杀版本：${currentVersion}\n十周年UI版本：${requiredVersion}\n\n当前十周年UI版本过低，请更新十周年UI到 ${currentVersion} 版本以确保十周年UI正常运行。\n\n点击确定继续游戏，但是所遇到的bug均不受理。`;
-				setTimeout(() => {
-					if (confirm(message)) {
-						game.print("已确认版本不匹配，继续游戏...");
-					}
-				}, 1000);
-			}
+			if (comparison === 0) return; // 版本匹配，直接返回
+			// 使用表驱动法处理版本不匹配的情况
+			const versionMessages = {
+				[-1]: {
+					title: "版本不匹配警告！",
+					content: `十周年UI要求无名杀版本：${requiredVersion}\n当前无名杀版本：${currentVersion}\n\n请更新无名杀到 ${requiredVersion} 版本以确保十周年UI正常运行。`,
+				},
+				[1]: {
+					title: "版本不匹配警告！",
+					content: `当前无名杀版本：${currentVersion}\n十周年UI版本：${requiredVersion}\n\n当前十周年UI版本过低，请更新十周年UI到 ${currentVersion} 版本以确保十周年UI正常运行。`,
+				},
+			};
+			const messageConfig = versionMessages[comparison];
+			if (!messageConfig) return;
+			const message = `${messageConfig.title}\n\n${messageConfig.content}\n\n点击确定继续游戏，但是所遇到的bug均不受理。`;
+			setTimeout(() => {
+				if (confirm(message)) {
+					game.print("已确认版本不匹配，继续游戏...");
+				}
+			}, 1000);
 		}
 		checkVersionCompatibility();
-		if (ui.css.layout) {
-			if (!ui.css.layout.href || ui.css.layout.href.indexOf("long2") < 0) ui.css.layout.href = lib.assetURL + "layout/long2/layout.css";
+		// 提前返回模式减少嵌套
+		if (!ui.css.layout) return;
+		if (!ui.css.layout.href || ui.css.layout.href.indexOf("long2") < 0) {
+			ui.css.layout.href = lib.assetURL + "layout/long2/layout.css";
 		}
 		decadeModule.init = function () {
 			// 基础CSS加载
@@ -70,14 +77,13 @@ export async function precontent() {
 			} else {
 				this.css(decadeUIPath + "css/player2.css");
 			}
-			let layoutCss = "css/layout.css";
-			if (style === "othersOff") {
-				layoutCss = "css/layout_new.css";
-			} else if (style === "onlineUI") {
-				layoutCss = "css/layout_new.css";
-			} else if (style === "babysha") {
-				layoutCss = "css/layout_new.css";
-			}
+			// 使用表驱动法映射样式到布局CSS
+			const layoutCssMap = {
+				othersOff: "css/layout_new.css",
+				onlineUI: "css/layout_new.css",
+				babysha: "css/layout_new.css",
+			};
+			const layoutCss = layoutCssMap[style] || "css/layout.css";
 			this.css(decadeUIPath + "css/equip.css");
 			document.body.setAttribute("data-style", style || "on");
 			this.css(decadeUIPath + layoutCss);
@@ -381,18 +387,14 @@ export async function precontent() {
 						}
 					);
 				};
+				// 使用表驱动法优化switch语句
+				const styleFileMap = {
+					on: "main1.js",
+					othersOff: "main3.js",
+				};
+				const fileName = styleFileMap[lib.config.extension_十周年UI_newDecadeStyle] || "main2.js";
 				floders.forEach(dir => {
-					switch (lib.config.extension_十周年UI_newDecadeStyle) {
-						case "on":
-							readAndEval(dir, "main1.js");
-							break;
-						case "othersOff":
-							readAndEval(dir, "main3.js");
-							break;
-						default:
-							readAndEval(dir, "main2.js");
-							break;
-					}
+					readAndEval(dir, fileName);
 				});
 			});
 		},
