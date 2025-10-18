@@ -1166,6 +1166,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				if (getAllPlayersCount() > 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
+				avatar.parentNode.querySelectorAll(".baby_skill").forEach(list => list.remove());
+				playerSkillArrays.delete(player);
 				const merged = [...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])].filter(skill => isOtherSkill(skill, player));
 				playerSkillArrays.set(player, merged);
 				updateSkillDisplay(player);
@@ -1174,8 +1176,19 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const oldHandler = lib.element.player[eventName];
 				if (!oldHandler) return;
 				lib.element.player[eventName] = function (...args) {
+					if (eventName === "changeCharacter") {
+						const avatar = this.node.avatar;
+						if (avatar) {
+							avatar.parentNode.querySelectorAll(".baby_skill").forEach(list => list.remove());
+							playerSkillArrays.delete(this);
+						}
+					}
 					if (typeof oldHandler === "function") oldHandler.apply(this, args);
-					refreshPlayerSkills(this);
+					if (eventName === "showCharacterEnd" || eventName === "changeCharacter") {
+						setTimeout(() => refreshPlayerSkills(this), 100);
+					} else {
+						refreshPlayerSkills(this);
+					}
 				};
 			});
 			const origAdd = lib.element.player.addSkill;
@@ -1194,11 +1207,27 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				else applyRemove(skill);
 				return res;
 			};
-			return { refreshPlayerSkills };
+			return { refreshPlayerSkills, playerSkillArrays };
 		})();
 		lib.refreshPlayerSkills = skillDisplayManager.refreshPlayerSkills;
+		lib.skillDisplayManager = skillDisplayManager;
+		if (game.on) {
+			game.on("gameStart", () => {
+				setTimeout(() => {
+					for (const player of game.players) {
+						skillDisplayManager.refreshPlayerSkills(player);
+					}
+				}, 500);
+			});
+		}
 	}
 	async function clearAllSkillDisplay() {
+		if (lib.config.extension_十周年UI_newDecadeStyle === "babysha") {
+			const skillDisplayManager = lib.skillDisplayManager;
+			if (skillDisplayManager && skillDisplayManager.playerSkillArrays) {
+				skillDisplayManager.playerSkillArrays = new WeakMap();
+			}
+		}
 		for (const player of [...game.players, ...(game.dead || [])]) {
 			const avatar = player.node.avatar;
 			if (!avatar) continue;
