@@ -1046,9 +1046,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		const getAllPlayersCount = () => game.players.length + (game.dead ? game.dead.length : 0);
 		const skillDisplayManager = (() => {
 			const playerSkillArrays = new WeakMap();
-			const isOtherSkill = skill => {
+			const isOtherSkill = (skill, player) => {
 				if (!lib.translate?.[skill]) return false;
 				const info = get.info(skill);
+				if (info && info.charlotte) return false;
+				if (info && info.zhuSkill && !player.isZhu) return false;
 				return !info || !info.nopop || skill.startsWith("olhedao_tianshu_");
 			};
 			const getSkillName = skill => lib.translate?.[skill] || skill;
@@ -1069,7 +1071,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				description.className = "skill_description";
 				// 使用本体相同的技能描述获取方法
 				const skillDesc = get.translation(skill, "info") || "暂无描述";
-				description.textContent = skillDesc;
+				// 支持HTML标签渲染
+				description.innerHTML = skillDesc;
 				popup.appendChild(description);
 				// 先添加到DOM中获取实际尺寸
 				document.body.appendChild(popup);
@@ -1151,7 +1154,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			};
 			const updateSkillArray = (player, skill, add = true) => {
 				if (getAllPlayersCount() > 5) return;
-				if (player === game.me || !isOtherSkill(skill)) return;
+				if (player === game.me || !isOtherSkill(skill, player)) return;
 				if (!playerSkillArrays.has(player)) playerSkillArrays.set(player, []);
 				const arr = playerSkillArrays.get(player);
 				const idx = arr.indexOf(skill);
@@ -1163,7 +1166,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				if (getAllPlayersCount() > 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
-				const merged = [...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])].filter(isOtherSkill);
+				const merged = [...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])].filter(skill => isOtherSkill(skill, player));
 				playerSkillArrays.set(player, merged);
 				updateSkillDisplay(player);
 			};
@@ -1191,7 +1194,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				else applyRemove(skill);
 				return res;
 			};
-			lib.onover.push(() => playerSkillArrays.clear());
 			return { refreshPlayerSkills };
 		})();
 		lib.refreshPlayerSkills = skillDisplayManager.refreshPlayerSkills;

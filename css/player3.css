@@ -329,12 +329,12 @@
 	justify-content: center;
 }
 #arena[data-forcestyle="2"] .player>.camp-wrap>.camp-name {
-	font-family: xinwei, xingkai;
-	font-display: swap;
-	font-size: 26px;
-	width: 75%;
-	height: 33.5%;
-	left: 10%;
+    font-family: xinwei, xingkai;
+    font-display: swap;
+    font-size: 26px;
+    width: 71%;
+    height: 30.5%;
+    left: 15%;
 	display: flex;
 	text-align: center;
 	align-items: center;
