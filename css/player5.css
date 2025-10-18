@@ -286,14 +286,14 @@
 }
 .player > .camp-wrap > .camp-border {
 	display: block;
-	left: 40px;
-	top: 10px;
-	width: 200%;
-	height: 13%;
-	position: absolute;
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-	background-color: rgba(0, 0, 0, 0.3);
+    left: 5px;
+    top: 19px;
+    width: 100%;
+    height: 20%;
+    position: absolute;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+	z-index: 88;
 }
 #arena.decadeUI[data-border-level="five"] .player > .camp-wrap > .camp-border {
 	background-image: url("../image/decorationh/border_camphs5.png");
@@ -435,10 +435,10 @@
 	font-family: xinwei, xingkai;
 	font-display: swap;
 	font-size: 26px;
-	width: 90%;
-	height: 30%;
-	left: 17%;
-	top: 3px;
+    width: 80%;
+    height: 25%;
+    left: 26%;
+    top: 4px;
 	display: flex;
 	text-align: center;
 	align-items: center;

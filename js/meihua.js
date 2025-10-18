@@ -269,10 +269,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		};
 		// 失去体力音效和动画
-		window._effect = { 
-			effect_loseHp: { 
-				name: "../../../十周年UI/assets/animation/effect_loseHp" 
-			} 
+		window._effect = {
+			effect_loseHp: {
+				name: "../../../十周年UI/assets/animation/effect_loseHp",
+			},
 		};
 		lib.skill._hpLossAudio = {
 			trigger: { player: "loseHpEnd" },
@@ -287,8 +287,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.playAudio("..", "extension", "十周年UI", "audio/hpLossSund.mp3");
 				dcdAnim.loadSpine(window._effect.effect_loseHp.name, "skel", () => {
 					window._effect.effect_loseHp.action = "play";
-					dcdAnim.playSpine(window._effect.effect_loseHp, { 
-						speed: 0.8, scale: 0.6, parent: player 
+					dcdAnim.playSpine(window._effect.effect_loseHp, {
+						speed: 0.8,
+						scale: 0.6,
+						parent: player,
 					});
 				});
 			},
@@ -1039,15 +1041,68 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 		player.ChupaizhishiXObserver = observer;
 	});
-	// 技能外显-仅在babysha样式下且场上人物小于5人时生效
-	if (lib.config.extension_十周年UI_newDecadeStyle === "babysha" && game.players.length < 5) {
+	// 技能外显-仅在babysha样式下且场上人物小于等于5人时生效
+	if (lib.config.extension_十周年UI_newDecadeStyle === "babysha" && game.players.length <= 5) {
 		const getAllPlayersCount = () => game.players.length + (game.dead ? game.dead.length : 0);
 		const skillDisplayManager = (() => {
 			const playerSkillArrays = new WeakMap();
-			const isOtherSkill = skill => !!lib.translate?.[skill];
+			const isOtherSkill = skill => {
+				if (!lib.translate?.[skill]) return false;
+				const info = get.info(skill);
+				return !info || !info.nopop || skill.startsWith("olhedao_tianshu_");
+			};
 			const getSkillName = skill => lib.translate?.[skill] || skill;
+			const showSkillDescription = (skill, targetElement) => {
+				// 移除已存在的技能描述弹窗
+				const existingPopup = document.querySelector(".baby_skill_popup");
+				if (existingPopup) existingPopup.remove();
+				const skillName = getSkillName(skill);
+				const skillInfo = lib.skill[skill];
+				if (!skillInfo) return;
+				const popup = document.createElement("div");
+				popup.className = "baby_skill_popup";
+				const title = document.createElement("div");
+				title.className = "skill_title";
+				title.textContent = skillName;
+				popup.appendChild(title);
+				const description = document.createElement("div");
+				description.className = "skill_description";
+				// 使用本体相同的技能描述获取方法
+				const skillDesc = get.translation(skill, "info") || "暂无描述";
+				description.textContent = skillDesc;
+				popup.appendChild(description);
+				// 先添加到DOM中获取实际尺寸
+				document.body.appendChild(popup);
+				// 强制重新计算尺寸，确保完全包裹内容
+				const titleHeight = title.scrollHeight;
+				const descHeight = description.scrollHeight;
+				const marginBetween = 8; // 标题和描述之间的间距
+				const padding = 24; // 上下padding
+				const totalContentHeight = titleHeight + descHeight + marginBetween + padding;
+				// 设置精确的高度
+				popup.style.height = `${totalContentHeight}px`;
+				// 计算弹窗位置
+				const rect = targetElement.getBoundingClientRect();
+				const popupRect = popup.getBoundingClientRect();
+				let left = rect.left + rect.width / 2 - popupRect.width / 2; // 居中显示
+				let top = rect.top - popupRect.height - 10;
+				// 边界检查
+				if (left < 10) left = 10;
+				if (left + popupRect.width > window.innerWidth - 10) left = window.innerWidth - popupRect.width - 10;
+				if (top < 10) top = rect.bottom + 10;
+				popup.style.left = `${left}px`;
+				popup.style.top = `${top}px`;
+				// 点击其他地方关闭弹窗
+				const closePopup = e => {
+					if (!popup.contains(e.target)) {
+						popup.remove();
+						document.removeEventListener("click", closePopup);
+					}
+				};
+				setTimeout(() => document.addEventListener("click", closePopup), 100);
+			};
 			const updateSkillDisplay = player => {
-				if (getAllPlayersCount() >= 5) return;
+				if (getAllPlayersCount() > 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
 				avatar.parentNode.querySelectorAll(".baby_skill").forEach(list => list.remove());
@@ -1065,31 +1120,37 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const isLeft = rect.left < window.innerWidth / 2;
 				const mode = get.mode();
 				const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode].double_character;
-				const baseOffset = isDoubleCharacter ? 130 : 75;
+				const baseOffset = isDoubleCharacter ? 135 : 75;
 				const frag = document.createDocumentFragment();
 				uniqueSkills.forEach((skill, idx) => {
 					const skillList = document.createElement("div");
 					Object.assign(skillList.style, {
 						position: "absolute",
-						bottom: `${idx * 40 + 30}px`,
+						bottom: `${idx * 35 + 30}px`,
 						zIndex: "102",
 					});
 					skillList.className = "baby_skill";
 					Object.assign(skillList.style, {
-						right: isLeft ? `${avatar.offsetWidth + baseOffset}px` : "",
-						left: isLeft ? "" : `${avatar.offsetWidth + (isDoubleCharacter ? 45 : 10)}px`,
+						left: isLeft ? `${avatar.offsetWidth + (isDoubleCharacter ? 65 : 10)}px` : "",
+						right: isLeft ? "" : `${avatar.offsetWidth + baseOffset}px`,
 					});
 					const skillBox = document.createElement("div");
 					skillBox.className = "baby_skill_box";
 					skillBox.setAttribute("data-skill", skill);
 					skillBox.textContent = getSkillName(skill).slice(0, 2);
+					skillBox.style.cursor = "pointer";
+					skillBox.addEventListener("click", e => {
+						e.stopPropagation();
+						game.playAudio("..", "extension", "十周年UI", "audio/BtnSure");
+						showSkillDescription(skill, e.target);
+					});
 					skillList.appendChild(skillBox);
 					frag.appendChild(skillList);
 				});
 				avatar.parentNode.appendChild(frag);
 			};
 			const updateSkillArray = (player, skill, add = true) => {
-				if (getAllPlayersCount() >= 5) return;
+				if (getAllPlayersCount() > 5) return;
 				if (player === game.me || !isOtherSkill(skill)) return;
 				if (!playerSkillArrays.has(player)) playerSkillArrays.set(player, []);
 				const arr = playerSkillArrays.get(player);
@@ -1099,7 +1160,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				updateSkillDisplay(player);
 			};
 			const refreshPlayerSkills = player => {
-				if (getAllPlayersCount() >= 5) return;
+				if (getAllPlayersCount() > 5) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
 				const merged = [...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])].filter(isOtherSkill);

@@ -1088,14 +1088,28 @@ export async function content(config, pack) {
 										// 默认宽度，可根据实际调整
 										const offset = 10;
 										const showWidth = 120; // 预估显示区宽度
-										if (rect.left < winWidth / 2) {
-											// 靠左，显示在右侧
-											showCards.style.left = player.offsetWidth + offset + "px";
-											showCards.style.right = "";
+										// babysha样式下，武将牌靠左就左边显示，靠右就右边显示
+										if (lib.config.extension_十周年UI_newDecadeStyle === "babysha") {
+											if (rect.left < winWidth / 2) {
+												// 靠左，显示在左侧
+												showCards.style.left = "";
+												showCards.style.right = player.offsetWidth + offset + "px";
+											} else {
+												// 靠右，显示在右侧
+												showCards.style.left = player.offsetWidth + offset + "px";
+												showCards.style.right = "";
+											}
 										} else {
-											// 靠右，显示在左侧
-											showCards.style.left = "";
-											showCards.style.right = player.offsetWidth + offset + "px";
+											// 其他样式保持原有逻辑
+											if (rect.left < winWidth / 2) {
+												// 靠左，显示在右侧
+												showCards.style.left = player.offsetWidth + offset + "px";
+												showCards.style.right = "";
+											} else {
+												// 靠右，显示在左侧
+												showCards.style.left = "";
+												showCards.style.right = player.offsetWidth + offset + "px";
+											}
 										}
 										showCards.style.top = "90px";
 									})();
@@ -1115,8 +1129,15 @@ export async function content(config, pack) {
 									// 边界修正
 									const _rect = player.node.showCards.getBoundingClientRect();
 									if (_rect.left <= 10 && !player.node.showCards.classList.contains("hidden")) {
-										const left = lib.config.extension_十周年UI_enable && lib.config.extension_十周年UI_newDecadeStyle == "on" ? player.offsetWidth + 10 : player.offsetWidth + 5;
-										player.node.showCards.style.left = left + "px";
+										// babysha样式下，如果显示在左侧且超出边界，则调整到右侧
+										if (lib.config.extension_十周年UI_newDecadeStyle === "babysha") {
+											const left = player.offsetWidth + 10;
+											player.node.showCards.style.left = left + "px";
+											player.node.showCards.style.right = "";
+										} else {
+											const left = lib.config.extension_十周年UI_enable && lib.config.extension_十周年UI_newDecadeStyle == "on" ? player.offsetWidth + 10 : player.offsetWidth + 5;
+											player.node.showCards.style.left = left + "px";
+										}
 										player.node.showCards.style.top = "90px";
 									}
 									// 鼠标悬停/触摸事件
@@ -5142,7 +5163,7 @@ export async function content(config, pack) {
 								this.node.campWrap.node.campName.innerHTML = "";
 								this.node.campWrap.node.campName.style.backgroundImage = "";
 								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "othersOff" ? (lib.config.extension_十周年UI_borderLevel == "one" ? "image/decoration/name_" : "image/decoration/group_") : "image/decoration/name_") + group + ".png";
+								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : decadeUI.config.newDecadeStyle == "othersOff" ? (lib.config.extension_十周年UI_borderLevel == "one" ? "image/decoration/name_" : "image/decoration/group_") : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
 								const create = () => {
 									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
@@ -5170,7 +5191,7 @@ export async function content(config, pack) {
 							}
 							if (decadeUI.config.newDecadeStyle == "off") {
 								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "othersOff" ? (lib.config.extension_十周年UI_borderLevel == "one" ? "image/decoration/name_" : "image/decoration/group_") : "image/decoration/name_") + group + ".png";
+								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : decadeUI.config.newDecadeStyle == "othersOff" ? (lib.config.extension_十周年UI_borderLevel == "one" ? "image/decoration/name_" : "image/decoration/group_") : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
 								const create = () => {
 									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";

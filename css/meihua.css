@@ -28,6 +28,8 @@
 	background: rgba(0, 0, 0, 0.1);
 	padding: 2px 2px 2px 2px;
 	box-sizing: border-box;
+	/* 确保技能框不会超出屏幕边界 */
+	max-width: 200px;
 }
 .baby_skill_box {
 	display: flex;
@@ -135,4 +137,36 @@
 	font-family: "yuanli" !important;
 	font-size: 17px !important;
 	bottom: var(--hand-tip-bottom, calc(20% + 10px)) !important;
+}
+/* 技能描述弹窗样式 */
+.baby_skill_popup {
+	position: fixed;
+	background: #000;
+	border: 2px solid #ffd700;
+	border-radius: 8px;
+	padding: 12px 16px;
+	color: #fff;
+	font-size: 14px;
+	line-height: 1.4;
+	min-width: 200px;
+	max-width: 80vw;
+	width: fit-content;
+	height: fit-content;
+	z-index: 1000;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+	word-wrap: break-word;
+	pointer-events: auto;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+}
+.baby_skill_popup .skill_title {
+	font-weight: bold;
+	margin-bottom: 8px;
+	color: #ffd700;
+	text-align: left;
+}
+.baby_skill_popup .skill_description {
+	text-align: left;
+	margin-top: 20px;
 }
