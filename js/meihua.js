@@ -1255,73 +1255,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 	lib.clearAllSkillDisplay = clearAllSkillDisplay;
 	// 装备入手
-	ui.selected.cards = new Proxy([], {
-		get(target, prop) {
-			if (typeof target[prop] === "function") return target[prop].bind(target);
-			return target[prop];
-		},
-		set(target, prop, value) {
-			target[prop] = value;
-			return true;
-		},
-	});
-	function syncRelatedSelection(card, isAdd) {
-		if (isAdd) {
-			card.relatedCard.classList.add("selected");
-			if (!ui.selected.cards.includes(card.relatedCard)) ui.selected.cards.push(card.relatedCard);
-		} else {
-			card.relatedCard.classList.remove("selected");
-			const idx = ui.selected.cards.indexOf(card.relatedCard);
-			if (idx !== -1) ui.selected.cards.splice(idx, 1);
-		}
-	}
-	const cardsProxy = new Proxy(ui.selected.cards, {
-		get(target, prop) {
-			if (prop === "push") {
-				return function (...args) {
-					for (const card of args) {
-						if (!target.includes(card)) {
-							target[target.length] = card;
-							if (card.relatedCard) syncRelatedSelection(card, true);
-						}
-					}
-					return target.length;
-				};
-			}
-			if (prop === "add") {
-				return function (card) {
-					if (!target.includes(card)) {
-						target.push(card);
-						if (card.relatedCard) syncRelatedSelection(card, true);
-					}
-				};
-			}
-			if (prop === "splice") {
-				return function (start, deleteCount, ...inserted) {
-					const removed = target.slice(start, start + deleteCount);
-					const result = Array.prototype.splice.call(target, start, deleteCount, ...inserted);
-					for (const card of removed) {
-						if (card.relatedCard) syncRelatedSelection(card, false);
-					}
-					for (const card of inserted) {
-						if (card.relatedCard) syncRelatedSelection(card, true);
-					}
-					return result;
-				};
-			}
-			if (prop === "remove") {
-				return function (card) {
-					const idx = target.indexOf(card);
-					if (idx !== -1) {
-						target.splice(idx, 1);
-						if (card.relatedCard) syncRelatedSelection(card, false);
-					}
-				};
-			}
-			return Reflect.get(target, prop);
-		},
-	});
-	ui.selected.cards = cardsProxy;
 	function createEquipCardCopy(originalCard) {
 		const card = ui.create.card(ui.special);
 		card.init([originalCard.suit, originalCard.number, originalCard.name, originalCard.nature]);
@@ -1330,15 +1263,29 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		card.storage = originalCard.storage;
 		card.relatedCard = originalCard;
 		card.owner = get.owner(originalCard);
+		const observer = new MutationObserver((mutations) => {
+			if (get.position(card) === "s" && card.hasGaintag("equipHand")) {
+				for (const m of mutations) {
+					if (m.attributeName === "class") {
+						if (card.classList.contains("selected")) {
+							card.relatedCard.classList.add("selected");
+							ui.selected.cards.add(card.relatedCard);
+						} else {
+							card.relatedCard.classList.remove("selected");
+							ui.selected.cards.remove(card.relatedCard);
+						}
+					}
+				}
+			}
+		});
+		observer.observe(card, { attributes: true, attributeFilter: ["class"] });
 		return card;
 	}
 	function createFilterCard(originalFilter, includeS) {
 		return function (card, player, target) {
 			const relatedCard = card.relatedCard || card;
 			if (get.position(card) === "e") return false;
-			if (includeS && get.position(card) === "s" && get.itemtype(card) === "card" && !card.hasGaintag("equipHand")) {
-				return false;
-			}
+			if (includeS && get.position(card) === "s" && get.itemtype(card) === "card" && !card.hasGaintag("equipHand")) return false;
 			return originalFilter(relatedCard, player, target);
 		};
 	}
@@ -1366,9 +1313,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			}
 		}
 		const cardsToGive = isMultiSelect ? cardxF2 : hasFilter ? cardxF : cardx;
-		if (cardsToGive.length) {
-			player.directgains(cardsToGive, null, "equipHand");
-		}
+		if (cardsToGive.length) player.directgains(cardsToGive, null, "equipHand");
 	}
 	function setupCardStyles(cards) {
 		cards.forEach(card => {
@@ -1390,13 +1335,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		if (!isValidEvent) return;
 		event.copyCards = true;
 		const includeS = !event.position.includes("s");
-		if (includeS) {
-			event.position += "s";
-		}
+		if (includeS) event.position += "s";
 		let eventFilterCard;
-		if (event.filterCard) {
-			eventFilterCard = createFilterCard(event.filterCard, includeS);
-		}
+		if (event.filterCard) eventFilterCard = createFilterCard(event.filterCard, includeS);
 		const originalCards = player.getCards("e");
 		const cardx = originalCards.map(createEquipCardCopy);
 		let cardxF = [];
@@ -1408,9 +1349,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			});
 		}
 		processCardSelection(event, player, cardx, cardxF, cardxF2);
-		if (eventFilterCard) {
-			event.filterCard = eventFilterCard;
-		}
+		if (eventFilterCard) event.filterCard = eventFilterCard;
 		const allCards = [...cardx, ...cardxF, ...cardxF2];
 		setupCardStyles(allCards);
 		sortCards(cardx);
@@ -1434,9 +1373,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				});
 		}
 		event.copyCards = false;
-		if (player === game.me) {
-			ui.updatehl();
-		}
+		if (player === game.me) ui.updatehl();
 	}
 	lib.hooks.uncheckBegin.add(async function (event, args) {
 		const player = event.player;
