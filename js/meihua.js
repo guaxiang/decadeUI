@@ -1054,6 +1054,29 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				return !info || !info.nopop || skill.startsWith("olhedao_tianshu_");
 			};
 			const getSkillName = skill => lib.translate?.[skill] || skill;
+			// 获取技能图标
+			const getSkillIcon = (skill, player) => {
+				const info = get.info(skill);
+				if (!info) return null;
+				// 限定技图标
+				if (info.limited) {
+					return "xiandingjihs.png";
+				}
+				// 觉醒技图标
+				if (info.juexingji) {
+					return "juexingjihs.png";
+				}
+				// 转换技图标
+				if (get.is.zhuanhuanji(skill, player)) {
+					let imgType = "yang";
+					let markNode = player && player.node && player.node.xSkillMarks && player.node.xSkillMarks.querySelector(`.skillMarkItem.zhuanhuanji[data-id="${skill}"]`);
+					if (markNode && markNode.classList.contains("yin")) {
+						imgType = "ying";
+					}
+					return imgType === "yang" ? "mark_yanghs.png" : "mark_yinghs.png";
+				}
+				return null;
+			};
 			const showSkillDescription = (skill, targetElement) => {
 				// 移除已存在的技能描述弹窗
 				const existingPopup = document.querySelector(".baby_skill_popup");
@@ -1142,6 +1165,19 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					skillBox.setAttribute("data-skill", skill);
 					skillBox.textContent = getSkillName(skill).slice(0, 2);
 					skillBox.style.cursor = "pointer";
+					// 添加技能图标
+					const skillIcon = getSkillIcon(skill, player);
+					if (skillIcon) {
+						const iconImg = document.createElement("img");
+						iconImg.src = `extension/十周年UI/shoushaUI/skill/babysha/${skillIcon}`;
+						iconImg.style.position = "absolute";
+						iconImg.style.top = "3px";
+						iconImg.style.right = "-15px";
+						iconImg.style.width = "16px";
+						iconImg.style.height = "16px";
+						iconImg.style.zIndex = "103";
+						skillList.appendChild(iconImg);
+					}
 					skillBox.addEventListener("click", e => {
 						e.stopPropagation();
 						game.playAudio("..", "extension", "十周年UI", "audio/BtnSure");
@@ -1193,6 +1229,18 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				if (Array.isArray(skill)) skill.forEach(applyRemove);
 				else applyRemove(skill);
 				return res;
+			};
+			lib.skill._zhuanhuanjiUpdate = {
+				trigger: { global: "changeZhuanhuanji" },
+				forced: true,
+				popup: false,
+				silent: true,
+				filter(event, player) {
+					return getAllPlayersCount() <= 5 && event.player && event.skill;
+				},
+				async content(event, trigger, player) {
+					updateSkillDisplay(event.player);
+				},
 			};
 			return { refreshPlayerSkills };
 		})();
@@ -1422,3 +1470,5 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 	}
 });
+
+

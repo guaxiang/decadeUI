@@ -208,6 +208,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const className = lib.skill[item.id].limited ? ".xiandingji.enable-skill" : ".skillitem.enable-skill";
 				const node = ui.create.div(className, this.node.combined, skillName);
 				node.dataset.id = item.id;
+				
+				// 添加技能图标
+				this.addSkillIcon(node, item.id);
+				
 				node.addEventListener("click", () => {
 					if (lib.config["extension_十周年UI_bettersound"]) game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 				});
@@ -219,6 +223,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const skillName = get.translation(item.name).slice(0, 2);
 				const node = ui.create.div(".skillitem.trigger-skill", this.node.combined, skillName);
 				node.dataset.id = item.id;
+				
+				// 添加技能图标
+				this.addSkillIcon(node, item.id);
 			},
 			update() {
 				const skills = this.getAllSkills();
@@ -273,6 +280,60 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills2) skills.addArray(ui.skills2.skills);
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
 				return skills;
+			},
+			addSkillIcon(node, skillId) {
+				const info = lib.skill[skillId];
+				if (!info) return;
+				
+				node.style.position = "relative";
+				
+				// 限定技图标
+				if (info.limited || (info.intro && info.intro.content === "limited")) {
+					const xiandingImg = document.createElement("img");
+					xiandingImg.className = "skill-xianding-icon";
+					xiandingImg.src = "extension/十周年UI/shoushaUI/skill/babysha/xiandingjihs.png";
+					xiandingImg.style.position = "absolute";
+					xiandingImg.style.top = "0";
+					xiandingImg.style.left = "0";
+					xiandingImg.style.width = "16px";
+					xiandingImg.style.height = "16px";
+					node.appendChild(xiandingImg);
+				}
+				
+				// 觉醒技图标
+				if (info.juexingji || info.dutySkill) {
+					const juexingImg = document.createElement("img");
+					juexingImg.className = "skill-juexing-icon";
+					juexingImg.src = "extension/十周年UI/shoushaUI/skill/babysha/juexingjihs.png";
+					juexingImg.style.position = "absolute";
+					juexingImg.style.top = "0";
+					juexingImg.style.left = "0";
+					juexingImg.style.width = "16px";
+					juexingImg.style.height = "16px";
+					node.appendChild(juexingImg);
+				}
+				
+				// 转换技图标
+				if (info.zhuanhuanji) {
+					const player = game.me;
+					let imgType = "yang";
+					let markNode = player && player.node && player.node.xSkillMarks && player.node.xSkillMarks.querySelector(`.skillMarkItem.zhuanhuanji[data-id="${skillId}"]`);
+					if (markNode && markNode.classList.contains("yin")) {
+						imgType = "ying";
+					}
+					
+					const zhuanhuanImg = document.createElement("img");
+					zhuanhuanImg.className = "skill-zhuanhuan-icon";
+					zhuanhuanImg.src = imgType === "yang" 
+						? "extension/十周年UI/shoushaUI/skill/babysha/mark_yanghs.png"
+						: "extension/十周年UI/shoushaUI/skill/babysha/mark_yinghs.png";
+					zhuanhuanImg.style.position = "absolute";
+					zhuanhuanImg.style.top = "0";
+					zhuanhuanImg.style.left = "0";
+					zhuanhuanImg.style.width = "16px";
+					zhuanhuanImg.style.height = "16px";
+					node.appendChild(zhuanhuanImg);
+				}
 			},
 		},
 		checkSkill(skill) {
