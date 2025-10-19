@@ -1255,6 +1255,73 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	}
 	lib.clearAllSkillDisplay = clearAllSkillDisplay;
 	// 装备入手
+	ui.selected.cards = new Proxy([], {
+		get(target, prop) {
+			if (typeof target[prop] === "function") return target[prop].bind(target);
+			return target[prop];
+		},
+		set(target, prop, value) {
+			target[prop] = value;
+			return true;
+		},
+	});
+	function syncRelatedSelection(card, isAdd) {
+		if (isAdd) {
+			card.relatedCard.classList.add("selected");
+			if (!ui.selected.cards.includes(card.relatedCard)) ui.selected.cards.push(card.relatedCard);
+		} else {
+			card.relatedCard.classList.remove("selected");
+			const idx = ui.selected.cards.indexOf(card.relatedCard);
+			if (idx !== -1) ui.selected.cards.splice(idx, 1);
+		}
+	}
+	const cardsProxy = new Proxy(ui.selected.cards, {
+		get(target, prop) {
+			if (prop === "push") {
+				return function (...args) {
+					for (const card of args) {
+						if (!target.includes(card)) {
+							target[target.length] = card;
+							if (card.relatedCard) syncRelatedSelection(card, true);
+						}
+					}
+					return target.length;
+				};
+			}
+			if (prop === "add") {
+				return function (card) {
+					if (!target.includes(card)) {
+						target.push(card);
+						if (card.relatedCard) syncRelatedSelection(card, true);
+					}
+				};
+			}
+			if (prop === "splice") {
+				return function (start, deleteCount, ...inserted) {
+					const removed = target.slice(start, start + deleteCount);
+					const result = Array.prototype.splice.call(target, start, deleteCount, ...inserted);
+					for (const card of removed) {
+						if (card.relatedCard) syncRelatedSelection(card, false);
+					}
+					for (const card of inserted) {
+						if (card.relatedCard) syncRelatedSelection(card, true);
+					}
+					return result;
+				};
+			}
+			if (prop === "remove") {
+				return function (card) {
+					const idx = target.indexOf(card);
+					if (idx !== -1) {
+						target.splice(idx, 1);
+						if (card.relatedCard) syncRelatedSelection(card, false);
+					}
+				};
+			}
+			return Reflect.get(target, prop);
+		},
+	});
+	ui.selected.cards = cardsProxy;
 	function createEquipCardCopy(originalCard) {
 		const card = ui.create.card(ui.special);
 		card.init([originalCard.suit, originalCard.number, originalCard.name, originalCard.nature]);
@@ -1263,18 +1330,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		card.storage = originalCard.storage;
 		card.relatedCard = originalCard;
 		card.owner = get.owner(originalCard);
-		card.addEventListener("click", () => {
-			const isSelected = ui.selected.cards.includes(card.relatedCard);
-			if (!isSelected) {
-				ui.selected.cards.remove(card);
-				ui.selected.cards.add(card.relatedCard);
-				card.relatedCard.classList.add("selected");
-			} else {
-				ui.selected.cards.remove(card.relatedCard);
-				card.relatedCard.classList.remove("selected");
-			}
-			game.check();
-		});
 		return card;
 	}
 	function createFilterCard(originalFilter, includeS) {
@@ -1329,6 +1384,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 	}
 	lib.hooks.checkBegin.add(async function (event) {
+		if (lib.config["extension_十周年UI_aloneEquip"]) return;
 		const player = event.player;
 		const isValidEvent = event.position && typeof event.position === "string" && event.position.includes("e") && player.countCards("e") && !event.copyCards && ["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard", "chooseCardTarget", "chooseToGive"].includes(event.name);
 		if (!isValidEvent) return;
@@ -1385,9 +1441,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	lib.hooks.uncheckBegin.add(async function (event, args) {
 		const player = event.player;
 		const shouldCleanup = args.includes("card") && event.copyCards && (event.result || (["chooseToUse", "chooseToRespond"].includes(event.name) && !event.skill && !event.result));
-		if (shouldCleanup) {
-			cleanupEquipCards(event, player);
-		}
+		if (lib.config["extension_十周年UI_aloneEquip"] || shouldCleanup) cleanupEquipCards(event, player);
 	});
 	// 卡牌选中提示
 	if (lib.config["extension_十周年UI_cardPrompt"]) {
@@ -1470,5 +1524,3 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 	}
 });
-
-

@@ -391,6 +391,8 @@ export let config = {
 					ui.equipSolts.me = undefined;
 				}
 			}
+			game.uncheck();
+			game.check();
 		},
 	},
 	viewInformationPause: {
