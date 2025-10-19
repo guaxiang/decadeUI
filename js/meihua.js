@@ -1263,14 +1263,17 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		card.storage = originalCard.storage;
 		card.relatedCard = originalCard;
 		card.owner = get.owner(originalCard);
-		const observer = new MutationObserver((mutations) => {
+		const observer = new MutationObserver(mutations => {
 			if (get.position(card) === "s" && card.hasGaintag("equipHand")) {
 				for (const m of mutations) {
 					if (m.attributeName === "class") {
+						ui.selected.cards.remove(card);
 						if (card.classList.contains("selected")) {
+							card.updateTransform(true, 0);
 							card.relatedCard.classList.add("selected");
 							ui.selected.cards.add(card.relatedCard);
 						} else {
+							card.updateTransform(false, 0);
 							card.relatedCard.classList.remove("selected");
 							ui.selected.cards.remove(card.relatedCard);
 						}
@@ -1281,6 +1284,34 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		observer.observe(card, { attributes: true, attributeFilter: ["class"] });
 		return card;
 	}
+	ui.create.cardChooseAll = function () {
+		const event = get.event();
+		if (!event.isMine() || !event.allowChooseAll || event.complexCard || event.complexSelect || !lib.config.choose_all_button) return null;
+		const selectCard = event.selectCard;
+		const range = get.select(selectCard);
+		if (range[1] <= 1) return null;
+		return (event.cardChooseAll = ui.create.control("全选", function () {
+			const event2 = get.event(),
+				player = event2.player;
+			const selecteds = [...ui.selected.cards].map(card => player.getCards("s", i => i.relatedCard === card)[0] || card);
+			ui.selected.cards.length = 0;
+			game.check();
+			const selectables = get.selectableCards();
+			const cards = selecteds.length ? [...new Set(selectables).difference(selecteds)] : selectables;
+			if (cards.length <= range[1]) ui.selected.cards.push(...cards);
+			else ui.selected.cards.push(...cards.randomGets(range[1]));
+			for (const card of ui.selected.cards) {
+				card.classList.add("selected");
+				card.updateTransform(true, 0);
+			}
+			for (const card of selecteds) {
+				card.classList.remove("selected");
+				card.updateTransform(false, 0);
+			}
+			game.check();
+			if (typeof event2.custom?.add?.card == "function") _status.event.custom.add.card();
+		}));
+	};
 	function createFilterCard(originalFilter, includeS) {
 		return function (card, player, target) {
 			const relatedCard = card.relatedCard || card;
