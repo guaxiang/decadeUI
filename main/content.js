@@ -1469,7 +1469,8 @@ export async function content(config, pack) {
 											const tryImg = new Image();
 											tryImg.onload = function () {
 												cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${tryImg.src}")`;
-												cardx.node.judgeMark.node.judge.innerText = "0px";
+												cardx.node.judgeMark.node.judge.innerText = "";
+												cardx.node.judgeMark.node.judge.style.fontSize = "";
 											};
 											tryImg.onerror = function () {
 												cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${basePath}tongyong.png")`;
