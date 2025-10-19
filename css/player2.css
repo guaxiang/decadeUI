@@ -1312,7 +1312,7 @@
 	z-index: 62;
 }
 .player.turnedover>.turned-over {
-	opacity: 0.8;
+	opacity: 1;
 }
 .turnedover>div {
 	opacity: initial;
