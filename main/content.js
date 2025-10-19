@@ -1470,7 +1470,7 @@ export async function content(config, pack) {
 											tryImg.onload = function () {
 												cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${tryImg.src}")`;
 												cardx.node.judgeMark.node.judge.innerText = "";
-												cardx.node.judgeMark.node.judge.style.fontSize = "";
+												cardx.node.judgeMark.node.judge.style.fontSize = "0px";
 											};
 											tryImg.onerror = function () {
 												cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${basePath}tongyong.png")`;
@@ -2024,7 +2024,7 @@ export async function content(config, pack) {
 								if (!get.is.zhuanhuanji(skill, this)) return;
 								if (this.hiddenSkills.includes(skill) && this !== game.me) return;
 								var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
-								var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
+								var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + skill + "_yang.png";
 								function imageExists(url) {
 									var xhr = new XMLHttpRequest();
 									xhr.open("GET", url, false);
@@ -2038,10 +2038,10 @@ export async function content(config, pack) {
 								}
 								if (!mark) return;
 								var style = lib.config.extension_十周年UI_newDecadeStyle;
-								var yangUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
-								var yingUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_ying.png";
-								var defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png";
-								var defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_ying.png";
+								var yangUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + skill + "_yang.png";
+								var yingUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + skill + "_ying.png";
+								var defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_yang.png";
+								var defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_ying.png";
 								if (style == "on" || style == "othersOff" || style == "onlineUI" || style == "babysha") {
 									if (mark.classList.contains("yin")) {
 										mark.classList.remove("yin");
@@ -5012,6 +5012,19 @@ export async function content(config, pack) {
 							var sender = this;
 							if (!sender.skills) sender.skills = [];
 							if (!sender.skills.includes(skill) && lib.translate[skill]) {
+								//手杀样式下将获得技能显示在标记内
+								if (lib.config.extension_十周年UI_newDecadeStyle == "off") {
+									var info = lib.skill[skill];
+									if (!info || info.charlotte || info.sub || (info.mark && !info.limited) || info.nopop || info.popup === false) return;
+									if (info.onremove && game.me != this.player.storage[skill]) return;
+									if (!info.intro)
+										info.intro = {
+											content() {
+												return get.translation(skill + "_info");
+											},
+										};
+									player.markSkill(skill);
+								}
 								sender.skills.push(skill);
 								var html = "";
 								for (var i = 0; i < sender.skills.length; i++) {
