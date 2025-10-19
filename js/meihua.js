@@ -1274,6 +1274,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			const idx = ui.selected.cards.indexOf(card.relatedCard);
 			if (idx !== -1) ui.selected.cards.splice(idx, 1);
 		}
+		game.check();
 	}
 	const cardsProxy = new Proxy(ui.selected.cards, {
 		get(target, prop) {
