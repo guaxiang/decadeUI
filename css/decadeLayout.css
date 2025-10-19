@@ -199,6 +199,9 @@
 #arena[data-new-decade-style="babysha"]>.player {
 	--w: 120px !important;
 }
+#arena[data-new-decade-style="codename"]>.player {
+	--w: 120px !important;
+}
 /*--------------------分割线--------------------*/
 /*8人座*/
 #arena[data-layout="nova"][data-number="8"]>.player[data-position="1"] {

@@ -4950,6 +4950,7 @@ export async function content(config, pack) {
 								babysha: "image/decorationh/identity3_",
 								on: "image/decoration/identity_",
 								othersOff: "image/decoration/identity_",
+								codename: "image/decoration_code/identity5_",
 							};
 							var srcPrefix = srcMap[style] || "image/decorations/identity2_";
 							image.src = decadeUIPath + srcPrefix + filename + ".png";
@@ -5723,7 +5724,10 @@ export async function content(config, pack) {
 				} else {
 					/*-----------------分割线-----------------*/
 					// 手牌折叠方式
-					if (get.is && typeof get.is.phoneLayout === "function" && lib.config.phonelayout) {
+					if (lib.config.extension_十周年UI_newDecadeStyle == "codename") {
+						// codename样式始终居中
+						xStart = (ui.arena.offsetWidth - totalW) / 2 - bounds.x;
+					} else if (get.is && typeof get.is.phoneLayout === "function" && lib.config.phonelayout) {
 						xStart += 0; // 触屏模式靠左
 					} else if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
 						xStart = (ui.arena.offsetWidth - totalW) / 2 - bounds.x;

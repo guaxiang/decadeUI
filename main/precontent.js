@@ -71,7 +71,7 @@ export async function precontent() {
 			// 基础CSS加载
 			["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"].forEach(path => this.css(decadeUIPath + path));
 			const style = lib.config.extension_十周年UI_newDecadeStyle;
-			const styleIndex = ["on", "off", "othersOff", "onlineUI", "babysha"].indexOf(style);
+			const styleIndex = ["on", "off", "othersOff", "onlineUI", "babysha", "codename"].indexOf(style);
 			if (style !== void 0) {
 				this.css(decadeUIPath + `css/player${styleIndex + 1}.css`);
 			} else {
@@ -106,6 +106,7 @@ export async function precontent() {
 					othersOff: 3,
 					onlineUI: 4,
 					babysha: 5,
+					codename: 6,
 				}[style] || 2;
 			if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode == "hs_hearthstone")) {
 				["character", "lbtn", "skill"].forEach(pack => {
@@ -532,6 +533,7 @@ export async function precontent() {
 		othersOff: 3,
 		onlineUI: 4,
 		babysha: 5,
+		codename: 6,
 	};
 	if (!(mode == "chess" || mode == "tafang" || mode == "hs_hearthstone")) {
 		var packs = [/*'card',*/ "character", "lbtn", "skill"];

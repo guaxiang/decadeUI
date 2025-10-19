@@ -33,6 +33,7 @@ export let config = {
 			othersOff: "一将成名",
 			onlineUI: "online",
 			babysha: "欢乐三国杀",
+			codename: "名将杀",
 		},
 		onclick(control) {
 			const origin = lib.config.extension_十周年UI_newDecadeStyle;
@@ -44,7 +45,7 @@ export let config = {
 		update() {
 			if (window.decadeUI) {
 				ui.arena.dataset.newDecadeStyle = lib.config.extension_十周年UI_newDecadeStyle;
-				ui.arena.dataset.decadeLayout = lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff" || lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha" ? "on" : "off";
+				ui.arena.dataset.decadeLayout = lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff" || lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha"|| lib.config.extension_十周年UI_newDecadeStyle == "codename" ? "on" : "off";
 			}
 		},
 	},
