@@ -4037,7 +4037,8 @@ export async function content(config, pack) {
 								custom.add.card();
 							}
 							game.check();
-							if (lib.config.popequip && lib.config.phonelayout && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
+							if (lib.config.popequip && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
+								if (this.classList && this.classList.contains("emptyequip")) return;
 								var rect = this.getBoundingClientRect();
 								ui.click.touchpop();
 								ui.click.intro.call(this.parentNode, {
@@ -4047,7 +4048,91 @@ export async function content(config, pack) {
 							}
 						},
 						intro() {
+							if (
+								(this && this.classList && this.classList.contains("emptyequip")) ||
+								(this && this.parentNode && this.parentNode.classList && this.parentNode.classList.contains("emptyequip")) ||
+								(this && this.dataset && typeof this.dataset.name === "string" && this.dataset.name.indexOf("empty_equip") === 0)
+							) {
+								return;
+							}
 							if (this.classList.contains("infohidden")) return;
+							// 修复十周年UI触屏布局下装备介绍被压缩的问题
+							if (this.classList.contains("card") &&
+								this.parentNode &&
+								this.parentNode.classList.contains("equips") &&
+								get.is.phoneLayout() &&
+								!get.is.mobileMe(this.parentNode.parentNode)) {
+								var e = arguments[0];
+								if (_status.dragged) {
+									return;
+								}
+								_status.clicked = true;
+								if (this.classList.contains("player") && !this.name) {
+									return;
+								}
+								if (this.parentNode == ui.historybar) {
+									if (ui.historybar.style.zIndex == "22") {
+										if (_status.removePop) {
+											if (_status.removePop(this) == false) {
+												return;
+											}
+										} else {
+											return;
+										}
+									}
+									ui.historybar.style.zIndex = 22;
+								}
+								var uiintro = get.nodeintro(this, false, e);
+								if (!uiintro) {
+									return;
+								}
+								uiintro.classList.add("popped");
+								uiintro.classList.add("static");
+								ui.window.appendChild(uiintro);
+								var layer = ui.create.div(".poplayer", ui.window);
+								var clicklayer = function (e) {
+									if (_status.touchpopping) {
+										return;
+									}
+									delete ui.throwEmotion;
+									delete _status.removePop;
+									game.closePoptipDialog();
+									uiintro.delete();
+									this.remove();
+									ui.historybar.style.zIndex = "";
+									delete _status.currentlogv;
+									if (!ui.arena.classList.contains("menupaused") && !uiintro.noresume) {
+										game.resume2();
+									}
+									if (e && e.stopPropagation) {
+										e.stopPropagation();
+									}
+									if (uiintro._onclose) {
+										uiintro._onclose();
+									}
+									return false;
+								};
+								layer.addEventListener(lib.config.touchscreen ? "touchend" : "click", clicklayer);
+								if (!lib.config.touchscreen) {
+									layer.oncontextmenu = clicklayer;
+								}
+								if (this.parentNode == ui.historybar && lib.config.touchscreen) {
+									var rect = this.getBoundingClientRect();
+									e = { clientX: 0, clientY: rect.top + 30 };
+								}
+								lib.placePoppedDialog(uiintro, e);
+								if (this.parentNode == ui.historybar) {
+									if (lib.config.show_history == "right") {
+										uiintro.style.left = "calc(100% - 10px)";
+										uiintro.style.right = "auto";
+									} else {
+										uiintro.style.right = "calc(100% - 10px)";
+										uiintro.style.left = "auto";
+									}
+								}
+								return;
+							}
+
 							return base.ui.click.intro.apply(this, arguments);
 						},
 						window() {
