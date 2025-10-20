@@ -5276,8 +5276,11 @@ export async function content(config, pack) {
 								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : decadeUI.config.newDecadeStyle == "othersOff" ? (lib.config.extension_十周年UI_borderLevel == "one" ? "image/decoration/name_" : "image/decoration/group_") : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
 								const create = () => {
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-									else {
+									if (decadeUI.config.newDecadeStyle == "codename") {
+										this.node.campWrap.node.campName.innerHTML = "";
+									} else if (!this._finalGroup) {
+										this.node.campWrap.node.campName.innerHTML = "";
+									} else {
 										const name = get.translation(this._finalGroup),
 											str = get.plainText(name);
 										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
@@ -5292,8 +5295,11 @@ export async function content(config, pack) {
 								image.src = url;
 							}
 						} else {
-							if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-							else {
+							if (decadeUI.config.newDecadeStyle == "codename") {
+								this.node.campWrap.node.campName.innerHTML = "";
+							} else if (!this._finalGroup) {
+								this.node.campWrap.node.campName.innerHTML = "";
+							} else {
 								const name = get.translation(this._finalGroup),
 									str = get.plainText(name);
 								if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
@@ -5304,8 +5310,11 @@ export async function content(config, pack) {
 								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : decadeUI.config.newDecadeStyle == "othersOff" ? (lib.config.extension_十周年UI_borderLevel == "one" ? "image/decoration/name_" : "image/decoration/group_") : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
 								const create = () => {
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-									else {
+									if (decadeUI.config.newDecadeStyle == "codename") {
+										this.node.campWrap.node.campName.innerHTML = "";
+									} else if (!this._finalGroup) {
+										this.node.campWrap.node.campName.innerHTML = "";
+									} else {
 										const name = get.translation(this._finalGroup),
 											str = get.plainText(name);
 										if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
@@ -5319,8 +5328,12 @@ export async function content(config, pack) {
 								image.src = url;
 							} else {
 								this._finalGroup = group;
-								if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-								else {
+								// codename样式下不显示文字势力
+								if (decadeUI.config.newDecadeStyle == "codename") {
+									this.node.campWrap.node.campName.innerHTML = "";
+								} else if (!this._finalGroup) {
+									this.node.campWrap.node.campName.innerHTML = "";
+								} else {
 									const name = get.translation(this._finalGroup),
 										str = get.plainText(name);
 									if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
