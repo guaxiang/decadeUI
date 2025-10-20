@@ -1173,21 +1173,21 @@
 	align-items: center;
 	align-content: center;
 	justify-content: center;
-	left: calc(50% - 47px);
+	left: calc(50% - 60px);
 	top: auto;
 	bottom: 15px;
-	width: 88px;
-	height: 88px;
-	line-height: 38px;
+	width: 130px;
+	height: 130px;
+	line-height: 50px;
 	color: rgb(210, 50, 50);
-	font-size: 38px;
+	font-size: 50px;
 	font-family: xingkai, huangcao, xinwei;
 	font-display: swap;
 	text-shadow: 0 0 5px black, 0 0 10px black, 0 0 15px black;
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
-	transform: none;
+	transform: rotate(-15deg);
 	opacity: 0;
 }
 .player.opposite-camp > .died-identity {

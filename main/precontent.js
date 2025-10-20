@@ -319,7 +319,7 @@ export async function precontent() {
 				});
 				return;
 			}
-			setText = typeof setText === "function" ? setText : () => {};
+			setText = typeof setText === "function" ? setText : () => { };
 			const zip = new JSZip(data);
 			const dirList = [],
 				fileList = [];
@@ -1201,7 +1201,7 @@ export async function precontent() {
 		lib.setScroll(window.qicai);
 		clickFK(window.qicai);
 		//-----7---小酒-------//
-		game.open_xiaojiu = function () {};
+		game.open_xiaojiu = function () { };
 		window.xiaojiu = ui.create.div("hidden", "", game.open_xiaojiu);
 		window.xiaojiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:36px;transition:none;background-size:100% 100%";
 		window.xiaojiu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xiaojiu.png");

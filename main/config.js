@@ -45,7 +45,7 @@ export let config = {
 		update() {
 			if (window.decadeUI) {
 				ui.arena.dataset.newDecadeStyle = lib.config.extension_十周年UI_newDecadeStyle;
-				ui.arena.dataset.decadeLayout = lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff" || lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha"|| lib.config.extension_十周年UI_newDecadeStyle == "codename" ? "on" : "off";
+				ui.arena.dataset.decadeLayout = lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff" || lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha" || lib.config.extension_十周年UI_newDecadeStyle == "codename" ? "on" : "off";
 			}
 		},
 	},
@@ -180,7 +180,7 @@ export let config = {
 	meanPrettify: {
 		name: "菜单美化",
 		intro: "开启全屏的菜单样式",
-		init: false,
+		init: true,
 		onclick(bool) {
 			game.saveConfig("extension_十周年UI_meanPrettify", bool);
 			if (bool) lib.init.css(window.decadeUIPath + "extension/十周年UI", "menu");
@@ -313,12 +313,12 @@ export let config = {
 	},
 	wujiangbeijing: {
 		name: "武将背景",
-		init: false,
+		init: true,
 		intro: "开启后，单双将和国战模式将用设置好的武将背景",
 	},
 	shiliyouhua: {
 		name: "官方势力",
-		init: false,
+		init: true,
 		intro: "开启后，非魏蜀吴群晋势力的角色将会重新选择势力，且美化势力选择框的展示效果",
 	},
 	forcestyle: {
@@ -334,7 +334,7 @@ export let config = {
 	},
 	cardPrompt: {
 		name: "卡牌提示",
-		init: false,
+		init: true,
 		intro: "开启后，在出牌阶段选择手牌时会显示卡牌描述提示",
 	},
 	handTipHeight: {
@@ -363,7 +363,7 @@ export let config = {
 	},
 	luckycard: {
 		name: "手气卡美化",
-		init: false,
+		init: true,
 		intro: "开启后，开启后手气卡锁定五次",
 	},
 	aloneEquip: {
@@ -377,7 +377,7 @@ export let config = {
 			if (_status.gameStarted && ui && ui.equipSolts) {
 				try {
 					ui.equipSolts.style.display = config ? "" : "none";
-				} catch (e) {}
+				} catch (e) { }
 				if (config && game.me != ui.equipSolts.me) {
 					if (ui.equipSolts.me) {
 						ui.equipSolts.me.appendChild(ui.equipSolts.equips);
@@ -492,7 +492,7 @@ export let config = {
 	},
 	gainSkillsVisible: {
 		name: "获得技能显示",
-		init: "on",
+		init: "othersOn",
 		item: {
 			on: "显示",
 			off: "不显示",
@@ -505,7 +505,7 @@ export let config = {
 	loadingStyle: {
 		name: "更换光标+loading框",
 		intro: "可以更换局内选项框以及光标",
-		init: "on",
+		init: "off",
 		item: {
 			off: "关闭",
 			on: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog2.png);background-size: 100% 100%;"></div>',

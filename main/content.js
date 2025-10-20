@@ -898,6 +898,8 @@ export async function content(config, pack) {
 									that.node.dieidentity.style.left = "25px";
 								} else if (decadeUI.config.newDecadeStyle === "babysha") {
 									url = decadeUIPath + "image/decorationh/dead3_" + identity + ".png";
+								} else if (decadeUI.config.newDecadeStyle === "codename") {
+									url = decadeUIPath + "image/decoration_code/dead_" + identity + ".png";
 								} else {
 									url = decadeUIPath + "image/decoration" + (goon ? "/dead" : "s/dead2") + "_" + identity + ".png";
 								}
