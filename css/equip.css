@@ -345,9 +345,9 @@ body[data-style="off"] {
 	--player-equips-left: var(--player-equips-left-new);
 	--player-equips-right: var(--player-equips-right-new);
 }
-/* codename样式：隐藏装备栏背景图 */
+/* codename样式：调整装备栏背景图透明度 */
 body[data-style="codename"] .equips-wrap > .equips-back > div {
-	display: none;
+	opacity: 0.5;
 }
 /* 兼容性：如果没有设置data-style属性，使用默认样式 */
 body:not([data-style]) {

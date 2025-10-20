@@ -29,19 +29,21 @@
 	width: auto;
 	display: flex;
 	flex-direction: column;
-	/* 改为单列排列 */
+	/* 始终单列排列 */
 	align-items: flex-end;
 	margin-right: 5px;
 	/* 技能间距 */
-	flex-wrap: wrap-reverse;
-	max-height: 900px; /* 4个技能的高度限制 */
+	flex-wrap: nowrap; /* 取消换行 */
+	max-height: 500px; /* 限制高度以启用滚动 */
+	overflow-y: auto; /* 添加垂直滚动 */
+	overflow-x: hidden; /* 隐藏水平滚动 */
 }
-/* 当技能超过6个时启用双列布局和滚动 */
+/* 当技能超过15个时启用滚动 */
 #arena[data-right-layout="on"] > .skill-control .combined.scroll-enabled {
-	flex-direction: row; /* 改为双列排列 */
-	flex-wrap: wrap; /* 允许换行 */
-	justify-content: flex-end; /* 右对齐 */
-	max-height: 900px; /* 限制高度以启用滚动 */
+	flex-direction: column; /* 保持单列排列 */
+	flex-wrap: nowrap; /* 不换行 */
+	justify-content: flex-start; /* 顶部对齐 */
+	max-height: 500px; /* 限制高度以启用滚动 */
 	overflow-y: auto; /* 添加垂直滚动 */
 	overflow-x: hidden; /* 隐藏水平滚动 */
 }
