@@ -96,7 +96,45 @@
 	z-index: 99;
 	position: fixed;
 }
-
+/*---------新版小配件--------*/
+.jiluButton_new {
+	display: block;
+	width: 55px;
+	height: 55px;
+	position: absolute;
+	bottom: 19%;
+	left: 20px;
+	right: auto;
+	background-image: url("./images/uibutton/cd_liaotian.png");
+	background-size: 100% 100%;
+	border-radius: 1px;
+	z-index: 4;
+}
+.huanfuButton_new {
+	display: block;
+	width: 55px;
+	height: 55px;
+	bottom: 29%;
+	position: absolute;
+	left: 22px;
+	right: auto;
+	background-image: url("./images/uibutton/cd_liwu.png");
+	background-size: 100% 100%;
+	border-radius: 1px;
+	z-index: 3;
+}
+.meiguiButton_new {
+	display: block;
+	width: 55px;
+	height: 55px;
+	position: absolute;
+	bottom: 9%;
+	left: 20px;
+	right: auto;
+	background-image: url("./images/uibutton/cd_juli.png");
+	background-size: 100% 100%;
+	z-index: 3;
+}
 /*-----------------------------*/
 .lbtn-confirm:not(.closing).removing {
 	opacity: 1 !important;

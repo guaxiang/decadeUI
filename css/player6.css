@@ -173,6 +173,13 @@
 	transition: none;
 }
 .player > .camp-wrap > .camp-back {
+	background-image: url("../image/decoration_code/fx_ui_fusu03.png");
+	width: 100%;
+	height: 90%;
+	top: 0px;
+	left: 0px;
+	background-size: 100% 100%;
+	pointer-events: none;
 }
 .player.unseen > .camp-wrap > .camp-back {
 }
@@ -245,10 +252,10 @@
 /* 等阶边框 */
 .player > .camp-wrap > .camp-border {
 	display: block;
-    left: 100px;
+    left: 90px;
     top: -20px;
-    width: 165%;
-    height: 70%;
+    width: 190%;
+    height: 80%;
 	position: absolute;
 	background-image: url("../image/decoration_code/border_camp3.png");
 	background-size: 100% 100%;
@@ -303,6 +310,9 @@
 	white-space: nowrap;
 	writing-mode: vertical-rl;
 	-webkit-writing-mode: vertical-rl;
+}
+.player > .camp-wrap:not([data-camp]) > .camp-back {
+	transform: translate(-8px, -20px);
 }
 .player.unseen > .camp-wrap > .avatar-name,
 .player:not(.unseen) > .camp-wrap > .avatar-name-default,
@@ -1061,9 +1071,9 @@
 #arena > .player:not(.minskin) > .identity {
 	left: auto;
     top: 0px;
-    right: 0px;
-    width: 32px;
-    height: 35px;
+    right: -2px;
+    width: 30px;
+    height: 33px;
 	line-height: 31px;
 	font-size: 31px;
 	background-size: 100% 100%;
@@ -1288,287 +1298,4 @@
 	box-sizing: border-box;
 	word-break: break-all;
 	z-index: 99;
-}
-/* 角标 */
-.player > .jie-mark,
-.player > .shen-mark,
-.player > .wu-mark,
-.player > .clan-mark,
-.player > .std-mark,
-.player > .dc-mark,
-.player > .yue-mark,
-.player > .sb-mark,
-.player > .ol-mark,
-.player > .sp-mark,
-.player > .star-mark,
-.player > .yao-mark,
-.player > .dm-mark,
-.player > .shan-mark,
-.player > .jin-mark,
-.player > .v-mark,
-.player > .mb-mark,
-.player > .xuan-mark,
-.player > .pot-mark,
-.player > .you-mark,
-.player > .tw-mark,
-.player > .huan-mark,
-.player > .jsrg-mark,
-.player > .jd-mark,
-.player > .shen-mark,
-.player > .ren-mark,
-.player > .nailong-mark,
-.player > .lie-mark,
-.player > .hanshi-mark,
-.player > .hun-mark,
-.player > .han-mark,
-.player > .kuang-mark,
-.player > .old-mark,
-.player > .lao-mark,
-.player > .Mbaby-mark,
-.player > .miao-mark,
-.player > .nian-mark,
-.player > .zhan-mark,
-.player > .wei-mark,
-.player > .ji-mark,
-.player > .sk-mark,
-.player > .sr-mark,
-.player > .tao-mark,
-.player > .chang-mark,
-.player > .wn-mark,
-.player > .jing-mark,
-.player > .sxrm-mark,
-.player > .meng-mark,
-.player > .cheng-mark,
-.player > .zhuan-mark,
-.player > .he-mark,
-.player > .shuai-mark,
-.player > .xing-mark,
-.player > .scl-mark,
-.player > .jiang-mark,
-.player > .yongjian-mark,
-.player > .jun-mark,
-.player > .xia-mark,
-.player > .k-mark,
-.player > .zhijiang-mark,
-.player > .long-mark,
-.player > .eu-mark,
-.player > .jiding-mark,
-.player > .yy-mark,
-.player > .jianghua-mark,
-.player > .she-mark,
-.player > .qingshi-mark,
-.player > .xuyuan-mark,
-.player > .fengyun-mark {
-	position: absolute;
-	top: 108px;
-	left: -11px;
-	width: 22px;
-	height: 34px;
-	background-size: 100% 100%;
-	pointer-events: none;
-	z-index: 87;
-}
-.player > .jie-mark {
-	background-image: url("../image/mark/mark_jie.png");
-}
-.player > .shen-mark {
-	background-image: url("../image/mark/mark_shen.png");
-}
-.player > .wu-mark {
-	background-image: url("../image/mark/mark_wu.png");
-}
-.player > .clan-mark {
-	background-image: url("../image/mark/mark_clan.png");
-}
-.player > .std-mark {
-	background-image: url("../image/mark/mark_std.png");
-}
-.player > .dc-mark {
-	background-image: url("../image/mark/mark_dc.png");
-}
-.player > .yue-mark {
-	background-image: url("../image/mark/mark_yue.png");
-}
-.player > .sb-mark {
-	background-image: url("../image/mark/mark_sb.png");
-}
-.player > .ol-mark {
-	background-image: url("../image/mark/mark_ol.png");
-}
-.player > .sp-mark {
-	background-image: url("../image/mark/mark_sp.png");
-}
-.player > .star-mark {
-	background-image: url("../image/mark/mark_star.png");
-}
-.player > .yao-mark {
-	background-image: url("../image/mark/mark_yao.png");
-}
-.player > .dm-mark {
-	background-image: url("../image/mark/mark_dm.png");
-}
-.player > .shan-mark {
-	background-image: url("../image/mark/mark_shan.png");
-}
-.player > .jin-mark {
-	background-image: url("../image/mark/mark_jin.png");
-}
-.player > .v-mark {
-	background-image: url("../image/mark/mark_v.png");
-}
-.player > .mb-mark {
-	background-image: url("../image/mark/mark_mb.png");
-}
-.player > .xuan-mark {
-	background-image: url("../image/mark/mark_xuan.png");
-}
-.player > .pot-mark {
-	background-image: url("../image/mark/mark_pot.png");
-}
-.player > .you-mark {
-	background-image: url("../image/mark/mark_you.png");
-}
-.player > .tw-mark {
-	background-image: url("../image/mark/mark_tw.png");
-}
-.player > .huan-mark {
-	background-image: url("../image/mark/mark_huan.png");
-}
-.player > .jsrg-mark {
-	background-image: url("../image/mark/mark_jsrg.png");
-}
-.player > .jd-mark {
-	background-image: url("../image/mark/mark_jd.png");
-}
-.player > .ren-mark {
-	background-image: url("../image/mark/mark_ren.png");
-}
-.player > .nailong-mark {
-	background-image: url("../image/mark/mark_nailong.png");
-}
-.player > .lie-mark {
-	background-image: url("../image/mark/mark_lie.png");
-}
-.player > .hanshi-mark {
-	background-image: url("../image/mark/mark_hanshi.png");
-}
-.player > .hun-mark {
-	background-image: url("../image/mark/mark_hun.png");
-}
-.player > .han-mark {
-	background-image: url("../image/mark/mark_han.png");
-}
-.player > .kuang-mark {
-	background-image: url("../image/mark/mark_kuang.png");
-}
-.player > .old-mark {
-	background-image: url("../image/mark/mark_old.png");
-}
-.player > .miao-mark {
-	background-image: url("../image/mark/mark_miao.png");
-}
-.player > .nian-mark {
-	background-image: url("../image/mark/mark_nian.png");
-}
-.player > .zhan-mark {
-	background-image: url("../image/mark/mark_zhan.png");
-}
-.player > .wei-mark {
-	background-image: url("../image/mark/mark_wei.png");
-}
-.player > .ji-mark {
-	background-image: url("../image/mark/mark_ji.png");
-}
-.player > .sk-mark {
-	background-image: url("../image/mark/mark_sk.png");
-}
-.player > .sr-mark {
-	background-image: url("../image/mark/mark_sr.png");
-}
-.player > .Mbaby-mark {
-	background-image: url("../image/mark/mark_Mbaby.png");
-}
-.player > .tao-mark {
-	background-image: url("../image/mark/mark_tao.png");
-}
-.player > .chang-mark {
-	background-image: url("../image/mark/mark_chang.png");
-}
-.player > .wn-mark {
-	background-image: url("../image/mark/mark_wn.png");
-}
-.player > .jing-mark {
-	background-image: url("../image/mark/mark_jing.png");
-}
-.player > .lao-mark {
-	background-image: url("../image/mark/mark_lao.png");
-}
-.player > .sxrm-mark {
-	background-image: url("../image/mark/mark_sxrm.png");
-}
-.player > .meng-mark {
-	background-image: url("../image/mark/mark_meng.png");
-}
-.player > .cheng-mark {
-	background-image: url("../image/mark/mark_cheng.png");
-}
-.player > .zhuan-mark {
-	background-image: url("../image/mark/mark_zhuan.png");
-}
-.player > .he-mark {
-	background-image: url("../image/mark/mark_he.png");
-}
-.player > .shuai-mark {
-	background-image: url("../image/mark/mark_shuai.png");
-}
-.player > .xing-mark {
-	background-image: url("../image/mark/mark_xing.png");
-}
-.player > .scl-mark {
-	background-image: url("../image/mark/mark_scl.png");
-}
-.player > .jiang-mark {
-	background-image: url("../image/mark/mark_jiang.png");
-}
-.player > .yongjian-mark {
-	background-image: url("../image/mark/mark_yongjian.png");
-}
-.player > .jun-mark {
-	background-image: url("../image/mark/mark_jun.png");
-}
-.player > .xia-mark {
-	background-image: url("../image/mark/mark_xia.png");
-}
-.player > .k-mark {
-	background-image: url("../image/mark/mark_k.png");
-}
-.player > .zhijiang-mark {
-	background-image: url("../image/mark/mark_zhijiang.png");
-}
-.player > .long-mark {
-	background-image: url("../image/mark/mark_long.png");
-}
-.player > .eu-mark {
-	background-image: url("../image/mark/mark_eu.png");
-}
-.player > .jiding-mark {
-	background-image: url("../image/mark/mark_jiding.png");
-}
-.player > .yy-mark {
-	background-image: url("../image/mark/mark_yy.png");
-}
-.player > .jianghua-mark {
-	background-image: url("../image/mark/mark_jianghua.png");
-}
-.player > .she-mark {
-	background-image: url("../image/mark/mark_she.png");
-}
-.player > .qingshi-mark {
-	background-image: url("../image/mark/mark_qingshi.png");
-}
-.player > .xuyuan-mark {
-	background-image: url("../image/mark/mark_xuyuan.png");
-}
-.player > .fengyun-mark {
-	background-image: url("../image/mark/mark_fengyun.png");
 }

@@ -4057,11 +4057,7 @@ export async function content(config, pack) {
 							}
 							if (this.classList.contains("infohidden")) return;
 							// 修复十周年UI触屏布局下装备介绍被压缩的问题
-							if (this.classList.contains("card") &&
-								this.parentNode &&
-								this.parentNode.classList.contains("equips") &&
-								get.is.phoneLayout() &&
-								!get.is.mobileMe(this.parentNode.parentNode)) {
+							if (this.classList.contains("card") &&this.parentNode &&this.parentNode.classList.contains("equips") &&get.is.phoneLayout() &&!get.is.mobileMe(this.parentNode.parentNode)) {
 								var e = arguments[0];
 								if (_status.dragged) {
 									return;
@@ -4132,7 +4128,6 @@ export async function content(config, pack) {
 								}
 								return;
 							}
-
 							return base.ui.click.intro.apply(this, arguments);
 						},
 						window() {
@@ -4915,6 +4910,13 @@ export async function content(config, pack) {
 								this.parentNode.classList.add("guozhan-mode");
 								return;
 							}
+ 							var currentStyle = lib.config.extension_十周年UI_newDecadeStyle;
+ 							if (currentStyle === "codename" && value === "猜") {
+ 								this.innerText = "";
+ 								this.style.visibility = "";
+ 								this.parentNode.style.backgroundImage = "";
+ 								return;
+ 							}
 							var filename;
 							var checked;
 							var identity = this.parentNode.dataset.color;

@@ -109,7 +109,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		const sortButton = ui.create.node("img");
 		sortButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/" + sortImg;
 		let styleText = "display:block;position:absolute;background-color:transparent;";
-		styleText += "width:55px;height:50px;bottom: 18%;left: 40px;z-index:4;right: auto;";
+		styleText += "width:55px;height:50px;bottom: 1%;left: 40px;z-index:4;right: auto;";
 		styleText += isRightLayout ? "right: calc(100% - 380px);z-index:3;" : "right: calc(100% - 1260px);z-index:3;";
 		sortButton.style.cssText = styleText;
 		sortButton.onclick = function () {
@@ -621,33 +621,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 			handcardNumber() {
 				const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
-				const isXPJ = lib.config.extension_十周年UI_XPJ === "on";
-				const isTouch = lib.config.phonelayout;
 				// 创建设置按钮
 				ui.create.div(".settingButton", ui.arena, plugin.click.setting);
-				// 仅触屏布局下加载功能按钮
-				if (isTouch) {
-					if (isRightLayout) {
-						if (isXPJ) {
-							ui.create.div(".huanfuButton", ui.arena, plugin.click.huanfu);
-							ui.create.div(".jiluButton", ui.arena, ui.click.pause);
-						} else {
-							ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
-							ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
-							ui.create.div(".meiguiButton_new", ui.arena);
-							ui.create.div(".xiaolianButton_new", ui.arena);
-						}
-					} else {
-						if (isXPJ) {
-							ui.create.div(".huanfuButton1", ui.arena, plugin.click.huanfu);
-							ui.create.div(".jiluButton1", ui.arena, ui.click.pause);
-						} else {
-							ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
-							ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
-							ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
-							ui.create.div(".xiaolianButton_new1", ui.arena, plugin.click.xiaolian);
-						}
-					}
+				if (isRightLayout) {
+					ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
+					ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
+					ui.create.div(".meiguiButton_new", ui.arena, plugin.click.meigui);
+				} else {
+					ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
+					ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
+					ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
 				}
 				// 创建托管按钮
 				ui.create.div(".tuoguanButton", ui.arena, ui.click.auto);
