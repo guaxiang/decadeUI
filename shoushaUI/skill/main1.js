@@ -4,7 +4,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			Object.assign(ui.create, {
 				skills(skills) {
@@ -450,19 +450,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!info.zhuanhuanji && !info.zhuanhuanji2) {
 						item = ui.create.div(".skillMarkItem.xiandingji", node, get.skillTranslation(k, player).slice(0, 2));
 					} else {
-						const url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + k + "_yang.png";
+						const url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + k + "_yang.png";
 						try {
 							if (this.checkImageExists(url)) {
 								item = ui.create.div(".skillMarkItem.zhuanhuanji", node, "");
-								item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/" + k + "_yang.png");
+								item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + k + "_yang.png");
 							} else {
 								item = ui.create.div(".skillMarkItem.zhuanhuanji", node, get.skillTranslation(k, player).slice(0, 2));
-								item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png");
+								item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_yang.png");
 								item.style.setProperty("--w", "42px");
 							}
 						} catch (err) {
 							item = ui.create.div(".skillMarkItem.zhuanhuanji", node, get.skillTranslation(k, player).slice(0, 2));
-							item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png");
+							item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_yang.png");
 							item.style.setProperty("--w", "42px");
 						}
 					}
