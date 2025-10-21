@@ -251,11 +251,11 @@
 }
 /* 等阶边框 */
 .player > .camp-wrap > .camp-border {
-	display: block;
-    left: 90px;
+    display: block;
+    left: 4px;
     top: -20px;
-    width: 190%;
-    height: 80%;
+    width: 436%;
+    height: 179%;
 	position: absolute;
 	background-image: url("../image/decoration_code/border_camp3.png");
 	background-size: 100% 100%;
@@ -265,13 +265,13 @@
 	background-image: url("../image/decoration_code/border_camp0.png");
 }
 #arena.decadeUI[data-border-level="two"] .player > .camp-wrap > .camp-border {
-	background-image: url("../image/decoration_code/border_camp1.png");
+	background-image: url("../image/decoration_code/border_camp0.png");
 }
 #arena.decadeUI[data-border-level="three"] .player > .camp-wrap > .camp-border {
-	background-image: url("../image/decoration_code/border_camp2.png");
+	background-image: url("../image/decoration_code/border_camp1.png");
 }
 #arena.decadeUI[data-border-level="four"] .player > .camp-wrap > .camp-border {
-	background-image: url("../image/decoration_code/border_camp3.png");
+	background-image: url("../image/decoration_code/border_camp2.png");
 }
 .player>.camp-wrap>.avatar-name,
 /*主将名，根据部分群友需要，添加定位代码*/

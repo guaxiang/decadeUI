@@ -136,6 +136,7 @@ export const prefixMarkModule = {
 		青史: { className: "qingshi-mark", property: "$qingshiMark" },
 		徐兖: { className: "xuyuan-mark", property: "$xuyuanMark" },
 		风云: { className: "fengyun-mark", property: "$fengyunMark" },
+		"26|神": { className: "shen-mark", property: "$shenMark" },
 	},
 	// 显示十周年角标
 	showPrefixMark(character, playerElement) {

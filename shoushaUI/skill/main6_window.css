@@ -110,3 +110,34 @@
 	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
 		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
 }
+.skillMarks {
+	max-height: 80px;
+	overflow-y: auto;
+	left: -40px !important;
+	top: 0px !important;
+	z-index: 90 !important;
+	justify-content: center;
+	align-items: center;
+}
+.skillMarks>.skillMarkItem {
+	--h: 19px;
+	width: 20px !important;
+	height: 25px !important;
+	right: 0px;
+	line-height: -10px;
+	text-align: center;
+	display: block;
+	position: relative;
+	border-radius: 50%;
+}
+.skillMarkItem.xiandingji {
+	background-image: url("./codename/xiandingji.png");
+	background-size: 100% 100%;
+	text-shadow: none;
+}
+.skillMarkItem.xiandingji.used {
+	-webkit-filter: grayscale(1);
+}
+.skillMarkItem+.skillMarkItem {
+	margin-top: -6.5px;
+}

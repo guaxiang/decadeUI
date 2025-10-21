@@ -259,46 +259,45 @@
 .cardRoundNumber > .cardPileNumber {
 	top: -15px;
 	--w: 65px;
-	--h: calc(var(--w) * 173 / 127);
+	--h: calc(var(--w) * 173 / 160);
 	width: var(--w);
 	height: var(--h);
-	background-image: url("./images/uibutton/cardback3.png");
+	background-image: url("./images/uibutton/codepaidui.png");
 	background-size: 100% 100%;
 	background-color: transparent;
 	position: relative;
 	z-index: 2;
 }
 .cardRoundNumber > .cardPileNumber > span {
-	left: 13px; /*牌堆数右移，越大越靠右*/
-	top: 12px;
+	left: 60px; /*牌堆数右移，越大越靠右*/
+	top: 40px;
 	width: 100%;
 	display: block;
 	position: absolute;
 	line-height: 20px;
 	text-align: center;
-	color: #342510;
-	font-size: 15px;
+	color: #ffffff;
+	font-size: 20px;
 	font-weight: bold; /*字体加粗*/
+	text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; /*黑色描边*/
 }
 .cardRoundNumber > .roundNumber,
 .cardRoundNumber > .time {
 	/*游戏时间*/
-	left: 10px; /*牌堆数/时间右移，越大越靠右*/
-	top: 24px;
+	left: 70px; /*牌堆数右移，越大越靠右*/
+	top: 0px;
 	height: 20px;
 	line-height: 16px; /*游戏轮数/时间间隔*/
 	white-space: nowrap;
-	color: #342510;
+	color: #ffffff;
+	font-size: 20px;
 	z-index: 3;
 	font-weight: bold;
+	text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; /*黑色描边*/
 }
-.cardRoundNumber > .time {
-	/*游戏时间*/
-	top: 48px; /*高度*/
-	left: 14px;
-	font-size: 17px;
-	color: #342510;
-	font-weight: bold;
+.cardRoundNumber > .roundNumber span {
+	color: #ffff00; /* 黄色 */
+	text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 0 4px #000; /* 黑色描边 */
 }
 /*托管中图片（）*/
 #autonode > div:last-child {

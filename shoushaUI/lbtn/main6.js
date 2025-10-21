@@ -24,7 +24,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		JIN: "jin",
 		YE: "ye",
 	};
-	const BACKGROUNDS = ["人间安乐", "兵临城下", "兵荒马乱", "三国开黑节", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游", "十周年"];
 	// 工具函数
 	const utils = {
 		playAudio(path) {
@@ -70,38 +69,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		[GROUPS.JIN]: ".Tipjinguo",
 		[GROUPS.YE]: ".Tipyexinjia",
 	};
-	// 创建问号按钮
-	function createQuestionButton() {
-		const isTouch = lib.config.phonelayout;
-		const bottomOffset = isTouch ? "calc(100% - 55px)" : "calc(100% - 105px)"; // 非触屏布局往下移动20px
-		const questionBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/wenhao.png", `display: block;width: 40px;height: 29px;position: absolute;bottom: ${bottomOffset};left: calc(100% - 159.5px);background-color: transparent;z-index:3`);
-		questionBtn.onclick = function () {
-			const popupContainer = ui.create.div(".popup-container", ui.window);
-			utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
-			// 根据游戏模式显示不同提示
-			if (lib.config.mode === MODES.IDENTITY) {
-				const tipClass = identityTips[game.me.identity];
-				if (tipClass) {
-					ui.create.div(tipClass, popupContainer);
-				}
-			} else if (lib.config.mode === MODES.DOUDIZHU) {
-				const tipClass = doudizhuTips[game.me.identity];
-				if (tipClass) {
-					ui.create.div(tipClass, popupContainer);
-				}
-			} else if (lib.config.mode === MODES.VERSUS) {
-				ui.create.div(".Tiphu", popupContainer);
-			} else if (lib.config.mode === MODES.GUOZHAN) {
-				const tipClass = groupTips[game.me.group] || ".Tipweizhi";
-				ui.create.div(tipClass, popupContainer);
-			}
-			popupContainer.addEventListener("click", event => {
-				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
-				popupContainer.delete(200);
-			});
-		};
-		document.body.appendChild(questionBtn);
-	}
 	// 创建整理手牌按钮
 	function createSortButton() {
 		const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
@@ -135,7 +102,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		const isTouch = lib.config.phonelayout;
 		const topOffset = isTouch ? "10px" : "60px"; // 非触屏布局往下移动50px
 		// 菜单按钮
-		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", `display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: ${topOffset};right: 55px;background-color: transparent;z-index:5`);
+		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/codecaidan.png", `display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: ${topOffset};right: 55px;background-color: transparent;z-index:5`);
 		document.body.appendChild(menuBtn);
 		let menuPopup = null;
 		function openMenu() {
@@ -400,9 +367,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		};
 		// 创建UI元素
 		const supportedModes = [MODES.IDENTITY, MODES.DOUDIZHU, MODES.GUOZHAN, MODES.VERSUS, MODES.SINGLE, MODES.MARTIAL];
-		if (supportedModes.includes(lib.config.mode)) {
-			createQuestionButton();
-		}
 		createSortButton();
 		createTopRightMenu();
 	});
@@ -445,8 +409,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				updateCardRoundTime(opts) {
 					if (!ui.cardRoundTime) return;
 					const roundNumber = Math.max(1, game.roundNumber || 1);
-					ui.cardRoundTime.node.roundNumber.innerHTML = `<span>第${roundNumber}轮</span>`;
-					ui.cardRoundTime.setNumberAnimation(opts.cardNumber);
+					if (ui.cardRoundTime.totalCards === 0) {
+						ui.cardRoundTime.totalCards = opts.cardNumber;
+					}
+					ui.cardRoundTime.node.roundNumber.innerHTML = `第<span>${roundNumber}</span>轮`;
+					ui.cardRoundTime.setNumberAnimation(opts.cardNumber, ui.cardRoundTime.totalCards);
 				},
 				updateCardnumber(opts) {
 					if (!ui.handcardNumber) return;
@@ -463,13 +430,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				arena: [
 					null,
 					function () {
-						if (ui.time3) {
-							clearInterval(ui.time3.interval);
-							ui.time3.delete();
-						}
 						if (ui.cardPileNumber) ui.cardPileNumber.delete();
 						ui.cardRoundTime = plugin.create.cardRoundTime();
 						ui.handcardNumber = plugin.create.handcardNumber();
+						if (ui.time) {
+							ui.time.style.display = "none";
+						}
+						if (ui.time3) {
+							ui.time3.style.display = "none";
+						}
 					},
 				],
 				cards: [
@@ -486,8 +455,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				update: [
 					null,
 					function (res, config, map) {
-						const hiddenItems = ["control_style", "custom_button", "custom_button_system_top", "custom_button_system_bottom", "custom_button_control_top", "custom_button_control_bottom", "radius_size"];
-						hiddenItems.forEach(item => map[item].hide());
+						const hiddenItems = ["control_style", "custom_button", "custom_button_system_top", "custom_button_system_bottom", "custom_button_control_top", "custom_button_control_bottom", "radius_size", "show_time", "show_time2", "show_time3"];
+						hiddenItems.forEach(item => {
+							if (map[item] && typeof map[item].hide === 'function') {
+								map[item].hide();
+							}
+						});
 					},
 				],
 			});
@@ -664,55 +637,40 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				node.node = {
 					cardPileNumber: ui.create.div(".cardPileNumber", node),
 					roundNumber: ui.create.div(".roundNumber", node),
-					time: ui.create.div(".time", node),
 				};
+				node.totalCards = 0;
 				node.updateRoundCard = function () {
 					const cardNumber = ui.cardPile.childNodes.length || 0;
+					if (this.totalCards === 0) {
+						this.totalCards = cardNumber;
+					}
 					const roundNumber = Math.max(1, game.roundNumber || 1);
-					this.node.roundNumber.innerHTML = `<span>第${roundNumber}轮</span>`;
-					this.setNumberAnimation(cardNumber);
+					this.node.roundNumber.innerHTML = `第<span>${roundNumber}</span>轮`;
+					this.setNumberAnimation(cardNumber, this.totalCards);
 					this.show();
 					game.addVideo("updateCardRoundTime", null, {
 						cardNumber: cardNumber,
 						roundNumber: roundNumber,
 					});
 				};
-				node.setNumberAnimation = function (num, step) {
+				node.setNumberAnimation = function (currentNum, totalNum, step) {
 					const item = this.node.cardPileNumber;
 					clearTimeout(item.interval);
 					if (!item._num) {
-						item.innerHTML = `<span>${num}</span>`;
-						item._num = num;
-					} else if (item._num !== num) {
-						if (!step) step = 500 / Math.abs(item._num - num);
-						if (item._num > num) item._num--;
+						item.innerHTML = `<span>${currentNum}/${totalNum}</span>`;
+						item._num = currentNum;
+					} else if (item._num !== currentNum) {
+						if (!step) step = 500 / Math.abs(item._num - currentNum);
+						if (item._num > currentNum) item._num--;
 						else item._num++;
-						item.innerHTML = `<span>${item._num}</span>`;
-						if (item._num !== num) {
+						item.innerHTML = `<span>${item._num}/${totalNum}</span>`;
+						if (item._num !== currentNum) {
 							item.interval = setTimeout(() => {
-								node.setNumberAnimation(num, step);
+								node.setNumberAnimation(currentNum, totalNum, step);
 							}, step);
 						}
 					}
 				};
-				// 时间显示
-				ui.time4 = node.node.time;
-				ui.time4.starttime = get.utc();
-				ui.time4.interval = setInterval(function () {
-					const totalSeconds = Math.round((get.utc() - ui.time4.starttime) / 1000);
-					if (totalSeconds >= 3600) {
-						const hours = Math.floor(totalSeconds / 3600);
-						const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
-						const seconds = totalSeconds - hours * 3600 - minutes * 60;
-						const formatTime = num => (num < 10 ? `0${num}` : num.toString());
-						ui.time4.innerHTML = `<span>${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}</span>`;
-					} else {
-						const minutes = Math.floor(totalSeconds / 60);
-						const seconds = totalSeconds - minutes * 60;
-						const formatTime = num => (num < 10 ? `0${num}` : num.toString());
-						ui.time4.innerHTML = `<span>${formatTime(minutes)}:${formatTime(seconds)}</span>`;
-					}
-				}, 1000);
 				game.addVideo("createCardRoundTime");
 				return node;
 			},
