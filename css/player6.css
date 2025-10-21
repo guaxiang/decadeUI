@@ -182,6 +182,13 @@
 	pointer-events: none;
 }
 .player.unseen > .camp-wrap > .camp-back {
+	background-image: url("../image/decoration_code/fx_ui_fusu03.png");
+	width: 100%;
+	height: 90%;
+	top: 0px;
+	left: 0px;
+	background-size: 100% 100%;
+	pointer-events: none;
 }
 .player > .camp-wrap[data-camp="wei"] > .camp-back {
 	background-image: url("../image/decoration_code/ui_s1_fight_guojia_caowei.png");
@@ -220,7 +227,13 @@
 	pointer-events: none;
 }
 .player > .camp-wrap[data-camp="shen"] > .camp-back {
-	background: linear-gradient(to bottom, rgb(97, 87, 15), rgb(65, 50, 9), rgb(67, 52, 9));
+	background-image: url("../image/decoration_code/ui_s1_fight_guojia_shen.png");
+	width: 100%;
+	height: 90%;
+	top: 0px;
+	left: 0px;
+	background-size: 100% 100%;
+	pointer-events: none;
 }
 .player > .camp-wrap[data-camp="shen2"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
@@ -247,7 +260,13 @@
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 .player > .camp-wrap[data-camp="daqin"] > .camp-back {
-	background: linear-gradient(to bottom, rgb(100, 100, 100), rgb(0, 0, 0));
+	background-image: url("../image/decoration_code/ui_s1_fight_guojia_qin.png");
+	width: 100%;
+	height: 90%;
+	top: 0px;
+	left: 0px;
+	background-size: 100% 100%;
+	pointer-events: none;
 }
 /* 等阶边框 */
 .player > .camp-wrap > .camp-border {
@@ -288,7 +307,7 @@
 	font-size: 16px;
 	line-height: 15px;
 	/*字体间距*/
-	text-shadow: none;
+	text-shadow: 1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000;
 	z-index: 89;
 }
 .player > .camp-wrap > .avatar-name,
@@ -300,7 +319,7 @@
 	justify-content: center;
 	font-size: 16px;
 	text-align: center;
-	text-shadow: none;
+	text-shadow: 1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000;
 	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
 	left: 26%;
 	top: 15%;
@@ -370,7 +389,7 @@
 	width: 18px;
 	height: 96px;
 	font-size: 16px;
-	text-shadow: none;
+	text-shadow: 1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000;
 	/*#000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
 	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
 	z-index: 80;

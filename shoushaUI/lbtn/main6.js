@@ -690,7 +690,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			},
 			meigui() {
-				// 玫瑰按钮点击处理
+				const isDistanceShowing = game.players.some(player => player !== game.me && player._distanceDisplay);
+				if (isDistanceShowing) {
+					plugin.closeDistanceDisplay();
+				} else {
+					plugin.showDistanceDisplay();
+				}
 			},
 			xiaolian() {
 				// 笑脸按钮点击处理
@@ -698,6 +703,35 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			setting() {
 				// 设置按钮点击处理
 			},
+		},
+		showDistanceDisplay() {
+			game.players.forEach(player => {
+				if (player !== game.me && player.isAlive()) {
+					const distance = get.distance(game.me, player);
+					const distanceText = distance === Infinity ? "∞" : distance.toString();
+					const distanceDisplay = ui.create.div(".distance-display", player);
+					distanceDisplay.innerHTML = `距离：${distanceText}`;
+					player._distanceDisplay = distanceDisplay;
+				}
+			});
+			plugin.distanceClickHandler = function(event) {
+				if (!event.target.closest('.player') && !event.target.closest('.meiguiButton_new') && !event.target.closest('.meiguiButton_new1')) {
+					plugin.closeDistanceDisplay();
+				}
+			};
+			document.addEventListener('click', plugin.distanceClickHandler);
+		},
+		closeDistanceDisplay() {
+			game.players.forEach(player => {
+				if (player._distanceDisplay) {
+					player._distanceDisplay.remove();
+					player._distanceDisplay = null;
+				}
+			});
+			if (plugin.distanceClickHandler) {
+				document.removeEventListener('click', plugin.distanceClickHandler);
+				plugin.distanceClickHandler = null;
+			}
 		},
 		compare: {
 			type(a, b) {
