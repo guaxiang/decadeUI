@@ -399,6 +399,23 @@
 	text-shadow: #000000 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
 	white-space: nowrap;
 }
+/* 距离显示样式 */
+.distance-display {
+	position: absolute;
+	top: 105%;
+	left: 80%;
+	transform: translate(-50%, -50%);
+	color: rgb(5, 5, 5);
+	font-family: "shousha";
+	font-size: 17px;
+	font-weight: bold;
+	z-index: 100;
+	pointer-events: none;
+	white-space: nowrap;
+	/*字体加粗*/
+	text-align: center;
+	text-shadow: 0 0 2px white, 0 0 1px white;
+}
 /*牌堆数*/
 /*同理，定义整体*/
 .cardRoundNumber {

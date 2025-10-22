@@ -324,6 +324,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (ui.cardPileNumber) ui.cardPileNumber.delete();
 						ui.cardRoundTime = plugin.create.cardRoundTime();
 						ui.handcardNumber = plugin.create.handcardNumber();
+						setTimeout(() => {
+							plugin.showDistanceDisplay();
+						}, 1000);
 					},
 				],
 				cards: [
@@ -928,6 +931,66 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					target.custom(link);
 				}
 			},
+		},
+		showDistanceDisplay() {
+			plugin.closeDistanceDisplay();
+			plugin._lastMe = game.me;
+			if (game.players && game.players.length > 0) {
+				game.players.forEach(player => {
+					const isDead = player.isDead && player.isDead() ||
+					(game.dead && game.dead.includes(player)) ||
+					(player.node && player.node.classList && player.node.classList.contains('dead')) ||
+					(player.hp !== undefined && player.hp <= 0);
+					if (player !== game.me && player.isAlive() && !isDead) {
+						const distance = get.distance(game.me, player);
+						const distanceText = distance === Infinity ? "∞" : distance.toString();
+						const distanceDisplay = ui.create.div(".distance-display", `(距离:${distanceText})`, player);
+						player._distanceDisplay = distanceDisplay;
+					}
+				});
+			}
+			if (plugin._distanceUpdateInterval) {
+				clearInterval(plugin._distanceUpdateInterval);
+			}
+			plugin._distanceUpdateInterval = setInterval(() => {
+				plugin.updateDistanceDisplay();
+			}, 1000);
+		},
+		updateDistanceDisplay() {
+			if (plugin._lastMe !== game.me) {
+				plugin._lastMe = game.me;
+				plugin.closeDistanceDisplay();
+				plugin.showDistanceDisplay();
+				return;
+			}
+			game.players.forEach(player => {
+				if (player !== game.me && player._distanceDisplay) {
+					const isDead = player.isDead && player.isDead() || 
+					(game.dead && game.dead.includes(player)) ||
+					(player.node && player.node.classList && player.node.classList.contains('dead')) ||
+					(player.hp !== undefined && player.hp <= 0);
+					if (player.isAlive() && !isDead) {
+						const distance = get.distance(game.me, player);
+						const distanceText = distance === Infinity ? "∞" : distance.toString();
+						player._distanceDisplay.innerHTML = `(距离:${distanceText})`;
+					} else {
+						player._distanceDisplay.remove();
+						player._distanceDisplay = null;
+					}
+				}
+			});
+		},
+		closeDistanceDisplay() {
+			game.players.forEach(player => {
+				if (player._distanceDisplay) {
+					player._distanceDisplay.remove();
+					player._distanceDisplay = null;
+				}
+			});
+			if (plugin._distanceUpdateInterval) {
+				clearInterval(plugin._distanceUpdateInterval);
+				plugin._distanceUpdateInterval = null;
+			}
 		},
 		compare: {
 			type(a, b) {
