@@ -271,14 +271,15 @@
 /* 等阶边框 */
 .player > .camp-wrap > .camp-border {
     display: block;
-    left: 4px;
+    left: 0px;
     top: -20px;
-    width: 436%;
+    width: 440%;
     height: 179%;
 	position: absolute;
 	background-image: url("../image/decoration_code/border_camp3.png");
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
+	pointer-events: none;
 }
 #arena.decadeUI[data-border-level="one"] .player > .camp-wrap > .camp-border {
 	background-image: url("../image/decoration_code/border_camp0.png");
