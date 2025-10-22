@@ -1321,7 +1321,8 @@
 .player > .she-mark,
 .player > .qingshi-mark,
 .player > .xuyuan-mark,
-.player > .fengyun-mark {
+.player > .fengyun-mark,
+.player > .man-mark {
 	position: absolute;
 	top: 108px;
 	left: -11px;
@@ -1534,4 +1535,7 @@
 }
 .player > .fengyun-mark {
 	background-image: url("../image/mark/mark_fengyun.png");
+}
+.player > .man-mark {
+	background-image: url("../image/mark/mark_man.png");
 }
