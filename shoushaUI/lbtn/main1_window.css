@@ -416,6 +416,10 @@
 	text-align: center;
 	text-shadow: 0 0 2px white, 0 0 1px white;
 }
+/* 死亡玩家的距离显示隐藏 */
+.player.dead > .distance-display {
+	display: none !important;
+}
 /*牌堆数*/
 /*同理，定义整体*/
 .cardRoundNumber {

@@ -934,11 +934,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			plugin._lastMe = game.me;
 			if (game.players && game.players.length > 0) {
 				game.players.forEach(player => {
-					const isDead = player.isDead && player.isDead() ||
-					(game.dead && game.dead.includes(player)) ||
-					(player.node && player.node.classList && player.node.classList.contains('dead')) ||
-					(player.hp !== undefined && player.hp <= 0);
-					if (player !== game.me && player.isAlive() && !isDead) {
+					if (player !== game.me) {
 						const distance = get.distance(game.me, player);
 						const distanceText = distance === Infinity ? "∞" : distance.toString();
 						const distanceDisplay = ui.create.div(".distance-display", `(距离:${distanceText})`, player);
@@ -962,18 +958,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			game.players.forEach(player => {
 				if (player !== game.me && player._distanceDisplay) {
-					const isDead = player.isDead && player.isDead() || 
-					(game.dead && game.dead.includes(player)) ||
-					(player.node && player.node.classList && player.node.classList.contains('dead')) ||
-					(player.hp !== undefined && player.hp <= 0);
-					if (player.isAlive() && !isDead) {
-						const distance = get.distance(game.me, player);
-						const distanceText = distance === Infinity ? "∞" : distance.toString();
-						player._distanceDisplay.innerHTML = `(距离:${distanceText})`;
-					} else {
-						player._distanceDisplay.remove();
-						player._distanceDisplay = null;
-					}
+					const distance = get.distance(game.me, player);
+					const distanceText = distance === Infinity ? "∞" : distance.toString();
+					player._distanceDisplay.innerHTML = `(距离:${distanceText})`;
 				}
 			});
 		},

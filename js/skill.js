@@ -1231,6 +1231,20 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 	};
+	decadeUI.inheritSkillGroup = {
+		undist: {
+			init(player, skill) {
+				if (player._distanceDisplay) {
+					player._distanceDisplay.style.display = 'none';
+				}
+			},
+			onremove(player, skill) {
+				if (player._distanceDisplay) {
+					player._distanceDisplay.style.display = '';
+				}
+			}
+		}
+	};
 	if (!_status.connectMode) {
 		for (var key in decadeUI.animateSkill) {
 			lib.skill[key] = decadeUI.animateSkill[key];
@@ -1255,6 +1269,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					for (const k in decadeUI.inheritSubSkill[key][j]) {
 						lib.skill[key].subSkill[j][k] = decadeUI.inheritSubSkill[key][j][k];
 					}
+				}
+			}
+		}
+		for (const groupName in decadeUI.inheritSkillGroup) {
+			if (lib.skill[groupName]) {
+				for (const method in decadeUI.inheritSkillGroup[groupName]) {
+					lib.skill[groupName][method] = decadeUI.inheritSkillGroup[groupName][method];
 				}
 			}
 		}
