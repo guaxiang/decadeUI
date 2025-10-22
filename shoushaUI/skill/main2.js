@@ -424,6 +424,63 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 				item.dataset.id = k;
 			}
+			plugin.updateXinfuFaluMarks(player);
+			plugin.updateStarcanxiMarks(player);
+		},
+		updateXinfuFaluMarks(player) {
+			if (!player.hasSkill("xinfu_falu")) return;
+			let skillMarksNode = player.node.xSkillMarks;
+			if (!skillMarksNode) return;
+			const suitMap = {
+				"spade": "spade",
+				"heart": "heart", 
+				"club": "club",
+				"diamond": "diamond"
+			};
+			const faluMarks = {};
+			lib.suit.forEach(suit => {
+				const markName = `xinfu_falu_${suit}`;
+				if (player.hasMark(markName)) {
+					faluMarks[markName] = true;
+				}
+			});
+			for (const markName in faluMarks) {
+				const suit = markName.slice("xinfu_falu_".length);
+				if (suitMap[suit]) {
+					const item = ui.create.div(".skillMarkItem", skillMarksNode, "");
+					item.dataset.id = markName;
+					item.classList.add(`xinfu-falu-${suit}`);
+				}
+			}
+		},
+		updateStarcanxiMarks(player) {
+			if (!player.hasSkill("starcanxi")) return;
+			let skillMarksNode = player.node.xSkillMarks;
+			if (!skillMarksNode) return;
+			const factions = ["qun", "shu", "wei", "wu"];
+			const factionMap = {
+				"qun": "qun",
+				"shu": "shu", 
+				"wei": "wei",
+				"wu": "wu"
+			};
+			const canxiSkills = {};
+			factions.forEach(faction => {
+				const skillName = `starcanxi_${faction}`;
+				if (player.hasSkill(skillName)) {
+					canxiSkills[skillName] = true;
+					console.log(`Found starcanxi skill: ${skillName}`);
+				}
+			});
+			for (const skillName in canxiSkills) {
+				const faction = skillName.slice("starcanxi_".length);
+				if (factionMap[faction]) {
+					const item = ui.create.div(".skillMarkItem", skillMarksNode, "");
+					item.dataset.id = skillName;
+					item.classList.add(`starcanxi-${faction}`);
+					console.log(`Created starcanxi mark element with class: starcanxi-${faction}`);
+				}
+			}
 		},
 		recontent() {
 			app.reWriteFunction(ui.create, {

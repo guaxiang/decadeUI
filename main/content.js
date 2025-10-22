@@ -541,6 +541,17 @@ export async function content(config, pack) {
 									const info = get.info(item);
 									if (info && (info.zhuanhuanji || info.zhuanhuanji2 || info.limited)) return;
 								}
+								if (item && typeof item === "string" && item.startsWith("xinfu_falu_")) {
+									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
+										return;
+									}
+								}
+								if (item && typeof item === "string" && item.startsWith("starcanxi_") &&
+									item !== "starcanxi_wangsheng" && item !== "starcanxi_xiangsi" && item !== "starcanxi_cancel") {
+									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
+										return;
+									}
+								}
 								if (get.itemtype(item) == "cards") {
 									var marks = new Array(item.length);
 									for (var i = 0; i < item.length; i++) marks.push(this.mark(item[i], info));
@@ -618,12 +629,34 @@ export async function content(config, pack) {
 									const info = get.info(name);
 									if (info && (info.zhuanhuanji || info.zhuanhuanji2 || info.limited)) return;
 								}
+								if (name && typeof name === "string" && name.startsWith("xinfu_falu_")) {
+									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
+										return;
+									}
+								}
+								if (name && typeof name === "string" && name.startsWith("starcanxi_") &&
+									name !== "starcanxi_wangsheng" && name !== "starcanxi_xiangsi" && name !== "starcanxi_cancel") {
+									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
+										return;
+									}
+								}
 								return base.lib.element.player.markSkill.apply(this, arguments);
 							},
 							unmarkSkill(name, info, card, nobroadcast) {
 								if (name && lib.config.extension_十周年UI_newDecadeStyle != "Off") {
 									const info = get.info(name);
 									if (info && (info.zhuanhuanji || info.zhuanhuanji2 || info.limited)) return;
+								}
+								if (name && typeof name === "string" && name.startsWith("xinfu_falu_")) {
+									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
+										return;
+									}
+								}
+								if (name && typeof name === "string" && name.startsWith("starcanxi_") &&
+									name !== "starcanxi_wangsheng" && name !== "starcanxi_xiangsi" && name !== "starcanxi_cancel") {
+									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
+										return;
+									}
 								}
 								return base.lib.element.player.unmarkSkill.apply(this, arguments);
 							},
@@ -4057,7 +4090,7 @@ export async function content(config, pack) {
 							}
 							if (this.classList.contains("infohidden")) return;
 							// 修复十周年UI触屏布局下装备介绍被压缩的问题
-							if (this.classList.contains("card") &&this.parentNode &&this.parentNode.classList.contains("equips") &&get.is.phoneLayout() &&!get.is.mobileMe(this.parentNode.parentNode)) {
+							if (this.classList.contains("card") && this.parentNode && this.parentNode.classList.contains("equips") && get.is.phoneLayout() && !get.is.mobileMe(this.parentNode.parentNode)) {
 								var e = arguments[0];
 								if (_status.dragged) {
 									return;
@@ -4910,13 +4943,13 @@ export async function content(config, pack) {
 								this.parentNode.classList.add("guozhan-mode");
 								return;
 							}
- 							var currentStyle = lib.config.extension_十周年UI_newDecadeStyle;
- 							if (currentStyle === "codename" && value === "猜") {
- 								this.innerText = "";
- 								this.style.visibility = "";
- 								this.parentNode.style.backgroundImage = "";
- 								return;
- 							}
+							var currentStyle = lib.config.extension_十周年UI_newDecadeStyle;
+							if (currentStyle === "codename" && value === "猜") {
+								this.innerText = "";
+								this.style.visibility = "";
+								this.parentNode.style.backgroundImage = "";
+								return;
+							}
 							var filename;
 							var checked;
 							var identity = this.parentNode.dataset.color;
