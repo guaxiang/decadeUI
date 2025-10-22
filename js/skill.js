@@ -1231,16 +1231,46 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 	};
-	decadeUI.inheritSkillGroup = {
-		undist: {
-			init(player, skill) {
-				if (player._distanceDisplay) {
-					player._distanceDisplay.style.display = 'none';
-				}
+	decadeUI.inheritSubSkill = {
+		olziruo: {
+			sort: {
+				async content(event, trigger, player) {
+					event.getParent(2).goto(0);
+					if (_status.connectMode || !event.isMine()) {
+						player.tempBanSkill("olziruo_sort", {
+							player: ["useCard1", "useSkillBegin", "chooseToUseEnd"],
+						});
+					}
+					const next = player.chooseToMove("自若：请整理手牌顺序", true);
+					next.set("list", [["手牌", player.getCards("h")]]);
+					next.set("processAI", list => {
+						let player = get.player(),
+							cards = list[0][1].slice(0);
+						cards.sort((a, b) => get.useful(b, player) - get.useful(a, player));
+						if (player.storage.olziruo) cards.reverse();
+						return [cards];
+					});
+					const result = await next.forResult();
+					if (!result || !result.bool) return;
+					let hs = result.moved[0].reverse();
+					hs.forEach((i, j) => {
+						player.node.handcards1.insertBefore(hs[j], player.node.handcards1.firstChild);
+					});
+					dui.queueNextFrameTick(dui.layoutHand, dui);
+				},
 			},
-			onremove(player, skill) {
-				if (player._distanceDisplay) {
-					player._distanceDisplay.style.display = '';
+		},
+		jsrgzhasi: {
+			undist: {
+				init(player, skill) {
+					if (player._distanceDisplay) {
+						player._distanceDisplay.style.display = 'none';
+					}
+				},
+				onremove(player, skill) {
+					if (player._distanceDisplay) {
+						player._distanceDisplay.style.display = '';
+					}
 				}
 			}
 		}
@@ -1269,13 +1299,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					for (const k in decadeUI.inheritSubSkill[key][j]) {
 						lib.skill[key].subSkill[j][k] = decadeUI.inheritSubSkill[key][j][k];
 					}
-				}
-			}
-		}
-		for (const groupName in decadeUI.inheritSkillGroup) {
-			if (lib.skill[groupName]) {
-				for (const method in decadeUI.inheritSkillGroup[groupName]) {
-					lib.skill[groupName][method] = decadeUI.inheritSkillGroup[groupName][method];
 				}
 			}
 		}
