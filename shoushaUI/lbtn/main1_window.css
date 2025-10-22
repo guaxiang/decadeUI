@@ -402,17 +402,17 @@
 /* 距离显示样式 */
 .distance-display {
 	position: absolute;
-	top: 105%;
+	top: 110%;
 	left: 80%;
 	transform: translate(-50%, -50%);
 	color: rgb(5, 5, 5);
 	font-family: "shousha";
 	font-size: 17px;
 	font-weight: bold;
+	/*字体加粗*/
 	z-index: 100;
 	pointer-events: none;
 	white-space: nowrap;
-	/*字体加粗*/
 	text-align: center;
 	text-shadow: 0 0 2px white, 0 0 1px white;
 }

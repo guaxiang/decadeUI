@@ -324,9 +324,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (ui.cardPileNumber) ui.cardPileNumber.delete();
 						ui.cardRoundTime = plugin.create.cardRoundTime();
 						ui.handcardNumber = plugin.create.handcardNumber();
-						setTimeout(() => {
-							plugin.showDistanceDisplay();
-						}, 1000);
 					},
 				],
 				cards: [
@@ -1017,5 +1014,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 		},
 	};
+	lib.announce.subscribe("gameStart", () => setTimeout(() => plugin.showDistanceDisplay(), 100));
 	return plugin;
 });
