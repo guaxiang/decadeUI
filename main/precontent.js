@@ -68,8 +68,9 @@ export async function precontent() {
 			ui.css.layout.href = lib.assetURL + "layout/long2/layout.css";
 		}
 		decadeModule.init = function () {
-			// 基础CSS加载
-			["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"].forEach(path => this.css(decadeUIPath + path));
+			// 基础CSS加载 - 使用动态导入确保Vite能检测到变化
+			const cssFiles = ["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"];
+			cssFiles.forEach(path => this.css(decadeUIPath + path));
 			const style = lib.config.extension_十周年UI_newDecadeStyle;
 			const styleIndex = ["on", "off", "othersOff", "onlineUI", "babysha", "codename"].indexOf(style);
 			if (style !== void 0) {
@@ -150,9 +151,18 @@ export async function precontent() {
 		};
 		decadeModule.css = function (path) {
 			if (!path) return console.error("path");
+			// 检查是否已经加载过相同的CSS，避免重复加载
+			const existingLink = document.querySelector(`link[href*="${path}"]`);
+			if (existingLink) {
+				return existingLink;
+			}
 			const link = document.createElement("link");
 			link.rel = "stylesheet";
-			link.href = `${path}?v=${version}`;
+			link.href = `${path}?v=${version}&t=${Date.now()}`; // 添加时间戳确保Vite能检测到变化
+			// 添加错误处理，确保加载失败时不会阻塞
+			link.onerror = function() {
+				console.warn(`Failed to load CSS: ${path}`);
+			};
 			document.head.appendChild(link);
 			return link;
 		};
@@ -163,6 +173,17 @@ export async function precontent() {
 		};
 		// 添加角标模块
 		decadeModule.prefixMark = prefixMarkModule;
+		// 添加CSS热重载支持
+		decadeModule.hotReloadCSS = function(path) {
+			const existingLink = document.querySelector(`link[href*="${path}"]`);
+			if (existingLink) {
+				// 更新现有链接的时间戳，强制重新加载
+				existingLink.href = `${path}?v=${version}&t=${Date.now()}`;
+				return existingLink;
+			}
+			return this.css(path);
+		};
+		
 		return decadeModule.init();
 	})({});
 	Object.defineProperties(_status, {
@@ -547,11 +568,11 @@ export async function precontent() {
 				console.error(`Failed to load ${this.src}`);
 			};
 			document.head.appendChild(script);
-
 			if (pack === "character") {
-				lib.init.css(layoutPath + pack + "/main" + listmap + ".css");
+				// 使用 decadeModule.css 而不是 lib.init.css，确保 Vite 能检测到变化
+				decadeModule.css(layoutPath + pack + "/main" + listmap + ".css");
 			} else {
-				lib.init.css(layoutPath + pack + "/main" + listmap + (lib.config.phonelayout ? "" : "_window") + ".css");
+				decadeModule.css(layoutPath + pack + "/main" + listmap + (lib.config.phonelayout ? "" : "_window") + ".css");
 			}
 		});
 	}
