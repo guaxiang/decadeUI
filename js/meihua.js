@@ -82,80 +82,81 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 			},
 		};
-		const originalChooseControl = lib.element.player.chooseControl;
-		lib.element.player.chooseControl = function (...args) {
-			const next = originalChooseControl.apply(this, args);
-			if (this === game.me) {
-				const groupTranslations = lib.group.map(i => get.translation(i));
-				if (Array.isArray(next.controls) && next.controls.length > 0 && next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
-					next.setContent(async function (event, trigger, player) {
-						const list = event.controls;
-						if (!list?.length) return;
-						const dialog = ui.create.dialog("hidden", [list, "vcard"]);
-						dialog.classList.add("noupdate", "faction-choice");
-						dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
-						if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
-						ui.skepk.innerHTML = "请选择势力";
-						for (const button of dialog.buttons) {
-							if (!button) continue;
-							const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : lib.config.extension_十周年UI_newDecadeStyle === "off" ? `extension/十周年UI/image/group/off/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
-							button.setBackgroundImage(imagePath);
-							button.style.setProperty("box-shadow", "unset", "important");
-							button.innerHTML = "";
-							button.addEventListener("click", () => {
-								const dcs = document.getElementById("dui-controls");
-								if (dcs) {
-									dcs.style.scale = "1";
-								}
-							});
-						}
-						if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
-						const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
-						progressBarBg.setBackgroundImage("extension/十周年UI/image/group/TimeBarBg.png");
-						progressBarBg.style.height = "13px";
-						const progressBar = ui.create.div(".groupJindutiao2", ui.dialogbar);
-						progressBar.setBackgroundImage("extension/十周年UI/image/group/TimeBarFull.png");
-						progressBar.style.height = "13px";
-						progressBar.style.width = "0%";
-						if (!ui.dialogtext) ui.dialogtext = ui.create.div(".groupJindutiaoText", ui.dialogbar);
-						ui.dialogtext.innerHTML = "";
-						progressBar.data = 100;
-						if (event.progressInterval) {
-							clearInterval(event.progressInterval);
-							delete event.progressInterval;
-						}
-						event.progressInterval = setInterval(() => {
-							progressBar.data -= 100 / 150; // 15秒 * 10次/秒
-							if (progressBar.data <= 0) {
-								progressBar.data = 0;
-								clearInterval(event.progressInterval);
-								delete event.progressInterval;
-							}
-							progressBar.style.width = progressBar.data + "%";
-						}, 100);
-						event.nextx = game.createEvent("chooseGroup");
-						event.nextx.dialog = dialog;
-						event.nextx.setContent(() => {
-							game.me.chooseButton(1, event.dialog, true).set("newconfirm1", true);
-						});
-						const dcs = document.getElementById("dui-controls");
-						if (dcs) dcs.style.scale = "0";
-						const dcs2 = document.getElementById("dui-controls");
-						if (dcs2) dcs2.style.scale = "1";
-						await event.nextx;
-						const val = event.nextx._result?.links?.[0]?.[2];
-						if (val) {
-							event.result = {
-								bool: true,
-								control: val,
-								index: event.controls.indexOf(val),
-							};
-						}
-					});
-				}
-			}
-			return next;
-		};
+		// 有点问题，先414
+		// const originalChooseControl = lib.element.player.chooseControl;
+		// lib.element.player.chooseControl = function (...args) {
+		// 	const next = originalChooseControl.apply(this, args);
+		// 	if (this === game.me) {
+		// 		const groupTranslations = lib.group.map(i => get.translation(i));
+		// 		if (Array.isArray(next.controls) && next.controls.length > 0 && next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
+		// 			next.setContent(async function (event, trigger, player) {
+		// 				const list = event.controls;
+		// 				if (!list?.length) return;
+		// 				const dialog = ui.create.dialog("hidden", [list, "vcard"]);
+		// 				dialog.classList.add("noupdate", "faction-choice");
+		// 				dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
+		// 				if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
+		// 				ui.skepk.innerHTML = "请选择势力";
+		// 				for (const button of dialog.buttons) {
+		// 					if (!button) continue;
+		// 					const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : lib.config.extension_十周年UI_newDecadeStyle === "off" ? `extension/十周年UI/image/group/off/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
+		// 					button.setBackgroundImage(imagePath);
+		// 					button.style.setProperty("box-shadow", "unset", "important");
+		// 					button.innerHTML = "";
+		// 					button.addEventListener("click", () => {
+		// 						const dcs = document.getElementById("dui-controls");
+		// 						if (dcs) {
+		// 							dcs.style.scale = "1";
+		// 						}
+		// 					});
+		// 				}
+		// 				if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
+		// 				const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
+		// 				progressBarBg.setBackgroundImage("extension/十周年UI/image/group/TimeBarBg.png");
+		// 				progressBarBg.style.height = "13px";
+		// 				const progressBar = ui.create.div(".groupJindutiao2", ui.dialogbar);
+		// 				progressBar.setBackgroundImage("extension/十周年UI/image/group/TimeBarFull.png");
+		// 				progressBar.style.height = "13px";
+		// 				progressBar.style.width = "0%";
+		// 				if (!ui.dialogtext) ui.dialogtext = ui.create.div(".groupJindutiaoText", ui.dialogbar);
+		// 				ui.dialogtext.innerHTML = "";
+		// 				progressBar.data = 100;
+		// 				if (event.progressInterval) {
+		// 					clearInterval(event.progressInterval);
+		// 					delete event.progressInterval;
+		// 				}
+		// 				event.progressInterval = setInterval(() => {
+		// 					progressBar.data -= 100 / 150; // 15秒 * 10次/秒
+		// 					if (progressBar.data <= 0) {
+		// 						progressBar.data = 0;
+		// 						clearInterval(event.progressInterval);
+		// 						delete event.progressInterval;
+		// 					}
+		// 					progressBar.style.width = progressBar.data + "%";
+		// 				}, 100);
+		// 				event.nextx = game.createEvent("chooseGroup");
+		// 				event.nextx.dialog = dialog;
+		// 				event.nextx.setContent(() => {
+		// 					game.me.chooseButton(1, event.dialog, true).set("newconfirm1", true);
+		// 				});
+		// 				const dcs = document.getElementById("dui-controls");
+		// 				if (dcs) dcs.style.scale = "0";
+		// 				const dcs2 = document.getElementById("dui-controls");
+		// 				if (dcs2) dcs2.style.scale = "1";
+		// 				await event.nextx;
+		// 				const val = event.nextx._result?.links?.[0]?.[2];
+		// 				if (val) {
+		// 					event.result = {
+		// 						bool: true,
+		// 						control: val,
+		// 						index: event.controls.indexOf(val),
+		// 					};
+		// 				}
+		// 			});
+		// 		}
+		// 	}
+		// 	return next;
+		// };
 	}
 	//武将背景
 	if (lib.config["extension_十周年UI_wujiangbeijing"]) {

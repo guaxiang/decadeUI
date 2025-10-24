@@ -121,31 +121,43 @@ export async function precontent() {
 		};
 		decadeModule.js = function (path) {
 			if (!path) return console.error("path");
+			// 检查是否已经加载过相同的JS，避免重复加载
+			const existingScript = document.querySelector(`script[src*="${path}"]`);
+			if (existingScript) {
+				return existingScript;
+			}
 			const script = document.createElement("script");
+			script.src = `${path}?v=${version}&t=${Date.now()}`; // 添加时间戳确保Vite能检测到变化
 			script.onload = function () {
+				console.log(`JS loaded: ${path}`);
 				this.remove();
 			};
 			script.onerror = function () {
+				console.error(`Failed to load JS: ${path}`);
 				this.remove();
-				console.error(`${this.src}not found`);
 			};
-			script.src = `${path}?v=${version}`;
 			document.head.appendChild(script);
 			return script;
 		};
 		decadeModule.jsAsync = function (path) {
 			if (!path) return console.error("path");
+			// 检查是否已经加载过相同的JS，避免重复加载
+			const existingScript = document.querySelector(`script[src*="${path}"]`);
+			if (existingScript) {
+				return existingScript;
+			}
 			const script = document.createElement("script");
 			script.async = true;
 			script.defer = true;
+			script.src = `${path}?v=${version}&t=${Date.now()}`; // 添加时间戳确保Vite能检测到变化
 			script.onload = function () {
+				console.log(`JS (async) loaded: ${path}`);
 				this.remove();
 			};
 			script.onerror = function () {
+				console.error(`Failed to load JS (async): ${path}`);
 				this.remove();
-				console.error(`${this.src}not found`);
 			};
-			script.src = `${path}?v=${version}`;
 			document.head.appendChild(script);
 			return script;
 		};
@@ -183,7 +195,16 @@ export async function precontent() {
 			}
 			return this.css(path);
 		};
-		
+		// 添加JS热重载支持
+		decadeModule.hotReloadJS = function(path, isAsync = false) {
+			const existingScript = document.querySelector(`script[src*="${path}"]`);
+			if (existingScript) {
+				// 移除现有脚本，然后重新加载
+				existingScript.remove();
+			}
+			// 使用对应的加载方法重新加载
+			return isAsync ? this.jsAsync(path) : this.js(path);
+		};
 		return decadeModule.init();
 	})({});
 	Object.defineProperties(_status, {

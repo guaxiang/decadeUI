@@ -670,7 +670,7 @@ export let config = {
 	},
 	mx_decade_characterDialog: {
 		name: "自由选将筛选框",
-		init: "default",
+		init: "extension-OL-system",
 		intro: "更改自由选将筛选框",
 		item: {
 			default: "默认本体框",
