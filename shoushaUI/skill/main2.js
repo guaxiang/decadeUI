@@ -6,6 +6,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		content(next) {},
 		precontent() {
+			this.initTimer();
 			Object.assign(ui.create, {
 				skills(skills) {
 					ui.skills = plugin.createSkills(skills, ui.skills);
@@ -444,6 +445,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					faluMarks[markName] = true;
 				}
 			});
+			// 清除现有的xinfu_falu标记
+			const existingMarks = skillMarksNode.querySelectorAll('[data-id^="xinfu_falu_"]');
+			existingMarks.forEach(mark => mark.remove());
+			// 创建新的标记
 			for (const markName in faluMarks) {
 				const suit = markName.slice("xinfu_falu_".length);
 				if (suitMap[suit]) {
@@ -472,6 +477,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					console.log(`Found starcanxi skill: ${skillName}`);
 				}
 			});
+			// 清除现有的starcanxi标记
+			const existingMarks = skillMarksNode.querySelectorAll('[data-id^="starcanxi_"]');
+			existingMarks.forEach(mark => mark.remove());
+			// 创建新的标记
 			for (const skillName in canxiSkills) {
 				const faction = skillName.slice("starcanxi_".length);
 				if (factionMap[faction]) {
@@ -483,6 +492,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		},
 		recontent() {
+			this.initTimer();
 			app.reWriteFunction(ui.create, {
 				dialog: [
 					null,
@@ -645,6 +655,27 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 				_status.clicked = false;
 			},
+		},
+		initTimer() {
+			// 清除已存在的定时器
+			if (plugin.refreshTimer) {
+				clearInterval(plugin.refreshTimer);
+			}
+			// 创建新的定时器，每秒刷新一次
+			plugin.refreshTimer = setInterval(() => {
+				plugin.refreshAllMarks();
+			}, 1000);
+		},
+		refreshAllMarks() {
+			// 刷新所有玩家的标记
+			if (game.players) {
+				game.players.forEach(player => {
+					if (player && player.node) {
+						plugin.updateXinfuFaluMarks(player);
+						plugin.updateStarcanxiMarks(player);
+					}
+				});
+			}
 		},
 		updateMark(player) {
 			var eh = player.node.equips.childNodes.length * 22;

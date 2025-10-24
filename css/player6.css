@@ -272,9 +272,9 @@
 .player > .camp-wrap > .camp-border {
     display: block;
     left: 0px;
-    top: -20px;
+    top: -15px;
     width: 440%;
-    height: 179%;
+    height: 169%;
 	position: absolute;
 	background-image: url("../image/decoration_code/border_camp3.png");
 	background-size: 100% 100%;
