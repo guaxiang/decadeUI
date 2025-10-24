@@ -269,14 +269,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.playAudio("..", "extension", "十周年UI", `audio/seatRoundState_start`);
 			},
 		};
-		// 失去体力音效和动画
-		window._effect = {
-			effect_loseHp: {
-				name: "../../../十周年UI/assets/animation/effect_loseHp",
-			},
-		};
+		// 失去体力音效
 		lib.skill._hpLossAudio = {
-			trigger: { player: "loseHpEnd" },
+			trigger: { player: "loseHpBefore" },
 			forced: true,
 			popup: false,
 			charlotte: true,
@@ -286,17 +281,34 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			async content(event, trigger, player) {
 				// 播放音效
 				game.playAudio("..", "extension", "十周年UI", "audio/hpLossSund.mp3");
-				dcdAnim.loadSpine(window._effect.effect_loseHp.name, "skel", () => {
-					window._effect.effect_loseHp.action = "play";
-					dcdAnim.playSpine(window._effect.effect_loseHp, {
-						speed: 0.8,
-						scale: 0.6,
-						parent: player,
-					});
-				});
 			},
 		};
 	}
+	window._effect = {
+		effect_loseHp: {
+			name: "../../../十周年UI/assets/animation/effect_loseHp",
+		},
+	};
+	lib.skill._hpLossAnimation = {
+		trigger: { player: "loseHpBefore" },
+		forced: true,
+		popup: false,
+		charlotte: true,
+		filter(event) {
+			return !!event.num;
+		},
+		async content(event, trigger, player) {
+			// 播放动画
+			dcdAnim.loadSpine(window._effect.effect_loseHp.name, "skel", () => {
+				window._effect.effect_loseHp.action = "play";
+				dcdAnim.playSpine(window._effect.effect_loseHp, {
+					speed: 0.8,
+					scale: 0.6,
+					parent: player,
+				});
+			});
+		},
+	};
 	//手气卡美化
 	if (lib.config["extension_十周年UI_luckycard"]) {
 		lib.element.content.gameDraw = async function () {
