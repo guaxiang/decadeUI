@@ -35,7 +35,7 @@
 	background-size: 100% 100% !important;
 }
 .player::before {
-	left: -52px;
+	left: -55px;
 	top: -42px;
 	width: 230px;
 	height: 262px;
@@ -67,7 +67,7 @@
 .player::after,
 .player.selected::after,
 .player.selectable::after {
-	left: -52px;
+	left: -55px;
 	top: -42px;
 	width: 230px;
 	height: 262px;
@@ -116,7 +116,6 @@
 #arena:not(.fewplayer) > .player:not(.minskin),
 #arena:not(.fewplayer):not(*[data-player_height=""]) > .player:not(.minskin) {
 	height: 180px !important;
-	width: 125px !important;
 }
 /*玩家锁链*/
 .player > .chain {
@@ -273,7 +272,7 @@
     display: block;
     left: 0px;
     top: -15px;
-    width: 440%;
+    width: 430%;
     height: 169%;
 	position: absolute;
 	background-image: url("../image/decoration_code/border_camp3.png");

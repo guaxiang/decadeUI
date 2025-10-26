@@ -58,7 +58,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
 			get: () => ["wei", "shu", "wu", "qun", "jin"],
-			set: () => {},
+			set: () => { },
 		});
 		lib.skill._slyh = {
 			trigger: { global: "gameStart", player: "enterGame" },
@@ -82,81 +82,80 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 			},
 		};
-		// 有点问题，先414
-		// const originalChooseControl = lib.element.player.chooseControl;
-		// lib.element.player.chooseControl = function (...args) {
-		// 	const next = originalChooseControl.apply(this, args);
-		// 	if (this === game.me) {
-		// 		const groupTranslations = lib.group.map(i => get.translation(i));
-		// 		if (Array.isArray(next.controls) && next.controls.length > 0 && next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
-		// 			next.setContent(async function (event, trigger, player) {
-		// 				const list = event.controls;
-		// 				if (!list?.length) return;
-		// 				const dialog = ui.create.dialog("hidden", [list, "vcard"]);
-		// 				dialog.classList.add("noupdate", "faction-choice");
-		// 				dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
-		// 				if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
-		// 				ui.skepk.innerHTML = "请选择势力";
-		// 				for (const button of dialog.buttons) {
-		// 					if (!button) continue;
-		// 					const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : lib.config.extension_十周年UI_newDecadeStyle === "off" ? `extension/十周年UI/image/group/off/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
-		// 					button.setBackgroundImage(imagePath);
-		// 					button.style.setProperty("box-shadow", "unset", "important");
-		// 					button.innerHTML = "";
-		// 					button.addEventListener("click", () => {
-		// 						const dcs = document.getElementById("dui-controls");
-		// 						if (dcs) {
-		// 							dcs.style.scale = "1";
-		// 						}
-		// 					});
-		// 				}
-		// 				if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
-		// 				const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
-		// 				progressBarBg.setBackgroundImage("extension/十周年UI/image/group/TimeBarBg.png");
-		// 				progressBarBg.style.height = "13px";
-		// 				const progressBar = ui.create.div(".groupJindutiao2", ui.dialogbar);
-		// 				progressBar.setBackgroundImage("extension/十周年UI/image/group/TimeBarFull.png");
-		// 				progressBar.style.height = "13px";
-		// 				progressBar.style.width = "0%";
-		// 				if (!ui.dialogtext) ui.dialogtext = ui.create.div(".groupJindutiaoText", ui.dialogbar);
-		// 				ui.dialogtext.innerHTML = "";
-		// 				progressBar.data = 100;
-		// 				if (event.progressInterval) {
-		// 					clearInterval(event.progressInterval);
-		// 					delete event.progressInterval;
-		// 				}
-		// 				event.progressInterval = setInterval(() => {
-		// 					progressBar.data -= 100 / 150; // 15秒 * 10次/秒
-		// 					if (progressBar.data <= 0) {
-		// 						progressBar.data = 0;
-		// 						clearInterval(event.progressInterval);
-		// 						delete event.progressInterval;
-		// 					}
-		// 					progressBar.style.width = progressBar.data + "%";
-		// 				}, 100);
-		// 				event.nextx = game.createEvent("chooseGroup");
-		// 				event.nextx.dialog = dialog;
-		// 				event.nextx.setContent(() => {
-		// 					game.me.chooseButton(1, event.dialog, true).set("newconfirm1", true);
-		// 				});
-		// 				const dcs = document.getElementById("dui-controls");
-		// 				if (dcs) dcs.style.scale = "0";
-		// 				const dcs2 = document.getElementById("dui-controls");
-		// 				if (dcs2) dcs2.style.scale = "1";
-		// 				await event.nextx;
-		// 				const val = event.nextx._result?.links?.[0]?.[2];
-		// 				if (val) {
-		// 					event.result = {
-		// 						bool: true,
-		// 						control: val,
-		// 						index: event.controls.indexOf(val),
-		// 					};
-		// 				}
-		// 			});
-		// 		}
-		// 	}
-		// 	return next;
-		// };
+		const originalChooseControl = lib.element.player.chooseControl;
+		lib.element.player.chooseControl = function (...args) {
+			const next = originalChooseControl.apply(this, args);
+			if (this === game.me) {
+				const groupTranslations = lib.group.map(i => get.translation(i));
+				if (Array.isArray(next.controls) && next.controls.length > 0 && next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
+					next.setContent(async function (event, trigger, player) {
+						const list = event.controls;
+						if (!list?.length) return;
+						const dialog = ui.create.dialog("hidden", [list, "vcard"]);
+						dialog.classList.add("noupdate", "faction-choice");
+						dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
+						if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
+						ui.skepk.innerHTML = "请选择势力";
+						for (const button of dialog.buttons) {
+							if (!button) continue;
+							const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : lib.config.extension_十周年UI_newDecadeStyle === "off" ? `extension/十周年UI/image/group/off/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
+							button.setBackgroundImage(imagePath);
+							button.style.setProperty("box-shadow", "unset", "important");
+							button.innerHTML = "";
+							button.addEventListener("click", () => {
+								const dcs = document.getElementById("dui-controls");
+								if (dcs) {
+									dcs.style.scale = "1";
+								}
+							});
+						}
+						if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
+						const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
+						progressBarBg.setBackgroundImage("extension/十周年UI/image/group/TimeBarBg.png");
+						progressBarBg.style.height = "13px";
+						const progressBar = ui.create.div(".groupJindutiao2", ui.dialogbar);
+						progressBar.setBackgroundImage("extension/十周年UI/image/group/TimeBarFull.png");
+						progressBar.style.height = "13px";
+						progressBar.style.width = "0%";
+						if (!ui.dialogtext) ui.dialogtext = ui.create.div(".groupJindutiaoText", ui.dialogbar);
+						ui.dialogtext.innerHTML = "";
+						progressBar.data = 100;
+						if (event.progressInterval) {
+							clearInterval(event.progressInterval);
+							delete event.progressInterval;
+						}
+						event.progressInterval = setInterval(() => {
+							progressBar.data -= 100 / 150; // 15秒 * 10次/秒
+							if (progressBar.data <= 0) {
+								progressBar.data = 0;
+								clearInterval(event.progressInterval);
+								delete event.progressInterval;
+							}
+							progressBar.style.width = progressBar.data + "%";
+						}, 100);
+						event.nextx = game.createEvent("chooseGroup");
+						event.nextx.dialog = dialog;
+						event.nextx.setContent(() => {
+							game.me.chooseButton(1, event.dialog, true).set("newconfirm1", true);
+						});
+						const dcs = document.getElementById("dui-controls");
+						if (dcs) dcs.style.scale = "0";
+						const dcs2 = document.getElementById("dui-controls");
+						if (dcs2) dcs2.style.scale = "1";
+						await event.nextx;
+						const val = event.nextx._result?.links?.[0]?.[2];
+						if (val) {
+							event.result = {
+								bool: true,
+								control: val,
+								index: event.controls.indexOf(val),
+							};
+						}
+					});
+				}
+			}
+			return next;
+		};
 	}
 	//武将背景
 	if (lib.config["extension_十周年UI_wujiangbeijing"]) {
@@ -925,69 +924,71 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		};
 	}
 	// 数字特效
-	if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff" || lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "off") {
-		window._WJMHHUIFUSHUZITEXIAO = { shuzi2: { name: "../../../十周年UI/assets/animation/globaltexiao/huifushuzi/shuzi2" } };
-		window._WJMHXUNISHUZITEXIAO = { SS_PaiJu_xunishanghai: { name: "../../../十周年UI/assets/animation/globaltexiao/xunishuzi/SS_PaiJu_xunishanghai" } };
-		window._WJMHSHANGHAISHUZITEXIAO = {
-			shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/shuzi" },
-			SZN_shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi" },
-		};
-		lib.skill._wjmh_huifushuzi_ = {
-			priority: 10,
-			forced: true,
-			trigger: { player: "recoverBegin" },
-			filter(event) {
-				return event.num && event.num > 0 && event.num <= 9 && lib.config.extension_十周年UI_newDecadeStyle !== "off";
-			},
-			async content(event, trigger, player) {
-				const action = trigger.num.toString();
-				if (action) {
-					dcdAnim.loadSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2.name, "skel", () => {
-						window._WJMHHUIFUSHUZITEXIAO.shuzi2.action = action;
-						dcdAnim.playSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2, { speed: 0.6, scale: 0.5, parent: player, y: 20 });
-					});
+	window._WJMHHUIFUSHUZITEXIAO = { shuzi2: { name: "../../../十周年UI/assets/animation/globaltexiao/huifushuzi/shuzi2" } };
+	window._WJMHXUNISHUZITEXIAO = { SS_PaiJu_xunishanghai: { name: "../../../十周年UI/assets/animation/globaltexiao/xunishuzi/SS_PaiJu_xunishanghai" } };
+	window._WJMHSHANGHAISHUZITEXIAO = {
+		shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/shuzi" },
+		SZN_shuzi: { name: "../../../十周年UI/assets/animation/globaltexiao/shanghaishuzi/SZN_shuzi" },
+	};
+	lib.skill._wjmh_huifushuzi_ = {
+		priority: 10,
+		forced: true,
+		trigger: { player: "recoverBegin" },
+		filter(event) {
+			return event.num && event.num > 0 && event.num <= 9 && lib.config.extension_十周年UI_newDecadeStyle !== "off";
+		},
+		async content(event, trigger, player) {
+			const action = trigger.num.toString();
+			if (action) {
+				dcdAnim.loadSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2.name, "skel", () => {
+					window._WJMHHUIFUSHUZITEXIAO.shuzi2.action = action;
+					dcdAnim.playSpine(window._WJMHHUIFUSHUZITEXIAO.shuzi2, { speed: 0.6, scale: 0.5, parent: player, y: 20 });
+				});
+			}
+		},
+	};
+	lib.skill._wjmh_xunishuzi_ = {
+		priority: 10,
+		forced: true,
+		trigger: { player: "damage" },
+		filter(event) {
+			return event.num >= 0 && event.num <= 9 && event.unreal;
+		},
+		async content(event, trigger, player) {
+			const action = "play" + trigger.num.toString();
+			if (action) {
+				dcdAnim.loadSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.name, "skel", () => {
+					window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.action = action;
+					dcdAnim.playSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai, { speed: 0.6, scale: 0.5, parent: player, y: 20 });
+				});
+			}
+		},
+	};
+	lib.skill._wjmh_shanghaishuzi_ = {
+		priority: 210,
+		forced: true,
+		trigger: { player: "damageBegin4" },
+		filter(event) {
+			return event.num && event.num > 1 && event.num <= 9 && lib.config.extension_十周年UI_newDecadeStyle;
+		},
+		async content(event, trigger, player) {
+			const action = trigger.num.toString();
+			if (action) {
+				var anim = "SZN_shuzi";
+				if (lib.config.extension_十周年UI_newDecadeStyle === "off") {
+					anim = "shuzi";
 				}
-			},
-		};
-		lib.skill._wjmh_xunishuzi_ = {
-			priority: 10,
-			forced: true,
-			trigger: { player: "damage" },
-			filter(event) {
-				return event.num >= 0 && event.num <= 9 && event.unreal;
-			},
-			async content(event, trigger, player) {
-				const action = "play" + trigger.num.toString();
-				if (action) {
-					dcdAnim.loadSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.name, "skel", () => {
-						window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai.action = action;
-						dcdAnim.playSpine(window._WJMHXUNISHUZITEXIAO.SS_PaiJu_xunishanghai, { speed: 0.6, scale: 0.5, parent: player, y: 20 });
-					});
-				}
-			},
-		};
-		lib.skill._wjmh_shanghaishuzi_ = {
-			priority: 210,
-			forced: true,
-			trigger: { player: "damageBegin4" },
-			filter(event) {
-				return event.num && event.num > 1 && event.num <= 9 && lib.config.extension_十周年UI_newDecadeStyle;
-			},
-			async content(event, trigger, player) {
-				const action = trigger.num.toString();
-				if (action) {
-					var anim = "SZN_shuzi";
+				dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO[anim].name, "skel", () => {
+					window._WJMHSHANGHAISHUZITEXIAO[anim].action = action;
 					if (lib.config.extension_十周年UI_newDecadeStyle === "off") {
-						anim = "shuzi";
+						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO[anim], { speed: 0.6, scale: 0.4, parent: player });
+					} else {
+						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO[anim], { speed: 0.6, scale: 0.4, parent: player, y: 20 });
 					}
-					dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO[anim].name, "skel", () => {
-						window._WJMHSHANGHAISHUZITEXIAO[anim].action = action;
-						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO[anim], { speed: 0.6, scale: 0.5, parent: player });
-					});
-				}
-			},
-		};
-	}
+				});
+			}
+		},
+	};
 	//目标指示特效
 	lib.element.player.inits = [].concat(lib.element.player.inits || []).concat(async player => {
 		if (player.ChupaizhishiXObserver) return;

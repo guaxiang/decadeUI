@@ -2259,15 +2259,7 @@ export async function content(config, pack) {
 									}
 									if (typeof num == "number") {
 										node.popupNumber = num;
-										if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI" && lib.config.extension_十周年UI_newDecadeStyle !== "othersOff" && lib.config.extension_十周年UI_newDecadeStyle !== "on" && lib.config.extension_十周年UI_newDecadeStyle !== "off") {
-											if (num == Infinity) {
-												num = "+∞";
-											} else if (num == -Infinity) {
-												num = "-∞";
-											} else if (num > 0) {
-												num = "+" + num;
-											}
-										} else num = "";
+										num = "";
 									} else {
 										node.popupNumber = null;
 									}
