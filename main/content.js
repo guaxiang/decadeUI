@@ -2083,7 +2083,7 @@ export async function content(config, pack) {
 								var yingUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + skill + "_ying.png";
 								var defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_yang.png";
 								var defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_ying.png";
-								if (style == "on" || style == "othersOff" || style == "onlineUI" || style == "babysha") {
+								if (style != "off") {
 									if (mark.classList.contains("yin")) {
 										mark.classList.remove("yin");
 										mark.classList.add("yang");

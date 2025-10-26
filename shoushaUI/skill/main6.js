@@ -171,13 +171,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const skills = game.expandSkills([skill]).map(item => app.get.skillInfo(item));
 				const enableSkills = this.getEnableSkills(skills);
 				const showSkills = enableSkills.length ? enableSkills : skills;
-				// 对技能进行排序：主动技 > 限定技 > 被动技
+				// 对技能进行排序：被动技 > 限定技 > 主动技
 				showSkills.sort(function (a, b) {
 					const aIsEnable = a.type === "enable";
 					const bIsEnable = b.type === "enable";
-					// 主动技优先
-					if (aIsEnable && !bIsEnable) return -1;
-					if (!aIsEnable && bIsEnable) return 1;
+					// 主动技排在后面
+					if (aIsEnable && !bIsEnable) return 1;
+					if (!aIsEnable && bIsEnable) return -1;
 					return 0;
 				});
 				showSkills.forEach(item => {
