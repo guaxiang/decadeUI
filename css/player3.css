@@ -332,9 +332,9 @@
     font-family: xinwei, xingkai;
     font-display: swap;
     font-size: 26px;
-    width: 71%;
-    height: 30.5%;
-    left: 15%;
+    width: 85%;
+    height: 30%;
+    left: 10%;
 	display: flex;
 	text-align: center;
 	align-items: center;
@@ -344,10 +344,6 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	transition: none;
-}
-#arena[data-forcestyle="2"][data-new-decade-style="othersOff"][data-border-level="one"] .player>.camp-wrap>.camp-name {
-	width: 100%;
-	left: 0%;
 }
 .player>.camp-wrap[data-camp="jin"]>.camp-name {
 	text-shadow: 1px 1px 0px #7f4f79, -1px -1px 0px #7f4f79, 1px -1px 0px #7f4f79, -1px 1px 0px #7f4f79;
@@ -537,10 +533,10 @@
 }
 /*武将牌显示*/
 .player>.primary-avatar {
-	left: 0;
+	left: 19px;
 	top: auto;
 	bottom: 0;
-	width: 100%;
+	width: 85%;
 	height: 100%;
 	opacity: 1;
 	background-size: cover;
@@ -804,7 +800,7 @@
 /*玩家标记显示-新样式*/
 #arena[data-player-mark-style="decade"]>.player>.dui-marks {
 	left: auto;
-	top: 34px;
+	top: 38px;
 	/*下移*/
 	right: 0px;
 	/*左移*/
@@ -852,7 +848,7 @@
 	font-family: yuanli;
 	line-height: 18px;
 	/*换行高度*/
-	font-size: 13px;
+	font-size: 15px;
 	/*字体大小*/
 	color: white;
 	/*字体颜色*/
@@ -873,7 +869,7 @@
 	height: auto;
 	line-height: 18px;
 	border-radius: 0;
-	font-size: 10px;
+	font-size: 15px;
 	/*字体大小*/
 	font-weight: inherit;
 	color: white;
@@ -1109,10 +1105,10 @@
 .player>.identity,
 #arena>.player:not(.minskin)>.identity {
 	left: auto;
-	top: 1px;
-	right: 1px;
-	width: 29px;
-	height: 31px;
+	top: 0px;
+	right: 0px;
+	width: 35px;
+	height: 35px;
 	line-height: 31px;
 	font-size: 31px;
 	background-size: 100% 100%;

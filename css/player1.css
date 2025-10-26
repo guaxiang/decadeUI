@@ -791,7 +791,7 @@
 	font-family: yuanli;
 	line-height: 18px;
 	/*换行高度*/
-	font-size: 13px;
+	font-size: 15px;
 	/*字体大小*/
 	color: white;
 	/*字体颜色*/
@@ -812,7 +812,7 @@
 	height: auto;
 	line-height: 18px;
 	border-radius: 0;
-	font-size: 10px;
+	font-size: 15px;
 	/*字体大小*/
 	font-weight: inherit;
 	color: white;
