@@ -132,7 +132,7 @@
 	width: 100%;
 	box-sizing: border-box;
 	padding: 60px 20px 20px 29px;
-	overflow: auto;
+	overflow: hidden;
 }
 .character-dialog.single > div.right {
 	left: calc(0% - 105px);
@@ -152,7 +152,8 @@
 .character-dialog > div.right > div {
 	width: 100%;
 	height: 100%;
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 .character-dialog > div.right div {
 	position: relative;
@@ -195,4 +196,23 @@
 	background-size: contain;
 	background-position: left;
 	background-repeat: no-repeat;
+}
+.character-dialog > div.right > div::-webkit-scrollbar {
+	width: 8px;
+}
+.character-dialog > div.right > div::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.3);
+	border-radius: 4px;
+}
+.character-dialog > div.right > div::-webkit-scrollbar-thumb {
+	background: rgba(255, 201, 1, 0.8);
+	border-radius: 4px;
+	border: 1px solid rgba(255, 201, 1, 0.3);
+}
+.character-dialog > div.right > div::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 201, 1, 1);
+}
+.character-dialog > div.right > div {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 201, 1, 0.8) rgba(0, 0, 0, 0.3);
 }
