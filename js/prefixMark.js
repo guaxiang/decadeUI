@@ -142,6 +142,8 @@ export const prefixMarkModule = {
 		'飞鸿|神': { className: "shen-mark", property: "$shenMark" },
 		"☆神": { className: "shen-mark", property: "$shenMark" },
 		虎翼: { className: "huyi-mark", property: "$huyiMark" },
+		闪耀: { className: "shanyao-mark", property: "$shanyaoMark" },
+		领主: { className: "lingzhu-mark", property: "$lingzhuMark" },
 	},
 	// 显示十周年角标
 	showPrefixMark(character, playerElement) {
