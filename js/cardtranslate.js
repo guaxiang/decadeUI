@@ -1,17 +1,17 @@
 (function () {
-	window.TenYearUI = window.TenYearUI || {};
-	TenYearUI.dragThreshold = 5;
-	TenYearUI.cardMargin = 8;
-	TenYearUI.isDragging = false;
-	TenYearUI.sourceNode = null;
-	TenYearUI.movedNode = null;
-	TenYearUI.originalPointerEvents = null;
-	TenYearUI.isMobileDevice = navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad|Mobile)/i);
-	TenYearUI.evts = TenYearUI.isMobileDevice ? ["touchstart", "touchmove", "touchend"] : ["mousedown", "mousemove", "mouseup"];
-	TenYearUI.init = async function () {
-		await TenYearUI.initCardDragSwap();
+	window.dui = window.dui || {};
+	dui.dragThreshold = 5;
+	dui.cardMargin = 8;
+	dui.isDragging = false;
+	dui.sourceNode = null;
+	dui.movedNode = null;
+	dui.originalPointerEvents = null;
+	dui.isMobileDevice = navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad|Mobile)/i);
+	dui.evts = dui.isMobileDevice ? ["touchstart", "touchmove", "touchend"] : ["mousedown", "mousemove", "mouseup"];
+	dui.init = async function () {
+		await dui.initCardDragSwap();
 	};
-	TenYearUI.getTransformValues = async function (element) {
+	dui.getTransformValues = async function (element) {
 		return new Promise((resolve) => {
 			requestAnimationFrame(() => {
 				try {
@@ -24,7 +24,7 @@
 			});
 		});
 	};
-	TenYearUI.updateHandLayout = async function () {
+	dui.updateHandLayout = async function () {
 		return new Promise((resolve) => {
 			requestAnimationFrame(() => {
 				if (window.dui && dui.layout && typeof dui.layout.updateHand === "function") {
@@ -34,10 +34,10 @@
 			});
 		});
 	};
-	TenYearUI.getCardElement = function (target) {
+	dui.getCardElement = function (target) {
 		return target ? target.closest(".card") : null;
 	};
-	TenYearUI.setCardTransform = async function (card, tx, ty, scale) {
+	dui.setCardTransform = async function (card, tx, ty, scale) {
 		if (!card || typeof tx !== "number" || typeof ty !== "number") return;
 		return new Promise((resolve) => {
 			requestAnimationFrame(() => {
@@ -50,15 +50,15 @@
 			});
 		});
 	};
-	TenYearUI.dragCardStart = async function (e) {
+	dui.dragCardStart = async function (e) {
 		if (e.button === 2) return;
-		const cardElement = TenYearUI.getCardElement(e.target);
+		const cardElement = dui.getCardElement(e.target);
 		if (!cardElement) return;
 		const touch = e.touches ? e.touches[0] : e;
 		const startX = touch.clientX;
 		const startY = touch.clientY;
-		const transformValues = await TenYearUI.getTransformValues(cardElement);
-		TenYearUI.sourceNode = cardElement;
+		const transformValues = await dui.getTransformValues(cardElement);
+		dui.sourceNode = cardElement;
 		Object.assign(cardElement, {
 			startX: startX,
 			startY: startY,
@@ -66,23 +66,23 @@
 			initialTranslateY: transformValues.translateY,
 			scale: transformValues.scale,
 		});
-		TenYearUI.isDragging = false;
-		TenYearUI.originalPointerEvents = getComputedStyle(cardElement).pointerEvents;
-		document.addEventListener(TenYearUI.evts[1], TenYearUI.dragCardMove, { passive: false });
-		document.addEventListener(TenYearUI.evts[2], TenYearUI.dragCardEnd, { passive: false });
+		dui.isDragging = false;
+		dui.originalPointerEvents = getComputedStyle(cardElement).pointerEvents;
+		document.addEventListener(dui.evts[1], dui.dragCardMove, { passive: false });
+		document.addEventListener(dui.evts[2], dui.dragCardEnd, { passive: false });
 	};
-	TenYearUI.dragCardMove = async function (e) {
-		const sourceCard = TenYearUI.sourceNode;
+	dui.dragCardMove = async function (e) {
+		const sourceCard = dui.sourceNode;
 		if (!sourceCard) return;
 		const touch = e.touches ? e.touches[0] : e;
 		const currentX = touch.clientX;
 		const currentY = touch.clientY;
 		const dx = currentX - sourceCard.startX;
 		const dy = currentY - sourceCard.startY;
-		if (!TenYearUI.isDragging) {
+		if (!dui.isDragging) {
 			const distance = Math.sqrt(dx * dx + dy * dy);
-			if (distance > TenYearUI.dragThreshold) {
-				TenYearUI.isDragging = true;
+			if (distance > dui.dragThreshold) {
+				dui.isDragging = true;
 				e.preventDefault();
 				e.stopPropagation();
 				Object.assign(sourceCard.style, {
@@ -93,19 +93,19 @@
 				});
 			}
 		}
-		if (TenYearUI.isDragging) {
+		if (dui.isDragging) {
 			const zoomFactor = (window.game && game.documentZoom) || 1;
 			const newTranslateX = sourceCard.initialTranslateX + dx / zoomFactor;
 			sourceCard.style.transform = `translate(${newTranslateX}px, ${sourceCard.initialTranslateY}px) scale(${sourceCard.scale})`;
 			const pointElement = document.elementFromPoint(touch.pageX, touch.pageY);
-			const targetCard = TenYearUI.getCardElement(pointElement);
-			if (targetCard && targetCard !== sourceCard && targetCard.parentNode === ui.handcards1 && TenYearUI.movedNode !== targetCard) {
-				TenYearUI.movedNode = targetCard;
-				await TenYearUI.swapCardPosition(sourceCard, targetCard);
+			const targetCard = dui.getCardElement(pointElement);
+			if (targetCard && targetCard !== sourceCard && targetCard.parentNode === ui.handcards1 && dui.movedNode !== targetCard) {
+				dui.movedNode = targetCard;
+				await dui.swapCardPosition(sourceCard, targetCard);
 			}
 		}
 	};
-	TenYearUI.swapCardPosition = async function (sourceCard, targetCard) {
+	dui.swapCardPosition = async function (sourceCard, targetCard) {
 		const handContainer = ui.handcards1;
 		const children = Array.from(handContainer.childNodes);
 		const sourceIndex = children.indexOf(sourceCard);
@@ -115,8 +115,8 @@
 		const isMovingLeft = sourceIndex > targetIndex;
 		handContainer.insertBefore(sourceCard, isMovingLeft ? targetCard : targetCard.nextSibling);
 		const sourceTx = sourceCard.tx;
-		await TenYearUI.setCardTransform(sourceCard, targetCard.tx, sourceCard.initialTranslateY, cardScale);
-		await TenYearUI.setCardTransform(targetCard, sourceTx, targetCard.ty, cardScale);
+		await dui.setCardTransform(sourceCard, targetCard.tx, sourceCard.initialTranslateY, cardScale);
+		await dui.setCardTransform(targetCard, sourceTx, targetCard.ty, cardScale);
 		const start = isMovingLeft ? targetIndex + 1 : sourceIndex;
 		const end = isMovingLeft ? sourceIndex : targetIndex - 1;
 		const updatedChildren = Array.from(handContainer.childNodes);
@@ -128,61 +128,61 @@
 				const neighborIdx = isMovingLeft ? originalIdx - 1 : originalIdx + 1;
 				const neighborCard = children[neighborIdx];
 				if (neighborCard) {
-					updatePromises.push(TenYearUI.setCardTransform(card, neighborCard.tx, card.ty, cardScale));
+					updatePromises.push(dui.setCardTransform(card, neighborCard.tx, card.ty, cardScale));
 				}
 			}
 		}
 		await Promise.all(updatePromises);
-		await TenYearUI.updateHandLayout();
+		await dui.updateHandLayout();
 	};
-	TenYearUI.dragCardEnd = async function (e) {
-		const sourceCard = TenYearUI.sourceNode;
+	dui.dragCardEnd = async function (e) {
+		const sourceCard = dui.sourceNode;
 		if (!sourceCard) return;
-		if (TenYearUI.isDragging) {
+		if (dui.isDragging) {
 			e.preventDefault();
 			e.stopPropagation();
-			if (!TenYearUI.movedNode) {
+			if (!dui.movedNode) {
 				sourceCard.style.transform = `translate(${sourceCard.initialTranslateX}px, ${sourceCard.initialTranslateY}px) scale(${sourceCard.scale})`;
 			}
 		}
 		Object.assign(sourceCard.style, {
 			transition: "",
-			pointerEvents: TenYearUI.originalPointerEvents || "",
+			pointerEvents: dui.originalPointerEvents || "",
 			opacity: "1",
 			zIndex: "",
 		});
-		document.removeEventListener(TenYearUI.evts[1], TenYearUI.dragCardMove);
-		document.removeEventListener(TenYearUI.evts[2], TenYearUI.dragCardEnd);
-		TenYearUI.sourceNode = null;
-		TenYearUI.movedNode = null;
-		TenYearUI.isDragging = false;
-		await TenYearUI.updateHandLayout();
+		document.removeEventListener(dui.evts[1], dui.dragCardMove);
+		document.removeEventListener(dui.evts[2], dui.dragCardEnd);
+		dui.sourceNode = null;
+		dui.movedNode = null;
+		dui.isDragging = false;
+		await dui.updateHandLayout();
 	};
-	TenYearUI.ensureCardPositions = async function () {
+	dui.ensureCardPositions = async function () {
 		if (!ui || !ui.handcards1) return;
 		const cards = ui.handcards1.querySelectorAll(".card");
 		const positionPromises = Array.from(cards).map(async card => {
 			if (typeof card.tx === "undefined" || typeof card.ty === "undefined") {
-				const { translateX, translateY } = await TenYearUI.getTransformValues(card);
+				const { translateX, translateY } = await dui.getTransformValues(card);
 				card.tx = translateX;
 				card.ty = translateY;
 			}
 		});
 		await Promise.all(positionPromises);
 	};
-	TenYearUI.initCardDragSwap = async function () {
+	dui.initCardDragSwap = async function () {
 		if (!ui || !ui.handcards1) {
-			setTimeout(() => TenYearUI.initCardDragSwap(), 1000);
+			setTimeout(() => dui.initCardDragSwap(), 1000);
 			return;
 		}
 		const handContainer = ui.handcards1;
-		handContainer.removeEventListener(TenYearUI.evts[0], TenYearUI.dragCardStart);
-		handContainer.addEventListener(TenYearUI.evts[0], TenYearUI.dragCardStart, { passive: false });
-		await TenYearUI.ensureCardPositions();
+		handContainer.removeEventListener(dui.evts[0], dui.dragCardStart);
+		handContainer.addEventListener(dui.evts[0], dui.dragCardStart, { passive: false });
+		await dui.ensureCardPositions();
 	};
 	async function onReady() {
 		setTimeout(async () => {
-			await TenYearUI.init();
+			await dui.init();
 		}, 1000);
 	}
 	if (document.readyState === "complete") {

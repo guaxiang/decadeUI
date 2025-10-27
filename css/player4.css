@@ -552,10 +552,10 @@
 }
 /*武将牌显示*/
 .player>.primary-avatar {
-	left: 0;
+	left: 20px;
 	top: auto;
 	bottom: 0;
-	width: 100%;
+	width: 84.9%;
 	height: 100%;
 	opacity: 1;
 	background-size: cover;

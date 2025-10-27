@@ -1322,7 +1322,9 @@
 .player > .qingshi-mark,
 .player > .xuyuan-mark,
 .player > .fengyun-mark,
-.player > .man-mark {
+.player > .man-mark,
+.player > .feihong-mark,
+.player > .huyi-mark {
 	position: absolute;
 	top: 108px;
 	left: -11px;
@@ -1538,4 +1540,10 @@
 }
 .player > .man-mark {
 	background-image: url("../image/mark/mark_man.png");
+}
+.player > .feihong-mark {
+	background-image: url("../image/mark/mark_feihong.png");
+}
+.player > .huyi-mark {
+	background-image: url("../image/mark/mark_huyi.png");
 }
