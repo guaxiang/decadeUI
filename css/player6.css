@@ -1047,6 +1047,11 @@
 .player > .name_seat {
 	display: none !important;
 }
+/* 当显示进度条时隐藏座位号 */
+.player:has(.timeai) > .seat,
+.player:has(.timePhase) > .seat {
+	display: none !important;
+}
 /*玩家手牌数显示*/
 .player > .card-count {
 	position: absolute;

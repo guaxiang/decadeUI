@@ -1160,6 +1160,11 @@
 .player > .name_seat {
 	display: none !important;
 }
+/* 当显示进度条时隐藏座位号 */
+.player:has(.timeai) > .seat,
+.player:has(.timePhase) > .seat {
+	display: none !important;
+}
 /* 所有位置添加"号位"文本 */
 .player[data-position="0"] > .seat::after,
 .player[data-position="1"] > .seat::after,
