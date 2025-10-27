@@ -96,27 +96,57 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
 						if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
 						ui.skepk.innerHTML = "请选择势力";
+						const getGroupImagePath = (buttonName) => {
+							const style = lib.config.extension_十周年UI_newDecadeStyle;
+							if (style === "on") {
+								return `extension/十周年UI/image/group/decade/group_${buttonName}.png`;
+							}
+							if (style === "off") {
+								return `extension/十周年UI/image/group/off/group_${buttonName}.png`;
+							}
+							return `extension/十周年UI/image/group/group_${buttonName}.png`;
+						};
 						for (const button of dialog.buttons) {
 							if (!button) continue;
-							const imagePath = lib.config.extension_十周年UI_newDecadeStyle === "on" ? `extension/十周年UI/image/group/decade/group_${button.name}.png` : lib.config.extension_十周年UI_newDecadeStyle === "off" ? `extension/十周年UI/image/group/off/group_${button.name}.png` : `extension/十周年UI/image/group/group_${button.name}.png`;
-							button.setBackgroundImage(imagePath);
+							// 移除 decade-card 类以避免卡牌美化逻辑干扰势力图
+							button.classList.remove("decade-card");
+							const groupImagePath = getGroupImagePath(button.name);
+							// 更新 asset 以防止异步加载干扰势力图显示
+							const dui = window.dui;
+							if (dui && dui.statics && dui.statics.cards && !dui.statics.cards.READ_OK) {
+								const asset = dui.statics.cards[button.name];
+								if (asset) {
+									// 禁用异步图片加载
+									asset.loaded = true;
+									asset.url = groupImagePath;
+									asset.rawUrl = `url("${lib.assetURL}${groupImagePath}")`;
+									// 清空 image 对象，防止触发 onerror
+									if (asset.image && asset.image.onerror) {
+										asset.image.onerror = null;
+									}
+								}
+							}
+							button.setBackgroundImage(groupImagePath);
 							button.style.setProperty("box-shadow", "unset", "important");
 							button.innerHTML = "";
 							button.addEventListener("click", () => {
-								const dcs = document.getElementById("dui-controls");
-								if (dcs) {
-									dcs.style.scale = "1";
+								const duiControls = document.getElementById("dui-controls");
+								if (duiControls) {
+									duiControls.style.scale = "1";
 								}
 							});
 						}
+						// 创建进度条背景
 						if (!ui.dialogbar) ui.dialogbar = ui.create.div(".groupJindutiao", dialog);
 						const progressBarBg = ui.create.div(".groupJindutiao1", ui.dialogbar);
 						progressBarBg.setBackgroundImage("extension/十周年UI/image/group/TimeBarBg.png");
 						progressBarBg.style.height = "13px";
+						// 创建进度条
 						const progressBar = ui.create.div(".groupJindutiao2", ui.dialogbar);
 						progressBar.setBackgroundImage("extension/十周年UI/image/group/TimeBarFull.png");
 						progressBar.style.height = "13px";
 						progressBar.style.width = "0%";
+						// 创建进度条文本
 						if (!ui.dialogtext) ui.dialogtext = ui.create.div(".groupJindutiaoText", ui.dialogbar);
 						ui.dialogtext.innerHTML = "";
 						progressBar.data = 100;
@@ -125,7 +155,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							delete event.progressInterval;
 						}
 						event.progressInterval = setInterval(() => {
-							progressBar.data -= 100 / 150; // 15秒 * 10次/秒
+							progressBar.data -= 100 / 150; // 15秒 = 1500ms，每100ms更新一次
 							if (progressBar.data <= 0) {
 								progressBar.data = 0;
 								clearInterval(event.progressInterval);
@@ -133,15 +163,16 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							}
 							progressBar.style.width = progressBar.data + "%";
 						}, 100);
+						// 创建选择事件
 						event.nextx = game.createEvent("chooseGroup");
 						event.nextx.dialog = dialog;
 						event.nextx.setContent(() => {
 							game.me.chooseButton(1, event.dialog, true).set("newconfirm1", true);
 						});
-						const dcs = document.getElementById("dui-controls");
-						if (dcs) dcs.style.scale = "0";
-						const dcs2 = document.getElementById("dui-controls");
-						if (dcs2) dcs2.style.scale = "1";
+						const duiControls = document.getElementById("dui-controls");
+						if (duiControls) {
+							duiControls.style.scale = "0";
+						}
 						await event.nextx;
 						const val = event.nextx._result?.links?.[0]?.[2];
 						if (val) {

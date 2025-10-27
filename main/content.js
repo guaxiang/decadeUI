@@ -312,7 +312,8 @@ export async function content(config, pack) {
 										equip.removeChild(equip.lastChild);
 									}
 								const imgFormat = decadeUI.config.cardPrettify;
-								if (imgFormat !== "off") {
+								// 跳过button类的卡牌
+								if (imgFormat !== "off" && !this.classList.contains("button")) {
 									let filename = card[2];
 									this.classList.add("decade-card");
 									if (!this.classList.contains("infohidden")) {
@@ -362,7 +363,7 @@ export async function content(config, pack) {
 											}
 										}
 									}
-								} else {
+								} else if (!this.classList.contains("button")) {
 									this.classList.remove("decade-card");
 								}
 								return this;
