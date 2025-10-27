@@ -1329,7 +1329,9 @@
 .player > .fengyun-mark,
 .player > .man-mark,
 .player > .feihong-mark,
-.player > .huyi-mark {
+.player > .huyi-mark,
+.player > .shanyao-mark,
+.player > .lingzhu-mark {
 	position: absolute;
 	top: 108px;
 	left: -11px;
@@ -1551,4 +1553,10 @@
 }
 .player > .huyi-mark {
 	background-image: url("../image/mark/mark_huyi.png");
+}
+.player > .shanyao-mark {
+	background-image: url("../image/mark/mark_shanyao.png");
+}
+.player > .lingzhu-mark {
+	background-image: url("../image/mark/mark_lingzhu.png");
 }
