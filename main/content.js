@@ -7986,120 +7986,40 @@ export async function content(config, pack) {
 		function showGTBB() {
 			var playerLabel = "玩家";
 			var nickname = lib.config.connect_nickname;
-			var randomNames = [
-				"氪金抽66",
-				"卡宝真可爱",
-				"蒸蒸日上",
-				"√卡视我如父",
-				"麒麟弓免疫枸杞",
-				"坏可宣（老坏批）",
-				"六千大败而归",
-				"开局酒古锭",
-				"遇事不决刷个乐",
-				"见面两刀喜相逢",
-				"改名出66",
-				"时代的六万五",
-				"韩旭",
-				"司马长衫",
-				"ogx",
-				"狗卡不如无名杀",
-				"王八万",
-				"一拳兀突骨",
-				"开局送神将",
-				"丈八二桃",
-				"装甲车车",
-				"等我喝口酒",
-				"Samuri",
-				"马",
-				"kimo鸡～木木",
-				"Log-Frunki",
-				"aoe银钱豹",
-				"没有丈八就托管",
-				"无中yyds",
-				"给咸鱼鸽鸽打call",
-				"小零二哟～",
-				"长歌最帅了",
-				"大猫有侠者之风",
-				"布灵布灵❤️",
-				"我爱～摸鱼🐠～",
-				"小寻寻真棒",
-				"呲牙哥超爱笑",
-				"是俺杀哒",
-				"阿七阿七",
-				"祖安·灰晖是龙王",
-				"吃颗桃桃好遗计",
-				"好可宣✓良民",
-				"藏海表锅好",
-				"金乎？木乎？水乎！！",
-				"无法也无天",
-				"西风不识相",
-				"神秘喵酱",
-				"星城在干嘛？",
-				"子鱼今天摸鱼了吗？",
-				"阳光苞里有阳光",
-				"诗笺的小裙裙",
-				"轮回中的消逝",
-				"乱踢jb的云野",
-				"小一是不是...是不是...",
-				"美羊羊爱瑟瑟",
-				"化梦的星辰",
-				"杰哥带你登dua郎",
-				"世中君子人",
-				"叹年华未央",
-				"短咕咕",
-				"若石",
-				"很可爱的小白",
-				"沉迷踢jb的云野",
-				"厉不厉害你坤哥",
-				"东方太白",
-				"恶心的死宅",
-				"风回太初",
-				"隔壁的戴天",
-				"林柒柒",
-				"洛神",
-				"ikun",
-				"蒙娜丽喵",
-				"只因无中",
-				"女宝",
-				"远道",
-				"翘课吗？",
-				"失败的man",
-				"晚舟",
-				"叙利亚野🐒",
-				"幸运女神在微笑",
-				"知天意，逆天寒",
-				"明月栖木",
-				"路卡利欧",
-				"兔兔",
-				"香蕉",
-				"douyun",
-				"启明星阿枫",
-				"雨夜寒稠",
-				"洛天依？！",
-				"黄老板是好人～",
-				"来点瑟瑟文和",
-				"鲨鱼配辣椒",
-				"萝卜～好萝卜",
-				"废城君",
-				"E佬细节鬼才",
-				"感到棘手要怀念谁？",
-				"半价小薯片",
-				"JK欧拉欧拉欧拉",
-				"新年快乐",
-				"乔姐带你飞",
-				"12345678？",
-				"缘之空",
-				"小小恐龙",
-				"教主：杀我！",
-				"才思泉涌的司马",
-				"我是好人",
-				"喜怒无常的大宝",
-				"黄赌毒",
-				"阴间杀～秋",
-				"敢于劈瓜的关羽",
-				"暮暮子",
-				"潜龙在渊",
-			];
+			//从已开启武将包中获取
+			var randomNames = [];
+			for (var i = 0; i < lib.config.characters.length; i++) {
+				var packName = lib.config.characters[i];
+				var pack = lib.characterPack[packName];
+				if (!pack) continue;
+				for (var charName in pack) {
+					var characterInfo = pack[charName];
+					if (characterInfo.isUnseen) continue;
+					if (lib.filter.characterDisabled(charName)) continue;
+					var displayName = get.translation(charName);
+					if (displayName && displayName !== charName) {
+						randomNames.push(displayName);
+					}
+				}
+			}
+			for (var packName in lib.characterPack) {
+				if (packName.indexOf("mode_extension_") === 0) {
+					var extName = packName.slice(15);
+					if (lib.config[`extension_${extName}_characters_enable`] === true) {
+						var pack = lib.characterPack[packName];
+						if (!pack) continue;
+						for (var charName in pack) {
+							var characterInfo = pack[charName];
+							if (characterInfo.isUnseen) continue;
+							if (lib.filter.characterDisabled(charName)) continue;
+							var displayName = get.translation(charName);
+							if (displayName && displayName !== charName) {
+								randomNames.push(displayName);
+							}
+						}
+					}
+				}
+			}
 			var suiji = randomNames.randomGet();
 			var name = [suiji, nickname].randomGet();
 			var action = ["通过", "使用", "开启"].randomGet();
@@ -8108,68 +8028,89 @@ export async function content(config, pack) {
 			var boxTypes = ["盒子", "宝盒", "礼包", "福袋", "礼盒", "庆典", "盛典"];
 			var box = boxTypes.randomGet();
 			var getText = "获得了";
-			//皮肤
-			var skins = ["界钟会×1", "王朗×1", "马钧×1", "司马昭×1", "司马师×1", "王平×1", "诸葛瞻×1", "张星彩×1", "董允×1", "关索×1", "骆统×1", "周处*1", "界步练师*1", "界朱然*1", "贺齐*1", "苏飞*1", "公孙康×1", "杨彪×1", "刘璋×1", "张仲景×1", "司马徽×1", "曹婴×1", "徐荣×1", "史诗宝珠*66", "史诗宝珠*33", "麒麟生角·魏延*1", "史诗宝珠*10", "刘焉×1", "孙寒华×1", "戏志才×1", "界曹真×1", "曹婴×1", "王粲×1", "界于禁×1", "郝昭×1", "界黄忠×1", "鲍三娘×1", "周群×1", "赵襄×1", "马云禄×1", "孙皓×1", "留赞×1", "吴景×1", "界徐盛×1", "许攸×1", "杜预×1", "界李儒×1", "张让×1", "麹义×1", "司马徽×1", "界左慈×1", "鲍三娘×1", "界徐盛×1", "南华老仙×1", "韩旭の大饼*100", "神郭嘉×1", "吴景×1", "周处×1", "杜预×1", "司马师×1", "羊微瑜×1", "神曹操×1"];
+			var skins = [];
+			//从已开启武将包中获取
+			for (var i = 0; i < lib.config.characters.length; i++) {
+				var packName = lib.config.characters[i];
+				var pack = lib.characterPack[packName];
+				if (!pack) continue;
+				for (var charName in pack) {
+					var characterInfo = pack[charName];
+					if (characterInfo.isUnseen) continue;
+					if (lib.filter.characterDisabled(charName)) continue;
+					var displayName = get.translation(charName);
+					if (displayName && displayName !== charName) {
+						var skinText = displayName + "×1";
+						skins.push(skinText);
+					}
+				}
+			}
+			for (var packName in lib.characterPack) {
+				if (packName.indexOf("mode_extension_") === 0) {
+					var extName = packName.slice(15);
+					if (lib.config[`extension_${extName}_characters_enable`] === true) {
+						var pack = lib.characterPack[packName];
+						if (!pack) continue;
+						for (var charName in pack) {
+							var characterInfo = pack[charName];
+							if (characterInfo.isUnseen) continue;
+							if (lib.filter.characterDisabled(charName)) continue;
+							var displayName = get.translation(charName);
+							if (displayName && displayName !== charName) {
+								var skinText = displayName + "×1";
+								skins.push(skinText);
+							}
+						}
+					}
+				}
+			}
 			var skin = skins.randomGet();
-			//武将
-			var generals = [
-				"谋定天下·陆逊*1（动+静）",
-				"龙困于渊·刘协（动+静）*1",
-				"星花柔矛·张星彩*1（动+静）",
-				"呼啸生风·许褚*1（动+静）",
-				"牛年立冬·司马懿*1（动+静）",
-				"鹰视狼顾·司马懿*1（动+静）",
-				"洛水神韵·甄姬*1（动+静）",
-				"登锋陷阵·张辽*1（动+静）",
-				"十胜十败·郭嘉*1（动+静）",
-				"猪年端午·曹丕*1（动+静）",
-				"背水一战·张郃*1（动+静）",
-				"神兵天降·邓艾*1（动+静）",
-				"独来固志·王基*1（动+静）",
-				"猪年圣诞·刘备*1（动+静）",
-				"哮风从龙·关羽*1（动+静）",
-				"西凉雄狮·马超*1（动+静）",
-				"鏖战赤壁·黄盖*1（动+静）",
-				"星流霆击·孙尚香*1（动+静）",
-				"猪年圣诞·陆逊*1（动+静）",
-				"鼠年七夕·貂蝉*1（动+静）",
-				"迅雷风烈·张角*1（动+静）",
-				"一往无前·袁绍*1（动+静）",
-				"盛气凌人·许攸*1（动+静）",
-				"玄冥天通·神曹操*1（动+静）",
-				"魂牵梦绕·灵雎*1（动+静）",
-				"肝胆相照·⭐甘宁*1（动+静）",
-				"超脱于世·庞德公*1（动+静）",
-				"雄踞益州·刘焉*1（动+静）",
-				"鼠年春节·兀突骨*1（动+静）",
-				"牛年端午·孙鲁班*1（动+静）",
-				"灵魂歌王·留赞*1（动+静）",
-				"花容月貌·孙茹*1（动+静）",
-				"猪年春节·孙鲁育*1（动+静）",
-				"长沙桓王·孙笨*1（动+静）",
-				"如花似朵·小乔*1（动+静）",
-				"嫣然一笑·鲍三娘*1",
-				"锐不可当·张翼*1（动+静）",
-				"鼠年中秋·关索*1（动+静）",
-				"花海舞枪·马云禄*1（动+静）",
-				"木牛流马·黄月英*1（动+静）",
-				"锋芒毕露·曹婴*1（动+静）",
-				"长坂败备·曹纯*1（动+静）",
-				"龙袭星落·王朗*1（动+静）",
-				"举棋若定·戏志才*1（动+静）",
-				"泰山捧日·程昱*1（动+静）",
-				"冬日·王元姬（动态+静态）*1",
-				"牛年七夕·步练师动态包*1（动+静）",
-				"神甘宁×1",
-				"巾帼花舞·马云禄*1（动+静）",
-				"银币*66666",
-				"将魂*66666",
-				"琪花瑶草·徐氏*1（动+静）",
-				"肝胆相照·星甘宁*1（动+静）",
-				"星流霆击·孙尚香（动+静）*1",
-				"锋芒毕露·曹婴*1（动+静）",
-				"长衫の天牢令*100",
-			];
+			//从已开启武将包中获取
+			var generals = [];
+			for (var i = 0; i < lib.config.characters.length; i++) {
+				var packName = lib.config.characters[i];
+				var pack = lib.characterPack[packName];
+				if (!pack) continue;
+				for (var charName in pack) {
+					var characterInfo = pack[charName];
+					if (characterInfo.isUnseen) continue;
+					if (lib.filter.characterDisabled(charName)) continue;
+					var title = lib.characterTitle[charName] || "";
+					if (title.startsWith("#")) {
+						title = title.slice(2);
+					}
+					title = get.plainText(title);
+					var displayName = get.translation(charName);
+					if (title && displayName && displayName !== charName) {
+						var generalText = title + "·" + displayName + "*1（动+静）";
+						generals.push(generalText);
+					}
+				}
+			}
+			for (var packName in lib.characterPack) {
+				if (packName.indexOf("mode_extension_") === 0) {
+					var extName = packName.slice(15);
+					if (lib.config[`extension_${extName}_characters_enable`] === true) {
+						var pack = lib.characterPack[packName];
+						if (!pack) continue;
+						for (var charName in pack) {
+							var characterInfo = pack[charName];
+							if (characterInfo.isUnseen) continue;
+							if (lib.filter.characterDisabled(charName)) continue;
+							var title = lib.characterTitle[charName] || "";
+							if (title.startsWith("#")) {
+								title = title.slice(2);
+							}
+							title = get.plainText(title);
+							var displayName = get.translation(charName);
+							if (title && displayName && displayName !== charName) {
+								var generalText = title + "·" + displayName + "*1（动+静）";
+								generals.push(generalText);
+							}
+						}
+					}
+				}
+			}
 			var general = generals.randomGet();
 			//奖励颜色
 			var reward = ['<font color="#56e4fa">' + skin + "</font>", '<font color="#f3c20f">' + general + "</font>"].randomGet();
