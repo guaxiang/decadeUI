@@ -312,8 +312,12 @@ export async function content(config, pack) {
 										equip.removeChild(equip.lastChild);
 									}
 								const imgFormat = decadeUI.config.cardPrettify;
-								// 跳过button类的卡牌
-								if (imgFormat !== "off" && !this.classList.contains("button")) {
+								// 仅对标准牌型进行美化，跳过 fullimage（武将原画）
+								if (
+									imgFormat !== "off" &&
+									!this.classList.contains("fullimage") &&
+									["basic", "trick", "equip", "delay"].includes(get.type(card[2]))
+								) {
 									let filename = card[2];
 									this.classList.add("decade-card");
 									if (!this.classList.contains("infohidden")) {
@@ -363,7 +367,7 @@ export async function content(config, pack) {
 											}
 										}
 									}
-								} else if (!this.classList.contains("button")) {
+								} else if (!this.classList.contains("fullimage")) {
 									this.classList.remove("decade-card");
 								}
 								return this;

@@ -112,7 +112,7 @@
 	padding: 0;
 }
 .control>div {
-	background-image: url("./images/uibutton/btnnnor.png");
+	background-image: url("./images/uibutton/new_btnn.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
 	padding: 2.6px 23px !important;
@@ -124,8 +124,7 @@
 	text-align: center;
 	margin-top: 0px !important;
 	margin-bottom: -15px !important;
-	color: #2f4f4f;
-	-webkit-text-stroke: 0.4px #803b02;
+	color: #f5d79e;
 	font-family: "yuanli";
 	font-size: 20px;
 }

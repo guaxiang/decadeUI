@@ -144,6 +144,7 @@ export const prefixMarkModule = {
 		虎翼: { className: "huyi-mark", property: "$huyiMark" },
 		闪耀: { className: "shanyao-mark", property: "$shanyaoMark" },
 		领主: { className: "lingzhu-mark", property: "$lingzhuMark" },
+		闪耀战姬: { className: "shanyao-mark", property: "$shanyaoMark" },
 	},
 	// 显示十周年角标
 	showPrefixMark(character, playerElement) {
