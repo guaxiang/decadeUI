@@ -743,7 +743,7 @@
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="3"] {
 	left: auto;
 	top: 9px;
-	right: calc(36% - (var(--w) / 2));
+	right: calc(35.5% - (var(--w) / 2));
 }
 #arena[data-layout="nova"][data-new-decade-style="othersOff"][data-number="8"]>.player[data-position="4"] {
 	left: calc(50% - (var(--w) / 2));

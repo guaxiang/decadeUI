@@ -26,7 +26,7 @@
 }
 /* 基础装备栏样式 */
 #arena > .equips-wrap {
-	bottom: 1%;
+	bottom: 0%;
 	height: 100%;
 	left: auto;
 	min-width: 130px;

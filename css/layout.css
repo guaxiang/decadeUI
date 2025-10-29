@@ -201,6 +201,16 @@ body > .background {
 	right: 320px;
 	bottom: 0%;
 }
+/* 名将杀样式下的右手布局手牌位置调整 */
+#arena[data-new-decade-style="codename"][data-right-layout="on"] > .hand-wrap,
+#arena[data-new-decade-style="codename"][data-right-layout="on"] > .hand-back {
+	left: 220px;
+}
+/* 非触屏布局下的右手布局手牌位置调整 */
+#arena[data-phonelayout="off"][data-right-layout="on"] > .hand-wrap,
+#arena[data-phonelayout="off"][data-right-layout="on"] > .hand-back {
+	left: 220px;
+}
 #arena[data-alone-equip="off"][data-right-layout="off"] > .hand-wrap,
 #arena[data-alone-equip="off"][data-right-layout="off"] > .hand-back {
 	/*左手布局+非单独装备栏*/
