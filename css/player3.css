@@ -141,7 +141,7 @@
 #arena[data-right-layout="on"]>.player[data-position="0"],
 #arena[data-right-layout="on"]>.player[data-position="0"]:not(.miniskin) {
 	left: auto;
-	right: 60px;
+	right: 20px;
 }
 /*玩家姓名阵营*/
 .player>.camp-wrap {

@@ -33,7 +33,7 @@
 	white-space: normal;
 	position: fixed;
 	bottom: calc(100% - 340px);
-	left: calc(100% - 147px);
+	left: calc(100% - 110px);
 	background-color: rgba(0, 0, 0, 0.5);
 }
 .buttonyjcm>.controls {
@@ -45,27 +45,26 @@
 	z-index: 99;
 	position: relative;
 	margin-top: 10px;
-	font-size: 14px;
+	font-size: 14.5px;
+	font-weight: 1000;
 	font-family: yuanli;
-	font-weight: 600;
-	color: #e3b88b;
+	color: #ae8e7d;
 	display: flex;
-	/* 开启flex布局 */
 	align-items: flex-end;
-	/* 上下以底边对齐 */
 	justify-content: center;
-	/* 文字左右居中 */
+	/* border: 1px solid #624f42; /* 添加边框 */
+	/* box-shadow: 8px 8px 8px #624f42; /* 添加阴影，值可以根据需要调整 */
 }
 /*---------新版小配件--------*/
 .jiluButton_new {
 	display: block;
-	--w: 53px;
-	--h: 53px;
+	--w: 56px;
+	--h: 56px;
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom: 1.5%;
-	left: 3%;
+	bottom: 1%;
+	left: 0%;
 	background-image: url("./images/uibutton/new_jilu_new.png");
 	background-size: 100% 100%;
 	border-radius: 1px;
@@ -74,13 +73,13 @@
 }
 .huanfuButton_new {
 	display: block;
-	--w: 53px;
-	--h: 53px;
+	--w: 56px;
+	--h: 56px;
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom: 24.5%;
-	left: 3%;
+	bottom: 23%;
+	left: 0%;
 	background-image: url("./images/uibutton/new_huanfu_new.png");
 	background-size: 100% 100%;
 	z-index: 3;
@@ -88,13 +87,13 @@
 }
 .xiaolianButton_new {
 	display: block;
-	--w: 53px;
-	--h: 53px;
+	--w: 56px;
+	--h: 56px;
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom: 13.5%;
-	left: 3%;
+	bottom: 12.5%;
+	left: 0%;
 	background-image: url("./images/uibutton/new_xiaolian_new.png");
 	background-size: 100% 100%;
 	z-index: 3;
@@ -113,7 +112,7 @@
 	padding: 0;
 }
 .control>div {
-	background-image: url("./images/uibutton/btnnnor.png");
+	background-image: url("./images/uibutton/new_btnn.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
 	padding: 2.6px 23px !important;
@@ -125,8 +124,7 @@
 	text-align: center;
 	margin-top: 0px !important;
 	margin-bottom: -15px !important;
-	color: #2f4f4f;
-	-webkit-text-stroke: 0.4px #803b02;
+	color: #f5d79e;
 	font-family: "yuanli";
 	font-size: 20px;
 }
@@ -188,7 +186,7 @@
 /*------有点懒具体看main1.css---------------*/
 .handcardNumber {
 	bottom: 0px;
-	right: 260px;
+	right: 225px;
 	font-family: "yuanli";
 	text-shadow: #f5d78e 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
 	color: #f5d78e;
@@ -211,7 +209,7 @@
 }
 /*手牌数参数*/
 .handcardNumber>.cardNumber {
-	left: 115px;
+	left: 120px;
 	bottom: 30px;
 	height: 8px;
 	line-height: 25px;
@@ -224,7 +222,7 @@
 }
 .cardRoundNumber {
 	top: 16px;
-	left: 25px;
+	left: 0px;
 	font-weight: 400;
 	font-family: "yuanli";
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;
@@ -232,8 +230,8 @@
 .cardRoundNumber>.cardPileNumber {
 	left: 20px;
 	top: -15px;
-	--w: 65px;
-	--h: calc(var(--w) * 173 / 127);
+	--w: 80px;
+	--h: calc(var(--w) * 430 / 360);
 	width: var(--w);
 	height: var(--h);
 	background-image: url("./images/uibutton/new_cardback3.png");
@@ -245,35 +243,36 @@
 .cardRoundNumber>.cardPileNumber>span {
 	left: 12px;
 	/*牌堆数右移，越大越靠右*/
-	top: 6px;
+	top: 15px;
 	width: 100%;
 	display: block;
 	position: absolute;
 	line-height: 20px;
 	text-align: center;
-	color: #cda448;
+	color: #a78d72;
 	font-size: 18px;
 }
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	left: 32px;
+	left: 35px;
 	/*牌堆数/时间右移，越大越靠右*/
-	top: 24px;
+	top: 30px;
 	height: 20px;
 	line-height: 16px;
+	font-size: 20px;
 	/*游戏轮数/时间间隔*/
 	white-space: nowrap;
-	color: #fae2bc;
+	color: #a78d72;
 	z-index: 3;
 }
 .cardRoundNumber>.time {
 	/*游戏时间*/
-	top: 48px;
+	top: 55px;
 	/*高度*/
-	left: 34px;
-	font-size: 17px;
-	color: #e0c192;
+	left: 43px;
+	font-size: 16px;
+	color: #a78d72;
 }
 /*托管中图片（）*/
 #autonode>div:last-child {
@@ -307,8 +306,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务忠臣*/
 .Tipzhongchen {
@@ -322,8 +321,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务反贼*/
 .Tipfanzei {
@@ -337,8 +336,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务内奸*/
 .Tipneijian {
@@ -352,8 +351,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务地主*/
 .Tipdizhu {
@@ -367,8 +366,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务农民*/
 .Tipnongmin {
@@ -382,8 +381,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务虎队*/
 .Tiphu {
@@ -397,8 +396,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务魏国*/
 .Tipweiguo {
@@ -412,8 +411,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务蜀国*/
 .Tipshuguo {
@@ -427,8 +426,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务吴国*/
 .Tipwuguo {
@@ -442,8 +441,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务晋国*/
 .Tipjinguo {
@@ -457,8 +456,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务野心家*/
 .Tipyexinjia {
@@ -472,8 +471,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务群雄*/
 .Tipqunxiong {
@@ -487,8 +486,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*身份任务未选择*/
 .Tipundefined {
@@ -502,8 +501,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*容错选项*/
 .Tipweizhi {
@@ -517,8 +516,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 460.5px);
-	bottom: calc(100% - 185px);
+	left: calc(100% - 400.5px);
+	bottom: calc(100% - 145px);
 }
 /*左手模式*/
 /*换肤*/
@@ -550,20 +549,6 @@
 	border-radius: 1px;
 	z-index: 4;
 }
-/*.meiguiButton_new1 {*/
-/*display: block;*/
-/*--w: 79px;*/
-/*--h: calc(var(--w) * 1080/1626);*/
-/*width: var(--w);*/
-/*height: var(--h);*/
-/*position: absolute;*/
-/*bottom: 18.4%;*/
-/*right: 0;*/
-/*background-image: url("./images/uibutton/meigui_new.png");*/
-/*background-size: 100% 100%;*/
-/*z-index:3;*/
-/*}*/
-/**/
 .xiaolianButton_new1 {
 	display: block;
 	--w: 47px;

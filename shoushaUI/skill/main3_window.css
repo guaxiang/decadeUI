@@ -4,14 +4,14 @@
 	/*同列技能可容纳最大宽度，建议别调*/
 	bottom: 8px;
 	/*整体上移，建议别调*/
-	right: 75px;
+	right: 35px;
 	/*技能显示右移，越小越靠右，建议别调*/
 	z-index: 6;
 }
 .gskill-control {
 	max-width: 120px;
 	bottom: 65px;
-	right: 210px;
+	right: 170px;
 	z-index: 6;
 }
 .skill-control div,

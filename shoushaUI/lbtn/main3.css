@@ -33,7 +33,7 @@
 	white-space: normal;
 	position: fixed;
 	bottom: calc(100% - 280px);
-	left: calc(100% - 150px);
+	left: calc(100% - 110px);
 	background-color: rgba(0, 0, 0, 0.5);
 }
 .buttonyjcm>.controls {
@@ -58,13 +58,13 @@
 /*---------新版小配件--------*/
 .jiluButton_new {
 	display: block;
-	--w: 53px;
-	--h: 53px;
+	--w: 56px;
+	--h: 56px;
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom: 1.5%;
-	left: 3%;
+	bottom: 1%;
+	left: 0%;
 	background-image: url("./images/uibutton/new_jilu_new.png");
 	background-size: 100% 100%;
 	border-radius: 1px;
@@ -73,13 +73,13 @@
 }
 .huanfuButton_new {
 	display: block;
-	--w: 53px;
-	--h: 53px;
+	--w: 56px;
+	--h: 56px;
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom: 24.5%;
-	left: 3%;
+	bottom: 23%;
+	left: 0%;
 	background-image: url("./images/uibutton/new_huanfu_new.png");
 	background-size: 100% 100%;
 	z-index: 3;
@@ -87,13 +87,13 @@
 }
 .xiaolianButton_new {
 	display: block;
-	--w: 53px;
-	--h: 53px;
+	--w: 56px;
+	--h: 56px;
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom: 13.5%;
-	left: 3%;
+	bottom: 12.5%;
+	left: 0%;
 	background-image: url("./images/uibutton/new_xiaolian_new.png");
 	background-size: 100% 100%;
 	z-index: 3;
@@ -186,7 +186,7 @@
 /*------有点懒具体看main1.css---------------*/
 .handcardNumber {
 	bottom: 0px;
-	right: 260px;
+	right: 225px;
 	font-family: "yuanli";
 	text-shadow: #f5d78e 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
 	color: #f5d78e;
@@ -222,7 +222,7 @@
 }
 .cardRoundNumber {
 	top: 16px;
-	left: 40px;
+	left: 0px;
 	font-weight: 400;
 	font-family: "yuanli";
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;

@@ -80,7 +80,6 @@ export async function precontent() {
 			}
 			// 使用表驱动法映射样式到布局CSS
 			const layoutCssMap = {
-				othersOff: "css/layout_new.css",
 				onlineUI: "css/layout_new.css",
 				babysha: "css/layout_new.css",
 			};
@@ -566,37 +565,8 @@ export async function precontent() {
 	};
 	//避免提示是否下载图片和字体素材
 	if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
-	//函数加载
-	var layoutPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
-	var mode = get.mode();
-	var styleMap = {
-		on: 2,
-		off: 1,
-		othersOff: 3,
-		onlineUI: 4,
-		babysha: 5,
-		codename: 6,
-	};
-	if (!(mode == "chess" || mode == "tafang" || mode == "hs_hearthstone")) {
-		var packs = [/*'card',*/ "character", "lbtn", "skill"];
-		var listmap = styleMap[lib.config.extension_十周年UI_newDecadeStyle] || 2;
-		packs.forEach(function (pack) {
-			const script = document.createElement("script");
-			script.async = true;
-			script.defer = true;
-			script.src = layoutPath + pack + "/main" + listmap + ".js?v=" + lib.extensionPack.十周年UI.version;
-			script.onerror = function () {
-				console.error(`Failed to load ${this.src}`);
-			};
-			document.head.appendChild(script);
-			if (pack === "character") {
-				// 使用 decadeModule.css 而不是 lib.init.css，确保 Vite 能检测到变化
-				decadeModule.css(layoutPath + pack + "/main" + listmap + ".css");
-			} else {
-				decadeModule.css(layoutPath + pack + "/main" + listmap + (lib.config.phonelayout ? "" : "_window") + ".css");
-			}
-		});
-	}
+	// 注释掉重复的加载逻辑，避免重复加载main文件
+	// 函数加载逻辑已移至 decadeModule.init() 中，避免重复加载
 	//函数框架
 	/*进度条框架*/
 	game.Jindutiaoplayer = function () {

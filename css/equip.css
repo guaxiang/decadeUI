@@ -49,8 +49,13 @@
 }
 /* 关闭触屏布局时的装备栏位置调整 - 仅在othersOff样式下生效 */
 #arena[data-new-decade-style="othersOff"][data-phonelayout="off"][data-right-layout="on"] > .equips-wrap {
-	left: 5%;
+	left: 1%;
 	right: auto;
+}
+/* othersOff样式下其他玩家装备向右微调 */
+#arena[data-new-decade-style="othersOff"] .player > .equips,
+#arena[data-new-decade-style="othersOff"] > .player:not(.minskin) > .equips {
+	left: calc(var(--player-equips-left) + 5%);
 }
 /* 装备栏背景和内容容器 */
 .equips-wrap > .equips-back {
@@ -324,13 +329,6 @@ body[data-style="babysha"] {
 	--player-equips-left: var(--player-equips-left-baby);
 	--player-equips-right: 16%;
 }
-/* othersOff样式 */
-body[data-style="othersOff"] {
-	--equip-right: var(--equip-right-new-new);
-	--equip-right-layout-left: var(--equip-right-layout-left-new-new);
-	--player-equips-left: var(--player-equips-left-new-new);
-	--player-equips-right: var(--player-equips-right-new-new);
-}
 /* onlineUI样式 */
 body[data-style="onlineUI"] {
 	--equip-right: var(--equip-right-ol);
@@ -348,11 +346,4 @@ body[data-style="off"] {
 /* codename样式：调整装备栏背景图透明度 */
 body[data-style="codename"] .equips-wrap > .equips-back > div {
 	opacity: 0.5;
-}
-/* 兼容性：如果没有设置data-style属性，使用默认样式 */
-body:not([data-style]) {
-	--equip-right: 86px;
-	--equip-right-layout-left: 90px;
-	--player-equips-left: 10%;
-	--player-equips-right: 16%;
 }
