@@ -3343,7 +3343,7 @@ export async function content(config, pack) {
 												var dialog = ui.dialogs[eventName];
 												if (!dialog && window.decadeUI) {
 													dialog = decadeUI.create.compareDialog();
-													var __captionName = typeof eventName === "string" ? eventName.split("_")[0] : "";
+													var __captionName = typeof eventName === "string" ? get.sourceSkillFor(eventName.split("_")[0]) : "";
 													dialog.caption = get.translation(__captionName) + "拼点";
 													dialog.player = player;
 													dialog.playerCard = playerCard.copy();
