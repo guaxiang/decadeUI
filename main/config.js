@@ -176,6 +176,11 @@ export let config = {
 			} else if (window.decadeUI) ui.arena.dataset.chupaizhishi = lib.config["extension_十周年UI_chupaizhishi"];
 		},
 	},
+	killEffect: {
+		name: "击杀特效",
+		intro: "开启后，击杀敌方角色时会显示击杀特效",
+		init: true,
+	},
 	//菜单美化
 	meanPrettify: {
 		name: "菜单美化",

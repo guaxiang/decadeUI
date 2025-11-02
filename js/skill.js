@@ -117,6 +117,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -100,
 			lastDo: true,
 			silent: true,
+			filter(event) {
+				return lib.config.extension_十周年UI_killEffect;
+			},
 			async content(event, trigger, player) {
 				if (!(trigger.source && trigger.player)) return;
 				game.broadcastAll(
