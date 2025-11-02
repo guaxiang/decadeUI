@@ -173,14 +173,24 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						if (duiControls) {
 							duiControls.style.scale = "0";
 						}
-						await event.nextx;
-						const val = event.nextx._result?.links?.[0]?.[2];
-						if (val) {
-							event.result = {
-								bool: true,
-								control: val,
-								index: event.controls.indexOf(val),
-							};
+						try {
+							await event.nextx;
+							const val = event.nextx._result?.links?.[0]?.[2];
+							if (val) {
+								event.result = {
+									bool: true,
+									control: val,
+									index: event.controls.indexOf(val),
+								};
+							}
+						} finally {
+							if (duiControls) {
+								duiControls.style.scale = "1";
+							}
+							if (event.progressInterval) {
+								clearInterval(event.progressInterval);
+								delete event.progressInterval;
+							}
 						}
 					});
 				}
