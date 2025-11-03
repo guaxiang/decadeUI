@@ -490,37 +490,39 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			}
 		},
-		updateStarcanxiMarks(player) {
-			if (!player.hasSkill("starcanxi")) return;
-			let skillMarksNode = player.node.xSkillMarks;
-			if (!skillMarksNode) return;
-			const factions = ["qun", "shu", "wei", "wu"];
-			const factionMap = {
-				"qun": "qun",
-				"shu": "shu", 
-				"wei": "wei",
-				"wu": "wu"
-			};
-			const canxiSkills = {};
-			factions.forEach(faction => {
-				const skillName = `starcanxi_${faction}`;
-				if (player.hasSkill(skillName)) {
-					canxiSkills[skillName] = true;
-				}
-			});
-			// 清除现有的starcanxi标记
-			const existingMarks = skillMarksNode.querySelectorAll('[data-id^="starcanxi_"]');
-			existingMarks.forEach(mark => mark.remove());
-			// 创建新的标记
-			for (const skillName in canxiSkills) {
-				const faction = skillName.slice("starcanxi_".length);
-				if (factionMap[faction]) {
-					const item = ui.create.div(".skillMarkItem", skillMarksNode, "");
-					item.dataset.id = skillName;
-					item.classList.add(`starcanxi-${faction}`);
-				}
+	updateStarcanxiMarks(player) {
+		if (!player.hasSkill("starcanxi")) return;
+		let skillMarksNode = player.node.xSkillMarks;
+		if (!skillMarksNode) return;
+		const factions = ["qun", "shu", "wei", "wu", "jin", "shen"];
+		const factionMap = {
+			"qun": "qun",
+			"shu": "shu", 
+			"wei": "wei",
+			"wu": "wu",
+			"jin": "jin",
+			"shen": "shen",
+		};
+		const canxiSkills = {};
+		factions.forEach(faction => {
+			const skillName = `starcanxi_${faction}`;
+			if (player.hasSkill(skillName)) {
+				canxiSkills[skillName] = true;
 			}
-		},
+		});
+		// 清除现有的starcanxi标记
+		const existingMarks = skillMarksNode.querySelectorAll('[data-id^="starcanxi_"]');
+		existingMarks.forEach(mark => mark.remove());
+		// 创建新的标记
+		for (const skillName in canxiSkills) {
+			const faction = skillName.slice("starcanxi_".length);
+			if (factionMap[faction]) {
+				const item = ui.create.div(".skillMarkItem", skillMarksNode, "");
+				item.dataset.id = skillName;
+				item.classList.add(`starcanxi-${faction}`);
+			}
+		}
+	},
 		recontent() {
 			this.initDialogRewrites();
 			this.initPlayerRewrites();

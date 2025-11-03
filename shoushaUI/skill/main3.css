@@ -302,6 +302,26 @@
 	height: var(--h) !important;
 	margin-top: 1px !important;
 }
+.skillMarkItem.starcanxi-jin {
+	background-image: url("./yijiang/starcanxi_jin.png");
+	background-size: 100% 100%;
+	text-shadow: none;
+	--w: 25px;
+	--h: calc(var(--w) * 1 / 1);
+	width: var(--w) !important;
+	height: var(--h) !important;
+	margin-top: 1px !important;
+}
+.skillMarkItem.starcanxi-shen {
+	background-image: url("./yijiang/starcanxi_shen.png");
+	background-size: 100% 100%;
+	text-shadow: none;
+	--w: 25px;
+	--h: calc(var(--w) * 1 / 1);
+	width: var(--w) !important;
+	height: var(--h) !important;
+	margin-top: 1px !important;
+}
 /*左手模式*/
 /*技能区*/
 .skill-controlzuoshou {
