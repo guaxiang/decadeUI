@@ -78,12 +78,7 @@ export async function precontent() {
 			} else {
 				this.css(decadeUIPath + "css/player2.css");
 			}
-			// 使用表驱动法映射样式到布局CSS
-			const layoutCssMap = {
-				onlineUI: "css/layout_new.css",
-				babysha: "css/layout_new.css",
-			};
-			const layoutCss = layoutCssMap[style] || "css/layout.css";
+			const layoutCss = "css/layout.css";
 			this.css(decadeUIPath + "css/equip.css");
 			document.body.setAttribute("data-style", style || "on");
 			this.css(decadeUIPath + layoutCss);
@@ -171,7 +166,7 @@ export async function precontent() {
 			link.rel = "stylesheet";
 			link.href = `${path}?v=${version}&t=${Date.now()}`; // 添加时间戳确保Vite能检测到变化
 			// 添加错误处理，确保加载失败时不会阻塞
-			link.onerror = function() {
+			link.onerror = function () {
 				console.warn(`Failed to load CSS: ${path}`);
 			};
 			document.head.appendChild(link);
@@ -185,7 +180,7 @@ export async function precontent() {
 		// 添加角标模块
 		decadeModule.prefixMark = prefixMarkModule;
 		// 添加CSS热重载支持
-		decadeModule.hotReloadCSS = function(path) {
+		decadeModule.hotReloadCSS = function (path) {
 			const existingLink = document.querySelector(`link[href*="${path}"]`);
 			if (existingLink) {
 				// 更新现有链接的时间戳，强制重新加载
@@ -195,7 +190,7 @@ export async function precontent() {
 			return this.css(path);
 		};
 		// 添加JS热重载支持
-		decadeModule.hotReloadJS = function(path, isAsync = false) {
+		decadeModule.hotReloadJS = function (path, isAsync = false) {
 			const existingScript = document.querySelector(`script[src*="${path}"]`);
 			if (existingScript) {
 				// 移除现有脚本，然后重新加载

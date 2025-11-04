@@ -274,11 +274,11 @@ body > .background {
 	transition: none;
 }
 .hand-cards > .handcards > .card.selected {
-	boder-radius: 2px;
+	border-radius: 2px;
 }
 .hand-cards > .handcards > .card.selectable {
-	boder-radius: 2px;
-	cursor: pointer;
+	border-radius: 2px;
+    cursor: pointer;
 }
 .hand-special {
 	left: auto;
@@ -687,3 +687,87 @@ body > .background {
 #arena > .card > .judge-mark {
 	visibility: hidden;
 }
+.buttons.smallzoom > .button.character,
+.buttons.smallzoom > .card {
+	zoom: 0.7;
+}
+/* ---------------- 合并layout_new.css---------------- */
+/* 龙框头/尾尺寸与位置（新版） */
+body[data-style="onlineUI"] .player > .long,
+body[data-style="babysha"] .player > .long {
+	--w: 60px;
+	--h: calc(var(--w) * 110 / 60);
+	width: var(--w);
+	height: var(--h);
+	right: -18px;
+	top: -25px;
+	z-index: 63;
+}
+body[data-style="onlineUI"] .player > .wei,
+body[data-style="babysha"] .player > .wei {
+	--w: 80px;
+	--h: calc(var(--w) * 40 / 80);
+	width: var(--w);
+	height: var(--h);
+	right: -9px;
+	bottom: -10px;
+}
+
+/* 手牌区与右手布局位置（含 onlineUI 专属更大右距） */
+body[data-style="onlineUI"] #arena > .hand-wrap,
+body[data-style="onlineUI"] #arena > .hand-back {
+	left: 360px;
+	right: 320px;
+	height: 150px;
+	bottom: 0%;
+}
+body[data-style="onlineUI"] #arena[data-right-layout="on"] > .hand-wrap,
+body[data-style="onlineUI"] #arena[data-right-layout="on"] > .hand-back {
+	left: 255px;
+	right: 410px;
+	bottom: 0%;
+}
+body[data-style="onlineUI"] #arena[data-alone-equip="off"][data-right-layout="off"] > .hand-wrap,
+body[data-style="onlineUI"] #arena[data-alone-equip="off"][data-right-layout="off"] > .hand-back {
+	left: 360px;
+	right: 160px;
+	bottom: 0%;
+}
+body[data-style="onlineUI"] #arena[data-alone-equip="off"][data-right-layout="on"] > .hand-wrap,
+body[data-style="onlineUI"] #arena[data-alone-equip="off"][data-right-layout="on"] > .hand-back {
+	left: 110px;
+	right: 405px;
+	bottom: 0%;
+}
+/* babysha 与 onlineUI 共用新版右手布局更大右距 */
+body[data-style="babysha"] #arena[data-right-layout="on"] > .hand-wrap,
+body[data-style="babysha"] #arena[data-right-layout="on"] > .hand-back {
+	left: 230px;
+	right: 380px;
+	bottom: 0%;
+}
+body[data-style="babysha"] #arena[data-alone-equip="off"][data-right-layout="on"] > .hand-wrap,
+body[data-style="babysha"] #arena[data-alone-equip="off"][data-right-layout="on"] > .hand-back {
+	left: 95px;
+	right: 380px;
+	bottom: 0%;
+}
+/* 触摸信息位置（top/left） */
+body[data-style="onlineUI"] .touchinfo,
+body[data-style="babysha"] .touchinfo { top: 1%; }
+body[data-style="onlineUI"] .touchinfo.left,
+body[data-style="babysha"] .touchinfo.left { left: 84%; top: 15%; }
+body[data-style="onlineUI"] .touchinfo.right,
+body[data-style="babysha"] .touchinfo.right { right: 2%; }
+/* 新版手牌卡片边框与位移 */
+body[data-style="onlineUI"] .hand-cards > .handcards > .card,
+body[data-style="babysha"] .hand-cards > .handcards > .card {
+	left: 20px;
+	border: 1px solid;
+	border-radius: 6px;
+}
+/* 龙尾在三级/五级时的背景图（新版） */
+body[data-style="onlineUI"] #arena[data-long-level="three"] > .player > .wei,
+body[data-style="babysha"] #arena[data-long-level="three"] > .player > .wei { background-image: url("../assets/image/long_yu2.png"); }
+body[data-style="onlineUI"] #arena[data-long-level="five"] > .player > .wei,
+body[data-style="babysha"] #arena[data-long-level="five"] > .player > .wei { background-image: url("../assets/image/long_yan2.png"); }
