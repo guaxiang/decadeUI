@@ -3493,26 +3493,10 @@ export async function content(config, pack) {
 					updatem(player) { },
 					updatez() {
 						window.documentZoom = game.documentZoom;
-						if (lib.config.touchscreen || (typeof decadeUI !== "undefined" && decadeUI.isMobile && decadeUI.isMobile())) {
-							var width = document.documentElement.offsetWidth;
-							var height = document.documentElement.offsetHeight;
-							var zoom = game.documentZoom;
-							if (zoom != 1) {
-								document.body.style.width = Math.round(width / zoom) + "px";
-								document.body.style.height = Math.round(height / zoom) + "px";
-								document.body.style.transform = "scale(" + Math.floor(zoom * 100) / 100 + ")";
-							} else {
-								document.body.style.width = width + "px";
-								document.body.style.height = height + "px";
-								document.body.style.transform = "";
-							}
-							document.body.style.zoom = "";
-						} else {
-							document.body.style.zoom = game.documentZoom;
-							document.body.style.width = "100%";
-							document.body.style.height = "100%";
-							document.body.style.transform = "";
-						}
+						document.body.style.zoom = game.documentZoom;
+						document.body.style.width = "100%";
+						document.body.style.height = "100%";
+						document.body.style.transform = "";
 					},
 					update() {
 						for (var i = 0; i < ui.updates.length; i++) ui.updates[i]();
