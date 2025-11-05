@@ -237,7 +237,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	// 局内交互优化
 	if (lib.config["extension_十周年UI_bettersound"]) {
 		// 拦截本体音效
-		game._decadeUI_blockedEquipAudios = game._decadeUI_blockedEquipAudios || new Set(["equip1", "equip2", "equip3", "equip4", "equip5", "loseHp"]);
+		game._decadeUI_blockedEquipAudios = game._decadeUI_blockedEquipAudios || new Set(["loseHp"]);
 		if (!game._decadeUI_playAudioWrapped) {
 			const originalPlayAudio = game.playAudio;
 			game.playAudio = function (...args) {
@@ -246,35 +246,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			};
 			game._decadeUI_playAudioWrapped = true;
 		}
-		lib.skill._useCardAudio = {
-			trigger: {
-				player: "useCard",
-			},
-			forced: true,
-			popup: false,
-			priority: -10,
-			async content(event, trigger, player) {
-				const card = trigger.card;
-				const cardType = get.type(card);
-				let audioName;
-				if (cardType === "basic" || cardType === "trick") {
-					audioName = "GameShowCard";
-				} else if (cardType === "equip") {
-					const equipType = get.subtype(card);
-					const audioMap = {
-						equip1: "weapon_equip", // 武器
-						equip2: "horse_equip", // 防具
-						equip3: "armor_equip", // -1马
-						equip4: "armor_equip", // +1马
-						equip5: "horse_equip", // 宝物
-					};
-					audioName = audioMap[equipType];
-				}
-				if (audioName) {
-					game.playAudio("..", "extension", "十周年UI", `audio/${audioName}`);
-				}
-			},
-		};
 		if (!game._decadeUI_uiClickAudioHandler) {
 			const uiClickAudioHandler = function (e) {
 				if (e.button !== 0) return;
@@ -1465,6 +1436,30 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		const player = event.player;
 		const shouldCleanup = args.includes("card") && event.copyCards && (event.result || (["chooseToUse", "chooseToRespond"].includes(event.name) && !event.skill && !event.result));
 		if (lib.config["extension_十周年UI_aloneEquip"] || shouldCleanup) cleanupEquipCards(event, player);
+	});
+	lib.hooks.checkCard.add(function (card, event) {
+		if (lib.config["extension_十周年UI_aloneEquip"] || !event.copyCards) return;
+		if (get.position(card) === "e" && card.classList.contains("selected")) {
+			const equipHandCopy = event.player.getCards("s", c => c.hasGaintag("equipHand") && c.relatedCard === card)[0];
+			if (equipHandCopy && !equipHandCopy.classList.contains("selected")) {
+				card.classList.remove("selected");
+				ui.selected.cards.remove(card);
+			}
+		}
+	});
+	lib.hooks.checkEnd.add(function (event) {
+		if (lib.config["extension_十周年UI_aloneEquip"] || !event.copyCards) return;
+		const player = event.player;
+		const equipCards = player.getCards("e");
+		for (const equipCard of equipCards) {
+			if (equipCard.classList.contains("selected")) {
+				const equipHandCopy = player.getCards("s", c => c.hasGaintag("equipHand") && c.relatedCard === equipCard)[0];
+				if (equipHandCopy && !equipHandCopy.classList.contains("selected")) {
+					equipCard.classList.remove("selected");
+					ui.selected.cards.remove(equipCard);
+				}
+			}
+		}
 	});
 	// 卡牌选中提示
 	if (lib.config["extension_十周年UI_cardPrompt"]) {
