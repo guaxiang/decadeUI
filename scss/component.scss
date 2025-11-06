@@ -1,0 +1,157 @@
+input[type="range"].slider {
+	position: relative;
+	height: 5px;
+	border-radius: 5px;
+	background: linear-gradient(rgba(240, 240, 255, 0.8), rgba(240, 240, 255, 0.8)) no-repeat rgba(200, 200, 200, 0.5);
+	background-size: 50% 100%;
+	-webkit-appearance: none;
+
+	&:focus {
+		outline: none;
+	}
+
+	&::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		height: 13px;
+		width: 13px;
+		background: white;
+		border-radius: 50%;
+		border: solid 1px rgba(0, 0, 0, 0.1);
+	}
+}
+
+.chat-box {
+	display: inline-flex;
+	flex-flow: column;
+	width: auto;
+	height: 200px;
+	background: rgba(0, 0, 0, 0.66);
+	border-radius: 0 0 4px 4px;
+
+	&.folded {
+		height: auto;
+		border-radius: 4px;
+		opacity: 0.66;
+
+		>div:not(.operation) {
+			display: none;
+		}
+
+		>.operation {
+
+			>input,
+			>button:not(.fold-button) {
+				display: none;
+			}
+
+			>button.fold-button {
+				background: rgba(255, 255, 255, 0.2);
+			}
+		}
+	}
+
+	>div {
+		position: static;
+		width: auto;
+		height: auto;
+	}
+
+	>.container {
+		flex: 1;
+		position: relative;
+		padding: 4px;
+		color: white;
+		box-shadow: 0 0 6px rgb(200, 150, 80) inset;
+
+		>.content {
+			position: absolute;
+			width: calc(100% - 8px);
+			height: calc(100% - 8px);
+			overflow-y: auto;
+
+			>div {
+				display: block;
+				position: static;
+				margin: 0;
+				height: auto;
+				word-wrap: break-word;
+				word-break: break-all;
+
+				>.sender {
+					color: #02ff02;
+				}
+			}
+		}
+	}
+
+	>.operation {
+		display: flex;
+		flex-flow: row;
+		padding: 2px;
+		height: auto;
+		min-height: 24px;
+		max-height: 32px;
+
+		>div,
+		>input,
+		>button {
+			position: static;
+		}
+
+		>.chat-input {
+			flex: 1;
+			padding: 4px 2px;
+			margin: 0px 2px;
+			outline: none;
+			border: 1px solid rgb(120, 120, 50);
+			color: #ffffff;
+			font-size: 16px;
+			line-height: 18px;
+			background: transparent;
+
+			&::-webkit-input-placeholder {
+				color: rgba(255, 255, 255, 0.3);
+				line-height: 18px;
+			}
+		}
+
+		>input {
+			font-family: inherit;
+		}
+
+		>button {
+			font-family: inherit;
+			text-shadow: 0 0 2px black;
+
+			&:active {
+				background: rgb(188, 120, 24);
+			}
+		}
+
+		>.fold-button,
+		>.send-button,
+		>.sticker-button {
+			padding: 4px;
+			line-height: 18px;
+			border: 1px solid transparent;
+			border-radius: 4px;
+			outline: none;
+			color: #ffffff;
+			font-size: 16px;
+			white-space: nowrap;
+			background: rgb(236, 151, 31);
+			transition-duration: 0.2s;
+			transition-property: background, transform, opacity;
+		}
+
+		>.send-button {
+			margin-left: 2px;
+		}
+	}
+}
+
+#arena>.chat-box {
+	z-index: 5;
+	left: -15px;
+	bottom: calc(1% + 185px);
+}

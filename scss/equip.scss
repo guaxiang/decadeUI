@@ -61,6 +61,7 @@
 
     /* othersOff样式下其他玩家装备向右微调 */
     &[data-new-decade-style="othersOff"] {
+
         .player>.equips,
         >.player:not(.minskin)>.equips {
             left: calc(var(--player-equips-left) + 5%);
@@ -132,15 +133,19 @@
             &[data-type="0"] {
                 background-image: url("../image/decoration/equip1.png");
             }
+
             &[data-type="1"] {
                 background-image: url("../image/decoration/equip2.png");
             }
+
             &[data-type="2"] {
                 background-image: url("../image/decoration/equip3.png");
             }
+
             &[data-type="3"] {
                 background-image: url("../image/decoration/equip4.png");
             }
+
             &[data-type="4"] {
                 background-image: url("../image/decoration/equip5.png");
             }
