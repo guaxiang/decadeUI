@@ -355,6 +355,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		};
 	}
+	// 确保lib.arenaReady存在
+	if (!lib.arenaReady) {
+		lib.arenaReady = [];
+	}
 	// 初始化
 	lib.arenaReady.push(function () {
 		// 更新轮次

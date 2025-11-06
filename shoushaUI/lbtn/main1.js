@@ -124,6 +124,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.arena.appendChild(game.ui_identityShowx);
 		}
 	};
+	// 确保lib.arenaReady存在
+	if (!lib.arenaReady) {
+		lib.arenaReady = [];
+	}
 	lib.arenaReady.push(function () {
 		//更新轮次
 		var originUpdateRoundNumber = game.updateRoundNumber;

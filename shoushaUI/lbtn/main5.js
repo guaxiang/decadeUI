@@ -1,4 +1,8 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
+	// 确保lib.arenaReady存在
+	if (!lib.arenaReady) {
+		lib.arenaReady = [];
+	}
 	lib.arenaReady.push(function () {
 		initializePlayerNames();
 		overrideUpdateRoundNumber();

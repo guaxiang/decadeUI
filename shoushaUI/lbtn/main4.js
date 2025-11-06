@@ -1146,6 +1146,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		if (game.updateCardNum) game.updateCardNum(0);
 		if (game.updateRoundNum) game.updateRoundNum();
 	}
+	// 确保lib.arenaReady存在
+	if (!lib.arenaReady) {
+		lib.arenaReady = [];
+	}
 	lib.arenaReady.push(function () {
 		shenfenrenwu(); //身份任务按钮
 		createcaidan(); //右上角菜单按钮
