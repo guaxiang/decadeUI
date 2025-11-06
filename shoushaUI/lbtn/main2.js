@@ -401,7 +401,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		};
 	}
 	// 初始化
-	lib.arenaReady.push(function () {
+	const initArena = function () {
 		// 更新轮次
 		const originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
@@ -417,7 +417,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		createSortButton();
 		createTopRightMenu();
-	});
+	};
+	if (lib.arenaReady) {
+		lib.arenaReady.push(initArena);
+	} else {
+		initArena();
+	}
 	// 插件定义
 	const plugin = {
 		name: "lbtn",
