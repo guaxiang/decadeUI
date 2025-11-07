@@ -688,7 +688,7 @@ body > .background {
 	visibility: hidden;
 }
 .buttons.smallzoom > .button.character,
-.buttons.smallzoom > .card {
+.buttons.smallzoom > .button.card {
 	zoom: 0.7;
 }
 /* ---------------- 合并layout_new.css---------------- */
