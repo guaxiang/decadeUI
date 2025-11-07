@@ -1,4 +1,3 @@
-@import "player.css";
 @import "animation.css";
 
 /*角色基本外观*/
@@ -15,9 +14,30 @@
 	box-shadow: 0px -1px 2px black, 0px 1px 5px black;
 }
 
+.player.dead {
+	animation: player-died 0.5s linear;
+	-webkit-animation: player-died 0.5s linear;
+	animation-iteration-count: 1;
+}
+
+/* 国战模式使用bj2背景 */
+[data-mode="guozhan"] .player,
+.player[data-mode="guozhan"] {
+	background: url("../assets/image/bj2.png") no-repeat center center !important;
+	background-size: 100% 100% !important;
+}
+
 /* 其他模式保持原有的单双将判断 */
 [data-mode]:not([data-mode="guozhan"]) .player:not(.fullskin2):not(.double-character):not([data-double="1"]) {
 	background: url("../assets/image/bjOL1.png") no-repeat center center !important;
+	background-size: 100% 100% !important;
+}
+
+[data-mode]:not([data-mode="guozhan"]) .player.fullskin2,
+[data-mode]:not([data-mode="guozhan"]) .player.double-character,
+[data-mode]:not([data-mode="guozhan"]) .player[data-double="1"],
+[data-mode]:not([data-mode="guozhan"]) .player.double {
+	background: url("../assets/image/bj2.png") no-repeat center center !important;
 	background-size: 100% 100% !important;
 }
 
@@ -112,6 +132,34 @@
 	opacity: 1;
 }
 
+#arena>.player {
+	z-index: 4;
+}
+
+.player>.mask {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: inherit;
+	background: rgba(0, 0, 0, 0.65);
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+	pointer-events: none;
+	z-index: 66;
+}
+
+.player.un-selectable:not(.selectable)>.mask {
+	opacity: 1;
+	transition: opacity 0.3s linear;
+}
+
+.player.un-selectable:not(.selectable)>.mask {
+	opacity: 1;
+	transition: opacity 0.3s linear;
+}
+
 #arena:not(.fewplayer)>.player:not(.minskin),
 #arena:not(.fewplayer):not(*[data-player_height=""])>.player:not(.minskin) {
 	height: 180px !important;
@@ -122,9 +170,20 @@
 .player>.chain {
 	top: 40%;
 	height: 24px;
+	visibility: hidden;
+	background-size: cover;
+	background-position-x: -120px;
+	background-repeat: no-repeat;
 	background-image: url("../assets/image/tie_suo.png");
+	transition-duration: 0.4s;
+	z-index: 86;
 	width: 100%;
 	left: 0%;
+}
+
+.player.linked2>.chain {
+	visibility: visible;
+	background-position-x: center;
 }
 
 /*主玩家位置*/
@@ -133,7 +192,16 @@
 #arena>.player[data-position="0"]:not(.minskin),
 #arena:not(*[data-player_height=""])>.player[data-position="0"],
 #arena:not(*[data-player_height=""])>.player[data-position="0"]:not(.miniskin) {
-	right: 55px;
+	left: 70px;
+	top: auto;
+	right: auto;
+	bottom: 1%;
+}
+
+#arena[data-right-layout="on"]>.player[data-position="0"],
+#arena[data-right-layout="on"]>.player[data-position="0"]:not(.miniskin) {
+	left: auto;
+	right: 60px;
 }
 
 /*玩家姓名阵营*/
@@ -146,6 +214,15 @@
 	transition: none;
 	z-index: 67;
 	pointer-events: none;
+}
+
+.player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).camp-wrap {
+	display: block !important;
+}
+
+/*新增*/
+.player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).primary-avatar {
+	display: block !important;
 }
 
 .player>.camp-wrap div {
@@ -1248,6 +1325,33 @@
 	background: rgb(100, 0, 0);
 }
 
+/*联机游戏等待中*/
+.player.connect>.gaming {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: calc(50% - 16px);
+	width: 100%;
+	height: 32px;
+	font-size: 32px;
+	font-family: "xinwei";
+	text-align: center;
+	z-index: 89;
+}
+
+/*玩家死亡变灰*/
+.player.dead {
+	opacity: 1;
+	filter: none;
+	-webkit-filter: none;
+}
+
+.player.dead>div {
+	filter: grayscale(1);
+	/*新增*/
+	-webkit-filter: grayscale(1);
+}
+
 /*玩家死亡文字*/
 .player>.died-identity {
 	display: flex;
@@ -1286,9 +1390,102 @@
 	-webkit-animation-delay: 0.5s;
 }
 
+/*玩家获得的技能显示*/
+.player>.gain-skill {
+	position: absolute;
+	left: 15px;
+	right: 15px;
+	max-height: calc(97% - 81px);
+	bottom: calc(3% + 81px);
+	color: rgb(255, 255, 200);
+	font-size: 20px;
+	font-family: yuanli;
+	text-align: center;
+	z-index: 87;
+}
+
+#arena.decadeUI[data-gain-skills-visible="off"]>.player>.gain-skill,
+#arena.decadeUI[data-gain-skills-visible="othersOn"]>.player[data-position="0"]>.gain-skill {
+	display: none;
+}
+
 /*角色翻面背景*/
 .player>.turned-over {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
 	background-image: url("../assets/image/turn_over_mask.png");
+	background-size: cover;
+	pointer-events: none;
+	z-index: 62;
+}
+
+.player.turnedover>.turned-over {
+	opacity: 0.8;
+}
+
+.turnedover>div {
+	opacity: initial;
+}
+
+/*角色边框*/
+.player>.framebg {
+	z-index: 63;
+}
+
+/*身份标记框*/
+.player>.identity-mark-box {
+	display: flex;
+	position: absolute;
+	justify-content: center;
+	flex-wrap: wrap;
+	top: 20%;
+	left: 16%;
+	width: 68%;
+	height: auto;
+	z-index: 99;
+}
+
+.player>.identity-mark-box>.identity-mark-item {
+	position: static;
+	width: auto;
+	height: auto;
+	min-width: 20px;
+	line-height: 20px;
+	border-style: solid;
+	border-width: 10px;
+	border-image-width: 18px;
+	border-image-slice: 31 31 fill;
+	border-image-source: url("../assets/image/item_bg.png");
+	cursor: pointer;
+	color: rgb(77, 60, 51);
+	font-family: shousha;
+	font-weight: bold;
+	font-size: 20px;
+	text-shadow: none;
+	transition: opacity, background, transform 0.3s;
+}
+
+.player>.identity-mark-box>.identity-mark-item:active {
+	transform: scale(0.9);
+}
+
+/*说话泡泡框*/
+.player>.chat-bubble {
+	left: 0;
+	top: 20px;
+	width: 100%;
+	height: auto;
+	border-style: solid;
+	border-width: 6px 6px 14px 6px;
+	border-image-slice: 6 6 14 6 fill;
+	border-image-source: url("../assets/image/chat_bubble.png");
+	box-sizing: border-box;
+	word-break: break-all;
+	z-index: 99;
 }
 
 .player>.jie-mark {

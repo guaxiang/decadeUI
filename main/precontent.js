@@ -71,8 +71,6 @@ export async function precontent() {
 			// 基础CSS加载 - 使用动态导入确保Vite能检测到变化
 			const cssFiles = ["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"];
 			cssFiles.forEach(path => this.css(decadeUIPath + path));
-			// 先加载共同的player.css
-			this.css(decadeUIPath + "css/player.css");
 			const style = lib.config.extension_十周年UI_newDecadeStyle;
 			const styleIndex = ["on", "off", "othersOff", "onlineUI", "babysha", "codename"].indexOf(style);
 			if (style !== void 0) {

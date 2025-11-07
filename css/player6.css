@@ -1,4 +1,3 @@
-@import "player.css";
 @import "animation.css";
 
 /*角色基本外观*/
@@ -15,9 +14,30 @@
 	box-shadow: 0px -1px 2px black, 0px 1px 5px black;
 }
 
+.player.dead {
+	animation: player-died 0.5s linear;
+	-webkit-animation: player-died 0.5s linear;
+	animation-iteration-count: 1;
+}
+
+/* 国战模式使用bj2背景 */
+[data-mode="guozhan"] .player,
+.player[data-mode="guozhan"] {
+	background: url("../assets/image/bj2.png") no-repeat center center !important;
+	background-size: 100% 100% !important;
+}
+
 /* 其他模式保持原有的单双将判断 */
 [data-mode]:not([data-mode="guozhan"]) .player:not(.fullskin2):not(.double-character):not([data-double="1"]) {
 	background: url("../assets/image/bj1.png") no-repeat center center !important;
+	background-size: 100% 100% !important;
+}
+
+[data-mode]:not([data-mode="guozhan"]) .player.fullskin2,
+[data-mode]:not([data-mode="guozhan"]) .player.double-character,
+[data-mode]:not([data-mode="guozhan"]) .player[data-double="1"],
+[data-mode]:not([data-mode="guozhan"]) .player.double {
+	background: url("../assets/image/bj2.png") no-repeat center center !important;
 	background-size: 100% 100% !important;
 }
 
@@ -79,6 +99,34 @@
 	animation-duration: 0.9s;
 	/*新增*/
 	opacity: 1;
+}
+
+#arena>.player {
+	z-index: 4;
+}
+
+.player>.mask {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: inherit;
+	background: rgba(0, 0, 0, 0.65);
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+	pointer-events: none;
+	z-index: 66;
+}
+
+.player.un-selectable:not(.selectable)>.mask {
+	opacity: 1;
+	transition: opacity 0.3s linear;
+}
+
+.player.un-selectable:not(.selectable)>.mask {
+	opacity: 1;
+	transition: opacity 0.3s linear;
 }
 
 #arena:not(.fewplayer)>.player:not(.minskin),
