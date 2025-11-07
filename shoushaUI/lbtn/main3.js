@@ -580,71 +580,46 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				confirm.update();
 			};
 			var originalCardChooseAll = ui.create.cardChooseAll;
-			ui.create.cardChooseAll = function () {
-				return null;
-			};
+			ui.create.cardChooseAll = function () { return null; };
+			function removeCardChooseAll(event) {
+				if (!event || !event.cardChooseAll) return;
+				var el = event.cardChooseAll;
+				if (el instanceof HTMLDivElement) {
+					if (el.parentNode) el.remove();
+					if (ui.updatec) ui.updatec();
+				}
+				delete event.cardChooseAll;
+			}
 			var initObserver = function () {
 				if (!ui.control) return;
 				var observer = new MutationObserver(function (mutations) {
-					mutations.forEach(function (mutation) {
-						mutation.addedNodes.forEach(function (node) {
+					for (var i = 0; i < mutations.length; i++) {
+						var added = mutations[i].addedNodes;
+						for (var j = 0; j < added.length; j++) {
+							var node = added[j];
 							if (node.nodeType === 1 && node.classList && node.classList.contains("control")) {
-								var firstChild = node.firstElementChild;
-								if (firstChild && (firstChild.innerHTML === "全选" || firstChild.innerHTML === "反选")) {
-									var event = _status.event;
-									if (node.childElementCount === 1 && firstChild.innerHTML.match(/^[全反]选$/)) {
-										node.style.display = "none";
-										node.remove();
-										if (event && event.cardChooseAll === node) {
-											delete event.cardChooseAll;
-										}
-										if (ui.updatec) {
-											ui.updatec();
-										}
-									}
+								var first = node.firstElementChild;
+								if (first && /^[全反]选$/.test(first.innerHTML) && node.childElementCount === 1) {
+									node.remove();
+									if (_status.event && _status.event.cardChooseAll === node) delete _status.event.cardChooseAll;
+									if (ui.updatec) ui.updatec();
 								}
 							}
-						});
-					});
+						}
+					}
 				});
 				observer.observe(ui.control, { childList: true });
 			};
-			if (ui.control) {
-				initObserver();
-			} else {
-				if (lib.arenaReady) {
-					lib.arenaReady.push(function () {
-						initObserver();
-					});
-				}
-			}
+			if (ui.control) initObserver();
+			else if (lib.arenaReady) lib.arenaReady.push(initObserver);
+
 			if (lib.hooks && lib.hooks.checkEnd) {
-				lib.hooks.checkEnd.add(function (event) {
-					if (event && event.cardChooseAll) {
-						if (event.cardChooseAll instanceof HTMLDivElement) {
-							event.cardChooseAll.style.display = "none";
-							if (event.cardChooseAll.parentNode) {
-								event.cardChooseAll.remove();
-							}
-							if (ui.updatec) ui.updatec();
-						}
-						delete event.cardChooseAll;
-					}
-				});
+				lib.hooks.checkEnd.add(removeCardChooseAll);
 			}
 			var originalCheck = game.check;
 			game.check = function (event) {
 				var result = originalCheck.apply(this, arguments);
-				if (event && event.cardChooseAll) {
-					if (event.cardChooseAll instanceof HTMLDivElement) {
-						event.cardChooseAll.style.display = "none";
-						if (event.cardChooseAll.parentNode) {
-							event.cardChooseAll.remove();
-						}
-						if (ui.updatec) ui.updatec();
-					}
-					delete event.cardChooseAll;
-				}
+				removeCardChooseAll(event);
 				return result;
 			};
 			// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
