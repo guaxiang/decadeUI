@@ -1,6 +1,6 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
 	// 初始化
-	const initArena = function () {
+	lib.arenaReady.push(function () {
 		// 更新轮次
 		var originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
@@ -169,12 +169,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			updateSelectAllButtonImage();
 		}, 100);
 		document.body.appendChild(selectAllButton);
-	};
-	if (lib.arenaReady) {
-		lib.arenaReady.push(initArena);
-	} else {
-		initArena();
-	}
+	});
 	// 辅助函数：显示身份提示
 	function showIdentityTip(container) {
 		if (game.me.identity == "zhu") {

@@ -168,18 +168,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		function loadBackgroundImages(container) {
 			let backgroundItems = lib.configMenu.appearence.config.image_background.item;
 			let hiddenBgs = lib.config.hiddenBackgroundPack || [];
-			
+
 			for (let fileName in backgroundItems) {
 				if (fileName === "default" || hiddenBgs.includes(fileName)) continue;
-				
+
 				let img = ui.create.div(".backgrounds", container);
 				img.dataset.name = fileName;
-				
+
 				if (fileName.startsWith("custom_")) {
-					game.getDB("image", fileName, function(fileToLoad) {
+					game.getDB("image", fileName, function (fileToLoad) {
 						if (fileToLoad) {
 							var fileReader = new FileReader();
-							fileReader.onload = function(fileLoadedEvent) {
+							fileReader.onload = function (fileLoadedEvent) {
 								var data = fileLoadedEvent.target.result;
 								img.style.backgroundImage = "url(" + data + ")";
 								img.style.backgroundSize = "cover";
@@ -190,9 +190,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				} else {
 					img.setBackgroundImage("image/background/" + fileName + ".jpg");
 				}
-				
+
 				if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
-				
+
 				img.addEventListener("click", function () {
 					var editItem = container.querySelector(".backgrounds:last-child");
 					var isEditMode = editItem && editItem.classList.contains("active");
@@ -253,93 +253,93 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					lib.init.background();
 					game.updateBackground();
 				});
-				
+
 				let backgroundName = backgroundItems[fileName];
 				ui.create.div(".buttontext", backgroundName, img);
 			}
 			(function (container) {
-					var addItem = ui.create.div(".backgrounds", container);
-					ui.create.div(".buttontext", "添加背景", addItem);
-					var input = document.createElement("input");
-					input.type = "file";
-					input.accept = "image/*";
-					input.multiple = true;
-					input.style.display = "none";
-					document.body.appendChild(input);
-					addItem.addEventListener("click", function () {
-						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-						input.click();
-					});
-					input.onchange = function (e) {
-						var files = e.target.files;
-						if (!files || files.length === 0) return;
-						var fileList = Array.from(files);
-						var totalFiles = fileList.length;
-						var processedFiles = 0;
-						fileList.forEach(function(file2, index) {
-							if (file2) {
-								var name2 = file2.name;
-								if (name2.includes(".")) {
-									name2 = name2.slice(0, name2.indexOf("."));
-								}
-								var link = (game.writeFile ? "cdv_" : "custom_") + name2;
-								if (lib.configMenu.appearence.config.image_background.item[link]) {
-									for (var i = 1; i < 1e3; i++) {
-										if (!lib.configMenu.appearence.config.image_background.item[link + "_" + i]) {
-											link = link + "_" + i;
-											break;
-										}
+				var addItem = ui.create.div(".backgrounds", container);
+				ui.create.div(".buttontext", "添加背景", addItem);
+				var input = document.createElement("input");
+				input.type = "file";
+				input.accept = "image/*";
+				input.multiple = true;
+				input.style.display = "none";
+				document.body.appendChild(input);
+				addItem.addEventListener("click", function () {
+					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					input.click();
+				});
+				input.onchange = function (e) {
+					var files = e.target.files;
+					if (!files || files.length === 0) return;
+					var fileList = Array.from(files);
+					var totalFiles = fileList.length;
+					var processedFiles = 0;
+					fileList.forEach(function (file2, index) {
+						if (file2) {
+							var name2 = file2.name;
+							if (name2.includes(".")) {
+								name2 = name2.slice(0, name2.indexOf("."));
+							}
+							var link = (game.writeFile ? "cdv_" : "custom_") + name2;
+							if (lib.configMenu.appearence.config.image_background.item[link]) {
+								for (var i = 1; i < 1e3; i++) {
+									if (!lib.configMenu.appearence.config.image_background.item[link + "_" + i]) {
+										link = link + "_" + i;
+										break;
 									}
-								}
-								lib.configMenu.appearence.config.image_background.item[link] = name2;
-								var callback = function() {
-									lib.config.customBackgroundPack.add(link);
-									game.saveConfig("customBackgroundPack", lib.config.customBackgroundPack);
-									processedFiles++;
-									if (processedFiles === totalFiles && editItem.classList.contains("active")) {
-										editbg.call(editItem);
-									}
-									while (container.firstChild) {
-										container.removeChild(container.firstChild);
-									}
-									loadBackgroundImages(container);
-								};
-								if (game.writeFile) {
-									game.writeFile(file2, "image/background", link + ".jpg", callback);
-								} else {
-									game.putDB("image", link, file2, callback);
 								}
 							}
-						});
-					};
-					var editItem = ui.create.div(".backgrounds", container);
-					ui.create.div(".buttontext", "编辑背景", editItem);
-					var editbg = function() {
-						this.classList.toggle("active");
-						var items = Array.from(container.querySelectorAll(".backgrounds"));
-						items.slice(0, Math.max(0, items.length - 2)).forEach(function (item) {
-							var fname = item.dataset.name;
-							if (!fname) return;
-							var textDiv = item.querySelector(".buttontext");
-							if (!textDiv) return;
-							var str;
-							if (this.classList.contains("active")) {
-								if (fname.startsWith("custom_") || fname.startsWith("cdv_")) {
-									str = "删除";
-								} else {
-									str = "隐藏";
+							lib.configMenu.appearence.config.image_background.item[link] = name2;
+							var callback = function () {
+								lib.config.customBackgroundPack.add(link);
+								game.saveConfig("customBackgroundPack", lib.config.customBackgroundPack);
+								processedFiles++;
+								if (processedFiles === totalFiles && editItem.classList.contains("active")) {
+									editbg.call(editItem);
 								}
+								while (container.firstChild) {
+									container.removeChild(container.firstChild);
+								}
+								loadBackgroundImages(container);
+							};
+							if (game.writeFile) {
+								game.writeFile(file2, "image/background", link + ".jpg", callback);
 							} else {
-								str = lib.configMenu.appearence.config.image_background.item[fname] || fname;
+								game.putDB("image", link, file2, callback);
 							}
-							textDiv.innerHTML = str;
-						}.bind(this));
-					};
-					editItem.addEventListener("click", function () {
-						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-						editbg.call(this);
+						}
 					});
-				})(container);
+				};
+				var editItem = ui.create.div(".backgrounds", container);
+				ui.create.div(".buttontext", "编辑背景", editItem);
+				var editbg = function () {
+					this.classList.toggle("active");
+					var items = Array.from(container.querySelectorAll(".backgrounds"));
+					items.slice(0, Math.max(0, items.length - 2)).forEach(function (item) {
+						var fname = item.dataset.name;
+						if (!fname) return;
+						var textDiv = item.querySelector(".buttontext");
+						if (!textDiv) return;
+						var str;
+						if (this.classList.contains("active")) {
+							if (fname.startsWith("custom_") || fname.startsWith("cdv_")) {
+								str = "删除";
+							} else {
+								str = "隐藏";
+							}
+						} else {
+							str = lib.configMenu.appearence.config.image_background.item[fname] || fname;
+						}
+						textDiv.innerHTML = str;
+					}.bind(this));
+				};
+				editItem.addEventListener("click", function () {
+					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					editbg.call(this);
+				});
+			})(container);
 		}
 		function closeMenu() {
 			if (menuPopup) {
@@ -354,10 +354,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				openMenu();
 			}
 		};
-	}
-	// 确保lib.arenaReady存在
-	if (!lib.arenaReady) {
-		lib.arenaReady = [];
 	}
 	// 初始化
 	lib.arenaReady.push(function () {
@@ -515,7 +511,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			})();
 		},
 		create: {
-			control() {},
+			control() { },
 			confirm() {
 				const confirm = ui.create.control("<span>确定</span>", "cancel");
 				confirm.classList.add("lbtn-confirm");
@@ -718,7 +714,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					player._distanceDisplay = distanceDisplay;
 				}
 			});
-			plugin.distanceClickHandler = function(event) {
+			plugin.distanceClickHandler = function (event) {
 				if (!event.target.closest('.player') && !event.target.closest('.meiguiButton_new') && !event.target.closest('.meiguiButton_new1')) {
 					plugin.closeDistanceDisplay();
 				}
