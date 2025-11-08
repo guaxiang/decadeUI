@@ -685,6 +685,9 @@ export async function content(config, pack) {
 								nodeMark.name = name + "_charactermark";
 								nodeMark.info = info;
 								nodeMark.text = nodeMarkText;
+								var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(name) : null;
+								var isOwnSkill = decadeUI.game.checkSkillOwnership.call(this, name, parentSkill);
+								nodeMark.classList.add(isOwnSkill ? "own-skill" : "other-skill");
 								nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
 								if (!lib.config.touchscreen) {
 									if (lib.config.hover_all) {
@@ -709,6 +712,10 @@ export async function content(config, pack) {
 												content: content,
 												id: id,
 											};
+											var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(name) : null;
+											var isOwnSkill = decadeUI.game.checkSkillOwnership.call(player, name, parentSkill);
+											player.marks[id].classList.remove("own-skill", "other-skill");
+											player.marks[id].classList.add(isOwnSkill ? "own-skill" : "other-skill");
 											game.addVideo("changeMarkCharacter", player, {
 												id: id,
 												name: name,
@@ -732,7 +739,9 @@ export async function content(config, pack) {
 												id: id,
 											};
 											nodeMark.text = nodeMarkText;
-											nodeMark.classList.add("other-skill");
+											var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(name) : null;
+											var isOwnSkill = decadeUI.game.checkSkillOwnership.call(player, name, parentSkill);
+											nodeMark.classList.add(isOwnSkill ? "own-skill" : "other-skill");
 											nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
 											if (!lib.config.touchscreen) {
 												if (lib.config.hover_all) {
@@ -7306,57 +7315,136 @@ export async function content(config, pack) {
 			}
 		},
 		checkSkillOwnership(skillName, parentSkill) {
-			// 特殊标记处理：这些标记是其他玩家给技能的方式实现的，应该显示为other-skill
-			const otherPlayerMarks = ["xinzhaofu_effect", "reyanzhu2", "rewangzun2"];
-			if (otherPlayerMarks.includes(skillName)) {
+			if (!skillName) return false;
+			let player = this;
+			let cleanSkillName = skillName.replace(/_charactermark|_skillmark/g, "");
+			let skillInfo = lib.skill && lib.skill[cleanSkillName];
+			if (decadeUI.game.checkOtherPlayerMark.call(player, cleanSkillName, skillInfo)) {
 				return false;
 			}
-			// 其他标记走正常流程判断
+			let storageResult = decadeUI.game.checkStorageOwnership.call(player, cleanSkillName);
+			if (storageResult === false) {
+				return false;
+			}
+			if (storageResult === true) {
+				return true;
+			}
+			let effectiveSkill = parentSkill ? 
+				(get && get.sourceSkillFor ? get.sourceSkillFor(parentSkill) : parentSkill) :
+				(get && get.sourceSkillFor ? get.sourceSkillFor(cleanSkillName) : cleanSkillName);
+			if (player.hasSkill(effectiveSkill, null, null, false) || 
+				player.hasSkill(cleanSkillName, null, null, false) || 
+				player.hasSkill(skillName, null, null, false)) {
+				return true;
+			}
+			let playerSkills = player.getSkills(null, null, false);
+			let expandedSkills = game.expandSkills(playerSkills.slice());
+			if (expandedSkills.includes(effectiveSkill) || expandedSkills.includes(cleanSkillName) || expandedSkills.includes(skillName)) {
+				return true;
+			}
+			let possibleSourceSkills = decadeUI.game.getPossibleSourceSkills(cleanSkillName);
+			for (let i = 0; i < possibleSourceSkills.length; i++) {
+				if (player.hasSkill(possibleSourceSkills[i], null, null, false)) {
+					return true;
+				}
+				let expanded = game.expandSkills([possibleSourceSkills[i]]);
+				if (expanded.includes(cleanSkillName) || expanded.includes(skillName)) {
+					return true;
+				}
+			}
+			return false;
+		},
+		checkOtherPlayerMark(cleanSkillName, skillInfo) {
+			if (cleanSkillName.endsWith("_effect")) {
+				let sourceSkillName = cleanSkillName.replace("_effect", "");
+				if (!this.hasSkill(sourceSkillName, null, null, false)) {
+					let sourceSkillInfo = lib.skill && lib.skill[sourceSkillName];
+					if (sourceSkillInfo && sourceSkillInfo.subSkill && sourceSkillInfo.subSkill.effect) {
+						return true;
+					}
+				}
+			}
+			if (cleanSkillName.endsWith("2") && cleanSkillName.length > 1) {
+				let baseSkillName = cleanSkillName.slice(0, -1);
+				if (skillInfo && skillInfo.sourceSkill) {
+					if (!this.hasSkill(skillInfo.sourceSkill, null, null, false) && !this.hasSkill(baseSkillName, null, null, false)) {
+						return true;
+					}
+				} else if (skillInfo && (skillInfo.charlotte || skillInfo.onremove)) {
+					if (!this.hasSkill(baseSkillName, null, null, false)) {
+						let baseSkillInfo = lib.skill && lib.skill[baseSkillName];
+						if (baseSkillInfo && baseSkillInfo.zhuSkill) {
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		},
+		checkStorageOwnership(cleanSkillName) {
+			let storage = this.storage && this.storage[cleanSkillName];
+			if (!storage) return null;
+			let checkItem = (item) => {
+				return item === this || 
+					(item && typeof item === "object" && ((item.name && item.name === this.name) || (item.node && item.node === this.node)));
+			};
+			if (Array.isArray(storage)) {
+				if (storage.length === 0) return null;
+				let hasOwn = false;
+				let hasOther = false;
+				for (let i = 0; i < storage.length; i++) {
+					if (checkItem(storage[i])) {
+						hasOwn = true;
+					} else if (storage[i] && typeof storage[i] === "object") {
+						hasOther = true;
+					}
+				}
+				if (hasOwn) return true;
+				if (hasOther) return false;
+				return null;
+			}
+			if (checkItem(storage)) {
+				return true;
+			}
+			if (storage && typeof storage === "object") {
+				return false;
+			}
+			return null;
+		},
+		getPossibleSourceSkills(cleanSkillName) {
 			const skillTransformRules = [
 				{
-					name: "xin前缀",
 					condition: name => name.startsWith("xin") && name.length > 3,
 					transform: name => name.substring(3),
 				},
 				{
-					name: "re前缀",
-					condition: name => name.startsWith("re") && name.length > 2,
+					condition: name => name.startsWith("re") && name.length > 2 && !name.startsWith("re_"),
 					transform: name => name.substring(2),
 				},
 				{
-					name: "_mark后缀",
 					condition: name => name.endsWith("_mark") && name.length > 5,
 					transform: name => name.substring(0, name.length - 5),
 				},
+				{
+					condition: name => name.endsWith("_effect") && name.length > 7,
+					transform: name => name.substring(0, name.length - 7),
+				},
 			];
-			var effectiveSkill = parentSkill && parentSkill !== skillName ? parentSkill : skillName;
-			if (this.hasSkill(effectiveSkill, null, null, false)) {
-				return true;
-			}
-			if (this.hasSkill(skillName, null, null, false)) {
-				return true;
-			}
-			var playerSkills = this.getSkills();
-			for (var i = 0; i < playerSkills.length; i++) {
-				var skill = playerSkills[i];
-				if (skill.includes(skillName) || skillName.includes(skill)) {
-					return true;
+			let possibleSourceSkills = [];
+			for (let i = 0; i < skillTransformRules.length; i++) {
+				let rule = skillTransformRules[i];
+				if (rule.condition(cleanSkillName)) {
+					let transformed = rule.transform(cleanSkillName);
+					if (transformed && transformed !== cleanSkillName) {
+						possibleSourceSkills.push(transformed);
+						let sourceSkill = get && get.sourceSkillFor ? get.sourceSkillFor(transformed) : transformed;
+						if (sourceSkill && sourceSkill !== transformed) {
+							possibleSourceSkills.push(sourceSkill);
+						}
+					}
 				}
 			}
-			var possibleSourceSkills = [];
-			for (var i = 0; i < skillTransformRules.length; i++) {
-				var rule = skillTransformRules[i];
-				if (rule.condition(skillName)) {
-					possibleSourceSkills.push(rule.transform(skillName));
-				}
-			}
-			for (var i = 0; i < possibleSourceSkills.length; i++) {
-				if (this.hasSkill(possibleSourceSkills[i], null, null, false)) {
-					return true;
-				}
-			}
-
-			return false;
+			return possibleSourceSkills;
 		},
 	};
 	decadeUI.config = config;
