@@ -67,7 +67,7 @@ export async function precontent() {
 		// 提前返回模式减少嵌套
 		if (!ui.css.layout) return;
 		if (!ui.css.layout.href || ui.css.layout.href.indexOf("long2") < 0) {
-			ui.css.layout.href = lib.assetURL + "layout/long2/layout.css";
+			ui.css.layout.href = `${lib.assetURL}layout/long2/layout.css`;
 		}
 		decadeModule.init = function () {
 			// 基础CSS加载 - 使用动态导入确保Vite能检测到变化
@@ -317,7 +317,7 @@ export async function precontent() {
 		path: {
 			ext(path, ext) {
 				ext = ext || app.name;
-				return lib.assetURL + "extension/" + ext + "/" + path;
+				return `${lib.assetURL}extension/${ext}/${path}`;
 			},
 		},
 		on(event, listen) {
@@ -536,9 +536,9 @@ export async function precontent() {
 		get: {
 			skillInfo(skill, node) {
 				const obj = { id: skill };
-				if (lib.translate[skill + "_ab"]) {
-					obj.name = lib.translate[skill + "_ab"];
-					obj.nameSimple = lib.translate[skill + "_ab"];
+				if (lib.translate[`${skill}_ab`]) {
+					obj.name = lib.translate[`${skill}_ab`];
+					obj.nameSimple = lib.translate[`${skill}_ab`];
 				} else if (lib.translate[skill]) {
 					obj.name = lib.translate[skill];
 					obj.nameSimple = lib.translate[skill].slice(0, 2);
@@ -553,8 +553,8 @@ export async function precontent() {
 					if (obj.info.nobracket) obj.nobracket = true;
 				}
 				obj.translation = get.skillInfoTranslation(skill, undefined, false);
-				obj.translationSource = lib.translate[skill + "_info"];
-				obj.translationAppend = lib.translate[skill + "_append"];
+				obj.translationSource = lib.translate[`${skill}_info`];
+				obj.translationAppend = lib.translate[`${skill}_append`];
 				obj.type = obj.info && obj.info.enable ? "enable" : "trigger";
 				return obj;
 			},
@@ -1235,7 +1235,11 @@ export async function precontent() {
 			// 隐藏其他对话框
 			["dialog_lifesay", "chatBackground", "dialog_emotion"].forEach(dialog => {
 				if (window[dialog]) {
-					if (window[dialog].show) window[dialog].style[dialog === "dialog_emotion" ? "bottom" : dialog === "dialog_lifesay" ? "left" : "left"] = dialog === "dialog_emotion" ? "100%" : dialog === "dialog_lifesay" ? "-" + window.dialog_lifesay?.style.width : "100%";
+					if (window[dialog].show) {
+						const styleProp = dialog === "dialog_emotion" ? "bottom" : "left";
+						const styleValue = dialog === "dialog_emotion" ? "100%" : dialog === "dialog_lifesay" ? `-${window.dialog_lifesay?.style.width}` : "100%";
+						window[dialog].style[styleProp] = styleValue;
+					}
 					setTimeout(() => {
 						window[dialog].hide();
 						window[dialog].show = false;
@@ -1270,15 +1274,15 @@ export async function precontent() {
 			window.dialog_emojiBgColor.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png");
 			window.dialog_emoji.appendChild(window.dialog_emojiBgColor);
 			lib.setScroll(window.dialog_emojiBgColor);
-			var emotionIndex = 0;
+			let emotionIndex = 0;
 			// 创建第一级菜单 - 表情包选择
 			for (const pack in lib.emotionList) {
-				window["dialog_emojiPack_" + pack] = ui.create.div("hidden", "", function () {
+				window[`dialog_emojiPack_${pack}`] = ui.create.div("hidden", "", function () {
 					for (const p in lib.emotionList) {
-						window["dialog_emojiPack_" + p].style.display = "none";
+						window[`dialog_emojiPack_${p}`].style.display = "none";
 					}
-					for (var i = 0; i < emotionIndex; i++) {
-						var content = window["dialog_emojiContent_" + i];
+					for (let i = 0; i < emotionIndex; i++) {
+						const content = window[`dialog_emojiContent_${i}`];
 						if (content.packName === this.packName) {
 							content.style.display = "";
 						} else {
@@ -1287,35 +1291,30 @@ export async function precontent() {
 					}
 				});
 
-				window["dialog_emojiPack_" + pack].style.cssText = "height: 70px; width: 70px; margin: 0 5px 5px 0; display: inline-block; left: 15px; top: 0px; position: relative; background-size: 100% 100%;";
-				window["dialog_emojiPack_" + pack].packName = pack;
-				window["dialog_emojiPack_" + pack].setBackgroundImage("image/emotion/" + pack + "/1.gif");
-				window.dialog_emojiBgColor.appendChild(window["dialog_emojiPack_" + pack]);
-				clickFK(window["dialog_emojiPack_" + pack]);
+				window[`dialog_emojiPack_${pack}`].style.cssText = "height: 70px; width: 70px; margin: 0 5px 5px 0; display: inline-block; left: 15px; top: 0px; position: relative; background-size: 100% 100%;";
+				window[`dialog_emojiPack_${pack}`].packName = pack;
+				window[`dialog_emojiPack_${pack}`].setBackgroundImage(`image/emotion/${pack}/1.gif`);
+				window.dialog_emojiBgColor.appendChild(window[`dialog_emojiPack_${pack}`]);
+				clickFK(window[`dialog_emojiPack_${pack}`]);
 			}
 			// 创建第二级菜单 - 具体表情 
 			for (const pack in lib.emotionList) {
 				const count = lib.emotionList[pack];
-				for (var i = 1; i <= count; i++) {
-					window["dialog_emojiContent_" + emotionIndex] = ui.create.div("hidden", "", function () {
+				for (let i = 1; i <= count; i++) {
+					window[`dialog_emojiContent_${emotionIndex}`] = ui.create.div("hidden", "", function () {
 						for (const p in lib.emotionList) {
-							window["dialog_emojiPack_" + p].style.display = "";
+							window[`dialog_emojiPack_${p}`].style.display = "";
 						}
-						for (var i = 0; i < emotionIndex; i++) {
-							window["dialog_emojiContent_" + i].style.display = "none";
+						for (let j = 0; j < emotionIndex; j++) {
+							window[`dialog_emojiContent_${j}`].style.display = "none";
 						}
-						var player = game.me;
-						var emotionsize = lib.config.extension_星之梦_emotionsize || 50;
-						var str = '<img src="' + lib.assetURL + "image/emotion/" + this.packName + "/" + this.emotionNum + '.gif" width="' + parseInt(emotionsize) + '" height="' + parseInt(emotionsize) + '">';
+						let player = game.me;
+						const emotionsize = lib.config.extension_星之梦_emotionsize || 50;
+						const str = `<img src="${lib.assetURL}image/emotion/${this.packName}/${this.emotionNum}.gif" width="${parseInt(emotionsize)}" height="${parseInt(emotionsize)}">`;
 						if (!player) {
 							if (game.connectPlayers) {
 								if (game.online) {
-									for (var i = 0; i < game.connectPlayers.length; i++) {
-										if (game.connectPlayers[i].playerid == game.onlineID) {
-											player = game.connectPlayers[i];
-											break;
-										}
-									}
+									player = game.connectPlayers.find(p => p.playerid === game.onlineID);
 								} else {
 									player = game.connectPlayers[0];
 								}
@@ -1331,13 +1330,13 @@ export async function precontent() {
 						delete window.dialog_emoji;
 						window.dialog_emoji = undefined;
 					});
-					window["dialog_emojiContent_" + emotionIndex].style.cssText = "height: 70px; width: 70px; margin: 0 5px 5px 0; display: inline-block; left: 15px; top: 0px; position: relative; background-size: 100% 100%; display: none;";
-					window["dialog_emojiContent_" + emotionIndex].packName = pack;
-					window["dialog_emojiContent_" + emotionIndex].emotionNum = i;
-					window["dialog_emojiContent_" + emotionIndex].setBackgroundImage("image/emotion/" + pack + "/" + i + ".gif");
+					window[`dialog_emojiContent_${emotionIndex}`].style.cssText = "height: 70px; width: 70px; margin: 0 5px 5px 0; display: inline-block; left: 15px; top: 0px; position: relative; background-size: 100% 100%; display: none;";
+					window[`dialog_emojiContent_${emotionIndex}`].packName = pack;
+					window[`dialog_emojiContent_${emotionIndex}`].emotionNum = i;
+					window[`dialog_emojiContent_${emotionIndex}`].setBackgroundImage(`image/emotion/${pack}/${i}.gif`);
 
-					window.dialog_emojiBgColor.appendChild(window["dialog_emojiContent_" + emotionIndex]);
-					clickFK(window["dialog_emojiContent_" + emotionIndex]);
+					window.dialog_emojiBgColor.appendChild(window[`dialog_emojiContent_${emotionIndex}`]);
+					clickFK(window[`dialog_emojiContent_${emotionIndex}`]);
 					emotionIndex++;
 				}
 			}
@@ -1390,7 +1389,7 @@ export async function precontent() {
 		// 输入框背景
 		window.chatInputOut = ui.create.div("hidden");
 		window.chatInputOut.style.cssText = "display: block;--w: 275px;--h: calc(var(--w) * 50/320);width: var(--w);height: var(--h);left:8%;top:14%;transition:none;background-size:100% 100%;pointer-events:none;z-index:6;";
-		window.chatInputOut.style.backgroundImage = "url('" + lib.assetURL + "extension/十周年UI/shoushaUI/sayplay/sayX.png')";
+		window.chatInputOut.style.backgroundImage = `url('${lib.assetURL}extension/十周年UI/shoushaUI/sayplay/sayX.png')`;
 		window.chatBg.appendChild(window.chatInputOut);
 		// 输入框
 		window.chatInput = ui.create.dialog("hidden");
@@ -1399,21 +1398,21 @@ export async function precontent() {
 		window.ipt = ui.create.div();
 		window.ipt.style.cssText = "height: 24px; width: 100%; top: 0px; left: 0px; margin: 0px; border-radius: 0px; background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4));";
 		if (window.input && window.input.value) window.input_value = window.input.value;
-		window.ipt.innerHTML = '<input type="text" value=' + (window.input_value || "请输入文字") + ' style="color:white;font-family:shousha;width:calc(100% - 10px);text-align:left;"></input>';
+		window.ipt.innerHTML = `<input type="text" value="${window.input_value || "请输入文字"}" style="color:white;font-family:shousha;width:calc(100% - 10px);text-align:left;"></input>`;
 		window.input = window.ipt.querySelector("input");
-		window.input.style.backgroundImage = "url('" + lib.assetURL + "extension/十周年UI/shoushaUI/sayplay/say.png')";
+		window.input.style.backgroundImage = `url('${lib.assetURL}extension/十周年UI/shoushaUI/sayplay/say.png')`;
 		window.input.style.backgroundSize = "120% 120%";
 		window.input.style.boxShadow = "none";
-		window.input.onclick = function (e) {
+		window.input.onclick = (e) => {
 			e.stopPropagation();
 		};
 		window.input.onfocus = function () {
-			if (this.value == "请输入文字") this.value = "";
+			if (this.value === "请输入文字") this.value = "";
 		};
-		window.input.onkeydown = function (e) {
+		window.input.onkeydown = (e) => {
 			e.stopPropagation();
 			if (e.keyCode === 13 || e.key === "Enter") {
-				const value = String(this.value ?? "");
+				const value = String(e.target.value ?? "");
 				if (!value) return;
 				window.sendInfo(value);
 			}
@@ -1425,7 +1424,11 @@ export async function precontent() {
 		// 隐藏其他对话框
 		["dialog_lifesay", "dialog_emoji", "dialog_emotion"].forEach(dialog => {
 			if (window[dialog]) {
-				if (window[dialog].show) window[dialog].style[dialog === "dialog_emotion" ? "bottom" : dialog === "dialog_emoji" ? "top" : "left"] = dialog === "dialog_emotion" ? "100%" : dialog === "dialog_emoji" ? "100%" : "-" + window.dialog_lifesay?.style.width;
+				if (window[dialog].show) {
+					const styleProp = dialog === "dialog_emotion" ? "bottom" : dialog === "dialog_emoji" ? "top" : "left";
+					const styleValue = dialog === "dialog_emotion" ? "100%" : dialog === "dialog_emoji" ? "100%" : `-${window.dialog_lifesay?.style.width}`;
+					window[dialog].style[styleProp] = styleValue;
+				}
 				setTimeout(() => {
 					window[dialog].hide();
 					window[dialog].show = false;
@@ -1441,7 +1444,7 @@ export async function precontent() {
 		window.chatBackground = ui.create.div("hidden");
 		window.chatBackground.classList.add("static");
 		window.chatBackground.show = true;
-		window.chatBackground.style.cssText = "transition: all 1s; height: 330px; width: 600px; top: calc(20% - 100px); left: 100%; bottom: calc(" + (window.chatBg ? window.chatBg.style.height : "0") + " + 5px); opacity: 1; border-radius: 10px; background-size: 100% 100%;";
+		window.chatBackground.style.cssText = `transition: all 1s; height: 330px; width: 600px; top: calc(20% - 100px); left: 100%; bottom: calc(${window.chatBg ? window.chatBg.style.height : "0"} + 5px); opacity: 1; border-radius: 10px; background-size: 100% 100%;`;
 		window.chatBackground.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png");
 		window.chatBackground.style.zIndex = 999999999;
 		window.chatBackground.style.boxShadow = "none";
@@ -1450,7 +1453,7 @@ export async function precontent() {
 		}, 100);
 		// 鼠标悬停效果
 		game.mouseChatDiv = function (div) {
-			if (lib.device == undefined) {
+			if (lib.device === undefined) {
 				div.onmouseover = function () {
 					this.style.opacity = 1.0;
 				};
@@ -1459,7 +1462,7 @@ export async function precontent() {
 				};
 			} else {
 				div.onclick = function () {
-					if (div.style.opacity == 0.25) this.style.opacity = 0.75;
+					if (div.style.opacity === "0.25") this.style.opacity = 0.75;
 					else this.style.opacity = 0.25;
 				};
 			}
@@ -1509,22 +1512,22 @@ export async function precontent() {
 								if (strx) {
 									window.chatRecord.push(strx);
 								}
-								var str = (window.chatRecord[0] || "") + "<br>";
+								let str = (window.chatRecord[0] || "") + "<br>";
 								if (window.chatRecord.length > 1) {
-									for (var i = 1; i < window.chatRecord.length; i++) {
-										str += "<br>" + window.chatRecord[i] + "<br>";
+									for (let i = 1; i < window.chatRecord.length; i++) {
+										str += `<br>${window.chatRecord[i]}<br>`;
 									}
 								}
-								if (window.chatBackground2 != undefined) game.updateChatWord(str);
+								if (window.chatBackground2 !== undefined) game.updateChatWord(str);
 							};
 						}
 						str = str.replace(/##assetURL##/g, lib.assetURL);
 						// 判断是否存在nickname，如果不存在则只显示name
 						if (player.nickname) {
 							//对应上面函数，把其他player的发言记录到框里
-							game.addChatWord("<font color=green>" + get.translation("" + player.name) + "[" + player.nickname + "]" + "</font><font color=white>：" + str + "</font>");
+							game.addChatWord(`<font color=green>${get.translation(String(player.name))}[${player.nickname}]</font><font color=white>：${str}</font>`);
 						} else {
-							game.addChatWord("<font color=green>" + get.translation("" + player.name) + "</font><font color=white>：" + str + "</font>");
+							game.addChatWord(`<font color=green>${get.translation(String(player.name))}</font><font color=white>：${str}</font>`);
 						}
 					},
 					player,

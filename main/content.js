@@ -231,15 +231,15 @@ export async function content(config, pack) {
 						},
 						card: {
 							copy() {
-								var clone = base.lib.element.card.copy.apply(this, arguments);
+								const clone = base.lib.element.card.copy.apply(this, arguments);
 								clone.nature = this.nature;
-								var res = dui.statics.cards;
-								var asset = res[clone.name];
+								const res = dui.statics.cards;
+								const asset = res[clone.name];
 								if (!res.READ_OK) return clone;
 								if (asset && !asset.loaded && clone.classList.contains("decade-card")) {
 									if (asset.loaded === undefined) {
-										var image = asset.image;
-										image.addEventListener("error", function () {
+										const image = asset.image;
+										image.addEventListener("error", () => {
 											clone.style.background = asset.rawUrl;
 											clone.classList.remove("decade-card");
 										});
@@ -364,15 +364,15 @@ export async function content(config, pack) {
 							},
 							updateTransform(bool, delay) {
 								if (delay) {
-									var that = this;
-									setTimeout(function () {
-										that.updateTransform(that.classList.contains("selected"));
+									setTimeout(() => {
+										this.updateTransform(this.classList.contains("selected"));
 									}, delay);
 								} else {
 									if (_status.event.player != game.me) return;
 									if (this._transform && this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.parentNode == ui.me && (!_status.mousedown || _status.mouseleft)) {
 										if (bool) {
-											this.style.transform = this._transform + " translateY(-" + (decadeUI.isMobile() ? 10 : 12) + "px)";
+											const offset = decadeUI.isMobile() ? 10 : 12;
+											this.style.transform = `${this._transform} translateY(-${offset}px)`;
 										} else {
 											this.style.transform = this._transform || "";
 										}
@@ -381,34 +381,30 @@ export async function content(config, pack) {
 							},
 							moveTo(player) {
 								if (!player) return;
-								var arena = dui.boundsCaches.arena;
+								const arena = dui.boundsCaches.arena;
 								if (!arena.updated) arena.update();
 								player.checkBoundsCache();
 								this.fixed = true;
-								var x = Math.round((player.cacheWidth - arena.cardWidth) / 2 + player.cacheLeft);
-								var y = Math.round((player.cacheHeight - arena.cardHeight) / 2 + player.cacheTop);
-								var scale = arena.cardScale;
+								const x = Math.round((player.cacheWidth - arena.cardWidth) / 2 + player.cacheLeft);
+								const y = Math.round((player.cacheHeight - arena.cardHeight) / 2 + player.cacheTop);
+								const scale = arena.cardScale;
 								this.tx = x;
 								this.ty = y;
 								this.scaled = true;
-								this.style.transform = "translate(" + x + "px," + y + "px) scale(" + scale + ")";
+								this.style.transform = `translate(${x}px,${y}px) scale(${scale})`;
 								return this;
 							},
 							moveDelete(player) {
 								this.fixed = true;
 								this.moveTo(player);
-								setTimeout(
-									function (card) {
-										card.delete();
-									},
-									460,
-									this
-								);
+								setTimeout(() => {
+									this.delete();
+								}, 460);
 							},
 						},
 						control: {
 							add(item) {
-								var node = document.createElement("div");
+								const node = document.createElement("div");
 								node.link = item;
 								node.innerHTML = get.translation(item);
 								node.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
@@ -429,14 +425,9 @@ export async function content(config, pack) {
 								if (ui.skills3 == this) ui.skills3 = null;
 							},
 							replace() {
-								var items;
-								var index = 0;
-								var nodes = this.childNodes;
-								if (Array.isArray(arguments[0])) {
-									items = arguments[0];
-								} else {
-									items = arguments;
-								}
+								const items = Array.isArray(arguments[0]) ? arguments[0] : Array.from(arguments);
+								let index = 0;
+								const nodes = this.childNodes;
 								this.custom = undefined;
 								for (let i = 0; i < items.length; i++) {
 									if (typeof items[i] === "function") {
@@ -459,7 +450,7 @@ export async function content(config, pack) {
 								return this;
 							},
 							updateLayout() {
-								var nodes = this.childNodes;
+								const nodes = this.childNodes;
 								if (nodes.length >= 2) {
 									this.classList.add("combo-control");
 									for (const node of nodes) node.classList.add("control");
@@ -471,31 +462,31 @@ export async function content(config, pack) {
 						},
 						player: {
 							addSkill(skill) {
-								var skill = base.lib.element.player.addSkill.apply(this, arguments);
-								if (!Array.isArray(skill)) {
+								const result = base.lib.element.player.addSkill.apply(this, arguments);
+								if (!Array.isArray(result)) {
 									const skills = ["name", "name1", "name2"].reduce((list, name) => {
 										if (this[name] && (name != "name1" || this.name != this.name1)) {
 											list.addArray(get.character(this[name], 3) || []);
 										}
 										return list;
 									}, []);
-									if (!skills.includes(skill)) {
-										var info = get.info(skill);
-										if (!(!info || info.nopop || !get.translation(skill + "_info") || !lib.translate[skill + "_info"])) this.node.gainSkill.gain(skill);
+									if (!skills.includes(result)) {
+										const info = get.info(result);
+										if (!(!info || info.nopop || !get.translation(result + "_info") || !lib.translate[result + "_info"])) this.node.gainSkill.gain(result);
 									}
 								}
 								[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
-								return skill;
+								return result;
 							},
 							removeSkill(skill) {
-								var skill = base.lib.element.player.removeSkill.apply(this, arguments);
-								if (!Array.isArray(skill)) {
-									if (this.node.gainSkill.skills && this.node.gainSkill.skills.includes(skill)) {
-										this.node.gainSkill.lose(skill);
+								const result = base.lib.element.player.removeSkill.apply(this, arguments);
+								if (!Array.isArray(result)) {
+									if (this.node.gainSkill.skills && this.node.gainSkill.skills.includes(result)) {
+										this.node.gainSkill.lose(result);
 									}
 								}
 								[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
-								return skill;
+								return result;
 							},
 							awakenSkill(skill) {
 								const result = base.lib.element.player.awakenSkill.apply(this, arguments);
@@ -566,9 +557,9 @@ export async function content(config, pack) {
 									item = item.name;
 								} else {
 									mark = ui.create.div(".card.mark");
-									var markText = lib.translate[item + "_bg"];
+									let markText = lib.translate[item + "_bg"];
 									if (!markText || markText[0] == "+" || markText[0] == "-") {
-										markText = get.translation(item).substr(0, 2);
+										markText = get.translation(item).slice(0, 2);
 										if (decadeUI.config.playerMarkStyle != "decade") {
 											markText = markText[0];
 										}
@@ -595,9 +586,9 @@ export async function content(config, pack) {
 								}
 								mark.name = item;
 								mark.skill = skill || item;
-								var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(mark.skill) : null;
+								const parentSkill = get?.sourceSkillFor ? get.sourceSkillFor(mark.skill) : null;
 								if (!mark.classList.contains("own-skill") && !mark.classList.contains("other-skill")) {
-									var isOwnSkill = decadeUI.game.checkSkillOwnership.call(this, mark.skill, parentSkill);
+									const isOwnSkill = decadeUI.game.checkSkillOwnership.call(this, mark.skill, parentSkill);
 									mark.classList.add(isOwnSkill ? "own-skill" : "other-skill");
 								}
 								if (typeof info == "object") {
@@ -657,20 +648,20 @@ export async function content(config, pack) {
 							},
 							markCharacter(name, info, learn, learn2) {
 								if (typeof name == "object") name = name.name;
-								var nodeMark = ui.create.div(".card.mark");
-								var nodeMarkText = ui.create.div(".mark-text", nodeMark);
+								const nodeMark = ui.create.div(".card.mark");
+								const nodeMarkText = ui.create.div(".mark-text", nodeMark);
 								if (!info) info = {};
 								if (!info.name) info.name = get.translation(name);
 								if (!info.content) info.content = get.skillintro(name, learn, learn2);
 								if (name.startsWith("unknown")) {
-									var unknownText = get.translation(name)[0];
+									const unknownText = get.translation(name)[0];
 									if (unknownText && unknownText.includes("☯")) {
 										nodeMark.style.setProperty("display", "none", "important");
 									}
 									nodeMarkText.innerHTML = unknownText;
 								} else {
 									if (!get.character(name)) return console.error(name);
-									var text = info.name.substr(0, 2);
+									const text = info.name.slice(0, 2);
 									if (text.length == 2) nodeMarkText.classList.add("small-text");
 									if (text && text.includes("☯")) {
 										nodeMark.style.setProperty("display", "none", "important");
@@ -680,8 +671,8 @@ export async function content(config, pack) {
 								nodeMark.name = name + "_charactermark";
 								nodeMark.info = info;
 								nodeMark.text = nodeMarkText;
-								var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(name) : null;
-								var isOwnSkill = decadeUI.game.checkSkillOwnership.call(this, name, parentSkill);
+								const parentSkill = get?.sourceSkillFor ? get.sourceSkillFor(name) : null;
+								const isOwnSkill = decadeUI.game.checkSkillOwnership.call(this, name, parentSkill);
 								nodeMark.classList.add(isOwnSkill ? "own-skill" : "other-skill");
 								nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
 								if (!lib.config.touchscreen) {
@@ -707,8 +698,8 @@ export async function content(config, pack) {
 												content: content,
 												id: id,
 											};
-											var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(name) : null;
-											var isOwnSkill = decadeUI.game.checkSkillOwnership.call(player, name, parentSkill);
+											const parentSkill = get?.sourceSkillFor ? get.sourceSkillFor(name) : null;
+											const isOwnSkill = decadeUI.game.checkSkillOwnership.call(player, name, parentSkill);
 											player.marks[id].classList.remove("own-skill", "other-skill");
 											player.marks[id].classList.add(isOwnSkill ? "own-skill" : "other-skill");
 											game.addVideo("changeMarkCharacter", player, {
@@ -718,10 +709,10 @@ export async function content(config, pack) {
 												target: target,
 											});
 										} else {
-											var nodeMark = ui.create.div(".card.mark");
-											var nodeMarkText = ui.create.div(".mark-text", nodeMark);
-											var skillName = get.translation(name);
-											var text = skillName.substr(0, 2);
+											const nodeMark = ui.create.div(".card.mark");
+											const nodeMarkText = ui.create.div(".mark-text", nodeMark);
+											const skillName = get.translation(name);
+											const text = skillName.slice(0, 2);
 											if (text.length == 2) nodeMarkText.classList.add("small-text");
 											if (text && text.includes("☯")) {
 												nodeMark.style.setProperty("display", "none", "important");
@@ -734,8 +725,8 @@ export async function content(config, pack) {
 												id: id,
 											};
 											nodeMark.text = nodeMarkText;
-											var parentSkill = get && get.sourceSkillFor ? get.sourceSkillFor(name) : null;
-											var isOwnSkill = decadeUI.game.checkSkillOwnership.call(player, name, parentSkill);
+											const parentSkill = get?.sourceSkillFor ? get.sourceSkillFor(name) : null;
+											const isOwnSkill = decadeUI.game.checkSkillOwnership.call(player, name, parentSkill);
 											nodeMark.classList.add(isOwnSkill ? "own-skill" : "other-skill");
 											nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
 											if (!lib.config.touchscreen) {
@@ -770,7 +761,7 @@ export async function content(config, pack) {
 							playDynamic(animation, deputy) {
 								deputy = deputy === true;
 								if (animation === undefined) return console.error("playDynamic: 参数1不能为空");
-								var dynamic = this.dynamic;
+								let dynamic = this.dynamic;
 								if (!dynamic) {
 									dynamic = new duilib.DynamicPlayer("assets/dynamic/");
 									dynamic.dprAdaptive = true;
@@ -791,7 +782,7 @@ export async function content(config, pack) {
 									};
 								if (this.doubleAvatar) {
 									if (Array.isArray(animation.x)) {
-										animation.x = animation.x.concat();
+										animation.x = [...animation.x];
 										animation.x[1] += deputy ? 0.25 : -0.25;
 									} else {
 										if (animation.x === undefined) {
@@ -810,7 +801,7 @@ export async function content(config, pack) {
 								}
 								if (this.$dynamicWrap.parentNode != this) this.appendChild(this.$dynamicWrap);
 								dynamic.outcropMask = duicfg.dynamicSkinOutcrop;
-								var avatar = dynamic.play(animation);
+								const avatar = dynamic.play(animation);
 								if (deputy === true) {
 									dynamic.deputy = avatar;
 								} else {
@@ -819,7 +810,7 @@ export async function content(config, pack) {
 								this.classList.add(deputy ? "d-skin2" : "d-skin");
 							},
 							stopDynamic(primary, deputy) {
-								var dynamic = this.dynamic;
+								const dynamic = this.dynamic;
 								if (!dynamic) return;
 								primary = primary === true;
 								deputy = deputy === true;
@@ -845,22 +836,18 @@ export async function content(config, pack) {
 								if (!this.$chatBubble) {
 									this.$chatBubble = decadeUI.element.create("chat-bubble");
 								}
-								var bubble = this.$chatBubble;
+								const bubble = this.$chatBubble;
 								bubble.innerHTML = str;
 								if (this != bubble.parentNode) this.appendChild(bubble);
 								bubble.classList.remove("removing");
 								bubble.style.animation = "fade-in 0.3s";
 								if (bubble.timeout) clearTimeout(bubble.timeout);
-								bubble.timeout = setTimeout(
-									function (bubble) {
-										bubble.timeout = undefined;
-										bubble.delete();
-									},
-									2000,
-									bubble
-								);
-								var name = get.translation(this.name);
-								var info = [name ? name + "[" + this.nickname + "]" : this.nickname, str];
+								bubble.timeout = setTimeout(() => {
+									bubble.timeout = undefined;
+									bubble.delete();
+								}, 2000);
+								const name = get.translation(this.name);
+								const info = [name ? `${name}[${this.nickname}]` : this.nickname, str];
 								lib.chatHistory.push(info);
 								if (_status.addChatEntry) {
 									if (_status.addChatEntry._origin.parentNode) {
@@ -883,10 +870,10 @@ export async function content(config, pack) {
 										return this;
 									}
 								}
-								var mark = this.marks[name];
+								const mark = this.marks[name];
 								if (storage && this.storage[name]) this.syncStorage(name);
 								if (lib.skill[name] && lib.skill[name].intro && !lib.skill[name].intro.nocount && (this.storage[name] || lib.skill[name].intro.markcount)) {
-									var num = 0;
+									let num = 0;
 									if (typeof lib.skill[name].intro.markcount == "function") {
 										num = lib.skill[name].intro.markcount(this.storage[name], this, name);
 										/*-----------------分割线-----------------*/
@@ -924,34 +911,34 @@ export async function content(config, pack) {
 								this.node.gainSkill.innerHTML = null;
 								if (!this.node.dieidentity) this.node.dieidentity = ui.create.div("died-identity", this);
 								this.node.dieidentity.classList.add("died-identity");
-								var that = this,
-									image = new Image(),
-									identity = decadeUI.getPlayerIdentity(this);
+								const that = this;
+								const image = new Image();
+								const identity = decadeUI.getPlayerIdentity(this);
 								const goon = decadeUI.config.newDecadeStyle === "on" || decadeUI.config.newDecadeStyle === "othersOff";
 								// 为onlineUI样式设置单独的路径判断
-								var url;
+								let url;
 								if (decadeUI.config.newDecadeStyle === "onlineUI") {
-									url = decadeUIPath + "image/decorationo/dead4_" + identity + ".png";
+									url = `${decadeUIPath}image/decorationo/dead4_${identity}.png`;
 									that.node.dieidentity.style.left = "25px";
 								} else if (decadeUI.config.newDecadeStyle === "babysha") {
-									url = decadeUIPath + "image/decorationh/dead3_" + identity + ".png";
+									url = `${decadeUIPath}image/decorationh/dead3_${identity}.png`;
 								} else if (decadeUI.config.newDecadeStyle === "codename") {
-									url = decadeUIPath + "image/decoration_code/dead_" + identity + ".png";
+									url = `${decadeUIPath}image/decoration_code/dead_${identity}.png`;
 								} else if (goon) {
-									url = decadeUIPath + "image/decoration/dead_" + identity + ".png";
+									url = `${decadeUIPath}image/decoration/dead_${identity}.png`;
 								} else {
 									if (this != game.me) {
-										url = decadeUIPath + "image/decorations/dead2_" + identity + ".png";
+										url = `${decadeUIPath}image/decorations/dead2_${identity}.png`;
 									} else {
-										url = decadeUIPath + "image/decorations/dead2_me.png";
+										url = `${decadeUIPath}image/decorations/dead2_me.png`;
 									}
 								}
-								image.onerror = function () {
-									that.node.dieidentity.innerHTML = decadeUI.getPlayerIdentity(that, that.identity, true) + "<br>阵亡";
+								image.onerror = () => {
+									that.node.dieidentity.innerHTML = `${decadeUI.getPlayerIdentity(that, that.identity, true)}<br>阵亡`;
 								};
 								// 离开效果仅在移动版样式下启用
 								if ((that._trueMe || that) != game.me && that != game.me && lib.config.extension_十周年UI_newDecadeStyle === "off") {
-									that.node.dieidentity.innerHTML = '<div style="width:21px; height:81px; left:22.5px; top:-12px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai.png);background-size: 100% 100%;"></div>';
+									that.node.dieidentity.innerHTML = `<div style="width:21px; height:81px; left:22.5px; top:-12px; position:absolute; background-image: url(${lib.assetURL}extension/十周年UI/assets/image/likai.png);background-size: 100% 100%;"></div>`;
 								} else {
 									that.node.dieidentity.innerHTML = "";
 								}
@@ -1051,7 +1038,7 @@ export async function content(config, pack) {
 										if (skins === undefined) continue;
 										const keys = Object.keys(skins);
 										if (keys.length === 0) {
-											console.error("player.init: " + avatars[i] + " 没有设置动皮参数");
+											console.error(`player.init: ${avatars[i]} 没有设置动皮参数`);
 											continue;
 										}
 										const skin = skins[Object.keys(skins)[0]];
@@ -1391,15 +1378,14 @@ export async function content(config, pack) {
 							},
 							directgain(cards, broadcast, gaintag) {
 								if (!cards || !cards.length) return;
-								var player = this;
-								var handcards = player.node.handcards1;
-								var fragment = document.createDocumentFragment();
+								const player = this;
+								const handcards = player.node.handcards1;
+								const fragment = document.createDocumentFragment();
 								if (_status.event.name == "gameDraw") {
 									player.$draw(cards.length);
 								}
-								var card;
-								for (var i = 0; i < cards.length; i++) {
-									card = cards[i];
+								for (let i = 0; i < cards.length; i++) {
+									const card = cards[i];
 									card.fix();
 									if (card.parentNode == handcards) {
 										cards.splice(i--, 1);
@@ -1412,7 +1398,7 @@ export async function content(config, pack) {
 									dui.layoutHandDraws(cards);
 									dui.queueNextFrameTick(dui.layoutHand, dui);
 								}
-								var s = player.getCards("s");
+								const s = player.getCards("s");
 								if (s.length) handcards.insertBefore(fragment, s[0]);
 								else handcards.appendChild(fragment);
 								if (!_status.video) {
@@ -1421,7 +1407,7 @@ export async function content(config, pack) {
 								}
 								if (broadcast !== false) {
 									game.broadcast(
-										function (player, cards) {
+										(player, cards) => {
 											player.directgain(cards);
 										},
 										this,
@@ -1535,7 +1521,7 @@ export async function content(config, pack) {
 								);
 							},
 							useCard() {
-								var event = base.lib.element.player.useCard.apply(this, arguments);
+								const event = base.lib.element.player.useCard.apply(this, arguments);
 								const finish = event.finish;
 								event.finish = function () {
 									if (typeof finish === "function") finish.apply(this, arguments);
@@ -1551,8 +1537,8 @@ export async function content(config, pack) {
 								return event;
 							},
 							lose() {
-								var next = base.lib.element.player.lose.apply(this, arguments);
-								var event = _status.event;
+								const next = base.lib.element.player.lose.apply(this, arguments);
+								let event = _status.event;
 								if (event.name === "loseAsync") event = event.getParent();
 								if (event.name == "useCard" || event.name === "respond") {
 									next.animate = true;
@@ -1570,14 +1556,14 @@ export async function content(config, pack) {
 							},
 							line(target, config) {
 								if (get.itemtype(target) == "players") {
-									for (var i = 0; i < target.length; i++) {
+									for (let i = 0; i < target.length; i++) {
 										this.line(target[i], config);
 									}
 								} else if (get.itemtype(target) == "player") {
 									if (target == this) return;
-									var player = this;
+									const player = this;
 									game.broadcast(
-										function (player, target, config) {
+										(player, target, config) => {
 											player.line(target, config);
 										},
 										player,
@@ -2067,10 +2053,10 @@ export async function content(config, pack) {
 								base.lib.element.player.$changeZhuanhuanji.apply(this, arguments);
 								if (!get.is.zhuanhuanji(skill, this)) return;
 								if (this.hiddenSkills.includes(skill) && this !== game.me) return;
-								var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
-								var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + skill + "_yang.png";
+								const mark = this.node.xSkillMarks.querySelector(`[data-id="${skill}"]`);
+								const url = `${lib.assetURL}extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/${skill}_yang.png`;
 								function imageExists(url) {
-									var xhr = new XMLHttpRequest();
+									const xhr = new XMLHttpRequest();
 									xhr.open("GET", url, false);
 									xhr.send();
 									return xhr.status !== 404;
@@ -2081,11 +2067,11 @@ export async function content(config, pack) {
 									if (mark) mark.dk = false;
 								}
 								if (!mark) return;
-								var style = lib.config.extension_十周年UI_newDecadeStyle;
-								var yangUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + skill + "_yang.png";
-								var yingUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/" + skill + "_ying.png";
-								var defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_yang.png";
-								var defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_ying.png";
+								const style = lib.config.extension_十周年UI_newDecadeStyle;
+								const yangUrl = `extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/${skill}_yang.png`;
+								const yingUrl = `extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/${skill}_ying.png`;
+								const defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_yang.png";
+								const defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/zhuanhuanji/ditu_ying.png";
 								if (style != "off") {
 									if (mark.classList.contains("yin")) {
 										mark.classList.remove("yin");
@@ -4992,23 +4978,23 @@ export async function content(config, pack) {
 									player.markSkill(skill);
 								}
 								sender.skills.push(skill);
-								var html = "";
-								for (var i = 0; i < sender.skills.length; i++) {
+								let html = "";
+								for (let i = 0; i < sender.skills.length; i++) {
 									/*-----------------分割线-----------------*/
-									html += "" + lib.translate[sender.skills[i]] + " ";
+									html += `${lib.translate[sender.skills[i]]} `;
 									sender.innerHTML = html;
 								}
 							}
 						},
 						lose(skill) {
-							var sender = this;
-							var index = sender.skills.indexOf(skill);
+							const sender = this;
+							const index = sender.skills.indexOf(skill);
 							if (index >= 0) {
 								sender.skills.splice(index, 1);
-								var html = "";
-								for (var i = 0; i < sender.skills.length; i++) {
+								let html = "";
+								for (let i = 0; i < sender.skills.length; i++) {
 									/*-----------------分割线-----------------*/
-									html += "" + lib.translate[sender.skills[i]] + " ";
+									html += `${lib.translate[sender.skills[i]]} `;
 								}
 								sender.innerHTML = html;
 							}
