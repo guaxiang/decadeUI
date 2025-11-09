@@ -90,7 +90,7 @@ export async function precontent() {
 				this.css(decadeUIPath + "css/style.css");
 			}
 			// JS异步加载
-			["js/spine.js", "js/component.js", "js/skill.js", "js/content.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"].forEach(path => this.jsAsync(decadeUIPath + path));
+			["js/spine.js", "js/component.js", "js/skill.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"].forEach(path => this.jsAsync(decadeUIPath + path));
 			// 原手杀UI内容加载
 			if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
 			const layoutPath = decadeUIPath + "shoushaUI/";
