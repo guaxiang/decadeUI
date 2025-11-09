@@ -1,21 +1,21 @@
 "use strict";
-decadeModule.import(function (lib, game, ui, get, ai, _status) {
+decadeModule.import((lib, game, ui, get, ai, _status) => {
 	if (lib.config["extension_十周年UI_translate"]) {
-		lib.init.js(lib.assetURL + "extension/十周年UI/js/cardtranslate.js");
+		lib.init.js(`${lib.assetURL}extension/十周年UI/js/cardtranslate.js`);
 		game.saveConfig("enable_drag", false);
 	} else {
 		game.saveConfig("enable_drag", true);
 	}
 	//OL随机框 by柳下跖
-	if (lib.config.extension_十周年UI_newDecadeStyle && lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
+	if (lib.config.extension_十周年UI_newDecadeStyle && lib.config.extension_十周年UI_newDecadeStyle === "onlineUI") {
 		lib.skill._longLevel = {
 			trigger: {
 				global: "gameStart",
 			},
 			silent: true,
 			forced: true,
-			filter: function (event, player) {
-				return lib.config.extension_十周年UI_longLevel == "ten" || lib.config.extension_十周年UI_longLevel == "eleven";
+			filter(event, player) {
+				return lib.config.extension_十周年UI_longLevel === "ten" || lib.config.extension_十周年UI_longLevel === "eleven";
 			},
 			async content() {
 				const player = _status.event.player;
@@ -28,7 +28,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				};
 				const rarityMap = ["silver", "gold", "yu", "bing", "yan"];
 				let rarity;
-				if (lib.config.extension_十周年UI_longLevel == "ten") {
+				if (lib.config.extension_十周年UI_longLevel === "ten") {
 					const rarityTypes = {
 						junk: "silver",
 						common: "gold",
@@ -37,18 +37,18 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						legend: "yan",
 					};
 					rarity = rarityTypes[game.getRarity(player.name)] || "silver";
-				} else if (lib.config.extension_十周年UI_longLevel == "eleven") {
+				} else if (lib.config.extension_十周年UI_longLevel === "eleven") {
 					rarity = rarityMap.randomGet();
 				}
 				if (rarity && rarityConfig[rarity]) {
 					const config = rarityConfig[rarity];
 					const longtou = document.createElement("img");
-					longtou.src = decadeUIPath + "/assets/image/OL/" + config.k + ".png";
-					longtou.style.cssText = "pointer-events:none;position:absolute;display:block;top:" + config.top + ";right:" + config.right + ";height:" + config.height + ";width:" + config.width + ";z-index:60";
+					longtou.src = `${decadeUIPath}/assets/image/OL/${config.k}.png`;
+					longtou.style.cssText = `pointer-events:none;position:absolute;display:block;top:${config.top};right:${config.right};height:${config.height};width:${config.width};z-index:60`;
 					player.appendChild(longtou);
 					const longwei = document.createElement("img");
-					longwei.src = decadeUIPath + "/assets/image/OL/" + config.border + ".png";
-					longwei.style.cssText = "pointer-events:none;position:absolute;display:block;top:" + config.top + ";right:" + config.right + ";height:" + config.height + ";width:" + config.width + ";z-index:72";
+					longwei.src = `${decadeUIPath}/assets/image/OL/${config.border}.png`;
+					longwei.style.cssText = `pointer-events:none;position:absolute;display:block;top:${config.top};right:${config.right};height:${config.height};width:${config.width};z-index:72`;
 					player.appendChild(longwei);
 				}
 			},
@@ -88,7 +88,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			if (this === game.me) {
 				const groupTranslations = lib.group.map(i => get.translation(i));
 				if (Array.isArray(next.controls) && next.controls.length > 0 && next.controls.every(val => lib.group.includes(val) || groupTranslations.includes(val))) {
-					next.setContent(async function (event, trigger, player) {
+					next.setContent(async (event, trigger, player) => {
 						const list = event.controls;
 						if (!list?.length) return;
 						const dialog = ui.create.dialog("hidden", [list, "vcard"]);
@@ -161,7 +161,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 								clearInterval(event.progressInterval);
 								delete event.progressInterval;
 							}
-							progressBar.style.width = progressBar.data + "%";
+							progressBar.style.width = `${progressBar.data}%`;
 						}, 100);
 						// 创建选择事件
 						event.nextx = game.createEvent("chooseGroup");
@@ -213,7 +213,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const setBackground = player => {
 					if (!player) return;
 					const mode = get.mode();
-					const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode].double_character;
+					const isDoubleCharacter = lib.config.mode_config[mode]?.double_character;
 					if (mode === "guozhan" || isDoubleCharacter) {
 						player.setAttribute("data-mode", "guozhan");
 					} else {
@@ -224,9 +224,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				game.dead.forEach(setBackground);
 			},
 		};
-		lib.arenaReady.push(function () {
+		lib.arenaReady.push(() => {
 			const mode = get.mode();
-			const isDoubleCharacter = lib.config.mode_config[mode] && lib.config.mode_config[mode].double_character;
+			const isDoubleCharacter = lib.config.mode_config[mode]?.double_character;
 			if (mode === "guozhan" || isDoubleCharacter) {
 				document.body.setAttribute("data-mode", "guozhan");
 			} else {
@@ -241,13 +241,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		if (!game._decadeUI_playAudioWrapped) {
 			const originalPlayAudio = game.playAudio;
 			game.playAudio = function (...args) {
-				if (args[0] === "effect" && game._decadeUI_blockedEquipAudios?.has && game._decadeUI_blockedEquipAudios.has(args[1])) return;
+				if (args[0] === "effect" && game._decadeUI_blockedEquipAudios?.has(args[1])) return;
 				return originalPlayAudio.apply(this, args);
 			};
 			game._decadeUI_playAudioWrapped = true;
 		}
 		if (!game._decadeUI_uiClickAudioHandler) {
-			const uiClickAudioHandler = function (e) {
+			const uiClickAudioHandler = (e) => {
 				if (e.button !== 0) return;
 				const target = e.target;
 				let audioToPlay = null;
@@ -274,7 +274,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			popup: false,
 			charlotte: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			async content() {
 				game.playAudio("..", "extension", "十周年UI", `audio/seatRoundState_start`);
@@ -382,15 +382,15 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 								okButton.innerHTML = "换牌";
 							}
 						}
-						event.custom.replace.confirm = function (ok) {
+						event.custom.replace.confirm = (ok) => {
 							dialog.close();
-							if (ui.confirm && ui.confirm.close) ui.confirm.close();
+							if (ui.confirm?.close) ui.confirm.close();
 							game.resume();
 							resolve({ bool: ok });
 						};
-						event.switchToAuto = function () {
+						event.switchToAuto = () => {
 							dialog.close();
-							if (ui.confirm && ui.confirm.close) ui.confirm.close();
+							if (ui.confirm?.close) ui.confirm.close();
 							game.resume();
 							resolve({ bool: false });
 						};
@@ -489,7 +489,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			const ext = extMap[style] || "jpg";
 			const imgPath = `extension/十周年UI/shoushaUI/lbtn/images/JDTS/${imageName}.${ext}`;
 			let position;
-			if (style == "1") {
+			if (style === "1") {
 				const isSpecialMode = get.mode() === "taixuhuanjing" || lib.config.extension_EngEX_SSServant;
 				position = isSpecialMode ? [10, 58, 7, 6] : [3, 58, 7, 6];
 			} else {
@@ -498,7 +498,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			game.as_showImage(imgPath, position, durationOrPersistent);
 		};
 		//游戏结束消失
-		lib.onover.push(function (bool) {
+		lib.onover.push(() => {
 			game.as_removeImage();
 		});
 		//等待响应
@@ -509,7 +509,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			silent: true,
 			direct: true,
 			filter(event, player) {
-				return player == game.me && _status.auto == false;
+				return player === game.me && _status.auto === false;
 			},
 			async content(event, trigger, player) {
 				trigger._jd_ddxy = true;
@@ -523,7 +523,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return game.me == event.target;
+				return game.me === event.target;
 			},
 			charlotte: true,
 			forced: true,
@@ -538,20 +538,20 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				if (event.card.storage && event.card.storage.nowuxie) return false;
-				var card = event.card;
-				var info = get.info(card);
+				if (event.card.storage?.nowuxie) return false;
+				const card = event.card;
+				const info = get.info(card);
 				if (info.wuxieable === false) return false;
-				if (event.name != "phaseJudge") {
+				if (event.name !== "phaseJudge") {
 					if (event.getParent().nowuxie) return false;
 					if (!event.target) {
 						if (info.wuxieable) return true;
 						return false;
 					}
 					if (event.player.hasSkillTag("playernowuxie", false, event.card)) return false;
-					if (get.type(event.card) != "trick" && !info.wuxieable) return false;
+					if (get.type(event.card) !== "trick" && !info.wuxieable) return false;
 				}
-				return player == game.me && _status.auto == false;
+				return player === game.me && _status.auto === false;
 			},
 			charlotte: true,
 			forced: true,
@@ -569,7 +569,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && event.card.name == "shan";
+				return player === game.me && event.card.name === "shan";
 			},
 			async content(event, trigger, player) {
 				trigger._jd_ddxy = true;
@@ -587,7 +587,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			silent: true,
 			filter(event, player) {
 				if (!event._jd_ddxy) return false;
-				return player == game.me && _status.auto == false;
+				return player === game.me && _status.auto === false;
 			},
 			direct: true,
 			async content() {
@@ -607,7 +607,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			forced: true,
 			filter(event, player) {
 				//剩余人数两人时
-				if (game.players.length == 2 && _status.currentPhase != game.me) return true;
+				if (game.players.length === 2 && _status.currentPhase !== game.me) return true;
 			},
 			async content() {
 				game.showJDTsImage("dfsk", true);
@@ -620,7 +620,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return _status.currentPhase != game.me && player != game.me;
+				return _status.currentPhase !== game.me && player !== game.me;
 			},
 			forced: true,
 			charlotte: true,
@@ -636,7 +636,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			forced: true,
 			charlotte: true,
 			filter(event, player) {
-				return player == game.me && _status.auto == false;
+				return player === game.me && _status.auto === false;
 			},
 			async content() {
 				game.as_removeImage();
@@ -649,7 +649,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -668,7 +668,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -686,7 +686,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -694,7 +694,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -Infinity,
 			lastDo: true,
 			async content() {
-				if (_status.as_showImage_phase && _status.as_showImage_phase == "zbjd") {
+				if (_status.as_showImage_phase === "zbjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
 				}
@@ -707,7 +707,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -725,7 +725,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -733,7 +733,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -Infinity,
 			lastDo: true,
 			async content() {
-				if (_status.as_showImage_phase && _status.as_showImage_phase == "pdjd") {
+				if (_status.as_showImage_phase === "pdjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
 				}
@@ -746,7 +746,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -764,7 +764,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -772,7 +772,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -Infinity,
 			lastDo: true,
 			async content() {
-				if (_status.as_showImage_phase && _status.as_showImage_phase == "mpjd") {
+				if (_status.as_showImage_phase === "mpjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
 				}
@@ -785,7 +785,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -803,7 +803,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -811,7 +811,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -Infinity,
 			lastDo: true,
 			async content() {
-				if (_status.as_showImage_phase && _status.as_showImage_phase == "cpjd") {
+				if (_status.as_showImage_phase === "cpjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
 				}
@@ -824,7 +824,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -842,7 +842,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -850,7 +850,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -Infinity,
 			lastDo: true,
 			async content() {
-				if (_status.as_showImage_phase && _status.as_showImage_phase == "qpjd") {
+				if (_status.as_showImage_phase === "qpjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
 				}
@@ -863,7 +863,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -881,7 +881,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -889,7 +889,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -Infinity,
 			lastDo: true,
 			async content() {
-				if (_status.as_showImage_phase && _status.as_showImage_phase == "jsjd") {
+				if (_status.as_showImage_phase === "jsjd") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
 				}
@@ -902,7 +902,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -920,7 +920,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			silent: true,
 			filter(event, player) {
-				return player == game.me && _status.currentPhase == player;
+				return player === game.me && _status.currentPhase === player;
 			},
 			charlotte: true,
 			ruleSkill: true,
@@ -928,7 +928,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -Infinity,
 			lastDo: true,
 			async content() {
-				if (_status.as_showImage_phase && _status.as_showImage_phase == "hhjs") {
+				if (_status.as_showImage_phase === "hhjs") {
 					game.as_removeImage();
 					delete _status.as_showImage_phase;
 				}
@@ -986,17 +986,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		async content(event, trigger, player) {
 			const action = trigger.num.toString();
 			if (action) {
-				var anim = "SZN_shuzi";
-				if (lib.config.extension_十周年UI_newDecadeStyle === "off") {
-					anim = "shuzi";
-				}
+				const anim = lib.config.extension_十周年UI_newDecadeStyle === "off" ? "shuzi" : "SZN_shuzi";
 				dcdAnim.loadSpine(window._WJMHSHANGHAISHUZITEXIAO[anim].name, "skel", () => {
 					window._WJMHSHANGHAISHUZITEXIAO[anim].action = action;
-					if (lib.config.extension_十周年UI_newDecadeStyle === "off") {
-						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO[anim], { speed: 0.6, scale: 0.4, parent: player });
-					} else {
-						dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO[anim], { speed: 0.6, scale: 0.4, parent: player, y: 20 });
+					const playOptions = { speed: 0.6, scale: 0.4, parent: player };
+					if (lib.config.extension_十周年UI_newDecadeStyle !== "off") {
+						playOptions.y = 20;
 					}
+					dcdAnim.playSpine(window._WJMHSHANGHAISHUZITEXIAO[anim], playOptions);
 				});
 			}
 		},
@@ -1094,11 +1091,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 				// 转换技图标
 				if (get.is.zhuanhuanji(skill, player)) {
-					let imgType = "yang";
-					let markNode = player && player.node && player.node.xSkillMarks && player.node.xSkillMarks.querySelector(`.skillMarkItem.zhuanhuanji[data-id="${skill}"]`);
-					if (markNode && markNode.classList.contains("yin")) {
-						imgType = "ying";
-					}
+					const markNode = player?.node?.xSkillMarks?.querySelector(`.skillMarkItem.zhuanhuanji[data-id="${skill}"]`);
+					const imgType = markNode?.classList.contains("yin") ? "ying" : "yang";
 					return imgType === "yang" ? "mark_yanghs.png" : "mark_yinghs.png";
 				}
 				return null;
@@ -1316,9 +1310,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		const selectCard = event.selectCard;
 		const range = get.select(selectCard);
 		if (range[1] <= 1) return null;
-		return (event.cardChooseAll = ui.create.control("全选", function () {
-			const event2 = get.event(),
-				player = event2.player;
+		return (event.cardChooseAll = ui.create.control("全选", () => {
+			const event2 = get.event();
+			const player = event2.player;
 			const selecteds = [...ui.selected.cards].map(card => player.getCards("s", i => i.relatedCard === card)[0] || card);
 			ui.selected.cards.length = 0;
 			game.check();
@@ -1335,11 +1329,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				card.updateTransform(false, 0);
 			}
 			game.check();
-			if (typeof event2.custom?.add?.card == "function") _status.event.custom.add.card();
+			if (typeof event2.custom?.add?.card === "function") _status.event.custom.add.card();
 		}));
 	};
 	function createFilterCard(originalFilter, includeS) {
-		return function (card, player, target) {
+		return (card, player, target) => {
 			const relatedCard = card.relatedCard || card;
 			if (get.position(card) === "e") return false;
 			if (includeS && get.position(card) === "s" && get.itemtype(card) === "card" && !card.hasGaintag("equipHand")) return false;
@@ -1352,14 +1346,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		if (hasFilter) {
 			if (isMultiSelect) {
 				cardxF2.addArray(cardxF);
-				for (const cardF of player.getCards("he", function (j) {
+				for (const cardF of player.getCards("he", (j) => {
 					const relatedCard = j.relatedCard || j;
 					return event.position.includes(get.position(relatedCard)) && event.filterCard(relatedCard, player, event.target);
 				})) {
 					if (!ui.selected.cards) ui.selected.cards = [];
 					ui.selected.cards.add(cardF);
 					cardxF2.addArray(
-						cardx.filter(function (j) {
+						cardx.filter((j) => {
 							if (cardxF2.includes(j)) return false;
 							const relatedCard = j.relatedCard || j;
 							return event.position.includes(get.position(relatedCard)) && event.filterCard(relatedCard, player, event.target);
@@ -1385,7 +1379,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			return a.number - b.number;
 		});
 	}
-	lib.hooks.checkBegin.add(async function (event) {
+	lib.hooks.checkBegin.add(async (event) => {
 		if (lib.config["extension_十周年UI_aloneEquip"]) return;
 		const player = event.player;
 		const isValidEvent = event.position && typeof event.position === "string" && event.position.includes("e") && player.countCards("e") && !event.copyCards && ["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard", "chooseCardTarget", "chooseToGive"].includes(event.name);
@@ -1432,12 +1426,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		event.copyCards = false;
 		if (player === game.me) ui.updatehl();
 	}
-	lib.hooks.uncheckBegin.add(async function (event, args) {
+	lib.hooks.uncheckBegin.add(async (event, args) => {
 		const player = event.player;
 		const shouldCleanup = args.includes("card") && event.copyCards && (event.result || (["chooseToUse", "chooseToRespond"].includes(event.name) && !event.skill && !event.result));
 		if (lib.config["extension_十周年UI_aloneEquip"] || shouldCleanup) cleanupEquipCards(event, player);
 	});
-	lib.hooks.checkCard.add(function (card, event) {
+	lib.hooks.checkCard.add((card, event) => {
 		if (lib.config["extension_十周年UI_aloneEquip"] || !event.copyCards) return;
 		if (get.position(card) === "e" && card.classList.contains("selected")) {
 			const equipHandCopy = event.player.getCards("s", c => c.hasGaintag("equipHand") && c.relatedCard === card)[0];
@@ -1463,11 +1457,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	});
 	// 卡牌选中提示
 	if (lib.config["extension_十周年UI_cardPrompt"]) {
-		window.getDecPrompt = function (text) {
+		window.getDecPrompt = (text) => {
 			if (typeof text !== "string") return text;
 			return text.replace(/＃/g, "");
 		};
-		lib.hooks.checkButton.add(function (event) {
+		lib.hooks.checkButton.add((event) => {
 			const dialog = event.dialog;
 			if (!dialog || !dialog.buttons) return;
 			const range = get.select(event.selectButton);
@@ -1502,7 +1496,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				event.custom.add.button();
 			}
 		});
-		lib.hooks.checkEnd.add(function (event) {
+		lib.hooks.checkEnd.add((event) => {
 			if (event.name === "chooseToUse" && event.type === "phase" && event.player === game.me && !event.skill) {
 				if (ui.cardDialog) {
 					ui.cardDialog.close();

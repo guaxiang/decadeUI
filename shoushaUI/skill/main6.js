@@ -1,10 +1,10 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
-	var plugin = {
+	const plugin = {
 		name: "skill",
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			this.initCreateMethods();
 			this.initUpdateMethods();
@@ -41,7 +41,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 		},
 		createSkillControl() {
-			const isRightLayout = lib.config["extension_十周年UI_rightLayout"] == "on";
+			const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
 			const className = isRightLayout ? ".skill-control" : ".skill-controlzuoshou";
 			const node = ui.create.div(className, ui.arena);
 			node.node = {
@@ -449,9 +449,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						.filter(item => item && typeof item === "string")
 						.map(item => {
 							if (item.startsWith("#")) {
-								return "<br><div>" + item.substr(1) + "</div>";
+								return `<br><div>${item.substr(1)}</div>`;
 							}
-							return "<div>" + item + "</div>";
+							return `<div>${item}</div>`;
 						})
 						.join("");
 					this.node.extra.classList.toggle("unshow", !str);
@@ -526,7 +526,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		updateMark(player) {
 			const equipHeight = player.node.equips.childNodes.length * 22;
 			const bottomValue = Math.max(88, equipHeight) * 0.8 + 1.6;
-			player.node.marks.style.bottom = bottomValue + "px";
+			player.node.marks.style.bottom = `${bottomValue}px`;
 		},
 	};
 	return plugin;

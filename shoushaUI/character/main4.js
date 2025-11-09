@@ -1,4 +1,4 @@
-app.import(function (lib, game, ui, get, ai, _status, app) {
+app.import((lib, game, ui, get, ai, _status, app) => {
 	// 常量定义
 	const CONSTANTS = {
 		// 官阶翻译映射
@@ -418,20 +418,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			let skills;
 			if (player.name2 && nametype) {
 				// 只显示主将/副将技能
-				if (nametype == "name1") {
+				if (nametype === "name1") {
 					skills = lib.character[player.name1][3].slice(0);
-				} else if (nametype == "name2") {
+				} else if (nametype === "name2") {
 					skills = lib.character[player.name2][3].slice(0);
 				}
 			} else {
 				skills = player.getSkills(null, false, false).slice(0);
 			}
-			skills = skills.filter(function (skill) {
-				if (!lib.skill[skill] || skill == "jiu") return false;
+			skills = skills.filter((skill) => {
+				if (!lib.skill[skill] || skill === "jiu") return false;
 				if (lib.skill[skill].nopop || lib.skill[skill].equipSkill) return false;
-				return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] != "";
+				return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] !== "";
 			});
-			if (player == game.me && player.hiddenSkills && player.hiddenSkills.length && !nametype) {
+			if (player === game.me && player.hiddenSkills && player.hiddenSkills.length && !nametype) {
 				skills.addArray(player.hiddenSkills);
 			}
 			return skills;
@@ -444,8 +444,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			for (let name of oSkills) {
 				if (hasSkills.includes(name)) continue;
 				if (player.name2 && nametype && (!lib.character[player.name1][3].includes(name) || !lib.character[player.name2][3].includes(name))) {
-					if (nametype == "name1" && lib.character[player.name2][3].includes(name)) continue;
-					if (nametype == "name2" && lib.character[player.name1][3].includes(name)) continue;
+					if (nametype === "name1" && lib.character[player.name2][3].includes(name)) continue;
+					if (nametype === "name2" && lib.character[player.name1][3].includes(name)) continue;
 				}
 				this.createSkillItem(container, name, player, hasSkills);
 			}
@@ -479,7 +479,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		// 创建隐藏技能项
 		createHiddenSkillItem(container, name, player, typeText) {
-			if (lib.skill[name].preHidden && get.mode() == "guozhan") {
+			if (lib.skill[name].preHidden && get.mode() === "guozhan") {
 				const id = ui.create.div(".xskill", Utils.generateSkillHTML('<span style="opacity:0.5">' + lib.translate[name] + "</span>", '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player, false) + '</span><br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>', typeText), container);
 				const underlinenode = id.querySelector(".underlinenode");
 				if (_status.prehidden_skills.includes(name)) underlinenode.classList.remove("on");
@@ -501,7 +501,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				underlinenode.classList.remove("on");
 			}
 			if (lib.skill[name].subfrequent) {
-				for (var j = 0; j < lib.skill[name].subfrequent.length; j++) {
+				for (let j = 0; j < lib.skill[name].subfrequent.length; j++) {
 					if (lib.config.autoskilllist.includes(name + "_" + lib.skill[name].subfrequent[j])) {
 						underlinenode.classList.remove("on");
 					}
@@ -544,11 +544,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const ysskillmiaoshu = get.translation(skill + "_info");
 				let ysSkillNameTypeHTML;
 				if (!info.enable && !info.trigger && !info.mod && !info.group) {
-					ysSkillNameTypeHTML = '<span class="yanshengji">' + ysskillname + "</span>";
+					ysSkillNameTypeHTML = `<span class="yanshengji">${ysskillname}</span>`;
 				} else {
-					ysSkillNameTypeHTML = has != "未生效" ? '<span class="yanshengji">' + ysskillname + "(" + has + ")</span>" : '<span style="color: #978a81;" class="yanshengji">' + ysskillname + "(" + has + ")</span>";
+					ysSkillNameTypeHTML = has !== "未生效" ? `<span class="yanshengji">${ysskillname}(${has})</span>` : `<span style="color: #978a81;" class="yanshengji">${ysskillname}(${has})</span>`;
 				}
-				const ysSkillDescHTML = '<span class="yanshengjiinfo">' + ysskillmiaoshu + "</span>";
+				const ysSkillDescHTML = `<span class="yanshengjiinfo">${ysskillmiaoshu}</span>`;
 				const ysSkillHTML = ysSkillNameTypeHTML + ysSkillDescHTML;
 				ui.create.div(".xskill", ysSkillHTML, container);
 			};
@@ -566,27 +566,27 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			const shownHs = player.getShownCards();
 			if (shownHs.length) {
 				ui.create.div(".xcaption", player.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区", container);
-				shownHs.forEach(function (item) {
-					var card = Utils.createCardElement(item);
+				shownHs.forEach((item) => {
+					const card = Utils.createCardElement(item);
 					container.appendChild(card);
 				});
 				if (allShown) {
-					var hs = player.getCards("h");
+					const hs = player.getCards("h");
 					hs.removeArray(shownHs);
 					if (hs.length) {
 						ui.create.div(".xcaption", "其他手牌", container);
-						hs.forEach(function (item) {
-							var card = Utils.createCardElement(item);
+						hs.forEach((item) => {
+							const card = Utils.createCardElement(item);
 							container.appendChild(card);
 						});
 					}
 				}
 			} else if (allShown) {
-				var hs = player.getCards("h");
+				const hs = player.getCards("h");
 				if (hs.length) {
 					ui.create.div(".xcaption", "手牌区", container);
-					hs.forEach(function (item) {
-						var card = Utils.createCardElement(item);
+					hs.forEach((item) => {
+						const card = Utils.createCardElement(item);
 						container.appendChild(card);
 					});
 				}
@@ -594,10 +594,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		// 创建装备区域
 		createEquipmentSection(container, player) {
-			var eSkills = player.getCards("e");
+			const eSkills = player.getCards("e");
 			if (!eSkills.length) return;
 			ui.create.div(".xcaption", "装备区", container);
-			eSkills.forEach(function (card) {
+			eSkills.forEach((card) => {
 				const suitConfig = CONSTANTS.SUIT_CONFIG[card.suit] || { symbol: "", color: "#FFFFFF" };
 				const typeIcon = CONSTANTS.EQUIP_TYPE_ICONS[get.subtype(card)] || "default.png";
 				const dianshu = get.strNumber(card.number);
@@ -609,26 +609,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		// 创建判定区域
 		createJudgeSection(container, player) {
-			var judges = player.getCards("j");
+			const judges = player.getCards("j");
 			if (!judges.length) return;
 			ui.create.div(".xcaption", "判定区域", container);
-			judges.forEach(function (card) {
+			judges.forEach((card) => {
 				const cards = card.cards;
-				let str = [get.translation(card), get.translation(card.name + "_info")];
+				const str = [get.translation(card), get.translation(card.name + "_info")];
 				if ((Array.isArray(cards) && cards.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) {
-					str[0] += "（" + get.translation(cards) + "）";
+					str[0] += `（${get.translation(cards)}）`;
 				}
-				ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", container);
+				ui.create.div(".xskill", `<div data-color>${str[0]}</div><div>${str[1]}</div>`, container);
 			});
 		}
 	}
 	// 插件主对象
-	var plugin = {
+	const plugin = {
 		name: "character",
 		filter() {
 			return !["chess", "tafang", "stone"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			app.reWriteFunction(lib, {
 				setIntro: [
@@ -645,14 +645,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		click: {
 			identity(e) {
 				e.stopPropagation();
-				var player = this.parentNode;
+				const player = this.parentNode;
 				if (!game.getIdentityList) return;
 				if (player.node.guessDialog) player.node.guessDialog.classList.toggle("hidden");
 				else {
-					var list = game.getIdentityList(player);
+					const list = game.getIdentityList(player);
 					if (!list) return;
-					var guessDialog = ui.create.div(".guessDialog", player);
-					var container = ui.create.div(guessDialog);
+					const guessDialog = ui.create.div(".guessDialog", player);
+					const container = ui.create.div(guessDialog);
 					lib.setScroll(guessDialog);
 					player.node.guessDialog = guessDialog;
 				}

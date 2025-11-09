@@ -1,4 +1,4 @@
-app.import(function (lib, game, ui, get, ai, _status, app) {
+app.import((lib, game, ui, get, ai, _status, app) => {
 	const LBTN_CONST = {
 		guozhanIdentities: [
 			{ key: "unknown", color: "#FFFFDE" },
@@ -29,8 +29,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		if (mode === "guozhan") {
 			const map = { undefined: "未选择势力", unknown: "保持隐蔽", ye: "   击败场上<br>所有其他角色", key: "   击败所有<br>非键势力角色" };
-			for (var i = 0; i < lib.group.length; i++) {
-				map[lib.group[i]] = "击败所有<br>非" + get.translation(lib.group[i]) + "势力角色";
+			for (let i = 0; i < lib.group.length; i++) {
+				map[lib.group[i]] = `击败所有<br>非${get.translation(lib.group[i])}势力角色`;
 			}
 			return map;
 		}
@@ -44,8 +44,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			if (versusMode === "siguo") {
 				const map = {};
-				for (var i = 0; i < lib.group.length; i++) {
-					map[lib.group[i]] = "获得龙船或击败<br>非" + get.translation(lib.group[i]) + "势力角色";
+				for (let i = 0; i < lib.group.length; i++) {
+					map[lib.group[i]] = `获得龙船或击败<br>非${get.translation(lib.group[i])}势力角色`;
 				}
 				return map;
 			}
@@ -67,56 +67,44 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			undefined: "胜利条件",
 		};
 	}
-	game.ui_identityShow_update = function () {
-		var identityShow = game.ui_identityShow; /*图层1*/
-		var identityShowx = game.ui_identityShowx; /*图层2 在图层1下面*/
-		var str = "";
-		if (lib.config.mode == "guozhan" || (lib.config.mode == "versus" && get.config("versus_mode") == "siguo") || (lib.config.mode == "versus" && get.config("versus_mode") == "jiange")) {
+	game.ui_identityShow_update = () => {
+		const identityShow = game.ui_identityShow; /*图层1*/
+		const identityShowx = game.ui_identityShowx; /*图层2 在图层1下面*/
+		let str = "";
+		if (lib.config.mode === "guozhan" || (lib.config.mode === "versus" && get.config("versus_mode") === "siguo") || (lib.config.mode === "versus" && get.config("versus_mode") === "jiange")) {
 			LBTN_CONST.guozhanIdentities.forEach(({ key, color }) => {
 				const count = game.countPlayer(current => current.identity === key);
 				if (count > 0) str += `<font color="${color}">${get.translation(key)}</font> x ${count}  `;
 			});
-		} else if (lib.config.mode == "versus" && get.config("versus_mode") == "two") {
-			var enemy = game.countPlayer(function (current) {
-				return current.isEnemyOf(game.me);
-			});
-			var friend = game.countPlayer(function (current) {
-				return current.isFriendOf(game.me);
-			});
-			if (enemy > 0) str += '<font color="#ff0000">' + "虎" + "</font> x " + enemy + "  ";
-			if (friend > 0) str += '<font color="#00ff00">' + "龙" + "</font> x " + friend + "  ";
+		} else if (lib.config.mode === "versus" && get.config("versus_mode") === "two") {
+			const enemy = game.countPlayer(current => current.isEnemyOf(game.me));
+			const friend = game.countPlayer(current => current.isFriendOf(game.me));
+			if (enemy > 0) str += `<font color="#ff0000">虎</font> x ${enemy}  `;
+			if (friend > 0) str += `<font color="#00ff00">龙</font> x ${friend}  `;
 		} else {
-			var zhu = game.countPlayer(function (current) {
-				return current.identity == "zhu" || current.identity == "rZhu" || current.identity == "bZhu";
-			});
-			var zhong = game.countPlayer(function (current) {
-				return current.identity == "zhong" || current.identity == "rZhong" || current.identity == "bZhong" || current.identity == "mingzhong";
-			});
-			var fan = game.countPlayer(function (current) {
-				return current.identity == "fan" || current.identity == "rYe" || current.identity == "bYe";
-			});
-			var nei = game.countPlayer(function (current) {
-				return current.identity == "nei" || current.identity == "rNei" || current.identity == "bNei";
-			});
-			if (zhu > 0) str += '<font color="' + LBTN_CONST.identityColors.zhu + '">' + get.translation("zhu") + "</font> x " + zhu + "  ";
-			if (zhong > 0) str += '<font color="' + LBTN_CONST.identityColors.zhong + '">' + get.translation("zhong") + "</font> x " + zhong + "  ";
-			if (fan > 0) str += '<font color="' + LBTN_CONST.identityColors.fan + '">' + get.translation("fan") + "</font> x " + fan + "  ";
-			if (nei > 0) str += '<font color="' + LBTN_CONST.identityColors.nei + '">' + get.translation("nei") + "</font> x " + nei;
+			const zhu = game.countPlayer(current => current.identity === "zhu" || current.identity === "rZhu" || current.identity === "bZhu");
+			const zhong = game.countPlayer(current => current.identity === "zhong" || current.identity === "rZhong" || current.identity === "bZhong" || current.identity === "mingzhong");
+			const fan = game.countPlayer(current => current.identity === "fan" || current.identity === "rYe" || current.identity === "bYe");
+			const nei = game.countPlayer(current => current.identity === "nei" || current.identity === "rNei" || current.identity === "bNei");
+			if (zhu > 0) str += `<font color="${LBTN_CONST.identityColors.zhu}">${get.translation("zhu")}</font> x ${zhu}  `;
+			if (zhong > 0) str += `<font color="${LBTN_CONST.identityColors.zhong}">${get.translation("zhong")}</font> x ${zhong}  `;
+			if (fan > 0) str += `<font color="${LBTN_CONST.identityColors.fan}">${get.translation("fan")}</font> x ${fan}  `;
+			if (nei > 0) str += `<font color="${LBTN_CONST.identityColors.nei}">${get.translation("nei")}</font> x ${nei}`;
 		}
-		str += "<br>" + (game.me?.identity ? lib.translate[game.me.identity + "_win_option"] ?? "" : "");
+		str += `<br>${game.me?.identity ? lib.translate[game.me.identity + "_win_option"] ?? "" : ""}`;
 		/*尽量保持字体大小，行高一致，不然会产生偏移*/
-		identityShow.innerHTML = '<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #C1AD92;text-shadow:none;">' + str + "</span>"; /*图层1*/
-		identityShowx.innerHTML = '<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #2D241B; -webkit-text-stroke: 2.7px #322B20;text-shadow:none;">' + str + "</span>"; /*图层2*/
+		identityShow.innerHTML = `<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #C1AD92;text-shadow:none;">${str}</span>`; /*图层1*/
+		identityShowx.innerHTML = `<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #2D241B; -webkit-text-stroke: 2.7px #322B20;text-shadow:none;">${str}</span>`; /*图层2*/
 	};
-	game.ui_identityShow_init = function () {
-		if (game.ui_identityShow == undefined) {
+	game.ui_identityShow_init = () => {
+		if (game.ui_identityShow === undefined) {
 			game.ui_identityShow = ui.create.div("", "身份加载中......");
 			game.ui_identityShow.style.top = "1.9px"; /*图层1 上下位置如果需要改动 两个图层都要改*/
 			game.ui_identityShow.style.left = "63.5px"; /*图层2 左右位置如果需要改动 两个图层都要改*/
 			game.ui_identityShow.style["z-index"] = 4;
 			ui.arena.appendChild(game.ui_identityShow);
 		}
-		if (game.ui_identityShowx == undefined) {
+		if (game.ui_identityShowx === undefined) {
 			game.ui_identityShowx = ui.create.div("", "身份加载中......");
 			game.ui_identityShowx.style.top = "1.9px"; /*图层2*/
 			game.ui_identityShowx.style.left = "63.5px"; /*图层2*/
@@ -124,24 +112,24 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.arena.appendChild(game.ui_identityShowx);
 		}
 	};
-	lib.arenaReady.push(function () {
+	lib.arenaReady.push(() => {
 		//更新轮次
-		var originUpdateRoundNumber = game.updateRoundNumber;
+		const originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
 			originUpdateRoundNumber.apply(this, arguments);
 			if (ui.cardRoundTime) ui.cardRoundTime.updateRoundCard();
 		};
 		/*聊天按钮模块*/
-		if (lib.config.extension_十周年UI_LTAN == false) {
-			var liaotian = ui.create.node("img");
+		if (lib.config.extension_十周年UI_LTAN === false) {
+			const liaotian = ui.create.node("img");
 			liaotian.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/liaotian.png";
-			if (lib.config["extension_十周年UI_rightLayout"] == "on") {
+			if (lib.config["extension_十周年UI_rightLayout"] === "on") {
 				liaotian.style.cssText = "display: block;--w: 135px;--h: calc(var(--w) * 1019/1400);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 97px);right: calc(100% - 129px);background-color: transparent;z-index:3";
 			} else {
 				//左手模式聊天按钮参数
 				liaotian.style.cssText = "display: block; --w: 135px; --h: calc(var(--w) * 1019/1400); width: var(--w); height: var(--h); position: absolute; top: calc(100% - 97px); left: calc(100% - 129px); background-color: transparent; z-index: 3; transform: scaleX(-1);";
 			}
-			liaotian.onclick = function () {
+			liaotian.onclick = () => {
 				if (lib.config["extension_说话_enable"]) {
 					game.showChatWordBackground();
 				} else {
@@ -151,11 +139,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			document.body.appendChild(liaotian);
 		}
 		/*---------------------*/
-		if (lib.config.mode == "identity" || lib.config.mode == "guozhan" || lib.config.mode == "versus" || lib.config.mode == "single" || lib.config.mode == "boss" || lib.config.mode == "doudizhu") {
-			var map = buildModeWinTranslations(lib.config.mode, get.config("versus_mode"));
+		if (lib.config.mode === "identity" || lib.config.mode === "guozhan" || lib.config.mode === "versus" || lib.config.mode === "single" || lib.config.mode === "boss" || lib.config.mode === "doudizhu") {
+			const map = buildModeWinTranslations(lib.config.mode, get.config("versus_mode"));
 			if (map === null) return;
-			for (var i in map) {
-				lib.translate[i + "_win_option"] = map[i];
+			for (const i in map) {
+				lib.translate[`${i}_win_option`] = map[i];
 			}
 			game.ui_identityShow_init();
 			setInterval(() => {
@@ -163,22 +151,22 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}, 1000);
 		}
 		//右上角菜单栏
-		var head = ui.create.node("img");
-		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/SSCD/button.png";
-		head.style.cssText = "display: block;--w: 130px;--h: calc(var(--w) * 1080/1434);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 98px);left: calc(100% - 126.2px);background-color: transparent;z-index:1";
-		document.body.appendChild(head);
-		var head = ui.create.node("div");
+		const headImg = ui.create.node("img");
+		headImg.src = `${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/SSCD/button.png`;
+		headImg.style.cssText = "display: block;--w: 130px;--h: calc(var(--w) * 1080/1434);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 98px);left: calc(100% - 126.2px);background-color: transparent;z-index:1";
+		document.body.appendChild(headImg);
+		const head = ui.create.node("div");
 		head.style.cssText = "display: block;width: 134px;height: 103px;position: absolute;top: 0px;right: -8px;background-color: transparent;z-index:1";
-		head.onclick = function () {
+		head.onclick = () => {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
-			var popuperContainer = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
+			const popuperContainer = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
 			popuperContainer.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 				event.stopPropagation();
 				popuperContainer.delete(200);
 			});
-			var yemian = ui.create.div(".yemian", popuperContainer);
-			var shezhi = ui.create.div(".shezhi", popuperContainer);
+			const yemian = ui.create.div(".yemian", popuperContainer);
+			const shezhi = ui.create.div(".shezhi", popuperContainer);
 			shezhi.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3");
 				if (!ui.click.configMenu) return;
@@ -188,71 +176,71 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.system1.classList.remove("shown");
 				ui.system2.classList.remove("shown");
 			});
-			var tuichu = ui.create.div(".tuichu", popuperContainer);
+			const tuichu = ui.create.div(".tuichu", popuperContainer);
 			tuichu.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3");
 				window.location.reload();
 			});
-			var taopao = ui.create.div(".taopao", popuperContainer);
+			const taopao = ui.create.div(".taopao", popuperContainer);
 			taopao.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3");
 				game.reload();
 			});
-			var touxiang = ui.create.div(".touxiang", popuperContainer);
+			const touxiang = ui.create.div(".touxiang", popuperContainer);
 			touxiang.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3");
 				game.over();
 			});
-			var tuoguan = ui.create.div(".tuoguan", popuperContainer);
+			const tuoguan = ui.create.div(".tuoguan", popuperContainer);
 			tuoguan.addEventListener("click", event => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3");
 				ui.click.auto();
 			});
 		};
 		document.body.appendChild(head);
-		if (lib.config.mode == "identity" || lib.config.mode == "doudizhu" || lib.config.mode == "versus" || lib.config.mode == "guozhan") {
+		if (lib.config.mode === "identity" || lib.config.mode === "doudizhu" || lib.config.mode === "versus" || lib.config.mode === "guozhan") {
 			/*左上角问号框*/
-			var tipshow = ui.create.node("img");
-			tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/shenfen.png";
+			const tipshow = ui.create.node("img");
+			tipshow.src = `${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/uibutton/shenfen.png`;
 			tipshow.style.cssText = "display: block;--w: 400px;--h: calc(var(--w) * 279/2139);width: var(--w);height: var(--h);position: absolute;top: -1px;left:-45px;background-color: transparent;z-index:1";
-			tipshow.onclick = function () {
-				var popuperContainer = ui.create.div(".popup-container", ui.window);
+			tipshow.onclick = () => {
+				const popuperContainer = ui.create.div(".popup-container", ui.window);
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
-				if (lib.config.mode == "identity") {
-					if (game.me.identity == "zhu") {
+				if (lib.config.mode === "identity") {
+					if (game.me.identity === "zhu") {
 						ui.create.div(".sfrwzhugong", popuperContainer);
-					} else if (game.me.identity == "zhong") {
+					} else if (game.me.identity === "zhong") {
 						ui.create.div(".sfrwchongchen", popuperContainer);
-					} else if (game.me.identity == "fan") {
+					} else if (game.me.identity === "fan") {
 						ui.create.div(".sfrwfanzei", popuperContainer);
-					} else if (game.me.identity == "nei") {
+					} else if (game.me.identity === "nei") {
 						ui.create.div(".sfrwneijian", popuperContainer);
 					}
 				}
-				if (lib.config.mode == "doudizhu") {
-					if (game.me.identity == "zhu") {
+				if (lib.config.mode === "doudizhu") {
+					if (game.me.identity === "zhu") {
 						ui.create.div(".sfrwdizhu", popuperContainer);
-					} else if (game.me.identity == "fan") {
+					} else if (game.me.identity === "fan") {
 						ui.create.div(".sfrwnongmin", popuperContainer);
 					}
 				}
-				if (lib.config.mode == "versus") {
+				if (lib.config.mode === "versus") {
 					ui.create.div(".sfrwhu", popuperContainer);
 				}
-				if (lib.config.mode == "guozhan") {
-					if (game.me.group == "unknown" || game.me.group == "undefined") {
+				if (lib.config.mode === "guozhan") {
+					if (game.me.group === "unknown" || game.me.group === "undefined") {
 						ui.create.div(".sfrwundefined", popuperContainer);
-					} else if (game.me.group == "wei") {
+					} else if (game.me.group === "wei") {
 						ui.create.div(".sfrwweiguo", popuperContainer);
-					} else if (game.me.group == "shu") {
+					} else if (game.me.group === "shu") {
 						ui.create.div(".sfrwshuguo", popuperContainer);
-					} else if (game.me.group == "wu") {
+					} else if (game.me.group === "wu") {
 						ui.create.div(".sfrwwuguo", popuperContainer);
-					} else if (game.me.group == "qun") {
+					} else if (game.me.group === "qun") {
 						ui.create.div(".sfrwqunxiong", popuperContainer);
-					} else if (game.me.group == "jin") {
+					} else if (game.me.group === "jin") {
 						ui.create.div(".sfrwjinguo", popuperContainer);
-					} else if (game.me.group == "ye") {
+					} else if (game.me.group === "ye") {
 						ui.create.div(".sfrwyexinjia", popuperContainer);
 					}
 				}
@@ -264,7 +252,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			document.body.appendChild(tipshow);
 		}
 	});
-	var plugin = {
+	const plugin = {
 		name: "lbtn",
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
@@ -284,7 +272,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					return !!player;
 				},
 				async content(event, trigger, player) {
-					var me = player || (_status.event && _status.event.player) || game.me;
+					const me = player || (_status.event && _status.event.player) || game.me;
 					if (ui.updateSkillControl) ui.updateSkillControl(me, true);
 				},
 			};
@@ -299,8 +287,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				updateCardRoundTime(opts) {
 					if (!ui.cardRoundTime) return;
-					var roundNumber = Math.max(1, game.roundNumber || 1);
-					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
+					const roundNumber = Math.max(1, game.roundNumber || 1);
+					ui.cardRoundTime.node.roundNumber.innerHTML = `<span>第${roundNumber}轮</span>`;
 					ui.cardRoundTime.setNumberAnimation(opts.cardNumber);
 				},
 				updateCardnumber(opts) {
@@ -349,17 +337,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-			ui.create.confirm = function (str, func) {
-				if ((_status.mode == "huanle" && _status.event.parent.name == "chooseCharacter" && _status.event.parent.step == "6" && _status.event.name == "chooseButton") || (lib.config["extension_无名补丁_xindjun"] && get.playerNumber() == "8" && get.mode() == "identity" && _status.mode == "normal" && _status.event.parent.name == "chooseCharacter" && _status.event.parent.step == "1" && _status.event.name == "chooseButton")) {
-					var node = ui.dialog.querySelector(".selected");
-					var head = ui.create.div(".ok23", node);
-					head.ondblclick = function (e) {
+			ui.create.confirm = (str, func) => {
+				if ((_status.mode === "huanle" && _status.event.parent.name === "chooseCharacter" && _status.event.parent.step === "6" && _status.event.name === "chooseButton") || (lib.config["extension_无名补丁_xindjun"] && get.playerNumber() === "8" && get.mode() === "identity" && _status.mode === "normal" && _status.event.parent.name === "chooseCharacter" && _status.event.parent.step === "1" && _status.event.name === "chooseButton")) {
+					const node = ui.dialog.querySelector(".selected");
+					const head = ui.create.div(".ok23", node);
+					head.ondblclick = (e) => {
 						e.stopPropagation();
 						ui.click.ok();
 					};
 					return;
 				}
-				var confirm = ui.confirm;
+				let confirm = ui.confirm;
 				if (!confirm) {
 					confirm = ui.confirm = plugin.create.confirm();
 				}
@@ -384,15 +372,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				confirm.update();
 			};
 			// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
-			(function () {
-				var originalCancel = ui.click.cancel;
+			(() => {
+				const originalCancel = ui.click.cancel;
 				ui.click.cancel = function (node) {
-					var event = _status.event;
-					if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)) {
+					const event = _status.event;
+					if (event && _status.event.type === "phase" && ui.confirm && !event.skill && (ui.selected.cards.length !== 0 || ui.selected.targets.length !== 0)) {
 						ui.confirm.classList.add("removing");
 						event.restore();
-						var cards = event.player.getCards("hej");
-						for (var i = 0; i < cards.length; i++) {
+						const cards = event.player.getCards("hej");
+						for (let i = 0; i < cards.length; i++) {
 							cards[i].recheck("useSkill");
 						}
 						game.uncheck();
@@ -404,10 +392,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			})();
 		},
 		create: {
-			control() {},
+			control() { },
 			confirm() {
 				//确定文本
-				var confirm = ui.create.control("<span></span>", "cancel");
+				const confirm = ui.create.control("<span></span>", "cancel");
 				confirm.classList.add("lbtn-confirm");
 				confirm.node = {
 					ok: confirm.firstChild,
@@ -422,13 +410,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				confirm.node.ok.link = "ok";
 				//这里重要修改2开始
 				//目的是在使用手气卡时，将按钮替换为免费换牌（3次后替换为换牌的函数在gamedraw函数里），将弃牌阶段按钮替换为弃牌，所以css的样式一定要搬。（再次修改，用以适配神将选势力）
-				if (_status.event.name == "gameDraw") confirm.node.ok.classList.add("huan");
-				else if (_status.event.name == "chooseToDiscard" && _status.event.parent.name == "phaseDiscard") confirm.node.ok.classList.add("qi");
-				else if ((_status.mode == "huanle" && _status.event.parent.step == "7") || (get.mode() == "identity" && _status.mode == "normal" && _status.event.parent.name == "chooseCharacter" && _status.event.parent.step == "2")) confirm.node.ok.classList.add("group");
+				if (_status.event.name === "gameDraw") confirm.node.ok.classList.add("huan");
+				else if (_status.event.name === "chooseToDiscard" && _status.event.parent.name === "phaseDiscard") confirm.node.ok.classList.add("qi");
+				else if ((_status.mode === "huanle" && _status.event.parent.step === "7") || (get.mode() === "identity" && _status.mode === "normal" && _status.event.parent.name === "chooseCharacter" && _status.event.parent.step === "2")) confirm.node.ok.classList.add("group");
 				else confirm.node.ok.classList.add("primary");
-				if ((_status.mode == "huanle" && _status.event.parent.step == "7") || (get.mode() == "identity" && _status.mode == "normal" && _status.event.parent.name == "chooseCharacter" && _status.event.parent.step == "2")) confirm.node.cancel.remove();
+				if ((_status.mode === "huanle" && _status.event.parent.step === "7") || (get.mode() === "identity" && _status.mode === "normal" && _status.event.parent.name === "chooseCharacter" && _status.event.parent.step === "2")) confirm.node.cancel.remove();
 				else confirm.node.cancel.classList.add("primary2");
-				confirm.node.cancel.innerHTML = "<image style=width: 80px height 15px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>";
+				confirm.node.cancel.innerHTML = `<image style=width: 80px height 15px src=${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/uibutton/QX.png>`;
 				// confirm.node.cancel2.classList.add('primary2');
 				confirm.custom = plugin.click.confirm;
 				app.reWriteFunction(confirm, {
@@ -438,7 +426,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						},
 					],
 				});
-				for (var k in confirm.node) {
+				for (const k in confirm.node) {
 					confirm.node[k].classList.add("disabled");
 					confirm.node[k].removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
 					confirm.node[k].addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
@@ -458,15 +446,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 				//添加重铸按钮素材
 				if (ui.skills2 && ui.skills2.skills.length) {
-					var skills = ui.skills2.skills;
+					const skills = ui.skills2.skills;
 					confirm.skills2 = [];
-					for (var i = 0; i < skills.length; i++) {
-						var item = document.createElement("div");
+					for (let i = 0; i < skills.length; i++) {
+						const item = document.createElement("div");
 						item.link = skills[i];
-						if (skills[i] == "_recasting") {
-							item.innerHTML = "<img draggable='false' src=" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/CZ.png>";
+						if (skills[i] === "_recasting") {
+							item.innerHTML = `<img draggable='false' src=${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/uibutton/CZ.png>`;
 							// 为重铸按钮设置单独的背景图
-							item.style.backgroundImage = "url(" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/game_btn_bg2.png)";
+							item.style.backgroundImage = `url(${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/uibutton/game_btn_bg2.png)`;
 							item.style.transform = "scale(0.75,0.75)";
 							item.style.setProperty("padding", "25px 10px", "important");
 						} else {
@@ -483,37 +471,37 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						confirm.insertBefore(item, confirm.firstChild);
 					}
 				}
-				confirm.update = function () {
+				confirm.update = () => {
 					//鹿鹿修改 限定技专属按钮开始
-					var skisxdj = function () {
-						if (_status.event?.skill && get.info(_status.event.skill)?.limited && _status.event.player == game.me) {
+					const skisxdj = () => {
+						if (_status.event?.skill && get.info(_status.event.skill)?.limited && _status.event.player === game.me) {
 							return true;
 						}
-						if (_status.event?.getParent(2)?.skill && get.info(_status.event.getParent(2).skill)?.limited && _status.event.getParent(2).player == game.me) {
+						if (_status.event?.getParent(2)?.skill && get.info(_status.event.getParent(2).skill)?.limited && _status.event.getParent(2).player === game.me) {
 							return true;
 						}
-						if (_status.event?.getParent()?.skill && get.info(_status.event.getParent().skill)?.limited && _status.event.getParent().player == game.me) {
+						if (_status.event?.getParent()?.skill && get.info(_status.event.getParent().skill)?.limited && _status.event.getParent().player === game.me) {
 							return true;
 						}
 						return false;
 					};
-					if (skisxdj() == true && !confirm.node.ok.classList.contains("xiandingji")) {
+					if (skisxdj() === true && !confirm.node.ok.classList.contains("xiandingji")) {
 						confirm.node.ok.classList.add("xiandingji");
 					}
-					if (skisxdj() != true && confirm.node.ok.classList.contains("xiandingji")) {
+					if (skisxdj() !== true && confirm.node.ok.classList.contains("xiandingji")) {
 						confirm.node.ok.classList.remove("xiandingji");
 					}
 					//鹿鹿修改 限定技专属按钮结束
 					if (confirm.skills2) {
 						if (_status.event.skill && _status.event.skill !== confirm.dataset.skill) {
 							confirm.dataset.skill = _status.event.skill;
-							confirm.skills2.forEach(function (item) {
+							confirm.skills2.forEach((item) => {
 								item.remove();
 							});
 							ui.updatec();
 						} else if (!_status.event.skill && confirm.dataset.skill) {
 							delete confirm.dataset.skill;
-							confirm.skills2.forEach(function (item) {
+							confirm.skills2.forEach((item) => {
 								confirm.insertBefore(item, confirm.firstChild);
 							});
 							ui.updatec();
@@ -524,21 +512,22 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				return confirm;
 			},
 			handcardNumber() {
-				var node3 = ui.create.div(".settingButton", ui.arena, plugin.click.setting);
-				var node2 = ui.create.div(".lbtn-controls", ui.arena);
+				const node3 = ui.create.div(".settingButton", ui.arena, plugin.click.setting);
+				const node2 = ui.create.div(".lbtn-controls", ui.arena);
 				ui.create.div(".lbtn-control", node2, "   ");
 				ui.create.div(".lbtn-control", node2, "   ");
 				/*ui.create.div('.lbtn-control1', node2, plugin.click.paixu);*/
 				//左手模式记录和牌序按钮
-				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-					var paixuauto = ui.create.div(".lbtn-paixu", ui.arena);
-					var jilu = ui.create.div(".latn-jilu", ui.arena, ui.click.pause);
+				let paixuauto, jilu;
+				if (lib.config["extension_十周年UI_rightLayout"] === "on") {
+					paixuauto = ui.create.div(".lbtn-paixu", ui.arena);
+					jilu = ui.create.div(".latn-jilu", ui.arena, ui.click.pause);
 				} else {
-					var paixuauto = ui.create.div(".lbtn-paixu1", ui.arena);
-					var jilu = ui.create.div(".latn-jilu1", ui.arena, ui.click.pause);
+					paixuauto = ui.create.div(".lbtn-paixu1", ui.arena);
+					jilu = ui.create.div(".latn-jilu1", ui.arena, ui.click.pause);
 				}
-				paixuauto.onclick = function () {
-					if (window.paixuxx == undefined || window.paixuxx == false) {
+				paixuauto.onclick = () => {
+					if (window.paixuxx === undefined || window.paixuxx === false) {
 						plugin.click.startAutoPaixu();
 						paixuauto.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/zidongpaixu.png");
 						window.paixuxx = true;
@@ -550,14 +539,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				};
 				//-----------------//
 				//左手模式同上继续加一个显示手牌牌量新的按钮css
-				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-					var node = ui.create.div(".handcardNumber", ui.arena).hide();
+				let node;
+				if (lib.config["extension_十周年UI_rightLayout"] === "on") {
+					node = ui.create.div(".handcardNumber", ui.arena).hide();
 					node.node = {
 						cardPicture: ui.create.div(".cardPicture", node),
 						cardNumber: ui.create.div(".cardNumber", node),
 					};
 				} else {
-					var node = ui.create.div(".handcardNumber1", ui.arena).hide();
+					node = ui.create.div(".handcardNumber1", ui.arena).hide();
 					node.node = {
 						cardPicture: ui.create.div(".cardPicture1", node),
 						cardNumber: ui.create.div(".cardNumber1", node),
@@ -566,15 +556,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				//手牌显示·---//
 				node.updateCardnumber = function () {
 					if (!game.me) return;
-					var cardNumber2 = game.me.countCards("h") || 0;
-					var cardNumber = game.me.getHandcardLimit() || 0;
-					var numbercolor = "white";
+					const cardNumber2 = game.me.countCards("h") || 0;
+					let cardNumber = game.me.getHandcardLimit() || 0;
+					let numbercolor = "white";
 					if (cardNumber2 > cardNumber) numbercolor = "white";
-					if (cardNumber == Infinity) cardNumber = "∞";
+					if (cardNumber === Infinity) cardNumber = "∞";
 					if (cardNumber > game.me.hp) numbercolor = "#20c520";
 					if (cardNumber < game.me.hp) numbercolor = "#ff1813";
-					if (cardNumber == game.me.hp) numbercolor = "#ffe9cd";
-					this.node.cardNumber.innerHTML = "</span>" + "<font size=5.5 >" + cardNumber2 + "</font>" + '<font size=5 face="xinwei">' + "/" + "<font color=" + numbercolor + ' size=4 face="shousha">' + cardNumber + "</font>" + "</span>";
+					if (cardNumber === game.me.hp) numbercolor = "#ffe9cd";
+					this.node.cardNumber.innerHTML = `</span><font size=5.5 >${cardNumber2}</font><font size=5 face="xinwei">/<font color=${numbercolor} size=4 face="shousha">${cardNumber}</font></span>`;
 					//      this.setNumberAnimation(cardNumber);
 					this.show();
 					game.addVideo("updateCardnumber", null, {
@@ -588,16 +578,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				return node;
 			},
 			cardRoundTime() {
-				var node = ui.create.div(".cardRoundNumber", ui.arena).hide();
+				const node = ui.create.div(".cardRoundNumber", ui.arena).hide();
 				node.node = {
 					cardPileNumber: ui.create.div(".cardPileNumber", node, plugin.click.paidui),
 					roundNumber: ui.create.div(".roundNumber", node),
 					time: ui.create.div(".time", node),
 				};
 				node.updateRoundCard = function () {
-					var cardNumber = ui.cardPile.childNodes.length || 0;
-					var roundNumber = Math.max(1, game.roundNumber || 1);
-					this.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
+					const cardNumber = ui.cardPile.childNodes.length || 0;
+					const roundNumber = Math.max(1, game.roundNumber || 1);
+					this.node.roundNumber.innerHTML = `<span>第${roundNumber}轮</span>`;
 					this.setNumberAnimation(cardNumber);
 					this.show();
 					game.addVideo("updateCardRoundTime", null, {
@@ -606,20 +596,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					});
 				};
 				node.setNumberAnimation = function (num, step) {
-					var item = this.node.cardPileNumber;
+					const item = this.node.cardPileNumber;
 					clearTimeout(item.interval);
 					if (!item._num) {
-						item.innerHTML = "<span>" + num + "</span>";
+						item.innerHTML = `<span>${num}</span>`;
 						item._num = num;
 					} else {
 						if (item._num !== num) {
 							if (!step) step = 500 / Math.abs(item._num - num);
 							if (item._num > num) item._num--;
 							else item._num++;
-							item.innerHTML = "<span>" + item._num + "</span>";
+							item.innerHTML = `<span>${item._num}</span>`;
 							if (item._num !== num) {
+								const self = this;
 								item.interval = setTimeout(() => {
-									node.setNumberAnimation(num, step);
+									self.setNumberAnimation(num, step);
 								}, step);
 							}
 						}
@@ -628,31 +619,31 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.time4 = node.node.time;
 				ui.time4.starttime = get.utc();
 				ui.time4.interval = setInterval(() => {
-					var num = Math.round((get.utc() - ui.time4.starttime) / 1000);
+					const num = Math.round((get.utc() - ui.time4.starttime) / 1000);
 					if (num >= 3600) {
-						var num1 = Math.floor(num / 3600);
-						var num2 = Math.floor((num - num1 * 3600) / 60);
-						var num3 = num - num1 * 3600 - parseInt(num2) * 60;
+						let num1 = Math.floor(num / 3600);
+						let num2 = Math.floor((num - num1 * 3600) / 60);
+						let num3 = num - num1 * 3600 - parseInt(num2) * 60;
 						if (num1 < 10) {
-							num1 = "0" + num1.toString();
+							num1 = `0${num1.toString()}`;
 						}
 						if (num2 < 10) {
-							num2 = "0" + num2.toString();
+							num2 = `0${num2.toString()}`;
 						}
 						if (num3 < 10) {
-							num3 = "0" + num3.toString();
+							num3 = `0${num3.toString()}`;
 						}
-						ui.time4.innerHTML = "<span>" + num1 + ":" + num2 + ":" + num3 + "</span>";
+						ui.time4.innerHTML = `<span>${num1}:${num2}:${num3}</span>`;
 					} else {
-						var num1 = Math.floor(num / 60);
-						var num2 = num - num1 * 60;
+						let num1 = Math.floor(num / 60);
+						let num2 = num - num1 * 60;
 						if (num1 < 10) {
-							num1 = "0" + num1.toString();
+							num1 = `0${num1.toString()}`;
 						}
 						if (num2 < 10) {
-							num2 = "0" + num2.toString();
+							num2 = `0${num2.toString()}`;
 						}
-						ui.time4.innerHTML = "<span>" + num1 + ":" + num2 + "</span>";
+						ui.time4.innerHTML = `<span>${num1}:${num2}</span>`;
 					}
 				}, 1000);
 				game.addVideo("createCardRoundTime");
@@ -662,21 +653,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		click: {
 			paixu() {
 				if (!game.me || game.me.hasSkillTag("noSortCard")) return;
-				var cards = game.me.getCards("hs");
-				var sort2 = function (a, b) {
-					var order = { basic: 0, trick: 1, delay: 1, equip: 2 };
-					var ta = get.type(a),
-						tb = get.type(b);
-					var ca = order[ta] == undefined ? 99 : order[ta];
-					var cb = order[tb] == undefined ? 99 : order[tb];
+				const cards = game.me.getCards("hs");
+				const sort2 = (a, b) => {
+					const order = { basic: 0, trick: 1, delay: 1, equip: 2 };
+					const ta = get.type(a);
+					const tb = get.type(b);
+					const ca = order[ta] === undefined ? 99 : order[ta];
+					const cb = order[tb] === undefined ? 99 : order[tb];
 					if (ca !== cb) return ca - cb;
-					if (a.name != b.name) return lib.sort.card(a.name, b.name);
-					if (a.suit != b.suit) return lib.suit.indexOf(a.suit) - lib.suit.indexOf(b.suit);
+					if (a.name !== b.name) return lib.sort.card(a.name, b.name);
+					if (a.suit !== b.suit) return lib.suit.indexOf(a.suit) - lib.suit.indexOf(b.suit);
 					return a.number - b.number;
 				};
 				if (cards.length > 1) {
 					cards.sort(sort2);
-					cards.forEach(function (i, j) {
+					cards.forEach((i, j) => {
 						game.me.node.handcards1.insertBefore(cards[j], game.me.node.handcards1.firstChild);
 					});
 					dui.queueNextFrameTick(dui.layoutHand, dui);
@@ -685,62 +676,62 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			// 开启自动牌序（监听手牌变化自动整理）
 			startAutoPaixu() {
 				if (!game.me || game.me.hasSkillTag("noSortCard")) return;
-				var container = game.me.node && game.me.node.handcards1;
+				const container = game.me.node && game.me.node.handcards1;
 				if (!container) return;
 				if (ui._autoPaixuObserver) {
 					try {
 						ui._autoPaixuObserver.disconnect();
-					} catch (e) {}
+					} catch (e) { }
 				}
 				ui._autoPaixuDebounce = null;
 				ui._autoPaixuSorting = false;
 				ui._autoPaixuEnabled = true;
 				ui._autoPaixuContainer = container;
 				ui._autoPaixuLastCount = container.childNodes.length || 0;
-				ui._autoPaixuObserver = new MutationObserver(function () {
+				ui._autoPaixuObserver = new MutationObserver(() => {
 					if (ui._autoPaixuSorting) return;
 					if (ui._autoPaixuDebounce) clearTimeout(ui._autoPaixuDebounce);
-					ui._autoPaixuDebounce = setTimeout(function () {
+					ui._autoPaixuDebounce = setTimeout(() => {
 						if (!game.me || !game.me.node || !game.me.node.handcards1) return;
-						var curCount = game.me.node.handcards1.childNodes.length || 0;
-						if (ui._autoPaixuLastCount != null && curCount < ui._autoPaixuLastCount) {
+						const curCount = game.me.node.handcards1.childNodes.length || 0;
+						if (ui._autoPaixuLastCount !== null && curCount < ui._autoPaixuLastCount) {
 							ui._autoPaixuLastCount = curCount;
 							return;
 						}
-						var cards = game.me.getCards("hs");
-						var sort2 = function (a, b) {
-							var order = { basic: 0, trick: 1, delay: 1, equip: 2 };
-							var ta = get.type(a),
-								tb = get.type(b);
-							var ca = order[ta] == undefined ? 99 : order[ta];
-							var cb = order[tb] == undefined ? 99 : order[tb];
+						const cards = game.me.getCards("hs");
+						const sort2 = (a, b) => {
+							const order = { basic: 0, trick: 1, delay: 1, equip: 2 };
+							const ta = get.type(a);
+							const tb = get.type(b);
+							const ca = order[ta] === undefined ? 99 : order[ta];
+							const cb = order[tb] === undefined ? 99 : order[tb];
 							if (ca !== cb) return ca - cb;
-							if (a.name != b.name) return lib.sort.card(a.name, b.name);
-							if (a.suit != b.suit) return lib.suit.indexOf(a.suit) - lib.suit.indexOf(b.suit);
+							if (a.name !== b.name) return lib.sort.card(a.name, b.name);
+							if (a.suit !== b.suit) return lib.suit.indexOf(a.suit) - lib.suit.indexOf(b.suit);
 							return a.number - b.number;
 						};
 						if (cards.length > 1) {
 							ui._autoPaixuSorting = true;
-							var sorted = cards.slice().sort(sort2);
-							var container = game.me.node.handcards1;
-							var unchanged = true;
-							for (var idx = 0; idx < sorted.length; idx++) {
+							const sorted = cards.slice().sort(sort2);
+							const container = game.me.node.handcards1;
+							let unchanged = true;
+							for (let idx = 0; idx < sorted.length; idx++) {
 								if (container.childNodes[idx] !== sorted[idx]) {
 									unchanged = false;
 									break;
 								}
 							}
 							if (!unchanged) {
-								for (var k = 0; k < sorted.length; k++) {
-									var nodeExpect = sorted[k];
+								for (let k = 0; k < sorted.length; k++) {
+									const nodeExpect = sorted[k];
 									if (container.childNodes[k] !== nodeExpect) {
 										container.insertBefore(nodeExpect, container.childNodes[k] || null);
 									}
 								}
 							}
-							dui.queueNextFrameTick(function () {
+							dui.queueNextFrameTick(() => {
 								dui.layoutHand();
-								setTimeout(function () {
+								setTimeout(() => {
 									ui._autoPaixuSorting = false;
 								}, 0);
 							}, dui);
@@ -753,29 +744,29 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui._autoPaixuKeeper)
 					try {
 						clearInterval(ui._autoPaixuKeeper);
-					} catch (e) {}
-				ui._autoPaixuKeeper = setInterval(function () {
+					} catch (e) { }
+				ui._autoPaixuKeeper = setInterval(() => {
 					if (!ui._autoPaixuEnabled) return;
 					if (!game.me || !game.me.node) return;
-					var cur = game.me.node.handcards1;
+					const cur = game.me.node.handcards1;
 					if (!cur) return;
 					if (cur !== ui._autoPaixuContainer) {
 						ui._autoPaixuContainer = cur;
 						ui._autoPaixuLastCount = cur.childNodes.length || 0;
 						try {
 							ui._autoPaixuObserver.disconnect();
-						} catch (e) {}
+						} catch (e) { }
 						ui._autoPaixuObserver.observe(cur, { childList: true, subtree: true });
 					}
-					var nowCount = cur.childNodes.length || 0;
+					const nowCount = cur.childNodes.length || 0;
 					if (nowCount !== ui._autoPaixuLastCount) {
-						var prev = ui._autoPaixuLastCount;
+						const prev = ui._autoPaixuLastCount;
 						ui._autoPaixuLastCount = nowCount;
 						if (nowCount > prev && !ui._autoPaixuSorting) {
 							if (ui._autoPaixuSuppressOnce) {
 								ui._autoPaixuSuppressOnce = false;
 							} else
-								setTimeout(function () {
+								setTimeout(() => {
 									plugin.click.paixu();
 								}, 120);
 						}
@@ -787,7 +778,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui._autoPaixuObserver) {
 					try {
 						ui._autoPaixuObserver.disconnect();
-					} catch (e) {}
+					} catch (e) { }
 					ui._autoPaixuObserver = null;
 				}
 				if (ui._autoPaixuDebounce) {
@@ -797,7 +788,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui._autoPaixuKeeper) {
 					try {
 						clearInterval(ui._autoPaixuKeeper);
-					} catch (e) {}
+					} catch (e) { }
 					ui._autoPaixuKeeper = null;
 				}
 				ui._autoPaixuSorting = false;
@@ -979,7 +970,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		compare: {
 			type(a, b) {
 				if (a === b) return 0;
-				var types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
+				const types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
 				return types.indexOf(a) - types.indexOf(b);
 			},
 			name(a, b) {
@@ -988,12 +979,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 			nature(a, b) {
 				if (a === b) return 0;
-				var nature = [undefined, "fire", "thunder"].addArray([a, b]);
+				const nature = [undefined, "fire", "thunder"].addArray([a, b]);
 				return nature.indexOf(a) - nature.indexOf(b);
 			},
 			suit(a, b) {
 				if (a === b) return 0;
-				var suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
+				const suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
 				return suit.indexOf(a) - suit.indexOf(b);
 			},
 			number(a, b) {

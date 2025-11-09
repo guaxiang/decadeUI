@@ -1,4 +1,4 @@
-app.import(function (lib, game, ui, get, ai, _status, app) {
+app.import((lib, game, ui, get, ai, _status, app) => {
 	// 工具函数区
 	const extensionPath = `${lib.assetURL}extension/十周年UI/shoushaUI/`;
 	// 获取武将分包
@@ -77,7 +77,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	function setLihuiDiv(skinDiv, playerSkin, fallbackUrl) {
 		const originalPath = extractImagePath(playerSkin);
 		const testImg = new Image();
-		testImg.onerror = function () {
+		testImg.onerror = () => {
 			skinDiv.style.backgroundImage = playerSkin;
 		};
 		testImg.onload = function () {
@@ -88,11 +88,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	// 主体插件
 	const plugin = {
 		name: "character",
-		filter: function () {
+		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content: function (next) {},
-		precontent: function () {
+		content(next) { },
+		precontent() {
 			app.reWriteFunction(lib, {
 				setIntro: [
 					function (args, node) {
@@ -111,7 +111,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 		},
 		click: {
-			identity: function (e) {
+			identity(e) {
 				e.stopPropagation();
 				const player = this.parentNode;
 				if (!game.getIdentityList) return;
@@ -126,12 +126,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					player.node.guessDialog = guessDialog;
 				}
 			},
-			playerIntro: function (e) {
+			playerIntro(e) {
 				e.stopPropagation();
 				if (plugin.playerDialog) {
 					return plugin.playerDialog.show(this);
 				}
-				const container = ui.create.div(".popup-container.hidden", ui.window, function (e) {
+				const container = ui.create.div(".popup-container.hidden", ui.window, (e) => {
 					if (e.target === container) {
 						container.hide();
 						game.resume2();
@@ -210,7 +210,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				lib.setScroll(rightPane.firstChild);
 				// 技能区
 				let oSkills = this.getSkills(null, false, false).slice(0);
-				if (this == game.me) oSkills = oSkills.concat(this.hiddenSkills);
+				if (this === game.me) oSkills = oSkills.concat(this.hiddenSkills);
 				if (oSkills.length) {
 					oSkills.forEach(skillName => {
 						const translation = lib.translate[skillName];
@@ -305,7 +305,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					eSkills.forEach(card => {
 						const cards = card.cards;
 						let str = [get.translation(card), get.translation(card.name + "_info")];
-						if (Array.isArray(cards) && cards.length) str[0] += `（${get.translation(card.cards)}）`;
+						if (Array.isArray(cards) && cards.length) {
+							str[0] += `（${get.translation(card.cards)}）`;
+						}
 						if (lib.card[card.name]?.cardPrompt) str[1] = lib.card[card.name].cardPrompt(card, this);
 						ui.create.div(".xskill", `<div data-color>${str[0]}</div><div>${str[1]}</div>`, rightPane.firstChild);
 					});

@@ -1,5 +1,5 @@
-app.import(function (lib, game, ui, get, ai, _status, app) {
-	lib.arenaReady.push(function () {
+app.import((lib, game, ui, get, ai, _status, app) => {
+	lib.arenaReady.push(() => {
 		initializePlayerNames();
 		overrideUpdateRoundNumber();
 		createUIElements();
@@ -7,8 +7,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	// 玩家昵称列表
 	const PLAYER_NICKNAMES = ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "无语", "小曦", "墨渊", "k9", "扶苏", "皇叔"];
 	// 初始化玩家昵称
-	function initializePlayerNames() {
-		setInterval(function () {
+	const initializePlayerNames = () => {
+		setInterval(() => {
 			game.countPlayer(current => {
 				// 添加确定每个玩家的名字
 				if (!current.nickname) {
@@ -17,9 +17,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			});
 		}, 1000);
-	}
+	};
 	// 重写轮次更新函数
-	function overrideUpdateRoundNumber() {
+	const overrideUpdateRoundNumber = () => {
 		const originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
 			originUpdateRoundNumber.apply(this, arguments);
@@ -27,15 +27,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.cardRoundTime.updateRoundCard();
 			}
 		};
-	}
+	};
 	// 创建UI元素
-	function createUIElements() {
+	const createUIElements = () => {
 		createConfigButton();
 		createSortButton();
 		createTopRightMenu();
-	}
+	};
 	// 创建配置按钮
-	function createConfigButton() {
+	const createConfigButton = () => {
 		const configButton = ui.create.node("div");
 		configButton.style.cssText = `
 			display: block;
@@ -50,7 +50,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			background-color: transparent;
 			z-index: 1;
 		`;
-		configButton.onclick = function () {
+		configButton.onclick = () => {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 			if (!ui.click.configMenu) return;
 			game.closePopped();
@@ -60,45 +60,45 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.system2.classList.remove("shown");
 		};
 		document.body.appendChild(configButton);
-	}
+	};
 	// 创建整理手牌按钮
-	function createSortButton() {
+	const createSortButton = () => {
 		const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
 		const sortImg = "hs_zhengli.png";
 		const sortButton = ui.create.node("img");
-		sortButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/" + sortImg;
+		sortButton.src = `${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/uibutton/${sortImg}`;
 		let styleText = "display:block;position:absolute;background-color:transparent;";
 		styleText += "width:85px;height:50px;bottom: 18%;left: 22px;z-index:4;right: auto;";
 		styleText += isRightLayout ? "right: calc(100% - 380px);z-index:3;" : "right: calc(100% - 1260px);z-index:3;";
 		sortButton.style.cssText = styleText;
-		sortButton.onclick = function () {
+		sortButton.onclick = () => {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
 			const cards = game.me.getCards("hs");
-			const sortFunction = function (b, a) {
+			const sortFunction = (b, a) => {
 				if (a.name !== b.name) return lib.sort.card(a.name, b.name);
 				if (a.suit !== b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
 				return a.number - b.number;
 			};
 			if (cards.length > 1) {
 				cards.sort(sortFunction);
-				cards.forEach(function (card, index) {
+				cards.forEach((card, index) => {
 					game.me.node.handcards1.insertBefore(cards[index], game.me.node.handcards1.firstChild);
 				});
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			}
 		};
 		document.body.appendChild(sortButton);
-	}
+	};
 	// 创建右上角菜单
-	function createTopRightMenu() {
+	const createTopRightMenu = () => {
 		const topOffset = "10px";
 		// 菜单按钮
 		const menuBtn = ui.create.node("img");
-		menuBtn.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/hs_caidan.png";
+		menuBtn.src = `${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/CD/hs_caidan.png`;
 		menuBtn.style.cssText = `display:block;--w:56px;--h:calc(var(--w) * 74/71);width:var(--w);height:var(--h);position:absolute;top:${topOffset};left:40px;background-color:transparent;z-index:3;`;
 		document.body.appendChild(menuBtn);
 		let menuPopup = null;
-		function openMenu() {
+		const openMenu = () => {
 			if (menuPopup) return;
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
 			menuPopup = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
@@ -140,25 +140,25 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 				ui.click.auto();
 			});
-		}
-		function openBackgroundSelector() {
-			var popuperContainer = ui.create.div(
+		};
+		const openBackgroundSelector = () => {
+			const popuperContainer = ui.create.div(
 				".popup-container",
 				{
 					background: "rgba(0, 0, 0, 0.8)",
 				},
 				ui.window
 			);
-			var guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
+			const guanbi = ui.create.div(".bgback", popuperContainer, (e) => {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 				popuperContainer.hide();
 				game.resume2();
 			});
-			var bigdialog = ui.create.div(".bgdialog", popuperContainer);
-			var bgbg = ui.create.div(".backgroundsbg", bigdialog);
+			const bigdialog = ui.create.div(".bgdialog", popuperContainer);
+			const bgbg = ui.create.div(".backgroundsbg", bigdialog);
 			loadBackgroundImages(bgbg);
-		}
-		function loadBackgroundImages(container) {
+		};
+		const loadBackgroundImages = (container) => {
 			let backgroundItems = lib.configMenu.appearence.config.image_background.item;
 			let hiddenBgs = lib.config.hiddenBackgroundPack || [];
 
@@ -169,30 +169,30 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				img.dataset.name = fileName;
 
 				if (fileName.startsWith("custom_")) {
-					game.getDB("image", fileName, function (fileToLoad) {
+					game.getDB("image", fileName, (fileToLoad) => {
 						if (fileToLoad) {
-							var fileReader = new FileReader();
-							fileReader.onload = function (fileLoadedEvent) {
-								var data = fileLoadedEvent.target.result;
-								img.style.backgroundImage = "url(" + data + ")";
+							const fileReader = new FileReader();
+							fileReader.onload = (fileLoadedEvent) => {
+								const data = fileLoadedEvent.target.result;
+								img.style.backgroundImage = `url(${data})`;
 								img.style.backgroundSize = "cover";
 							};
 							fileReader.readAsDataURL(fileToLoad, "UTF-8");
 						}
 					});
 				} else {
-					img.setBackgroundImage("image/background/" + fileName + ".jpg");
+					img.setBackgroundImage(`image/background/${fileName}.jpg`);
 				}
 
-				if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
+				if (fileName === lib.config.image_background) ui.create.div(".bgxuanzhong", img);
 
 				img.addEventListener("click", function () {
-					var editItem = container.querySelector(".backgrounds:last-child");
-					var isEditMode = editItem && editItem.classList.contains("active");
+					const editItem = container.querySelector(".backgrounds:last-child");
+					const isEditMode = editItem && editItem.classList.contains("active");
 					if (isEditMode) {
 						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-						var textDiv = this.querySelector(".buttontext");
-						if (textDiv && textDiv.innerHTML == "隐藏") {
+						const textDiv = this.querySelector(".buttontext");
+						if (textDiv && textDiv.innerHTML === "隐藏") {
 							container.parentNode.noclose = true;
 							this.remove();
 							if (!lib.config.prompt_hidebg) {
@@ -202,7 +202,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							lib.config.hiddenBackgroundPack.add(fileName);
 							game.saveConfig("hiddenBackgroundPack", lib.config.hiddenBackgroundPack);
 							delete lib.configMenu.appearence.config.image_background.item[fileName];
-							if (lib.config.image_background == fileName) {
+							if (lib.config.image_background === fileName) {
 								game.saveConfig("image_background", "default");
 								lib.init.background();
 								game.updateBackground();
@@ -212,19 +212,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 							loadBackgroundImages(container);
 							return;
-						} else if (textDiv && textDiv.innerHTML == "删除") {
+						} else if (textDiv && textDiv.innerHTML === "删除") {
 							container.parentNode.noclose = true;
 							if (confirm("是否删除此背景？（此操作不可撤销）")) {
 								this.remove();
 								lib.config.customBackgroundPack.remove(fileName);
 								game.saveConfig("customBackgroundPack", lib.config.customBackgroundPack);
 								if (fileName.startsWith("cdv_")) {
-									game.removeFile("image/background/" + fileName + ".jpg");
+									game.removeFile(`image/background/${fileName}.jpg`);
 								} else {
 									game.deleteDB("image", fileName);
 								}
 								delete lib.configMenu.appearence.config.image_background.item[fileName];
-								if (lib.config.image_background == fileName) {
+								if (lib.config.image_background === fileName) {
 									game.saveConfig("image_background", "default");
 									lib.init.background();
 									game.updateBackground();
@@ -237,8 +237,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							return;
 						}
 					}
-					let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
-					allSelectedElements.forEach(function (selectedElement) {
+					const allSelectedElements = document.querySelectorAll(".bgxuanzhong");
+					allSelectedElements.forEach((selectedElement) => {
 						selectedElement.parentNode.removeChild(selectedElement);
 					});
 					ui.create.div(".bgxuanzhong", img);
@@ -250,42 +250,42 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				let backgroundName = backgroundItems[fileName];
 				ui.create.div(".buttontext", backgroundName, img);
 			}
-			(function (container) {
-				var addItem = ui.create.div(".backgrounds", container);
+			((container) => {
+				const addItem = ui.create.div(".backgrounds", container);
 				ui.create.div(".buttontext", "添加背景", addItem);
-				var input = document.createElement("input");
+				const input = document.createElement("input");
 				input.type = "file";
 				input.accept = "image/*";
 				input.multiple = true;
 				input.style.display = "none";
 				document.body.appendChild(input);
-				addItem.addEventListener("click", function () {
+				addItem.addEventListener("click", () => {
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 					input.click();
 				});
-				input.onchange = function (e) {
-					var files = e.target.files;
+				input.onchange = (e) => {
+					const files = e.target.files;
 					if (!files || files.length === 0) return;
-					var fileList = Array.from(files);
-					var totalFiles = fileList.length;
-					var processedFiles = 0;
-					fileList.forEach(function (file2, index) {
+					const fileList = Array.from(files);
+					const totalFiles = fileList.length;
+					let processedFiles = 0;
+					fileList.forEach((file2, index) => {
 						if (file2) {
-							var name2 = file2.name;
+							let name2 = file2.name;
 							if (name2.includes(".")) {
 								name2 = name2.slice(0, name2.indexOf("."));
 							}
-							var link = (game.writeFile ? "cdv_" : "custom_") + name2;
+							let link = `${game.writeFile ? "cdv_" : "custom_"}${name2}`;
 							if (lib.configMenu.appearence.config.image_background.item[link]) {
-								for (var i = 1; i < 1e3; i++) {
-									if (!lib.configMenu.appearence.config.image_background.item[link + "_" + i]) {
-										link = link + "_" + i;
+								for (let i = 1; i < 1e3; i++) {
+									if (!lib.configMenu.appearence.config.image_background.item[`${link}_${i}`]) {
+										link = `${link}_${i}`;
 										break;
 									}
 								}
 							}
 							lib.configMenu.appearence.config.image_background.item[link] = name2;
-							var callback = function () {
+							const callback = () => {
 								lib.config.customBackgroundPack.add(link);
 								game.saveConfig("customBackgroundPack", lib.config.customBackgroundPack);
 								processedFiles++;
@@ -298,25 +298,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								loadBackgroundImages(container);
 							};
 							if (game.writeFile) {
-								game.writeFile(file2, "image/background", link + ".jpg", callback);
+								game.writeFile(file2, "image/background", `${link}.jpg`, callback);
 							} else {
 								game.putDB("image", link, file2, callback);
 							}
 						}
 					});
 				};
-				var editItem = ui.create.div(".backgrounds", container);
+				const editItem = ui.create.div(".backgrounds", container);
 				ui.create.div(".buttontext", "编辑背景", editItem);
-				var editbg = function () {
+				const editbg = function () {
 					this.classList.toggle("active");
-					var items = Array.from(container.querySelectorAll(".backgrounds"));
-					items.slice(0, Math.max(0, items.length - 2)).forEach(function (item) {
-						var fname = item.dataset.name;
+					const items = Array.from(container.querySelectorAll(".backgrounds"));
+					const self = this;
+					items.slice(0, Math.max(0, items.length - 2)).forEach((item) => {
+						const fname = item.dataset.name;
 						if (!fname) return;
-						var textDiv = item.querySelector(".buttontext");
+						const textDiv = item.querySelector(".buttontext");
 						if (!textDiv) return;
-						var str;
-						if (this.classList.contains("active")) {
+						let str;
+						if (self.classList.contains("active")) {
 							if (fname.startsWith("custom_") || fname.startsWith("cdv_")) {
 								str = "删除";
 							} else {
@@ -326,15 +327,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							str = lib.configMenu.appearence.config.image_background.item[fname] || fname;
 						}
 						textDiv.innerHTML = str;
-					}.bind(this));
+					});
 				};
 				editItem.addEventListener("click", function () {
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 					editbg.call(this);
 				});
 			})(container);
-		}
-		function closeMenu() {
+		};
+		const closeMenu = () => {
 			if (menuPopup) {
 				menuPopup.delete(200);
 				menuPopup = null;
@@ -371,7 +372,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				noDeprive: true,
 				priority: -Infinity,
 				filter(event, player) {
-					return player == game.me;
+					return player === game.me;
 				},
 				content() {
 					if (ui.updateSkillControl) {
@@ -595,7 +596,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (window.zyile_charactercard) {
 					window.zyile_charactercard(player, false);
 				} else {
-					ui.click.charactercard(game.me.name, game.zhu, lib.config.mode == "mode_guozhan" ? "guozhan" : true);
+					ui.click.charactercard(game.me.name, game.zhu, lib.config.mode === "mode_guozhan" ? "guozhan" : true);
 				}
 			},
 			// 确认按钮
@@ -734,15 +735,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			confirm.update();
 		};
 		// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
-		(function () {
-			var originalCancel = ui.click.cancel;
+		(() => {
+			const originalCancel = ui.click.cancel;
 			ui.click.cancel = function (node) {
-				var event = _status.event;
-				if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)) {
+				const event = _status.event;
+				if (event && _status.event.type === "phase" && ui.confirm && !event.skill && (ui.selected.cards.length !== 0 || ui.selected.targets.length !== 0)) {
 					ui.confirm.classList.add("removing");
 					event.restore();
-					var cards = event.player.getCards("hej");
-					for (var i = 0; i < cards.length; i++) {
+					const cards = event.player.getCards("hej");
+					for (let i = 0; i < cards.length; i++) {
 						cards[i].recheck("useSkill");
 					}
 					game.uncheck();

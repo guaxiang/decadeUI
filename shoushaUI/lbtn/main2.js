@@ -1,4 +1,4 @@
-app.import(function (lib, game, ui, get, ai, _status, app) {
+app.import((lib, game, ui, get, ai, _status, app) => {
 	// 常量定义
 	const MODES = {
 		IDENTITY: "identity",
@@ -75,7 +75,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		const isTouch = lib.config.phonelayout;
 		const bottomOffset = isTouch ? "calc(100% - 55px)" : "calc(100% - 105px)"; // 非触屏布局往下移动20px
 		const questionBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/wenhao.png", `display: block;width: 40px;height: 29px;position: absolute;bottom: ${bottomOffset};left: calc(100% - 159.5px);background-color: transparent;z-index:3`);
-		questionBtn.onclick = function () {
+		questionBtn.onclick = () => {
 			const popupContainer = ui.create.div(".popup-container", ui.window);
 			utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
 			// 根据游戏模式显示不同提示
@@ -114,17 +114,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			sortBtnStyle = isRightLayout ? utils.getButtonStyle(45, "110/170", "calc(100% - 45px)", "calc(100% - 290px)", 7) : utils.getButtonStyle(88, "81/247", "calc(100% - 33px)", "right: calc(100% - 367.2px)", 4);
 		}
 		const sortBtn = utils.createImage(`extension/十周年UI/shoushaUI/lbtn/images/uibutton/${sortImg}`, sortBtnStyle);
-		sortBtn.onclick = function () {
+		sortBtn.onclick = () => {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
 			const cards = game.me.getCards("hs");
-			const sortFunction = function (b, a) {
+			const sortFunction = (b, a) => {
 				if (a.name !== b.name) return lib.sort.card(a.name, b.name);
 				if (a.suit !== b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
 				return a.number - b.number;
 			};
 			if (cards.length > 1) {
 				cards.sort(sortFunction);
-				cards.forEach(function (card, index) {
+				cards.forEach((card, index) => {
 					game.me.node.handcards1.insertBefore(cards[index], game.me.node.handcards1.firstChild);
 				});
 				dui.queueNextFrameTick(dui.layoutHand, dui);
@@ -194,20 +194,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 		}
 		function openBackgroundSelector() {
-			var popuperContainer = ui.create.div(
+			const popuperContainer = ui.create.div(
 				".popup-container",
 				{
 					background: "rgba(0, 0, 0, 0.8)",
 				},
 				ui.window
 			);
-			var guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
+			const guanbi = ui.create.div(".bgback", popuperContainer, (e) => {
 				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 				popuperContainer.hide();
 				game.resume2();
 			});
-			var bigdialog = ui.create.div(".bgdialog", popuperContainer);
-			var bgbg = ui.create.div(".backgroundsbg", bigdialog);
+			const bigdialog = ui.create.div(".bgdialog", popuperContainer);
+			const bgbg = ui.create.div(".backgroundsbg", bigdialog);
 			loadBackgroundImages(bgbg);
 		}
 		function loadBackgroundImages(container) {
@@ -221,30 +221,30 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				img.dataset.name = fileName;
 
 				if (fileName.startsWith("custom_")) {
-					game.getDB("image", fileName, function (fileToLoad) {
+					game.getDB("image", fileName, (fileToLoad) => {
 						if (fileToLoad) {
-							var fileReader = new FileReader();
-							fileReader.onload = function (fileLoadedEvent) {
-								var data = fileLoadedEvent.target.result;
-								img.style.backgroundImage = "url(" + data + ")";
+							const fileReader = new FileReader();
+							fileReader.onload = (fileLoadedEvent) => {
+								const data = fileLoadedEvent.target.result;
+								img.style.backgroundImage = `url(${data})`;
 								img.style.backgroundSize = "cover";
 							};
 							fileReader.readAsDataURL(fileToLoad, "UTF-8");
 						}
 					});
 				} else {
-					img.setBackgroundImage("image/background/" + fileName + ".jpg");
+					img.setBackgroundImage(`image/background/${fileName}.jpg`);
 				}
 
-				if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
+				if (fileName === lib.config.image_background) ui.create.div(".bgxuanzhong", img);
 
 				img.addEventListener("click", function () {
-					var editItem = container.querySelector(".backgrounds:last-child");
-					var isEditMode = editItem && editItem.classList.contains("active");
+					const editItem = container.querySelector(".backgrounds:last-child");
+					const isEditMode = editItem && editItem.classList.contains("active");
 					if (isEditMode) {
 						utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-						var textDiv = this.querySelector(".buttontext");
-						if (textDiv && textDiv.innerHTML == "隐藏") {
+						const textDiv = this.querySelector(".buttontext");
+						if (textDiv && textDiv.innerHTML === "隐藏") {
 							container.parentNode.noclose = true;
 							this.remove();
 							if (!lib.config.prompt_hidebg) {
@@ -254,7 +254,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							lib.config.hiddenBackgroundPack.add(fileName);
 							game.saveConfig("hiddenBackgroundPack", lib.config.hiddenBackgroundPack);
 							delete lib.configMenu.appearence.config.image_background.item[fileName];
-							if (lib.config.image_background == fileName) {
+							if (lib.config.image_background === fileName) {
 								game.saveConfig("image_background", "default");
 								lib.init.background();
 								game.updateBackground();
@@ -264,7 +264,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 							loadBackgroundImages(container);
 							return;
-						} else if (textDiv && textDiv.innerHTML == "删除") {
+						} else if (textDiv && textDiv.innerHTML === "删除") {
 							container.parentNode.noclose = true;
 							if (confirm("是否删除此背景？（此操作不可撤销）")) {
 								this.remove();
@@ -276,7 +276,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 									game.deleteDB("image", fileName);
 								}
 								delete lib.configMenu.appearence.config.image_background.item[fileName];
-								if (lib.config.image_background == fileName) {
+								if (lib.config.image_background === fileName) {
 									game.saveConfig("image_background", "default");
 									lib.init.background();
 									game.updateBackground();
@@ -290,7 +290,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					}
 					let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
-					allSelectedElements.forEach(function (selectedElement) {
+					allSelectedElements.forEach((selectedElement) => {
 						selectedElement.parentNode.removeChild(selectedElement);
 					});
 					ui.create.div(".bgxuanzhong", img);
@@ -302,42 +302,42 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				let backgroundName = backgroundItems[fileName];
 				ui.create.div(".buttontext", backgroundName, img);
 			}
-			(function (container) {
-				var addItem = ui.create.div(".backgrounds", container);
+			((container) => {
+				const addItem = ui.create.div(".backgrounds", container);
 				ui.create.div(".buttontext", "添加背景", addItem);
-				var input = document.createElement("input");
+				const input = document.createElement("input");
 				input.type = "file";
 				input.accept = "image/*";
 				input.multiple = true;
 				input.style.display = "none";
 				document.body.appendChild(input);
-				addItem.addEventListener("click", function () {
+				addItem.addEventListener("click", () => {
 					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 					input.click();
 				});
-				input.onchange = function (e) {
-					var files = e.target.files;
+				input.onchange = (e) => {
+					const files = e.target.files;
 					if (!files || files.length === 0) return;
-					var fileList = Array.from(files);
-					var totalFiles = fileList.length;
-					var processedFiles = 0;
-					fileList.forEach(function (file2, index) {
+					const fileList = Array.from(files);
+					const totalFiles = fileList.length;
+					let processedFiles = 0;
+					fileList.forEach((file2, index) => {
 						if (file2) {
-							var name2 = file2.name;
+							let name2 = file2.name;
 							if (name2.includes(".")) {
 								name2 = name2.slice(0, name2.indexOf("."));
 							}
-							var link = (game.writeFile ? "cdv_" : "custom_") + name2;
+							let link = `${game.writeFile ? "cdv_" : "custom_"}${name2}`;
 							if (lib.configMenu.appearence.config.image_background.item[link]) {
-								for (var i = 1; i < 1e3; i++) {
-									if (!lib.configMenu.appearence.config.image_background.item[link + "_" + i]) {
-										link = link + "_" + i;
+								for (let i = 1; i < 1e3; i++) {
+									if (!lib.configMenu.appearence.config.image_background.item[`${link}_${i}`]) {
+										link = `${link}_${i}`;
 										break;
 									}
 								}
 							}
 							lib.configMenu.appearence.config.image_background.item[link] = name2;
-							var callback = function () {
+							const callback = () => {
 								lib.config.customBackgroundPack.add(link);
 								game.saveConfig("customBackgroundPack", lib.config.customBackgroundPack);
 								processedFiles++;
@@ -350,25 +350,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								loadBackgroundImages(container);
 							};
 							if (game.writeFile) {
-								game.writeFile(file2, "image/background", link + ".jpg", callback);
+								game.writeFile(file2, "image/background", `${link}.jpg`, callback);
 							} else {
 								game.putDB("image", link, file2, callback);
 							}
 						}
 					});
 				};
-				var editItem = ui.create.div(".backgrounds", container);
+				const editItem = ui.create.div(".backgrounds", container);
 				ui.create.div(".buttontext", "编辑背景", editItem);
-				var editbg = function () {
+				const editbg = function () {
 					this.classList.toggle("active");
-					var items = Array.from(container.querySelectorAll(".backgrounds"));
-					items.slice(0, Math.max(0, items.length - 2)).forEach(function (item) {
-						var fname = item.dataset.name;
+					const items = Array.from(container.querySelectorAll(".backgrounds"));
+					const self = this;
+					items.slice(0, Math.max(0, items.length - 2)).forEach((item) => {
+						const fname = item.dataset.name;
 						if (!fname) return;
-						var textDiv = item.querySelector(".buttontext");
+						const textDiv = item.querySelector(".buttontext");
 						if (!textDiv) return;
-						var str;
-						if (this.classList.contains("active")) {
+						let str;
+						if (self.classList.contains("active")) {
 							if (fname.startsWith("custom_") || fname.startsWith("cdv_")) {
 								str = "删除";
 							} else {
@@ -378,7 +379,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							str = lib.configMenu.appearence.config.image_background.item[fname] || fname;
 						}
 						textDiv.innerHTML = str;
-					}.bind(this));
+					});
 				};
 				editItem.addEventListener("click", function () {
 					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
@@ -392,7 +393,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				menuPopup = null;
 			}
 		}
-		menuBtn.onclick = function () {
+		menuBtn.onclick = () => {
 			if (menuPopup) {
 				closeMenu();
 			} else {
@@ -401,7 +402,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		};
 	}
 	// 初始化
-	lib.arenaReady.push(function () {
+	lib.arenaReady.push(() => {
 		// 更新轮次
 		const originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
@@ -530,15 +531,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				confirm.update();
 			};
 			// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
-			(function () {
-				var originalCancel = ui.click.cancel;
+			(() => {
+				const originalCancel = ui.click.cancel;
 				ui.click.cancel = function (node) {
-					var event = _status.event;
-					if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)) {
+					const event = _status.event;
+					if (event && _status.event.type === "phase" && ui.confirm && !event.skill && (ui.selected.cards.length !== 0 || ui.selected.targets.length !== 0)) {
 						ui.confirm.classList.add("removing");
 						event.restore();
-						var cards = event.player.getCards("hej");
-						for (var i = 0; i < cards.length; i++) {
+						const cards = event.player.getCards("hej");
+						for (let i = 0; i < cards.length; i++) {
 							cards[i].recheck("useSkill");
 						}
 						game.uncheck();

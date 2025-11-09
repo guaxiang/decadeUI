@@ -1,4 +1,4 @@
-(function () {
+(() => {
 	window.dui = window.dui || {};
 	dui.dragThreshold = 5;
 	dui.cardMargin = 8;
@@ -8,10 +8,12 @@
 	dui.originalPointerEvents = null;
 	dui.isMobileDevice = navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad|Mobile)/i);
 	dui.evts = dui.isMobileDevice ? ["touchstart", "touchmove", "touchend"] : ["mousedown", "mousemove", "mouseup"];
-	dui.init = async function () {
+
+	dui.init = async () => {
 		await dui.initCardDragSwap();
 	};
-	dui.getTransformValues = async function (element) {
+
+	dui.getTransformValues = async (element) => {
 		return new Promise((resolve) => {
 			requestAnimationFrame(() => {
 				try {
@@ -24,20 +26,21 @@
 			});
 		});
 	};
-	dui.updateHandLayout = async function () {
+
+	dui.updateHandLayout = async () => {
 		return new Promise((resolve) => {
 			requestAnimationFrame(() => {
-				if (window.dui && dui.layout && typeof dui.layout.updateHand === "function") {
+				if (typeof window.dui?.layout?.updateHand === "function") {
 					dui.layout.updateHand();
 				}
 				resolve();
 			});
 		});
 	};
-	dui.getCardElement = function (target) {
-		return target ? target.closest(".card") : null;
-	};
-	dui.setCardTransform = async function (card, tx, ty, scale) {
+
+	dui.getCardElement = (target) => target?.closest(".card") ?? null;
+
+	dui.setCardTransform = async (card, tx, ty, scale) => {
 		if (!card || typeof tx !== "number" || typeof ty !== "number") return;
 		return new Promise((resolve) => {
 			requestAnimationFrame(() => {
@@ -50,18 +53,17 @@
 			});
 		});
 	};
-	dui.dragCardStart = async function (e) {
+	dui.dragCardStart = async (e) => {
 		if (e.button === 2) return;
 		const cardElement = dui.getCardElement(e.target);
 		if (!cardElement) return;
-		const touch = e.touches ? e.touches[0] : e;
-		const startX = touch.clientX;
-		const startY = touch.clientY;
+		const touch = e.touches?.[0] ?? e;
+		const { clientX: startX, clientY: startY } = touch;
 		const transformValues = await dui.getTransformValues(cardElement);
 		dui.sourceNode = cardElement;
 		Object.assign(cardElement, {
-			startX: startX,
-			startY: startY,
+			startX,
+			startY,
 			initialTranslateX: transformValues.translateX,
 			initialTranslateY: transformValues.translateY,
 			scale: transformValues.scale,
@@ -71,12 +73,11 @@
 		document.addEventListener(dui.evts[1], dui.dragCardMove, { passive: false });
 		document.addEventListener(dui.evts[2], dui.dragCardEnd, { passive: false });
 	};
-	dui.dragCardMove = async function (e) {
+	dui.dragCardMove = async (e) => {
 		const sourceCard = dui.sourceNode;
 		if (!sourceCard) return;
-		const touch = e.touches ? e.touches[0] : e;
-		const currentX = touch.clientX;
-		const currentY = touch.clientY;
+		const touch = e.touches?.[0] ?? e;
+		const { clientX: currentX, clientY: currentY } = touch;
 		const dx = currentX - sourceCard.startX;
 		const dy = currentY - sourceCard.startY;
 		if (!dui.isDragging) {
@@ -94,7 +95,7 @@
 			}
 		}
 		if (dui.isDragging) {
-			const zoomFactor = (window.game && game.documentZoom) || 1;
+			const zoomFactor = window.game?.documentZoom ?? 1;
 			const newTranslateX = sourceCard.initialTranslateX + dx / zoomFactor;
 			sourceCard.style.transform = `translate(${newTranslateX}px, ${sourceCard.initialTranslateY}px) scale(${sourceCard.scale})`;
 			const pointElement = document.elementFromPoint(touch.pageX, touch.pageY);
@@ -105,13 +106,13 @@
 			}
 		}
 	};
-	dui.swapCardPosition = async function (sourceCard, targetCard) {
+	dui.swapCardPosition = async (sourceCard, targetCard) => {
 		const handContainer = ui.handcards1;
 		const children = Array.from(handContainer.childNodes);
 		const sourceIndex = children.indexOf(sourceCard);
 		const targetIndex = children.indexOf(targetCard);
 		if (sourceIndex === -1 || targetIndex === -1) return;
-		const cardScale = (window.dui && dui.boundsCaches && dui.boundsCaches.hand && dui.boundsCaches.hand.cardScale) || 1;
+		const cardScale = window.dui?.boundsCaches?.hand?.cardScale ?? 1;
 		const isMovingLeft = sourceIndex > targetIndex;
 		handContainer.insertBefore(sourceCard, isMovingLeft ? targetCard : targetCard.nextSibling);
 		const sourceTx = sourceCard.tx;
@@ -135,7 +136,7 @@
 		await Promise.all(updatePromises);
 		await dui.updateHandLayout();
 	};
-	dui.dragCardEnd = async function (e) {
+	dui.dragCardEnd = async (e) => {
 		const sourceCard = dui.sourceNode;
 		if (!sourceCard) return;
 		if (dui.isDragging) {
@@ -147,7 +148,7 @@
 		}
 		Object.assign(sourceCard.style, {
 			transition: "",
-			pointerEvents: dui.originalPointerEvents || "",
+			pointerEvents: dui.originalPointerEvents ?? "",
 			opacity: "1",
 			zIndex: "",
 		});
@@ -158,10 +159,10 @@
 		dui.isDragging = false;
 		await dui.updateHandLayout();
 	};
-	dui.ensureCardPositions = async function () {
-		if (!ui || !ui.handcards1) return;
+	dui.ensureCardPositions = async () => {
+		if (!ui?.handcards1) return;
 		const cards = ui.handcards1.querySelectorAll(".card");
-		const positionPromises = Array.from(cards).map(async card => {
+		const positionPromises = Array.from(cards).map(async (card) => {
 			if (typeof card.tx === "undefined" || typeof card.ty === "undefined") {
 				const { translateX, translateY } = await dui.getTransformValues(card);
 				card.tx = translateX;
@@ -170,8 +171,9 @@
 		});
 		await Promise.all(positionPromises);
 	};
-	dui.initCardDragSwap = async function () {
-		if (!ui || !ui.handcards1) {
+
+	dui.initCardDragSwap = async () => {
+		if (!ui?.handcards1) {
 			setTimeout(() => dui.initCardDragSwap(), 1000);
 			return;
 		}
@@ -180,11 +182,13 @@
 		handContainer.addEventListener(dui.evts[0], dui.dragCardStart, { passive: false });
 		await dui.ensureCardPositions();
 	};
-	async function onReady() {
+
+	const onReady = async () => {
 		setTimeout(async () => {
 			await dui.init();
 		}, 1000);
-	}
+	};
+
 	if (document.readyState === "complete") {
 		onReady();
 	} else {

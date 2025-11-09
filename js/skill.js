@@ -1,7 +1,6 @@
 ﻿"use strict";
-decadeModule.import(function (lib, game, ui, get, ai, _status) {
+decadeModule.import((lib, game, ui, get, ai, _status) => {
 	decadeUI.animateSkill = {
-		//涉及game.start自定义brawl模式无法播放开局动画，故搬运到此处做成技能播放
 		mx_start: {
 			trigger: {
 				global: "gameDrawAfter",
@@ -20,15 +19,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const animation = decadeUI.animation;
 				const bounds = animation.getSpineBounds(effectName);
 				if (!bounds) return;
-				const sz = bounds.size;
-				const scale = Math.min(animation.canvas.width / sz.x, animation.canvas.height / sz.y) * scaleFactor;
+				const { size } = bounds;
+				const scale = Math.min(animation.canvas.width / size.x, animation.canvas.height / size.y) * scaleFactor;
 				animation.playSpine({
 					name: effectName,
-					scale: scale,
+					scale,
 				});
 			},
 		},
-		//龙头
 		mx_longLevel: {
 			trigger: {
 				global: "gameStart",
@@ -91,7 +89,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				});
 			},
 		},
-		//属性赋予
 		decadeUI_usecardBegin: {
 			trigger: {
 				global: "useCardBegin",
@@ -101,13 +98,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			priority: -100,
 			silent: true,
 			filter(event) {
-				return !ui.clear.delay && event.card.name != "wuxie";
+				return !ui.clear.delay && event.card.name !== "wuxie";
 			},
 			async content(event, trigger, player) {
 				ui.clear.delay = "usecard";
 			},
 		},
-		//击杀特效
 		decadeUI_dieKillEffect: {
 			trigger: {
 				source: ["dieBegin"],
@@ -123,7 +119,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			async content(event, trigger, player) {
 				if (!(trigger.source && trigger.player)) return;
 				game.broadcastAll(
-					function (source, player) {
+					(source, player) => {
 						if (!window.decadeUI) return;
 						decadeUI.effect.kill(source, player);
 					},
@@ -146,11 +142,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			silent: true,
 			priority: -100,
 			filter(event) {
-				return ui.clear.delay === "usecard" && event.card.name != "wuxie";
+				return ui.clear.delay === "usecard" && event.card.name !== "wuxie";
 			},
 			async content(event, trigger, player) {
 				ui.clear.delay = false;
-				game.broadcastAll(function () {
+				game.broadcastAll(() => {
 					ui.clear();
 				});
 			},
@@ -160,32 +156,30 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				global: ["discardAfter", "loseToDiscardpileAfter", "loseAsyncAfter"],
 			},
 			filter(event) {
-				return ui.todiscard[event.discardid] ? true : false;
+				return !!ui.todiscard[event.discardid];
 			},
 			forced: true,
 			silent: true,
 			popup: false,
 			priority: -100,
 			async content(event, trigger, player) {
-				game.broadcastAll(function (id) {
+				game.broadcastAll((id) => {
 					if (window.decadeUI) {
 						ui.todiscard = [];
 						ui.clear();
 						return;
 					}
-					var todiscard = ui.todiscard[id];
+					const todiscard = ui.todiscard[id];
 					delete ui.todiscard[id];
 					if (todiscard) {
-						var time = 1000;
-						if (typeof todiscard._discardtime == "number") {
+						let time = 1000;
+						if (typeof todiscard._discardtime === "number") {
 							time += todiscard._discardtime - get.time();
 						}
-						if (time < 0) {
-							time = 0;
-						}
-						setTimeout(function () {
-							for (var i = 0; i < todiscard.length; i++) {
-								todiscard[i].delete();
+						time = Math.max(0, time);
+						setTimeout(() => {
+							for (const card of todiscard) {
+								card.delete();
 							}
 						}, time);
 					}
@@ -200,13 +194,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 			async content(event, trigger, player) {
 				await player.draw();
-				var cards = Array.from(ui.ordering.childNodes);
+				const cards = Array.from(ui.ordering.childNodes);
 				while (cards.length) {
 					cards.shift().discard();
 				}
-				var evt = _status.event.getParent("phase", true);
+				const evt = _status.event.getParent("phase", true);
 				if (evt) {
-					if (window.decadeUI && decadeUI.eventDialog) {
+					if (window.decadeUI?.eventDialog) {
 						decadeUI.eventDialog.finished = true;
 						decadeUI.eventDialog.finishing = false;
 						decadeUI.eventDialog = undefined;
@@ -227,16 +221,16 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			contentx: [
 				async (event, trigger, player) => {
 					event.pingcai_delayed = true;
-					var name = lib.skill.xinfu_pingcai_backup.takara;
+					const name = lib.skill.xinfu_pingcai_backup.takara;
 					event.cardname = name;
 					event.videoId = lib.status.videoId++;
 					if (player.isUnderControl()) {
 						game.swapPlayerAuto(player);
 					}
-					var switchToAuto = function () {
+					const switchToAuto = () => {
 						game.pause();
 						game.countChoose();
-						event.timeout = setTimeout(function () {
+						event.timeout = setTimeout(() => {
 							_status.imchoosing = false;
 							event._result = {
 								bool: true,
@@ -244,41 +238,38 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							game.resume();
 						}, 9000);
 					};
-					var createDialog = function (player, id, name) {
-						if (player == game.me) return;
-						var dialog = ui.create.dialog("forcebutton", "hidden");
-						var str = get.translation(player) + "正在擦拭宝物上的灰尘…";
-						var canSkip = !_status.connectMode;
+					const createDialog = (player, id, name) => {
+						if (player === game.me) return;
+						const dialog = ui.create.dialog("forcebutton", "hidden");
+						const canSkip = !_status.connectMode;
+						let str = `${get.translation(player)}正在擦拭宝物上的灰尘…`;
 						if (canSkip) str += "<br>（点击宝物可以跳过等待AI操作）";
-						dialog.textPrompt = dialog.add('<div class="text center">' + str + "</div>");
-						dialog.classList.add("fixed");
-						dialog.classList.add("scroll1");
-						dialog.classList.add("scroll2");
-						dialog.classList.add("fullwidth");
-						dialog.classList.add("fullheight");
-						dialog.classList.add("noupdate");
+						dialog.textPrompt = dialog.add(`<div class="text center">${str}</div>`);
+						dialog.classList.add("fixed", "scroll1", "scroll2", "fullwidth", "fullheight", "noupdate");
 						dialog.videoId = id;
-						var canvas2 = document.createElement("canvas");
+						const canvas2 = document.createElement("canvas");
 						dialog.canvas_viewer = canvas2;
 						dialog.appendChild(canvas2);
 						canvas2.classList.add("grayscale");
-						canvas2.style.position = "absolute";
-						canvas2.style.width = "249px";
-						canvas2.style.height = "249px";
-						canvas2.style["border-radius"] = "6px";
-						canvas2.style.left = "calc(50% - 125px)";
-						canvas2.style.top = "calc(50% - 125px)";
+						Object.assign(canvas2.style, {
+							position: "absolute",
+							width: "249px",
+							height: "249px",
+							borderRadius: "6px",
+							left: "calc(50% - 125px)",
+							top: "calc(50% - 125px)",
+							border: "3px solid",
+						});
 						canvas2.width = 249;
 						canvas2.height = 249;
-						canvas2.style.border = "3px solid";
-						var ctx2 = canvas2.getContext("2d");
-						var img = new Image();
-						img.src = lib.assetURL + "image/card/" + name + ".png";
-						img.onload = function () {
-							ctx2.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas2.width, canvas2.height);
+						const ctx2 = canvas2.getContext("2d");
+						const img = new Image();
+						img.src = `${lib.assetURL}image/card/${name}.png`;
+						img.onload = () => {
+							ctx2.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas2.width, canvas2.height);
 						};
 						if (canSkip) {
-							var skip = function () {
+							const skip = () => {
 								if (event.pingcai_delayed) {
 									delete event.pingcai_delayed;
 									clearTimeout(event.timeout);
@@ -293,12 +284,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						}
 						dialog.open();
 					};
-					var chooseButton = function (id, name) {
-						var event = _status.event;
+					const chooseButton = (id, name) => {
+						const event = _status.event;
 						_status.xinfu_pingcai_finished = false;
-						var dialog = ui.create.dialog("forcebutton", "hidden");
+						const dialog = ui.create.dialog("forcebutton", "hidden");
 						dialog.textPrompt = dialog.add('<div class="text center">擦拭掉宝物上的灰尘吧！</div>');
-						event.switchToAuto = function () {
+						event.switchToAuto = () => {
 							event._result = {
 								bool: _status.xinfu_pingcai_finished,
 							};
@@ -306,91 +297,72 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							_status.imchoosing = false;
 							_status.xinfu_pingcai_finished = true;
 						};
-						dialog.classList.add("fixed");
-						dialog.classList.add("scroll1");
-						dialog.classList.add("scroll2");
-						dialog.classList.add("fullwidth");
-						dialog.classList.add("fullheight");
-						dialog.classList.add("noupdate");
+						dialog.classList.add("fixed", "scroll1", "scroll2", "fullwidth", "fullheight", "noupdate");
 						dialog.videoId = id;
-						var canvas = document.createElement("canvas");
-						var canvas2 = document.createElement("canvas");
+						const canvas = document.createElement("canvas");
+						const canvas2 = document.createElement("canvas");
 						dialog.appendChild(canvas2);
 						dialog.appendChild(canvas);
-						canvas.style.position = "absolute";
-						canvas.style.width = "249px";
-						canvas.style.height = "249px";
-						canvas.style["border-radius"] = "6px";
-						canvas.style.left = "calc(50% - 125px)";
-						canvas.style.top = "calc(50% - 125px)";
+						const canvasStyle = {
+							position: "absolute",
+							width: "249px",
+							height: "249px",
+							borderRadius: "6px",
+							left: "calc(50% - 125px)",
+							top: "calc(50% - 125px)",
+							border: "3px solid",
+						};
+						Object.assign(canvas.style, canvasStyle);
+						Object.assign(canvas2.style, canvasStyle);
 						canvas.width = 249;
 						canvas.height = 249;
-						canvas.style.border = "3px solid";
-						canvas2.style.position = "absolute";
-						canvas2.style.width = "249px";
-						canvas2.style.height = "249px";
-						canvas2.style["border-radius"] = "6px";
-						canvas2.style.left = "calc(50% - 125px)";
-						canvas2.style.top = "calc(50% - 125px)";
 						canvas2.width = 249;
 						canvas2.height = 249;
-						canvas2.style.border = "3px solid";
-						var ctx = canvas.getContext("2d");
-						var ctx2 = canvas2.getContext("2d");
-						var img = new Image();
-						img.src = lib.assetURL + "image/card/" + name + ".png";
-						img.onload = function () {
-							ctx2.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas2.width, canvas2.height);
+						const ctx = canvas.getContext("2d");
+						const ctx2 = canvas2.getContext("2d");
+						const img = new Image();
+						img.src = `${lib.assetURL}image/card/${name}.png`;
+						img.onload = () => {
+							ctx2.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas2.width, canvas2.height);
 						};
 						ctx.fillStyle = "lightgray";
 						ctx.fillRect(0, 0, canvas.width, canvas.height);
-						canvas.onmousedown = function (ev) {
-							canvas.onmousemove = function (e) {
+						const checkCompletion = () => {
+							const data = ctx.getImageData(canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8).data;
+							let sum = 0;
+							for (let i = 3; i < data.length; i += 4) {
+								if (data[i] === 0) {
+									sum++;
+								}
+							}
+							if (sum >= canvas.width * canvas.height * 0.6 && !_status.xinfu_pingcai_finished) {
+								_status.xinfu_pingcai_finished = true;
+								event.switchToAuto();
+							}
+						};
+						canvas.onmousedown = () => {
+							canvas.onmousemove = (e) => {
 								if (_status.xinfu_pingcai_finished) return;
 								ctx.beginPath();
 								ctx.clearRect(e.offsetX / game.documentZoom - 16, e.offsetY / game.documentZoom - 16, 32, 32);
-								var data = ctx.getImageData(canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8).data;
-								var sum = 0;
-								for (var i = 3; i < data.length; i += 4) {
-									if (data[i] == 0) {
-										sum++;
-									}
-								}
-								if (sum >= canvas.width * canvas.height * 0.6) {
-									if (!_status.xinfu_pingcai_finished) {
-										_status.xinfu_pingcai_finished = true;
-										event.switchToAuto();
-									}
-								}
+								checkCompletion();
 							};
 						};
-						canvas.ontouchstart = function (ev) {
-							canvas.ontouchmove = function (e) {
+						canvas.ontouchstart = () => {
+							canvas.ontouchmove = (e) => {
 								if (_status.xinfu_pingcai_finished) return;
 								ctx.beginPath();
-								var rect = canvas.getBoundingClientRect();
-								var X = ((e.touches[0].clientX / game.documentZoom - rect.left) / rect.width) * canvas.width;
-								var Y = ((e.touches[0].clientY / game.documentZoom - rect.top) / rect.height) * canvas.height;
+								const rect = canvas.getBoundingClientRect();
+								const X = ((e.touches[0].clientX / game.documentZoom - rect.left) / rect.width) * canvas.width;
+								const Y = ((e.touches[0].clientY / game.documentZoom - rect.top) / rect.height) * canvas.height;
 								ctx.clearRect(X - 16, Y - 16, 32, 32);
-								var data = ctx.getImageData(canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8).data;
-								var sum = 0;
-								for (var i = 3; i < data.length; i += 4) {
-									if (data[i] == 0) {
-										sum++;
-									}
-								}
-								if (sum >= canvas.width * canvas.height * 0.6) {
-									if (!_status.xinfu_pingcai_finished) {
-										_status.xinfu_pingcai_finished = true;
-										event.switchToAuto();
-									}
-								}
+								checkCompletion();
 							};
 						};
-						canvas.onmouseup = function (ev) {
+						canvas.onmouseup = () => {
 							canvas.onmousemove = null;
 						};
-						canvas.ontouchend = function (ev) {
+						canvas.ontouchend = () => {
 							canvas.ontouchmove = null;
 						};
 						dialog.open();
@@ -409,14 +381,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					}
 				},
 				async (event, trigger, player) => {
-					var result = event._result || event.result || { bool: false };
+					const result = event._result || event.result || { bool: false };
 					event._result = result;
 					game.broadcastAll(
-						function (id, result, player) {
+						(id, result, player) => {
 							_status.xinfu_pingcai_finished = true;
-							var dialog = get.idDialog(id);
+							const dialog = get.idDialog(id);
 							if (dialog) {
-								dialog.textPrompt.innerHTML = '<div class="text center">' + (get.translation(player) + "擦拭宝物" + (result.bool ? "成功！" : "失败…")) + "</div>";
+								dialog.textPrompt.innerHTML = `<div class="text center">${get.translation(player)}擦拭宝物${result.bool ? "成功！" : "失败…"}</div>`;
 								if (result.bool && dialog.canvas_viewer) dialog.canvas_viewer.classList.remove("grayscale");
 							}
 							if (!_status.connectMode) delete event.pingcai_delayed;
@@ -429,10 +401,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				},
 				async (event, trigger, player) => {
 					game.broadcastAll("closeDialog", event.videoId);
-					if (event._result && event._result.bool) {
-						player.logSkill("pcaudio_" + event.cardname);
+					if (event._result?.bool) {
+						player.logSkill(`pcaudio_${event.cardname}`);
 						event.insert(lib.skill.xinfu_pingcai[event.cardname], {
-							player: player,
+							player,
 						});
 					}
 				}
@@ -455,7 +427,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		dddfenye: {
 			$compareFenye(players, cards1, targets, cards2) {
 				game.broadcast(
-					function (players, cards1, targets, cards2) {
+					(players, cards1, targets, cards2) => {
 						lib.skill.dddfenye.$compareFenye(players, cards1, targets, cards2);
 					},
 					players,
@@ -464,10 +436,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					cards2
 				);
 				game.addVideo("compareFenye", [get.targetsInfo(players), get.cardsInfo(cards1), get.targetsInfo(targets), get.cardsInfo(cards2)]);
-				for (var i = players.length - 1; i >= 0; i--) {
+				for (let i = players.length - 1; i >= 0; i--) {
 					players[i].$throwordered2(cards1[i].copy(false));
 				}
-				for (var i = targets.length - 1; i >= 0; i--) {
+				for (let i = targets.length - 1; i >= 0; i--) {
 					targets[i].$throwordered2(cards2[i].copy(false));
 				}
 			},
@@ -489,7 +461,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				);
 			},
 			$zhuanhuanji(skill, player) {
-				const character = Boolean(player.storage[skill]) ? "caojie" : "liuxie";
+				const character = player.storage[skill] ? "caojie" : "liuxie";
 				const mark = player.marks[skill];
 				if (mark) {
 					mark.setBackground(character, "character");
@@ -501,7 +473,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					{
 						characterName: "liuxiecaojie",
 					},
-					"liuxiecaojie" + (player.storage[skill] ? "_shadow" : "")
+					`liuxiecaojie${player.storage[skill] ? "_shadow" : ""}`
 				);
 			},
 		},
@@ -509,7 +481,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			async content(event, trigger, player) {
 				let num = player.maxHp,
 					cards = get.cards(num, true);
-				await player.showCards(cards, get.translation(player) + "发动了【易城】");
+				await player.showCards(cards, `${get.translation(player)}发动了【易城】`);
 				if (player.countCards("h")) {
 					const sum = cards.reduce((num, card) => num + get.number(card), 0);
 					const {
@@ -525,18 +497,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 								cards,
 								list => {
 									const sum2 = list.reduce((num, card) => num + get.number(card, false), 0);
-									return (
-										"牌堆顶（现" +
-										sum2 +
-										{
-											0: "=",
-											"-1": "<",
-											1: ">",
-										}[get.sgn(sum2 - sum).toString()] +
-										"原" +
-										sum +
-										"）"
-									);
+									const sign = { 0: "=", "-1": "<", 1: ">" }[get.sgn(sum2 - sum).toString()];
+									return `牌堆顶（现${sum2}${sign}原${sum}）`;
 								},
 							],
 							["手牌", player.getCards("h")],
@@ -582,10 +544,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							player.$throw(puts, 1000);
 							await player.lose(puts, ui.special);
 							await player.gain(gains, "gain2");
-							//调整手牌顺序
-							let hs = moved[1].reverse();
-							hs.forEach((i, j) => {
-								player.node.handcards1.insertBefore(hs[j], player.node.handcards1.firstChild);
+							const hs = moved[1].reverse();
+							hs.forEach((card) => {
+								player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild);
 							});
 							dui.queueNextFrameTick(dui.layoutHand, dui);
 							cards = moved[0].slice();
@@ -597,15 +558,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 								game.log(cards, "被放回了牌堆顶");
 								game.updateRoundNumber();
 							}
-							await player.showCards(cards, get.translation(player) + "【易城】第一次交换后");
+							await player.showCards(cards, `${get.translation(player)}【易城】第一次交换后`);
 							if (cards.reduce((num, card) => num + get.number(card), 0) > sum && player.countCards("h")) {
 								const {
 									result: { bool },
-								} = await player.chooseBool("易城：是否使用全部手牌交换" + get.translation(cards) + "？").set(
+								} = await player.chooseBool(`易城：是否使用全部手牌交换${get.translation(cards)}？`).set(
 									"choice",
-									(() => {
-										return cards.reduce((num, card) => num + get.value(card), 0) > player.getCards("h").reduce((num, card) => num + get.value(card), 0);
-									})()
+									cards.reduce((num, card) => num + get.value(card), 0) > player.getCards("h").reduce((num, card) => num + get.value(card), 0)
 								);
 								if (bool) {
 									const hs = player.getCards("h");
@@ -621,7 +580,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 										game.log(cards, "被放回了牌堆顶");
 										game.updateRoundNumber();
 									}
-									await player.showCards(cards, get.translation(player) + "【易城】第二次交换后");
+									await player.showCards(cards, `${get.translation(player)}【易城】第二次交换后`);
 								}
 							}
 						}
@@ -629,17 +588,15 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 			},
 		},
-		//注意：twtanfeng非版本不可用而修改，而是为了适配视为使用XX牌的转化写的以viewAs方法实现效果的技能的“示例”
-		//玩家可以以此chooseToUse为模板，对自己想要实现的“将XX牌当作XX牌使用”的技能写成支持viewAs的模板以实现萌修十周年对viewAs卡牌选中美化的支持
 		twtanfeng: {
 			async content(event, trigger, player) {
-				let choose = player
-					.chooseTarget(get.prompt2("twtanfeng"), function (card, player, target) {
-						return target != player && target.countDiscardableCards(player, "hej") > 0;
+				const choose = player
+					.chooseTarget(get.prompt2("twtanfeng"), (card, player, target) => {
+						return target !== player && target.countDiscardableCards(player, "hej") > 0;
 					})
-					.set("ai", function (target) {
-						var player = _status.event.player,
-							num = 1;
+					.set("ai", (target) => {
+						const player = _status.event.player;
+						let num = 1;
 						if (get.attitude(player, target) > 0) num = 3;
 						else if (!target.countCards("he") || !target.canUse("sha", player)) {
 							if (
@@ -666,14 +623,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						);
 					})
 					.setHiddenSkill("twtanfeng");
-				let { result } = await choose;
-				if (!result || !result.bool) return;
-				let target = result.targets[0];
+				const { result } = await choose;
+				if (!result?.bool) return;
+				const target = result.targets[0];
 				event.target = target;
 				player.logSkill("twtanfeng", target);
 				await player.discardPlayerCard(target, "hej", true);
-				let next = target.chooseToUse();
-				next.set("openskilldialog", "###探锋：选择一张牌当作【杀】对" + get.translation(player) + "使用###或点击“取消”，受到其造成的1点火焰伤害，并令其跳过本回合的一个阶段（准备阶段和结束阶段除外）");
+				const next = target.chooseToUse();
+				next.set("openskilldialog", `###探锋：选择一张牌当作【杀】对${get.translation(player)}使用###或点击"取消"，受到其造成的1点火焰伤害，并令其跳过本回合的一个阶段（准备阶段和结束阶段除外）`);
 				next.set("norestore", true);
 				next.set("_backupevent", "twtanfeng_backup");
 				next.set("custom", {
@@ -685,46 +642,45 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				next.backup("twtanfeng_backup");
 				next.set("targetRequired", true);
 				next.set("complexSelect", true);
-				next.set("filterTarget", function (card, player, target) {
-					if (target != _status.event.sourcex && !ui.selected.targets.includes(_status.event.sourcex)) return false;
-					return lib.filter.targetEnabled.apply(this, arguments);
+				next.set("filterTarget", (card, player, target) => {
+					if (target !== _status.event.sourcex && !ui.selected.targets.includes(_status.event.sourcex)) return false;
+					if (!card) return false;
+					return lib.filter.targetEnabled(card, player, target);
 				});
 				next.set("sourcex", player);
 				next.set("addCount", false);
-				let useRes = await next;
-				if (!useRes || !useRes.bool) {
+				const useRes = await next;
+				if (!useRes?.bool) {
 					player.line(target, "fire");
 					await target.damage(1, "fire");
 				} else {
 					return;
 				}
 				if (!target.isIn()) return;
-				var list = [],
-					list2 = [];
+				const list = [];
+				const list2 = [];
 				event.map = {
 					phaseJudge: "判定阶段",
 					phaseDraw: "摸牌阶段",
 					phaseUse: "出牌阶段",
 					phaseDiscard: "弃牌阶段",
 				};
-				for (var i of ["phaseJudge", "phaseDraw", "phaseUse", "phaseDiscard"]) {
-					if (!player.skipList.includes(i)) {
-						i = event.map[i];
-						list.push(i);
-						if (i != "判定阶段" && i != "弃牌阶段") list2.push(i);
+				for (const phase of ["phaseJudge", "phaseDraw", "phaseUse", "phaseDiscard"]) {
+					if (!player.skipList.includes(phase)) {
+						const phaseName = event.map[phase];
+						list.push(phaseName);
+						if (phaseName !== "判定阶段" && phaseName !== "弃牌阶段") list2.push(phaseName);
 					}
 				}
-				let ctrl = target
+				const ctrl = target
 					.chooseControl(list)
-					.set("prompt", "探锋：令" + get.translation(player) + "跳过一个阶段")
-					.set("ai", function () {
-						return _status.event.choice;
-					})
+					.set("prompt", `探锋：令${get.translation(player)}跳过一个阶段`)
+					.set("ai", () => _status.event.choice)
 					.set(
 						"choice",
-						(function () {
-							var att = get.attitude(target, player);
-							var num = player.countCards("j");
+						(() => {
+							const att = get.attitude(target, player);
+							const num = player.countCards("j");
 							if (att > 0) {
 								if (list.includes("判定阶段") && num > 0) return "判定阶段";
 								return "弃牌阶段";
@@ -734,13 +690,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							return list2.randomGet();
 						})()
 					);
-				let { result: cResult } = await ctrl;
-				for (var i in event.map) {
-					if (event.map[i] == cResult.control) player.skip(i);
+				const { result: cResult } = await ctrl;
+				for (const phase in event.map) {
+					if (event.map[phase] === cResult.control) player.skip(phase);
 				}
 				target.popup(cResult.control);
 				target.line(player);
-				game.log(player, "跳过了", "#y" + cResult.control);
+				game.log(player, "跳过了", `#y${cResult.control}`);
 			},
 			subSkill: {
 				backup: {
@@ -750,9 +706,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					filterCard: true,
 					position: "hes",
 					check(card) {
-						var player = _status.event.player,
-							target = _status.event.getParent().player;
-						var eff = get.effect(
+						const player = _status.event.player;
+						const target = _status.event.getParent().player;
+						const eff = get.effect(
 							target,
 							get.autoViewAs(
 								{
@@ -763,9 +719,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							player,
 							player
 						);
-						var eff2 = get.damageEffect(player, target, player, "fire");
+						const eff2 = get.damageEffect(player, target, player, "fire");
 						if (eff < 0 || eff2 > 0 || eff2 > eff || get.tag(card, "recover")) return 0;
-						return (player.hp == 1 ? 10 : 6) - get.value(card);
+						return (player.hp === 1 ? 10 : 6) - get.value(card);
 					},
 				},
 			},
@@ -809,10 +765,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						return [cards];
 					});
 					const result = await next.forResult();
-					if (!result || !result.bool) return;
-					let hs = result.moved[0].reverse();
-					hs.forEach((i, j) => {
-						player.node.handcards1.insertBefore(hs[j], player.node.handcards1.firstChild);
+					if (!result?.bool) return;
+					const hs = result.moved[0].reverse();
+					hs.forEach((card) => {
+						player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild);
 					});
 					dui.queueNextFrameTick(dui.layoutHand, dui);
 				},
@@ -834,30 +790,21 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		}
 	};
 	if (!_status.connectMode) {
-		for (var key in decadeUI.animateSkill) {
+		for (const key of Object.keys(decadeUI.animateSkill)) {
 			lib.skill[key] = decadeUI.animateSkill[key];
 			game.addGlobalSkill(key);
 		}
-		for (var key in decadeUI.skill) {
-			/*if (lib.skill[key]) */
-			lib.skill[key] = decadeUI.skill[key];
-		}
-		for (var key in decadeUI.inheritSkill) {
+		Object.assign(lib.skill, decadeUI.skill);
+		for (const key of Object.keys(decadeUI.inheritSkill)) {
 			if (lib.skill[key]) {
-				for (var j in decadeUI.inheritSkill[key]) {
-					lib.skill[key][j] = decadeUI.inheritSkill[key][j];
-				}
+				Object.assign(lib.skill[key], decadeUI.inheritSkill[key]);
 			}
 		}
-		for (const key in decadeUI.inheritSubSkill) {
-			if (lib.skill[key]) {
-				if (!lib.skill[key].subSkill) continue;
-				for (const j in decadeUI.inheritSubSkill[key]) {
-					if (!lib.skill[key].subSkill[j]) continue;
-					for (const k in decadeUI.inheritSubSkill[key][j]) {
-						lib.skill[key].subSkill[j][k] = decadeUI.inheritSubSkill[key][j][k];
-					}
-				}
+		for (const key of Object.keys(decadeUI.inheritSubSkill)) {
+			if (!lib.skill[key]?.subSkill) continue;
+			for (const j of Object.keys(decadeUI.inheritSubSkill[key])) {
+				if (!lib.skill[key].subSkill[j]) continue;
+				Object.assign(lib.skill[key].subSkill[j], decadeUI.inheritSubSkill[key][j]);
 			}
 		}
 	}

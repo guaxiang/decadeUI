@@ -1,10 +1,10 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
-	var plugin = {
+	const plugin = {
 		name: "skill",
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			this.initCreateMethods();
 			this.initUpdateMethods();
@@ -41,7 +41,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 		},
 		createSkillControl() {
-			const isRightLayout = lib.config["extension_十周年UI_rightLayout"] == "on";
+			const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
 			const className = isRightLayout ? ".skill-control" : ".skill-controlzuoshou";
 			const node = ui.create.div(className, ui.arena);
 			node.node = {
@@ -208,10 +208,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const className = lib.skill[item.id].limited ? ".xiandingji.enable-skill" : ".skillitem.enable-skill";
 				const node = ui.create.div(className, this.node.combined, skillName);
 				node.dataset.id = item.id;
-				
+
 				// 添加技能图标
 				this.addSkillIcon(node, item.id);
-				
+
 				node.addEventListener("click", () => {
 					if (lib.config["extension_十周年UI_bettersound"]) game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 				});
@@ -223,7 +223,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const skillName = get.translation(item.name).slice(0, 2);
 				const node = ui.create.div(".skillitem.trigger-skill", this.node.combined, skillName);
 				node.dataset.id = item.id;
-				
+
 				// 添加技能图标
 				this.addSkillIcon(node, item.id);
 			},
@@ -284,9 +284,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			addSkillIcon(node, skillId) {
 				const info = lib.skill[skillId];
 				if (!info) return;
-				
+
 				node.style.position = "relative";
-				
+
 				// 限定技图标
 				if (info.limited || (info.intro && info.intro.content === "limited")) {
 					const xiandingImg = document.createElement("img");
@@ -299,7 +299,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					xiandingImg.style.height = "16px";
 					node.appendChild(xiandingImg);
 				}
-				
+
 				// 觉醒技图标
 				if (info.juexingji || info.dutySkill) {
 					const juexingImg = document.createElement("img");
@@ -312,7 +312,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					juexingImg.style.height = "16px";
 					node.appendChild(juexingImg);
 				}
-				
+
 				// 转换技图标
 				if (info.zhuanhuanji) {
 					const player = game.me;
@@ -321,10 +321,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (markNode && markNode.classList.contains("yin")) {
 						imgType = "ying";
 					}
-					
+
 					const zhuanhuanImg = document.createElement("img");
 					zhuanhuanImg.className = "skill-zhuanhuan-icon";
-					zhuanhuanImg.src = imgType === "yang" 
+					zhuanhuanImg.src = imgType === "yang"
 						? "extension/十周年UI/shoushaUI/skill/babysha/mark_yanghs.png"
 						: "extension/十周年UI/shoushaUI/skill/babysha/mark_yinghs.png";
 					zhuanhuanImg.style.position = "absolute";
@@ -510,9 +510,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						.filter(item => item && typeof item === "string")
 						.map(item => {
 							if (item.startsWith("#")) {
-								return "<br><div>" + item.substr(1) + "</div>";
+								return `<br><div>${item.substr(1)}</div>`;
 							}
-							return "<div>" + item + "</div>";
+							return `<div>${item}</div>`;
 						})
 						.join("");
 					this.node.extra.classList.toggle("unshow", !str);
@@ -587,7 +587,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		updateMark(player) {
 			const equipHeight = player.node.equips.childNodes.length * 22;
 			const bottomValue = Math.max(88, equipHeight) * 0.8 + 1.6;
-			player.node.marks.style.bottom = bottomValue + "px";
+			player.node.marks.style.bottom = `${bottomValue}px`;
 		},
 	};
 	return plugin;

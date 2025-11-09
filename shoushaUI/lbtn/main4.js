@@ -121,11 +121,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		// 获取当前游戏模式
 		getCurrentMode() {
-			if (lib.configOL.doudizhu_mode || lib.config.mode == "doudizhu") return "doudizhu";
-			if (lib.configOL.single_mode || lib.config.mode == "single") return "single";
-			if (lib.configOL.boss_mode || lib.config.mode == "boss") return "boss";
-			if (lib.configOL.guozhan_mode || lib.config.mode == "guozhan") return "guozhan";
-			if (lib.configOL.versus_mode || lib.config.mode == "versus") return "versus";
+			if (lib.configOL.doudizhu_mode || lib.config.mode === "doudizhu") return "doudizhu";
+			if (lib.configOL.single_mode || lib.config.mode === "single") return "single";
+			if (lib.configOL.boss_mode || lib.config.mode === "boss") return "boss";
+			if (lib.configOL.guozhan_mode || lib.config.mode === "guozhan") return "guozhan";
+			if (lib.configOL.versus_mode || lib.config.mode === "versus") return "versus";
 			return "identity";
 		},
 		// 格式化时间
@@ -133,7 +133,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			const hours = Math.floor(seconds / 3600);
 			const minutes = Math.floor((seconds - hours * 3600) / 60);
 			const secs = seconds - hours * 3600 - minutes * 60;
-			return (hours > 0 ? (hours < 10 ? "0" + hours : hours) + ":" : "") + (minutes < 10 ? "0" + minutes : minutes) + ":" + (secs < 10 ? "0" + secs : secs);
+			const hoursStr = hours > 0 ? `${hours < 10 ? "0" : ""}${hours}:` : "";
+			const minutesStr = `${minutes < 10 ? "0" : ""}${minutes}`;
+			const secsStr = `${secs < 10 ? "0" : ""}${secs}`;
+			return `${hoursStr}${minutesStr}:${secsStr}`;
 		},
 	};
 	/*预留的接口
@@ -154,27 +157,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}, str.slice(6));
 		} else originalChat.call(this, id, str);
 	};
-	const originalSystem = ui.create.system;
-	game.system = {};
-	ui.create.system = function (str, func, right, before) {
-		//修改本体的创建菜单栏函数，使其添加到菜单栏
-		var node = originalSystem(str, func, right, before);
-		game.system[str] = {
-			name: str,
-		};
-		if (func) game.system[str].click = func;
-		return node;
-	};
 	// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
 	(function () {
-		var originalCancel = ui.click.cancel;
+		const originalCancel = ui.click.cancel;
 		ui.click.cancel = function (node) {
-			var event = _status.event;
-			if (event && _status.event.type == "phase" && ui.confirm && !event.skill && (ui.selected.cards.length != 0 || ui.selected.targets.length != 0)) {
+			const event = _status.event;
+			if (event && _status.event.type === "phase" && ui.confirm && !event.skill && (ui.selected.cards.length !== 0 || ui.selected.targets.length !== 0)) {
 				ui.confirm.classList.add("removing");
 				event.restore();
-				var cards = event.player.getCards("hej");
-				for (var i = 0; i < cards.length; i++) {
+				const cards = event.player.getCards("hej");
+				for (let i = 0; i < cards.length; i++) {
 					cards[i].recheck("useSkill");
 				}
 				game.uncheck();
@@ -285,8 +277,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 				let gou = ui.create.div(".gou", anniu);
 				let seat = tar.getSeatNum();
-				let targets = game.players.concat(game.dead).filter(function (current) {
-					return current.getSeatNum() == seat;
+				const targets = game.players.concat(game.dead).filter(function (current) {
+					return current.getSeatNum() === seat;
 				});
 				if (targets.length) {
 					let current = targets[0];
@@ -323,12 +315,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					clonedSidebar.scrollTop = clonedSidebar.scrollHeight - clonedSidebar.clientHeight;
 				}
 			}
-			let prefixName = lib.translate[tar.name + "_prefix"] ? `${get.prefixSpan(get.translation(tar.name + "_prefix"), tar.name)}${get.rawName(tar.name)}` : get.translation(tar.name);
-			let seatnum = "(" + (tar.getSeatNum() == 2 ? "二" : get.cnNumber(tar.getSeatNum())) + "号位)";
-			let name = ui.create.div(".name", prefixName + seatnum, namebgbg, function (event) {
+			const prefixName = lib.translate[tar.name + "_prefix"] ? `${get.prefixSpan(get.translation(tar.name + "_prefix"), tar.name)}${get.rawName(tar.name)}` : get.translation(tar.name);
+			const seatnum = `(${tar.getSeatNum() === 2 ? "二" : get.cnNumber(tar.getSeatNum())}号位)`;
+			const name = ui.create.div(".name", prefixName + seatnum, namebgbg, function (event) {
 				change(event);
 			});
-			let anniu = ui.create.div(".jiluanniu", namebg, function (event) {
+			const anniu = ui.create.div(".jiluanniu", namebg, function (event) {
 				change(event);
 			});
 		}
@@ -365,7 +357,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						ye: "击败场上所有其他角色",
 					};
 					for (let i = 0; i < lib.group.length; i++) {
-						config[lib.group[i]] = "击败所有非" + get.translation(lib.group[i]) + "势力角色";
+						config[lib.group[i]] = `击败所有非${get.translation(lib.group[i])}势力角色`;
 					}
 					return config;
 				},
@@ -374,7 +366,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (versusMode === "standard") return {};
 					if (versusMode === "two") {
 						return {
-							undefined: "" + (get.config("replace_character_two") ? "击败所有敌方" : "协同队友击败所有敌人") + "",
+							undefined: get.config("replace_character_two") ? "击败所有敌方" : "协同队友击败所有敌人",
 						};
 					}
 					if (versusMode === "jiange") {
@@ -384,9 +376,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						};
 					}
 					if (versusMode === "siguo") {
-						let config = {};
+						const config = {};
 						for (let i = 0; i < lib.group.length; i++) {
-							config[lib.group[i]] = "获得龙船或击败非" + get.translation(lib.group[i]) + "势力角色";
+							config[lib.group[i]] = `获得龙船或击败非${get.translation(lib.group[i])}势力角色`;
 						}
 						return config;
 					}
@@ -411,21 +403,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		};
 		const buildIdentityString = () => {
 			let str = "";
-			if (lib.config.mode == "guozhan" || (lib.config.mode == "versus" && get.config("versus_mode") == "siguo") || (lib.config.mode == "versus" && get.config("versus_mode") == "jiange")) {
+			if (lib.config.mode === "guozhan" || (lib.config.mode === "versus" && get.config("versus_mode") === "siguo") || (lib.config.mode === "versus" && get.config("versus_mode") === "jiange")) {
 				const identities = ["unknown", "wei", "shu", "wu", "qun", "jin", "ye", "key"];
 				const identityCounts = {};
 				for (let identity of identities) {
 					identityCounts[identity] = game.countPlayer(current => {
 						return current.identity === identity;
 					});
-					str += '<font color="' + CONSTANTS.IDENTITY_COLORS[identity] + '">' + get.translation(identity) + identityCounts[identity] + "</font>" + " ";
+					str += `<font color="${CONSTANTS.IDENTITY_COLORS[identity]}">${get.translation(identity)}${identityCounts[identity]}</font> `;
 				}
 				str += "<br>";
-			} else if ((lib.config.mode == "versus" && get.config("versus_mode") == "two") || lib.config.mode == "doudizhu") {
+			} else if ((lib.config.mode === "versus" && get.config("versus_mode") === "two") || lib.config.mode === "doudizhu") {
 				// 空实现
 			} else {
 				for (let [key, info] of Object.entries(CONSTANTS.IDENTITY_INFO)) {
-					let count = game.countPlayer(current => info.aliases.includes(current.identity));
+					const count = game.countPlayer(current => info.aliases.includes(current.identity));
 					str += `<font color="${info.color}">${get.translation(key)}</font>${count}  `;
 				}
 				str += "<br>";
@@ -435,21 +427,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		const updateIdentityShow = () => {
 			updatePlayerNicknames();
 			//左上角整体（身份任务及牌局记录）
-			var identityShow = ui.identityShow;
-			var str = buildIdentityString();
-			if (game.me) str += '<span style="color: orange;"><center>' + get.translation(game.me.identity + "_win_option") + "</span>";
-			if (lib.config.mode == "taixuhuanjing") {
+			const identityShow = ui.identityShow;
+			let str = buildIdentityString();
+			if (game.me) str += `<span style="color: orange;"><center>${get.translation(game.me.identity + "_win_option")}</span>`;
+			if (lib.config.mode === "taixuhuanjing") {
 				game.gamePremise = function () {
 					return;
 				};
-				str = '<span style="color: orange;"><center>' + _status.TaiXuHuanJingGame.premise + "" + "</span>";
+				str = `<span style="color: orange;"><center>${_status.TaiXuHuanJingGame.premise}</span>`;
 			}
-			identityShow.innerHTML = '<span style="font-family:shousha;font-size:16px;font-weight:500;text-align:right;line-height:20px;color:#C1AD92;text-shadow:none;max-width:20px;word-wrap:break-word;">' + str + "</span>";
-			let jiluShow = ui.create.div(".jiluButton", identityShow, ui.click.pause);
+			identityShow.innerHTML = `<span style="font-family:shousha;font-size:16px;font-weight:500;text-align:right;line-height:20px;color:#C1AD92;text-shadow:none;max-width:20px;word-wrap:break-word;">${str}</span>`;
+			const jiluShow = ui.create.div(".jiluButton", identityShow, ui.click.pause);
 		};
 		// 初始化
 		setupModeConfigs();
-		if (ui.identityShow == undefined) {
+		if (ui.identityShow === undefined) {
 			ui.identityShow = ui.create.div(".identityShow", "身份加载中......", ui.window);
 		}
 		ui.identityShow_update = updateIdentityShow;
@@ -466,7 +458,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		};
 		const openMenuPopup = () => {
 			Utils.playAudio(CONSTANTS.AUDIO.CLICK);
-			var popuperContainer = ui.create.div(".popup-container", ui.window);
+			const popuperContainer = ui.create.div(".popup-container", ui.window);
 			popuperContainer.addEventListener("click", event => {
 				Utils.playAudio(CONSTANTS.AUDIO.BACK);
 				event.stopPropagation();
@@ -514,20 +506,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			addSystemMenuItems(container);
 		};
 		const openBackgroundSelector = () => {
-			var popuperContainer = ui.create.div(
+			const popuperContainer = ui.create.div(
 				".popup-container",
 				{
 					background: "rgba(0, 0, 0, 0.8)",
 				},
 				ui.window
 			);
-			var guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
+			const guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
 				Utils.playAudio(CONSTANTS.AUDIO.CAIDAN);
 				popuperContainer.hide();
 				game.resume2();
 			});
-			var bigdialog = ui.create.div(".bgdialog", popuperContainer);
-			var bgbg = ui.create.div(".backgroundsbg", bigdialog);
+			const bigdialog = ui.create.div(".bgdialog", popuperContainer);
+			const bgbg = ui.create.div(".backgroundsbg", bigdialog);
 			loadBackgroundImages(bgbg);
 		};
 		const loadBackgroundImages = container => {
@@ -543,28 +535,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (fileName.startsWith("custom_")) {
 					game.getDB("image", fileName, function (fileToLoad) {
 						if (fileToLoad) {
-							var fileReader = new FileReader();
+							const fileReader = new FileReader();
 							fileReader.onload = function (fileLoadedEvent) {
-								var data = fileLoadedEvent.target.result;
-								img.style.backgroundImage = "url(" + data + ")";
+								const data = fileLoadedEvent.target.result;
+								img.style.backgroundImage = `url(${data})`;
 								img.style.backgroundSize = "cover";
 							};
 							fileReader.readAsDataURL(fileToLoad, "UTF-8");
 						}
 					});
 				} else {
-					img.setBackgroundImage("image/background/" + fileName + ".jpg");
+					img.setBackgroundImage(`image/background/${fileName}.jpg`);
 				}
 
-				if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
+				if (fileName === lib.config.image_background) ui.create.div(".bgxuanzhong", img);
 
 				img.addEventListener("click", function () {
-					var editItem = container.querySelector(".backgrounds:last-child");
-					var isEditMode = editItem && editItem.classList.contains("active");
+					const editItem = container.querySelector(".backgrounds:last-child");
+					const isEditMode = editItem && editItem.classList.contains("active");
 					if (isEditMode) {
 						Utils.playAudio(CONSTANTS.AUDIO.BUTTON);
-						var textDiv = this.querySelector(".buttontext");
-						if (textDiv && textDiv.innerHTML == "隐藏") {
+						const textDiv = this.querySelector(".buttontext");
+						if (textDiv && textDiv.innerHTML === "隐藏") {
 							container.parentNode.noclose = true;
 							this.remove();
 							if (!lib.config.prompt_hidebg) {
@@ -574,7 +566,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							lib.config.hiddenBackgroundPack.add(fileName);
 							game.saveConfig("hiddenBackgroundPack", lib.config.hiddenBackgroundPack);
 							delete lib.configMenu.appearence.config.image_background.item[fileName];
-							if (lib.config.image_background == fileName) {
+							if (lib.config.image_background === fileName) {
 								game.saveConfig("image_background", "default");
 								lib.init.background();
 								game.updateBackground();
@@ -584,19 +576,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 							loadBackgroundImages(container);
 							return;
-						} else if (textDiv && textDiv.innerHTML == "删除") {
+						} else if (textDiv && textDiv.innerHTML === "删除") {
 							container.parentNode.noclose = true;
 							if (confirm("是否删除此背景？（此操作不可撤销）")) {
 								this.remove();
 								lib.config.customBackgroundPack.remove(fileName);
 								game.saveConfig("customBackgroundPack", lib.config.customBackgroundPack);
 								if (fileName.startsWith("cdv_")) {
-									game.removeFile("image/background/" + fileName + ".jpg");
+									game.removeFile(`image/background/${fileName}.jpg`);
 								} else {
 									game.deleteDB("image", fileName);
 								}
 								delete lib.configMenu.appearence.config.image_background.item[fileName];
-								if (lib.config.image_background == fileName) {
+								if (lib.config.image_background === fileName) {
 									game.saveConfig("image_background", "default");
 									lib.init.background();
 									game.updateBackground();
@@ -623,9 +615,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.create.div(".buttontext", backgroundName, img);
 			}
 			(function (container) {
-				var addItem = ui.create.div(".backgrounds", container);
+				const addItem = ui.create.div(".backgrounds", container);
 				ui.create.div(".buttontext", "添加背景", addItem);
-				var input = document.createElement("input");
+				const input = document.createElement("input");
 				input.type = "file";
 				input.accept = "image/*";
 				input.multiple = true;
@@ -636,28 +628,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					input.click();
 				});
 				input.onchange = function (e) {
-					var files = e.target.files;
+					const files = e.target.files;
 					if (!files || files.length === 0) return;
-					var fileList = Array.from(files);
-					var totalFiles = fileList.length;
-					var processedFiles = 0;
+					const fileList = Array.from(files);
+					const totalFiles = fileList.length;
+					let processedFiles = 0;
 					fileList.forEach(function (file2, index) {
 						if (file2) {
-							var name2 = file2.name;
+							let name2 = file2.name;
 							if (name2.includes(".")) {
 								name2 = name2.slice(0, name2.indexOf("."));
 							}
-							var link = (game.writeFile ? "cdv_" : "custom_") + name2;
+							let link = `${game.writeFile ? "cdv_" : "custom_"}${name2}`;
 							if (lib.configMenu.appearence.config.image_background.item[link]) {
-								for (var i = 1; i < 1e3; i++) {
-									if (!lib.configMenu.appearence.config.image_background.item[link + "_" + i]) {
-										link = link + "_" + i;
+								for (let i = 1; i < 1e3; i++) {
+									if (!lib.configMenu.appearence.config.image_background.item[`${link}_${i}`]) {
+										link = `${link}_${i}`;
 										break;
 									}
 								}
 							}
 							lib.configMenu.appearence.config.image_background.item[link] = name2;
-							var callback = function () {
+							const callback = function () {
 								lib.config.customBackgroundPack.add(link);
 								game.saveConfig("customBackgroundPack", lib.config.customBackgroundPack);
 								processedFiles++;
@@ -670,24 +662,24 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								loadBackgroundImages(container);
 							};
 							if (game.writeFile) {
-								game.writeFile(file2, "image/background", link + ".jpg", callback);
+								game.writeFile(file2, "image/background", `${link}.jpg`, callback);
 							} else {
 								game.putDB("image", link, file2, callback);
 							}
 						}
 					});
 				};
-				var editItem = ui.create.div(".backgrounds", container);
+				const editItem = ui.create.div(".backgrounds", container);
 				ui.create.div(".buttontext", "编辑背景", editItem);
-				var editbg = function () {
+				const editbg = function () {
 					this.classList.toggle("active");
-					var items = Array.from(container.querySelectorAll(".backgrounds"));
+					const items = Array.from(container.querySelectorAll(".backgrounds"));
 					items.slice(0, Math.max(0, items.length - 2)).forEach(function (item) {
-						var fname = item.dataset.name;
+						const fname = item.dataset.name;
 						if (!fname) return;
-						var textDiv = item.querySelector(".buttontext");
+						const textDiv = item.querySelector(".buttontext");
 						if (!textDiv) return;
-						var str;
+						let str;
 						if (this.classList.contains("active")) {
 							if (fname.startsWith("custom_") || fname.startsWith("cdv_")) {
 								str = "删除";
@@ -809,13 +801,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							game.send("throwEmotion", current, giftType.show);
 						} else game.me.throwEmotion(current, giftType.show);
 					});
-					let playerRect = player.getBoundingClientRect();
-					let containerRect = container.getBoundingClientRect();
+					const playerRect = player.getBoundingClientRect();
+					const containerRect = container.getBoundingClientRect();
 					giftgive.style.position = "absolute";
-					giftgive.style.top = playerRect.top - containerRect.top + "px";
-					giftgive.style.left = playerRect.left - containerRect.left + "px";
-					giftgive.style.width = playerRect.width + "px";
-					giftgive.style.height = playerRect.height + "px";
+					giftgive.style.top = `${playerRect.top - containerRect.top}px`;
+					giftgive.style.left = `${playerRect.left - containerRect.left}px`;
+					giftgive.style.width = `${playerRect.width}px`;
+					giftgive.style.height = `${playerRect.height}px`;
 				}
 			});
 		}
@@ -876,13 +868,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				let textList = game.parseSkillText(name, game.me.name);
 				let audioList = game.parseSkillAudio(name, game.me.name);
 				for (let i = 0; i < textList.length; i++) {
-					let text = ui.create.div(".talkquick", "[" + get.skillTranslation(name) + "]" + textList[i], rightbg, function () {
+					const text = ui.create.div(".talkquick", `[${get.skillTranslation(name)}]${textList[i]}`, rightbg, function () {
 						let actualPath;
-						if (audioList[i].slice(0, 4) === "ext:") actualPath = "../extension/" + audioList[i].slice(4);
-						else actualPath = "../audio/" + audioList[i];
+						if (audioList[i].slice(0, 4) === "ext:") actualPath = `../extension/${audioList[i].slice(4)}`;
+						else actualPath = `../audio/${audioList[i]}`;
 						if (game.online) {
 							game.send("chat", game.onlineID, textList[i]);
-							game.send("chat", game.onlineID, "/audio" + actualPath);
+							game.send("chat", game.onlineID, `/audio${actualPath}`);
 						} else {
 							game.me.chat(textList[i]);
 							game.broadcastAll(function (receivedPath) {
@@ -1023,10 +1015,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		function createSortCardFunction() {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
-			var cards = game.me.getCards("hs");
-			var sort2 = function (b, a) {
-				if (a.name != b.name) return lib.sort.card(a.name, b.name);
-				else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
+			const cards = game.me.getCards("hs");
+			const sort2 = function (b, a) {
+				if (a.name !== b.name) return lib.sort.card(a.name, b.name);
+				else if (a.suit !== b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
 				else return a.number - b.number;
 			};
 			if (cards.length > 1) {
@@ -1038,7 +1030,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		}
 		// 创建按钮容器
-		ui.anniubuttons = ui.create.div(lib.config["extension_十周年UI_rightLayout"] == "on" ? ".leftbuttons" : ".rightbuttons", ui.window);
+		ui.anniubuttons = ui.create.div(lib.config["extension_十周年UI_rightLayout"] === "on" ? ".leftbuttons" : ".rightbuttons", ui.window);
 		// 创建按钮
 		for (let [buttonName, config] of Object.entries(buttonConfigs)) {
 			let button = ui.create.div(".anniubutton", ui.anniubuttons);
@@ -1053,8 +1045,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.cardRoundTimeNode.remove();
 			}
 			ui.cardRoundTimeNode = ui.create.div(".cardRoundNumber", ui.window);
-			var cardPileNumberNode = ui.create.div(".cardPileNumber", ui.cardRoundTimeNode);
-			var roundNumberNode = ui.create.div(".roundNumber", ui.cardRoundTimeNode);
+			const cardPileNumberNode = ui.create.div(".cardPileNumber", ui.cardRoundTimeNode);
+			const roundNumberNode = ui.create.div(".roundNumber", ui.cardRoundTimeNode);
 			ui.timeNode = ui.create.div(".time", ui.cardRoundTimeNode);
 			return { cardPileNumberNode, roundNumberNode };
 		};
@@ -1065,24 +1057,24 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		};
 		const setupRoundNumberUpdate = roundNumberNode => {
 			game.updateRoundNum = function () {
-				var roundNumber = Math.max(1, game.roundNumber || 1);
-				roundNumberNode.innerHTML = "<span>第" + get.cnNumber(roundNumber, true) + "轮</span>";
+				const roundNumber = Math.max(1, game.roundNumber || 1);
+				roundNumberNode.innerHTML = `<span>第${get.cnNumber(roundNumber, true)}轮</span>`;
 				ui.cardRoundTimeNode.style.display = "block";
 			};
 		};
 		const setupCardNumberUpdate = cardPileNumberNode => {
 			game.updateCardNum = function (num, step) {
-				var item = cardPileNumberNode;
+				const item = cardPileNumberNode;
 				clearTimeout(item.interval);
 				if (!item._num) {
-					item.innerHTML = '<span style="font-size: 16px;">' + num + "</span>";
+					item.innerHTML = `<span style="font-size: 16px;">${num}</span>`;
 					item._num = num;
 				} else {
 					if (item._num !== num) {
 						if (!step) step = 500 / Math.abs(item._num - num);
 						if (item._num > num) item._num--;
 						else item._num++;
-						item.innerHTML = '<span style="font-size: 16px;">' + item._num + "</span>";
+						item.innerHTML = `<span style="font-size: 16px;">${item._num}</span>`;
 						if (item._num !== num) {
 							item.interval = setTimeout(function () {
 								game.updateCardNum(num, step);
@@ -1095,18 +1087,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		const setupTimeUpdate = () => {
 			function updateTime() {
 				if (!ui.timeNode.starttime) ui.timeNode.starttime = get.utc();
-				var num = Math.round((get.utc() - ui.timeNode.starttime) / 1000);
-				var timeString = Utils.formatTime(num);
-				ui.timeNode.innerHTML = "<span><center>" + timeString + "</span>";
+				const num = Math.round((get.utc() - ui.timeNode.starttime) / 1000);
+				const timeString = Utils.formatTime(num);
+				ui.timeNode.innerHTML = `<span><center>${timeString}</span>`;
 			}
 			updateTime();
 			setInterval(updateTime, 1000);
 		};
 		const setupRoundNumberOverride = () => {
-			var originupdateRoundNumber = game.updateRoundNumber;
+			const originupdateRoundNumber = game.updateRoundNumber;
 			game.updateRoundNumber = function () {
 				originupdateRoundNumber.apply(this, arguments);
-				let cardNumber = ui.cardPile.childNodes.length || 0;
+				const cardNumber = ui.cardPile.childNodes.length || 0;
 				game.broadcastAll(function (cardNumber) {
 					if (game.updateCardNum) game.updateCardNum(cardNumber);
 					if (game.updateRoundNum) game.updateRoundNum();
@@ -1156,7 +1148,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	const CompareUtils = {
 		type(a, b) {
 			if (a === b) return 0;
-			var types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
+			const types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
 			return types.indexOf(a) - types.indexOf(b);
 		},
 		name(a, b) {
@@ -1165,12 +1157,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		nature(a, b) {
 			if (a === b) return 0;
-			var nature = [undefined, "fire", "thunder"].addArray([a, b]);
+			const nature = [undefined, "fire", "thunder"].addArray([a, b]);
 			return nature.indexOf(a) - nature.indexOf(b);
 		},
 		suit(a, b) {
 			if (a === b) return 0;
-			var suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
+			const suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
 			return suit.indexOf(a) - suit.indexOf(b);
 		},
 		number(a, b) {
@@ -1181,7 +1173,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	const CreateUtils = {
 		control() { },
 		confirm() {
-			var confirm = ui.create.control("<span>确定</span>", "cancel");
+			const confirm = ui.create.control("<span>确定</span>", "cancel");
 			confirm.classList.add("lbtn-confirm");
 			confirm.node = {
 				ok: confirm.firstChild,
@@ -1207,7 +1199,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			return confirm;
 		},
 		setupConfirmEventListeners(confirm) {
-			for (var k in confirm.node) {
+			for (const k in confirm.node) {
 				confirm.node[k].classList.add("disabled");
 				confirm.node[k].removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
 				confirm.node[k].addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
@@ -1227,10 +1219,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		setupSkills2(confirm) {
 			if (ui.skills2 && ui.skills2.skills.length) {
-				var skills = ui.skills2.skills;
+				const skills = ui.skills2.skills;
 				confirm.skills2 = [];
-				for (var i = 0; i < skills.length; i++) {
-					var item = document.createElement("div");
+				for (let i = 0; i < skills.length; i++) {
+					const item = document.createElement("div");
 					item.link = skills[i];
 					item.innerHTML = get.translation(skills[i]);
 					item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
@@ -1275,7 +1267,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		},
 	};
-	var plugin = {
+	const plugin = {
 		name: "lbtn",
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
@@ -1294,7 +1286,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				noDeprive: true,
 				priority: -Infinity,
 				filter(event, player) {
-					return player == game.me;
+					return player === game.me;
 				},
 				content() {
 					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
@@ -1325,7 +1317,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				],
 			});
 			ui.create.confirm = function (str, func) {
-				var confirm = ui.confirm;
+				let confirm = ui.confirm;
 				if (!confirm) {
 					confirm = ui.confirm = plugin.create.confirm();
 				}

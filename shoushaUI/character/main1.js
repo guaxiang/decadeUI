@@ -4,7 +4,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			app.reWriteFunction(lib, {
 				setIntro: [
@@ -42,7 +42,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				if (plugin.playerDialog) {
 					return plugin.playerDialog.show(this);
 				}
-				const container = ui.create.div(".popup-container.hidden", ui.window, function (e) {
+				const container = ui.create.div(".popup-container.hidden", ui.window, (e) => {
 					if (e.target === container) {
 						container.hide();
 						game.resume2();
@@ -162,12 +162,12 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						biankuangname.innerHTML = get.slimName(name);
 						biankuangname2.innerHTML = get.slimName(name2);
 					}
-					mingcheng.innerHTML = player.nickname || (player == game.me ? lib.config.connect_nickname : get.translation(player.name));
+					mingcheng.innerHTML = player.nickname || (player === game.me ? lib.config.connect_nickname : get.translation(player.name));
 					dengji.innerText = `Lv：${Math.floor(Math.random() * 200 + 1)}`;
 					shenglv.innerHTML = `<span style="font-size: 20px;">胜率：</span>${Math.floor(Math.random() * 100)}.${Math.floor(Math.random() * 100)}%`;
 					taolv.innerHTML = `<span style="font-size: 20px;">逃率：</span>${Math.floor(Math.random() * 100)}.${Math.floor(Math.random() * 100)}%`;
 					dialog.classList.add("single");
-					viewBusinessCard.onclick = function () {
+					viewBusinessCard.onclick = () => {
 						const popuperContainer = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
 						popuperContainer.addEventListener("click", event => {
 							event.stopPropagation();
@@ -187,91 +187,91 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 							player === game.me
 								? lib.config.connect_nickname
 								: get.translation(
-										[
-											"氪金抽66",
-											"卡宝真可爱",
-											"蒸蒸日上",
-											"√卡视我如父",
-											"麒麟弓免疫枸杞",
-											"坏可宣（老坏批）",
-											"六千大败而归",
-											"开局酒古锭",
-											"遇事不决刷个乐",
-											"见面两刀喜相逢",
-											"改名出66",
-											"时代的六万五",
-											"韩旭",
-											"司马长衫",
-											"ogx",
-											"狗卡不如无名杀",
-											"王八万",
-											"一拳兀突骨",
-											"开局送神将",
-											"丈八二桃",
-											"装甲车车",
-											"等我喝口酒",
-											"Samuri",
-											"马",
-											"Log-Frunki",
-											"aoe银钱豹",
-											"没有丈八就托管",
-											"无中yyds",
-											"给咸鱼鸽鸽打call",
-											"小零二哟～",
-											"长歌最帅了",
-											"大猫有侠者之风",
-											"布灵布灵❤️",
-											"我爱～摸鱼🐠～",
-											"小寻寻真棒",
-											"呲牙哥超爱笑",
-											"是俺杀哒",
-											"阿七阿七",
-											"祖安·灰晖是龙王",
-											"吃颗桃桃好遗计",
-											"好可宣✓良民",
-											"藏海表锅好",
-											"金乎？木乎？水乎！！",
-											"无法也无天",
-											"西风不识相",
-											"神秘喵酱",
-											"星城在干嘛？",
-											"子鱼今天摸鱼了吗？",
-											"阳光苞里有阳光",
-											"诗笺的小裙裙",
-											"轮回中的消逝",
-											"乱踢jb的云野",
-											"小一是不是...是不是...",
-											"美羊羊爱瑟瑟",
-											"化梦的星辰",
-											"杰哥带你登dua郎",
-											"世中君子人",
-											"叹年华未央",
-											"短咕咕",
-											"洛天依？！",
-											"黄老板是好人～",
-											"来点瑟瑟文和",
-											"鲨鱼配辣椒",
-											"萝卜～好萝卜",
-											"废城君",
-											"E佬细节鬼才",
-											"感到棘手要怀念谁？",
-											"半价小薯片",
-											"JK欧拉欧拉欧拉",
-											"新年快乐",
-											"乔姐带你飞",
-											"12345678？",
-											"缘之空",
-											"小小恐龙",
-											"教主：杀我！",
-											"才思泉涌的司马",
-											"我是好人",
-											"喜怒无常的大宝",
-											"黄赌毒",
-											"阴间杀～秋",
-											"敢于劈瓜的关羽",
-											"暮暮子",
-										].randomGet(1)
-								  )
+									[
+										"氪金抽66",
+										"卡宝真可爱",
+										"蒸蒸日上",
+										"√卡视我如父",
+										"麒麟弓免疫枸杞",
+										"坏可宣（老坏批）",
+										"六千大败而归",
+										"开局酒古锭",
+										"遇事不决刷个乐",
+										"见面两刀喜相逢",
+										"改名出66",
+										"时代的六万五",
+										"韩旭",
+										"司马长衫",
+										"ogx",
+										"狗卡不如无名杀",
+										"王八万",
+										"一拳兀突骨",
+										"开局送神将",
+										"丈八二桃",
+										"装甲车车",
+										"等我喝口酒",
+										"Samuri",
+										"马",
+										"Log-Frunki",
+										"aoe银钱豹",
+										"没有丈八就托管",
+										"无中yyds",
+										"给咸鱼鸽鸽打call",
+										"小零二哟～",
+										"长歌最帅了",
+										"大猫有侠者之风",
+										"布灵布灵❤️",
+										"我爱～摸鱼🐠～",
+										"小寻寻真棒",
+										"呲牙哥超爱笑",
+										"是俺杀哒",
+										"阿七阿七",
+										"祖安·灰晖是龙王",
+										"吃颗桃桃好遗计",
+										"好可宣✓良民",
+										"藏海表锅好",
+										"金乎？木乎？水乎！！",
+										"无法也无天",
+										"西风不识相",
+										"神秘喵酱",
+										"星城在干嘛？",
+										"子鱼今天摸鱼了吗？",
+										"阳光苞里有阳光",
+										"诗笺的小裙裙",
+										"轮回中的消逝",
+										"乱踢jb的云野",
+										"小一是不是...是不是...",
+										"美羊羊爱瑟瑟",
+										"化梦的星辰",
+										"杰哥带你登dua郎",
+										"世中君子人",
+										"叹年华未央",
+										"短咕咕",
+										"洛天依？！",
+										"黄老板是好人～",
+										"来点瑟瑟文和",
+										"鲨鱼配辣椒",
+										"萝卜～好萝卜",
+										"废城君",
+										"E佬细节鬼才",
+										"感到棘手要怀念谁？",
+										"半价小薯片",
+										"JK欧拉欧拉欧拉",
+										"新年快乐",
+										"乔姐带你飞",
+										"12345678？",
+										"缘之空",
+										"小小恐龙",
+										"教主：杀我！",
+										"才思泉涌的司马",
+										"我是好人",
+										"喜怒无常的大宝",
+										"黄赌毒",
+										"阴间杀～秋",
+										"敢于劈瓜的关羽",
+										"暮暮子",
+									].randomGet(1)
+								)
 						);
 						ui.create.div(".gonghui", bigdialog, get.translation(`(${["无名杀会员", "手机三国杀会员", "三国杀ol会员", "三国杀十周年会员", "怒焰三国杀会员", "欢乐三国杀会员", "阵面对决会员"].randomGet(1)})`));
 						ui.create.div(".xianhua", bigdialog, get.translation(`鲜花${Math.floor(Math.random() * 999 + 1)}`));
@@ -280,14 +280,14 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						ui.create.div(".zhanshi", bigdialog, get.translation("展示(诏令－1)"));
 						const list = Object.keys(lib.character).filter(i => !lib.filter.characterDisabled(i));
 						_status.characterlist = list;
-						event.filterChoice = function (name1, name2) {
+						event.filterChoice = (name1, name2) => {
 							const info1 = lib.character[name1];
 							const info2 = lib.character[name2];
 							if (!info1 || !info2) return;
 							let num = 0;
-							if (info1[0] == info2[0]) num++;
-							if (get.infoMaxHp(info1[2]) == get.infoMaxHp(info2[2])) num++;
-							if (info1[3].length == info2[3].length) num++;
+							if (info1[0] === info2[0]) num++;
+							if (get.infoMaxHp(info1[2]) === get.infoMaxHp(info2[2])) num++;
+							if (info1[3].length === info2[3].length) num++;
 							return num > 1;
 						};
 						let shanchang = list.randomGets(4);
@@ -311,7 +311,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					lib.setScroll(rightPane.firstChild);
 					let oSkills = player.getSkills(null, false, false).slice(0);
 					oSkills = oSkills.filter(skill => lib.skill[skill] && skill !== "jiu" && !lib.skill[skill].nopop && !lib.skill[skill].equipSkill && lib.translate[skill + "_info"] && lib.translate[skill + "_info"] !== "");
-					if (player == game.me && player.hiddenSkills.length) oSkills.addArray(player.hiddenSkills);
+					if (player === game.me && player.hiddenSkills.length) oSkills.addArray(player.hiddenSkills);
 					const allShown = player.isUnderControl() || (!game.observe && game.me && game.me.hasSkillTag("viewHandcard", null, player, true));
 					const shownHs = player.getShownCards();
 					if (shownHs.length) {
@@ -376,7 +376,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 								const conflict = player.forbiddenSkills[name].length ? `（与${get.translation(player.forbiddenSkills[name])}冲突）` : "（双将禁用）";
 								ui.create.div(".xskill", `<div data-color><span style="opacity:0.5">${skillName}</span></div><div><span style="opacity:0.5">${conflict}${skillInfo}</span></div>`, rightPane.firstChild);
 							} else if (player.hiddenSkills.includes(name)) {
-								if (lib.skill[name].preHidden && get.mode() == "guozhan") {
+								if (lib.skill[name].preHidden && get.mode() === "guozhan") {
 									const id = ui.create.div(".xskill", transparentIcon + `<div data-color><span style="opacity:0.5">${skillName}</span></div><div><span style="opacity:0.5">${skillInfo}</span><br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div></div>`, rightPane.firstChild);
 									const underlinenode = id.querySelector(".underlinenode");
 									if (_status.prehidden_skills.includes(name)) underlinenode.classList.remove("on");
@@ -428,15 +428,15 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 							let displayName = card.name + "_info";
 							let str = [get.translation(isQiexie ? card.name : card), get.translation(displayName)];
 							if (Array.isArray(cards) && cards.length) {
-								str[0] += "（" + get.translation(card.cards) + "）";
+								str[0] += `（${get.translation(card.cards)}）`;
 							}
 							if (lib.card[card.name]?.cardPrompt) {
 								str[1] = lib.card[card.name].cardPrompt(card, player);
 							}
 							if (isQiexie && lib.translate[card.name + "_append"]) {
-								str[1] += '<br><br><div style="font-size: 0.85em; font-family: xinwei; line-height: 1.2;">' + lib.translate[card.name + "_append"] + "</div>";
+								str[1] += `<br><br><div style="font-size: 0.85em; font-family: xinwei; line-height: 1.2;">${lib.translate[card.name + "_append"]}</div>`;
 							}
-							ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
+							ui.create.div(".xskill", `<div data-color>${str[0]}</div><div>${str[1]}</div>`, rightPane.firstChild);
 						});
 					}
 					const judges = player.getCards("j");
