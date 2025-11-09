@@ -2,14 +2,11 @@ import { lib, game, ui, get, ai, _status } from "../../../noname.js";
 import { ChildNodesWatcher } from "../../../noname/library/cache/childNodesWatcher.js";
 export async function content(config, pack) {
 	if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
-	//菜单栏错位bugfix
 	// 检测是否开启皮肤切换扩展，开了就使用game.menuZoom = 1
 	if (game.hasExtension && game.hasExtension("皮肤切换")) {
 		game.menuZoom = 1;
 	} else {
-		// 让menuZoom使用系统的documentZoom值，确保菜单定位正确
 		if (typeof game.menuZoom === "undefined" || game.menuZoom === null) {
-			// 如果menuZoom未设置，让系统使用默认的documentZoom
 			delete game.menuZoom;
 		}
 	}
@@ -62,7 +59,6 @@ export async function content(config, pack) {
 				true
 			);
 			this.initOverride();
-			// 初始化手牌提示高度
 			const handTipHeight = lib.config["extension_十周年UI_handTipHeight"] || "20";
 			document.documentElement.style.setProperty('--hand-tip-bottom', `calc(${handTipHeight}% + 10px)`);
 			if (window.get && typeof window.get.cardsetion === "function") {
@@ -71,7 +67,7 @@ export async function content(config, pack) {
 					try {
 						return oldCardsetion.apply(this, args);
 					} catch (e) {
-						if (e && e.message && e.message.indexOf("indexOf") !== -1) {
+						if (e?.message?.includes("indexOf")) {
 							return "";
 						}
 						throw e;
@@ -93,7 +89,7 @@ export async function content(config, pack) {
 		},
 		initOverride() {
 			function override(dest, src) {
-				var ok = true;
+				let ok = true;
 				for (const key in src) {
 					if (dest[key]) {
 						ok = override(dest[key], src[key]);
@@ -216,19 +212,19 @@ export async function content(config, pack) {
 						},
 						event: {
 							addMessageHook(message, callback) {
-								if (this._messages == undefined) this._messages = {};
+								if (this._messages === undefined) this._messages = {};
 								message = message.toLowerCase();
-								if (this._messages[message] == undefined) this._messages[message] = [];
+								if (this._messages[message] === undefined) this._messages[message] = [];
 								message = this._messages[message];
 								message.push(callback);
 							},
 							triggerMessage(message) {
-								if (this._messages == undefined) return;
+								if (this._messages === undefined) return;
 								message = message.toLowerCase();
-								if (this._messages[message] == undefined) return;
+								if (this._messages[message] === undefined) return;
 								message = this._messages[message];
-								for (var i = 0; i < message.length; i++) {
-									if (typeof message[i] == "function") message[i].call(this);
+								for (let i = 0; i < message.length; i++) {
+									if (typeof message[i] === "function") message[i].call(this);
 								}
 								this._messages[message] = [];
 							},
@@ -241,7 +237,7 @@ export async function content(config, pack) {
 								var asset = res[clone.name];
 								if (!res.READ_OK) return clone;
 								if (asset && !asset.loaded && clone.classList.contains("decade-card")) {
-									if (asset.loaded == undefined) {
+									if (asset.loaded === undefined) {
 										var image = asset.image;
 										image.addEventListener("error", function () {
 											clone.style.background = asset.rawUrl;
@@ -442,8 +438,8 @@ export async function content(config, pack) {
 									items = arguments;
 								}
 								this.custom = undefined;
-								for (var i = 0; i < items.length; i++) {
-									if (typeof items[i] == "function") {
+								for (let i = 0; i < items.length; i++) {
+									if (typeof items[i] === "function") {
 										this.custom = items[i];
 									} else {
 										if (index < nodes.length) {
@@ -466,10 +462,10 @@ export async function content(config, pack) {
 								var nodes = this.childNodes;
 								if (nodes.length >= 2) {
 									this.classList.add("combo-control");
-									for (var i = 0; i < nodes.length; i++) nodes[i].classList.add("control");
+									for (const node of nodes) node.classList.add("control");
 								} else {
 									this.classList.remove("combo-control");
-									if (nodes.length == 1) nodes[0].classList.remove("control");
+									if (nodes.length === 1) nodes[0].classList.remove("control");
 								}
 							},
 						},
@@ -551,13 +547,13 @@ export async function content(config, pack) {
 										return;
 									}
 								}
-								if (get.itemtype(item) == "cards") {
-									var marks = new Array(item.length);
-									for (var i = 0; i < item.length; i++) marks.push(this.mark(item[i], info));
+								if (get.itemtype(item) === "cards") {
+									const marks = [];
+									for (const card of item) marks.push(this.mark(card, info));
 									return marks;
 								}
-								var mark;
-								if (get.itemtype(item) == "card") {
+								let mark;
+								if (get.itemtype(item) === "card") {
 									mark = item.copy("mark");
 									mark.suit = item.suit;
 									mark.number = item.number;
@@ -666,7 +662,7 @@ export async function content(config, pack) {
 								if (!info) info = {};
 								if (!info.name) info.name = get.translation(name);
 								if (!info.content) info.content = get.skillintro(name, learn, learn2);
-								if (name.indexOf("unknown") == 0) {
+								if (name.startsWith("unknown")) {
 									var unknownText = get.translation(name)[0];
 									if (unknownText && unknownText.includes("☯")) {
 										nodeMark.style.setProperty("display", "none", "important");
@@ -773,7 +769,7 @@ export async function content(config, pack) {
 							},
 							playDynamic(animation, deputy) {
 								deputy = deputy === true;
-								if (animation == undefined) return console.error("playDynamic: 参数1不能为空");
+								if (animation === undefined) return console.error("playDynamic: 参数1不能为空");
 								var dynamic = this.dynamic;
 								if (!dynamic) {
 									dynamic = new duilib.DynamicPlayer("assets/dynamic/");
@@ -798,7 +794,7 @@ export async function content(config, pack) {
 										animation.x = animation.x.concat();
 										animation.x[1] += deputy ? 0.25 : -0.25;
 									} else {
-										if (animation.x == undefined) {
+										if (animation.x === undefined) {
 											animation.x = [0, deputy ? 0.75 : 0.25];
 										} else {
 											animation.x = [animation.x, deputy ? 0.25 : -0.25];
@@ -873,8 +869,8 @@ export async function content(config, pack) {
 										_status.addChatEntry = undefined;
 									}
 								}
-								if (lib.config.background_speak && lib.quickVoice.indexOf(str) != -1) {
-									game.playAudio("voice", this.sex == "female" ? "female" : "male", lib.quickVoice.indexOf(str));
+								if (lib.config.background_speak && lib.quickVoice.includes(str)) {
+									game.playAudio("voice", this.sex === "female" ? "female" : "male", lib.quickVoice.indexOf(str));
 								}
 							},
 							/*-----------------分割线-----------------*/
@@ -1010,22 +1006,22 @@ export async function content(config, pack) {
 								while ((ele = ui.equipSolts.back.firstChild)) {
 									ele.remove();
 								}
-								var storage = this.expandedSlots,
-									equipSolts = ui.equipSolts;
-								for (var repetition = 0; repetition < 5; repetition++) {
+								const storage = this.expandedSlots;
+								const equipSolts = ui.equipSolts;
+								for (let repetition = 0; repetition < 5; repetition++) {
 									if (storage && storage["equip" + (repetition + 1)]) {
-										for (var adde = 0; adde < storage["equip" + (repetition + 1)]; adde++) {
-											var addediv = decadeUI.element.create(null, equipSolts.back);
+										for (let adde = 0; adde < storage["equip" + (repetition + 1)]; adde++) {
+											const addediv = decadeUI.element.create(null, equipSolts.back);
 											addediv.dataset.type = repetition;
 										}
 									}
-									var ediv = decadeUI.element.create(null, equipSolts.back);
+									const ediv = decadeUI.element.create(null, equipSolts.back);
 									ediv.dataset.type = repetition;
 								}
 							},
 							$init(character, character2) {
 								base.lib.element.player.$init.apply(this, arguments);
-								this.doubleAvatar = (character2 && lib.character[character2]) != undefined;
+								this.doubleAvatar = (character2 && lib.character[character2]) !== undefined;
 								// 在othersOff一将成名样式下，检查武将原画是否存在，如果不存在则添加•体验后缀
 								if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
 									this.checkAndAddExperienceSuffix(character);
@@ -1033,34 +1029,33 @@ export async function content(config, pack) {
 										this.checkAndAddExperienceSuffix(character2);
 									}
 								}
-								var CUR_DYNAMIC = decadeUI.CUR_DYNAMIC;
-								var MAX_DYNAMIC = decadeUI.MAX_DYNAMIC;
-								if (CUR_DYNAMIC == undefined) {
+								let CUR_DYNAMIC = decadeUI.CUR_DYNAMIC;
+								let MAX_DYNAMIC = decadeUI.MAX_DYNAMIC;
+								if (CUR_DYNAMIC === undefined) {
 									CUR_DYNAMIC = 0;
 									decadeUI.CUR_DYNAMIC = CUR_DYNAMIC;
 								}
-								if (MAX_DYNAMIC == undefined) {
+								if (MAX_DYNAMIC === undefined) {
 									MAX_DYNAMIC = decadeUI.isMobile() ? 2 : 10;
 									if (window.OffscreenCanvas) MAX_DYNAMIC += 8;
 									decadeUI.MAX_DYNAMIC = MAX_DYNAMIC;
 								}
 								if (this.dynamic) this.stopDynamic();
-								var showDynamic = (this.dynamic || CUR_DYNAMIC < MAX_DYNAMIC) && duicfg.dynamicSkin;
-								if (showDynamic && _status.mode != null) {
-									var skins;
-									var dskins = decadeUI.dynamicSkin;
-									var avatars = this.doubleAvatar ? [character, character2] : [character];
-									var increased;
-									for (var i = 0; i < avatars.length; i++) {
-										skins = dskins[avatars[i]];
-										if (skins == undefined) continue;
-										var keys = Object.keys(skins);
-										if (keys.length == 0) {
+								const showDynamic = (this.dynamic || CUR_DYNAMIC < MAX_DYNAMIC) && duicfg.dynamicSkin;
+								if (showDynamic && _status.mode !== null) {
+									const dskins = decadeUI.dynamicSkin;
+									const avatars = this.doubleAvatar ? [character, character2] : [character];
+									let increased;
+									for (let i = 0; i < avatars.length; i++) {
+										const skins = dskins[avatars[i]];
+										if (skins === undefined) continue;
+										const keys = Object.keys(skins);
+										if (keys.length === 0) {
 											console.error("player.init: " + avatars[i] + " 没有设置动皮参数");
 											continue;
 										}
-										var skin = skins[Object.keys(skins)[0]];
-										if (skin.speed == undefined) skin.speed = 1;
+										const skin = skins[Object.keys(skins)[0]];
+										if (skin.speed === undefined) skin.speed = 1;
 										this.playDynamic(
 											{
 												name: skin.name, //	string 骨骼文件名，一般是assets/dynamic 下的动皮文件，也可以使用.. 来寻找其他文件目录
@@ -1082,9 +1077,9 @@ export async function content(config, pack) {
 												hideSlots: skin.hideSlots, // 隐藏不需要的部件，想知道具体部件名称请使用SpineAltasSplit工具查看
 												clipSlots: skin.clipSlots, // 剪掉超出头的部件，仅针对露头动皮，其他勿用
 											},
-											i == 1
+											i === 1
 										);
-										this.$dynamicWrap.style.backgroundImage = 'url("' + decadeUIPath + "assets/dynamic/" + skin.background + '")';
+										this.$dynamicWrap.style.backgroundImage = `url("${decadeUIPath}assets/dynamic/${skin.background}")`;
 										if (!increased) {
 											increased = true;
 											decadeUI.CUR_DYNAMIC++;
@@ -1622,7 +1617,7 @@ export async function content(config, pack) {
 								this.cacheReferW = refer.width;
 								this.cacheReferH = refer.height;
 								this.cachePosition = this.dataset.position;
-								if (this.cacheLeft == null) update = true;
+								if (this.cacheLeft === null) update = true;
 								if (update || forceUpdate) {
 									this.cacheLeft = this.offsetLeft;
 									this.cacheTop = this.offsetTop;
@@ -1631,18 +1626,18 @@ export async function content(config, pack) {
 								}
 							},
 							queueCssAnimation(animation) {
-								var current = this.style.animation;
-								var animations = this._cssanimations;
-								if (animations == undefined) {
+								const current = this.style.animation;
+								let animations = this._cssanimations;
+								if (animations === undefined) {
 									animations = [];
 									this._cssanimations = animations;
 									this.addEventListener("animationend", function (e) {
-										if (this.style.animationName != e.animationName) return;
-										var current = this.style.animation;
-										var animations = this._cssanimations;
+										if (this.style.animationName !== e.animationName) return;
+										const current = this.style.animation;
+										const animations = this._cssanimations;
 										while (animations.length) {
 											this.style.animation = animations.shift();
-											if (this.style.animation != current) return;
+											if (this.style.animation !== current) return;
 											animations.current = this.style.animation;
 										}
 										animations.current = "";
@@ -1949,9 +1944,9 @@ export async function content(config, pack) {
 									game.addVideo("throw", this, [get.cardsInfo(cards), 0, nosource]);
 								}
 								cards.sort(function (a, b) {
-									if (a.tx == undefined && b.tx == undefined) return 0;
-									if (a.tx == undefined) return duicfg.rightLayout ? -1 : 1;
-									if (b.tx == undefined) return duicfg.rightLayout ? 1 : -1;
+									if (a.tx === undefined && b.tx === undefined) return 0;
+									if (a.tx === undefined) return duicfg.rightLayout ? -1 : 1;
+									if (b.tx === undefined) return duicfg.rightLayout ? 1 : -1;
 									return a.tx - b.tx;
 								});
 								for (var i = 0; i < cards.length; i++) {
@@ -1964,9 +1959,9 @@ export async function content(config, pack) {
 							},
 							$throwordered2(card, nosource) {
 								if (_status.connectMode) ui.todiscard = [];
-								if (card.throwordered == undefined) {
-									var x, y;
-									var bounds = dui.boundsCaches.arena;
+								if (card.throwordered === undefined) {
+									let x, y;
+									const bounds = dui.boundsCaches.arena;
 									if (!bounds.updated) bounds.update();
 									this.checkBoundsCache();
 									if (nosource) {
@@ -3349,14 +3344,14 @@ export async function content(config, pack) {
 						document.body.style.transform = "";
 					},
 					update() {
-						for (var i = 0; i < ui.updates.length; i++) ui.updates[i]();
-						if (ui.dialog == undefined || ui.dialog.classList.contains("noupdate")) return;
+						for (const update of ui.updates) update();
+						if (ui.dialog === undefined || ui.dialog.classList.contains("noupdate")) return;
 						if (game.chess) return base.ui.update();
-						if ((!ui.dialog.buttons || !ui.dialog.buttons.length) && !ui.dialog.forcebutton && ui.dialog.classList.contains("fullheight") == false && get.mode() != "stone") {
+						if ((!ui.dialog.buttons || !ui.dialog.buttons.length) && !ui.dialog.forcebutton && ui.dialog.classList.contains("fullheight") === false && get.mode() !== "stone") {
 							ui.dialog.classList.add("prompt");
 						} else {
 							ui.dialog.classList.remove("prompt");
-							var height = ui.dialog.content.offsetHeight;
+							let height = ui.dialog.content.offsetHeight;
 							if (decadeUI.isMobile()) height = decadeUI.get.bodySize().height * 0.75 - 80;
 							else height = decadeUI.get.bodySize().height * 0.45;
 							ui.dialog.style.height = Math.min(height, ui.dialog.content.offsetHeight) + "px";
@@ -3932,7 +3927,7 @@ export async function content(config, pack) {
 							if (
 								(this && this.classList && this.classList.contains("emptyequip")) ||
 								(this && this.parentNode && this.parentNode.classList && this.parentNode.classList.contains("emptyequip")) ||
-								(this && this.dataset && typeof this.dataset.name === "string" && this.dataset.name.indexOf("empty_equip") === 0)
+								(this && this.dataset && typeof this.dataset.name === "string" && this.dataset.name.startsWith("empty_equip"))
 							) {
 								return;
 							}
@@ -4339,9 +4334,9 @@ export async function content(config, pack) {
 					skillState(player) {
 						const skills = base.get.skillState.apply(this, arguments);
 						if (game.me !== player) {
-							var global = (skills.global = skills.global.concat());
-							for (var i = global.length - 1; i >= 0; i--) {
-								if (global[i].indexOf("decadeUI") >= 0) global.splice(i, 1);
+							const global = (skills.global = skills.global.concat());
+							for (let i = global.length - 1; i >= 0; i--) {
+								if (global[i].includes("decadeUI")) global.splice(i, 1);
 							}
 						}
 						return skills;
@@ -4495,11 +4490,11 @@ export async function content(config, pack) {
 					var key;
 					var current = this.firstChild.innerText;
 					for (const key in identityList) {
-						if (theNext == null || getNext) {
+						if (theNext === null || getNext) {
 							theNext = key;
 							if (getNext) break;
 						}
-						if (current == identityList[key]) getNext = true;
+						if (current === identityList[key]) getNext = true;
 					}
 					this.parentNode.setIdentity(theNext);
 				} else {
@@ -7170,11 +7165,11 @@ export async function content(config, pack) {
 			if (storageResult === true) {
 				return true;
 			}
-			let effectiveSkill = parentSkill ? 
+			let effectiveSkill = parentSkill ?
 				(get && get.sourceSkillFor ? get.sourceSkillFor(parentSkill) : parentSkill) :
 				(get && get.sourceSkillFor ? get.sourceSkillFor(cleanSkillName) : cleanSkillName);
-			if (player.hasSkill(effectiveSkill, null, null, false) || 
-				player.hasSkill(cleanSkillName, null, null, false) || 
+			if (player.hasSkill(effectiveSkill, null, null, false) ||
+				player.hasSkill(cleanSkillName, null, null, false) ||
 				player.hasSkill(skillName, null, null, false)) {
 				return true;
 			}
@@ -7226,7 +7221,7 @@ export async function content(config, pack) {
 			let storage = this.storage && this.storage[cleanSkillName];
 			if (!storage) return null;
 			let checkItem = (item) => {
-				return item === this || 
+				return item === this ||
 					(item && typeof item === "object" && ((item.name && item.name === this.name) || (item.node && item.node === this.node)));
 			};
 			if (Array.isArray(storage)) {
@@ -7897,184 +7892,129 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			event.respondix = 0;
-			for (var i = 0; i < game.players.length; i++) {
-				var ab = game.players[i].getElementsByClassName("tipskill");
+			for (const player of game.players) {
+				const ab = player.getElementsByClassName("tipskill");
 				if (ab[0]) event.respondix++;
 			}
 			return event.respondix > 0;
 		},
 		async content(event, trigger, player) {
-			for (var i = 0; i < game.players.length; i++) {
-				lib.removeFirstByClass(game.players[i], "tipskill");
+			for (const player of game.players) {
+				lib.removeFirstByClass(player, "tipskill");
 			}
 		},
 	};
 	//狗托播报
 	if (config.GTBB) {
-		var gtbbUI = {};
+		const gtbbUI = {};
+		// 从字符包中获取数据的公共函数
+		function getCharactersFromPacks(filterFn) {
+			const results = [];
+			// 从标准字符包获取
+			for (const packName of lib.config.characters) {
+				const pack = lib.characterPack[packName];
+				if (!pack) continue;
+				for (const [charName, characterInfo] of Object.entries(pack)) {
+					if (characterInfo.isUnseen) continue;
+					if (lib.filter.characterDisabled(charName)) continue;
+					const result = filterFn(charName, characterInfo);
+					if (result) results.push(result);
+				}
+			}
+			// 从扩展字符包获取
+			for (const packName of Object.keys(lib.characterPack)) {
+				if (!packName.startsWith("mode_extension_")) continue;
+				const extName = packName.slice(15);
+				if (lib.config[`extension_${extName}_characters_enable`] !== true) continue;
+				const pack = lib.characterPack[packName];
+				if (!pack) continue;
+				for (const [charName, characterInfo] of Object.entries(pack)) {
+					if (characterInfo.isUnseen) continue;
+					if (lib.filter.characterDisabled(charName)) continue;
+					const result = filterFn(charName, characterInfo);
+					if (result) results.push(result);
+				}
+			}
+			return results;
+		}
 		function showGTBB() {
-			var playerLabel = "玩家";
-			var nickname = lib.config.connect_nickname;
-			//从已开启武将包中获取
-			var randomNames = [];
-			for (var i = 0; i < lib.config.characters.length; i++) {
-				var packName = lib.config.characters[i];
-				var pack = lib.characterPack[packName];
-				if (!pack) continue;
-				for (var charName in pack) {
-					var characterInfo = pack[charName];
-					if (characterInfo.isUnseen) continue;
-					if (lib.filter.characterDisabled(charName)) continue;
-					var displayName = get.translation(charName);
-					if (displayName && displayName !== charName) {
-						randomNames.push(displayName);
-					}
+			const playerLabel = "玩家";
+			const nickname = lib.config.connect_nickname;
+			// 获取随机名称
+			const randomNames = getCharactersFromPacks((charName) => {
+				const displayName = get.translation(charName);
+				return displayName && displayName !== charName ? displayName : null;
+			});
+			// 获取皮肤
+			const skins = getCharactersFromPacks((charName) => {
+				const displayName = get.translation(charName);
+				return displayName && displayName !== charName ? `${displayName}×1` : null;
+			});
+			// 获取武将
+			const generals = getCharactersFromPacks((charName) => {
+				let title = lib.characterTitle[charName] || "";
+				if (title.startsWith("#")) title = title.slice(2);
+				title = get.plainText(title);
+				const displayName = get.translation(charName);
+				if (title && displayName && displayName !== charName) {
+					return `${title}·${displayName}*1（动+静）`;
 				}
-			}
-			for (var packName in lib.characterPack) {
-				if (packName.indexOf("mode_extension_") === 0) {
-					var extName = packName.slice(15);
-					if (lib.config[`extension_${extName}_characters_enable`] === true) {
-						var pack = lib.characterPack[packName];
-						if (!pack) continue;
-						for (var charName in pack) {
-							var characterInfo = pack[charName];
-							if (characterInfo.isUnseen) continue;
-							if (lib.filter.characterDisabled(charName)) continue;
-							var displayName = get.translation(charName);
-							if (displayName && displayName !== charName) {
-								randomNames.push(displayName);
-							}
-						}
-					}
-				}
-			}
-			var suiji = randomNames.randomGet();
-			var name = [suiji, nickname].randomGet();
-			var action = ["通过", "使用", "开启"].randomGet();
-			var stories = ["周年", "五一", "踏青", "牛年", "开黑", "冬至", "春分", "鼠年", "盛典", "魏魂", "群魂", "蜀魂", "吴魂", "猪年", "圣诞", "国庆", "狗年", "金秋", "奇珍", "元旦", "小雪", "冬日", "招募", "梦之回廊", "虎年", "新春", "七夕", "大雪", "端午", "武将", "中秋", "庆典"];
-			var story = stories.randomGet();
-			var boxTypes = ["盒子", "宝盒", "礼包", "福袋", "礼盒", "庆典", "盛典"];
-			var box = boxTypes.randomGet();
-			var getText = "获得了";
-			var skins = [];
-			//从已开启武将包中获取
-			for (var i = 0; i < lib.config.characters.length; i++) {
-				var packName = lib.config.characters[i];
-				var pack = lib.characterPack[packName];
-				if (!pack) continue;
-				for (var charName in pack) {
-					var characterInfo = pack[charName];
-					if (characterInfo.isUnseen) continue;
-					if (lib.filter.characterDisabled(charName)) continue;
-					var displayName = get.translation(charName);
-					if (displayName && displayName !== charName) {
-						var skinText = displayName + "×1";
-						skins.push(skinText);
-					}
-				}
-			}
-			for (var packName in lib.characterPack) {
-				if (packName.indexOf("mode_extension_") === 0) {
-					var extName = packName.slice(15);
-					if (lib.config[`extension_${extName}_characters_enable`] === true) {
-						var pack = lib.characterPack[packName];
-						if (!pack) continue;
-						for (var charName in pack) {
-							var characterInfo = pack[charName];
-							if (characterInfo.isUnseen) continue;
-							if (lib.filter.characterDisabled(charName)) continue;
-							var displayName = get.translation(charName);
-							if (displayName && displayName !== charName) {
-								var skinText = displayName + "×1";
-								skins.push(skinText);
-							}
-						}
-					}
-				}
-			}
-			var skin = skins.randomGet();
-			//从已开启武将包中获取
-			var generals = [];
-			for (var i = 0; i < lib.config.characters.length; i++) {
-				var packName = lib.config.characters[i];
-				var pack = lib.characterPack[packName];
-				if (!pack) continue;
-				for (var charName in pack) {
-					var characterInfo = pack[charName];
-					if (characterInfo.isUnseen) continue;
-					if (lib.filter.characterDisabled(charName)) continue;
-					var title = lib.characterTitle[charName] || "";
-					if (title.startsWith("#")) {
-						title = title.slice(2);
-					}
-					title = get.plainText(title);
-					var displayName = get.translation(charName);
-					if (title && displayName && displayName !== charName) {
-						var generalText = title + "·" + displayName + "*1（动+静）";
-						generals.push(generalText);
-					}
-				}
-			}
-			for (var packName in lib.characterPack) {
-				if (packName.indexOf("mode_extension_") === 0) {
-					var extName = packName.slice(15);
-					if (lib.config[`extension_${extName}_characters_enable`] === true) {
-						var pack = lib.characterPack[packName];
-						if (!pack) continue;
-						for (var charName in pack) {
-							var characterInfo = pack[charName];
-							if (characterInfo.isUnseen) continue;
-							if (lib.filter.characterDisabled(charName)) continue;
-							var title = lib.characterTitle[charName] || "";
-							if (title.startsWith("#")) {
-								title = title.slice(2);
-							}
-							title = get.plainText(title);
-							var displayName = get.translation(charName);
-							if (title && displayName && displayName !== charName) {
-								var generalText = title + "·" + displayName + "*1（动+静）";
-								generals.push(generalText);
-							}
-						}
-					}
-				}
-			}
-			var general = generals.randomGet();
+				return null;
+			});
+			const suiji = randomNames.randomGet();
+			const name = [suiji, nickname].randomGet();
+			const action = ["通过", "使用", "开启"].randomGet();
+			const stories = ["周年", "五一", "踏青", "牛年", "开黑", "冬至", "春分", "鼠年", "盛典", "魏魂", "群魂", "蜀魂", "吴魂", "猪年", "圣诞", "国庆", "狗年", "金秋", "奇珍", "元旦", "小雪", "冬日", "招募", "梦之回廊", "虎年", "新春", "七夕", "大雪", "端午", "武将", "中秋", "庆典"];
+			const story = stories.randomGet();
+			const boxTypes = ["盒子", "宝盒", "礼包", "福袋", "礼盒", "庆典", "盛典"];
+			const box = boxTypes.randomGet();
+			const getText = "获得了";
+			const skin = skins.randomGet();
+			const general = generals.randomGet();
 			//奖励颜色
-			var reward = ['<font color="#56e4fa">' + skin + "</font>", '<font color="#f3c20f">' + general + "</font>"].randomGet();
-			var tailMsgs = [",大家快恭喜TA吧！", ",大家快恭喜TA吧。无名杀是一款非盈利游戏(づ ●─● )づ", ",祝你新的一年天天开心，万事如意"];
-			var tail = tailMsgs.randomGet();
+			const reward = [`<font color="#56e4fa">${skin}</font>`, `<font color="#f3c20f">${general}</font>`].randomGet();
+			const tailMsgs = [",大家快恭喜TA吧！", ",大家快恭喜TA吧。无名杀是一款非盈利游戏(づ ●─● )づ", ",祝你新的一年天天开心，万事如意"];
+			const tail = tailMsgs.randomGet();
 			/*定义部分属性--默认手杀*/
-			var fontset = "FZLBJW"; /*字体*/
-			var colorA = "#efe8dc"; /*颜色a*/
-			var colorB = "#22c622"; /*颜色b*/
-			if (lib.config.extension_十周年UI_GTBBFont == "off") {
+			let fontset = "FZLBJW"; /*字体*/
+			let colorA = "#efe8dc"; /*颜色a*/
+			let colorB = "#22c622"; /*颜色b*/
+			if (lib.config.extension_十周年UI_GTBBFont === "off") {
 				fontset = "yuanli";
 				colorA = "#86CC5B";
 				colorB = "#B3E1EC";
 			}
 			gtbbUI.div.show();
-			setTimeout(function () {
+			setTimeout(() => {
 				gtbbUI.div.hide();
 			}, 15500);
-			gtbbUI.div2.innerHTML = '<marquee direction="left" behavior="scroll" scrollamount="9.8" loop="1" width="100%" height="50" align="absmiddle">' + '<font face="' + fontset + '">' + playerLabel + '<font color="' + colorA + '"><b>' + name + "</b></font>" + action + '<font color="' + colorB + '"><b>' + story + box + "</b></font>" + getText + "<b>" + reward + "</b>" + tail + "</font></marquee>";
+			gtbbUI.div2.innerHTML = `
+				<marquee direction="left" behavior="scroll" scrollamount="9.8" loop="1" width="100%" height="50" align="absmiddle">
+					<font face="${fontset}">
+						${playerLabel}
+						<font color="${colorA}"><b>${name}</b></font>
+						${action}
+						<font color="${colorB}"><b>${story}${box}</b></font>
+						${getText}<b>${reward}</b>${tail}
+					</font>
+				</marquee>
+			`;
 		}
 		gtbbUI.div = ui.create.div("");
 		gtbbUI.div2 = ui.create.div("", gtbbUI.div);
 		/*----------手杀样式-------*/
-		if (config.GTBBYangshi == "on") {
+		if (config.GTBBYangshi === "on") {
 			gtbbUI.div.style.cssText = "pointer-events:none;width:100%;height:25px;font-size:23px;z-index:6;";
 			gtbbUI.div2.style.cssText = "pointer-events:none;background:rgba(0,0,0,0.5);width:100%;height:27px;";
 			/*------------------------*/
 		} else {
 			/*-------十周年样式-------*/
 			gtbbUI.div.style.cssText = "pointer-events:none;width:56%;height:35px;font-size:18px;z-index:20;background-size:100% 100%;background-repeat:no-repeat;left:50%;top:15%;transform:translateX(-50%);";
-			gtbbUI.div.style["background-image"] = "url(" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/goutuo.png";
+			gtbbUI.div.style["background-image"] = `url(${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/uibutton/goutuo.png`;
 			gtbbUI.div2.style.cssText = "pointer-events:none;width:85.5%;height:35px;left:8%;line-height:35px;";
 			/*------------------------*/
 		}
-		var id = setInterval(function () {
+		const id = setInterval(() => {
 			if (!gtbbUI.div.parentNode && ui.window) {
 				ui.window.appendChild(gtbbUI.div);
 				clearInterval(id);

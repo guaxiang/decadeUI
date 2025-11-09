@@ -1,12 +1,14 @@
 import { lib, game, ui, get, ai, _status } from "../../../noname.js";
 import { prefixMarkModule } from "../js/prefixMark.js";
 export async function precontent() {
-	if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
-	if (lib.config["extension_" + decadeUIName + "_eruda"]) {
-		var script = document.createElement("script");
-		script.src = decadeUIPath + "js/eruda.js";
+	const mode = get.mode();
+	if (mode === "chess" || mode === "tafang" || mode === "hs_hearthstone") return;
+
+	if (lib.config[`extension_${decadeUIName}_eruda`]) {
+		const script = document.createElement("script");
+		script.src = `${decadeUIPath}js/eruda.js`;
 		document.body.appendChild(script);
-		script.onload = function () {
+		script.onload = () => {
 			eruda.init();
 		};
 	}
@@ -22,8 +24,8 @@ export async function precontent() {
 			ui.create.div(".avatar", ui.create.div(".seat-player.fakeplayer", node)).setBackground(list.randomRemove(), "character");
 		}
 	};
-	window.decadeModule = (function (decadeModule) {
-		var version = lib.extensionPack.十周年UI.version;
+	window.decadeModule = ((decadeModule) => {
+		const version = lib.extensionPack.十周年UI.version;
 		function checkVersionCompatibility() {
 			const currentVersion = lib.version;
 			const requiredVersion = lib.extensionPack.十周年UI.minNonameVersion;
@@ -70,43 +72,47 @@ export async function precontent() {
 		decadeModule.init = function () {
 			// 基础CSS加载 - 使用动态导入确保Vite能检测到变化
 			const cssFiles = ["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"];
-			cssFiles.forEach(path => this.css(decadeUIPath + path));
+			cssFiles.forEach(path => this.css(`${decadeUIPath}${path}`));
 			const style = lib.config.extension_十周年UI_newDecadeStyle;
 			const styleIndex = ["on", "off", "othersOff", "onlineUI", "babysha", "codename"].indexOf(style);
-			if (style !== void 0) {
-				this.css(decadeUIPath + `css/player${styleIndex + 1}.css`);
+			if (style !== undefined) {
+				this.css(`${decadeUIPath}css/player${styleIndex + 1}.css`);
 			} else {
-				this.css(decadeUIPath + "css/player2.css");
+				this.css(`${decadeUIPath}css/player2.css`);
 			}
 			const layoutCss = "css/layout.css";
-			this.css(decadeUIPath + "css/equip.css");
-			document.body.setAttribute("data-style", style || "on");
-			this.css(decadeUIPath + layoutCss);
+			this.css(`${decadeUIPath}css/equip.css`);
+			document.body.setAttribute("data-style", style ?? "on");
+			this.css(`${decadeUIPath}${layoutCss}`);
 			// 其他条件CSS
 			if (lib.config.extension_十周年UI_meanPrettify) {
-				this.css(decadeUIPath + "css/menu.css");
+				this.css(`${decadeUIPath}css/menu.css`);
 			}
-			if (lib.config["extension_十周年UI_choosecharboder"]) {
-				this.css(decadeUIPath + "css/style.css");
+			if (lib.config.extension_十周年UI_choosecharboder) {
+				this.css(`${decadeUIPath}css/style.css`);
 			}
 			// JS异步加载
-			["js/spine.js", "js/component.js", "js/skill.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"].forEach(path => this.jsAsync(decadeUIPath + path));
+			const jsFiles = ["js/spine.js", "js/component.js", "js/skill.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"];
+			jsFiles.forEach(path => this.jsAsync(`${decadeUIPath}${path}`));
 			// 原手杀UI内容加载
 			if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
-			const layoutPath = decadeUIPath + "shoushaUI/";
-			const listmap =
-				{
-					on: 2,
-					off: 1,
-					othersOff: 3,
-					onlineUI: 4,
-					babysha: 5,
-					codename: 6,
-				}[style] || 2;
-			if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode == "hs_hearthstone")) {
+			const layoutPath = `${decadeUIPath}shoushaUI/`;
+			const styleMap = {
+				on: 2,
+				off: 1,
+				othersOff: 3,
+				onlineUI: 4,
+				babysha: 5,
+				codename: 6,
+			};
+			const listmap = styleMap[style] ?? 2;
+			const currentMode = get.mode();
+			if (!["chess", "tafang", "hs_hearthstone"].includes(currentMode)) {
 				["character", "lbtn", "skill"].forEach(pack => {
 					// css加载
-					const cssPath = pack === "character" ? `${layoutPath}${pack}/main${listmap}.css` : `${layoutPath}${pack}/main${listmap}${lib.config.phonelayout ? "" : "_window"}.css`;
+					const cssPath = pack === "character"
+						? `${layoutPath}${pack}/main${listmap}.css`
+						: `${layoutPath}${pack}/main${listmap}${lib.config.phonelayout ? "" : "_window"}.css`;
 					this.css(cssPath);
 					this.jsAsync(`${layoutPath}${pack}/main${listmap}.js`);
 				});
@@ -114,7 +120,10 @@ export async function precontent() {
 			return this;
 		};
 		decadeModule.js = function (path) {
-			if (!path) return console.error("path");
+			if (!path) {
+				console.error("path is required");
+				return;
+			}
 			// 检查是否已经加载过相同的JS，避免重复加载
 			const existingScript = document.querySelector(`script[src*="${path}"]`);
 			if (existingScript) {
@@ -122,19 +131,22 @@ export async function precontent() {
 			}
 			const script = document.createElement("script");
 			script.src = `${path}?v=${version}&t=${Date.now()}`; // 添加时间戳确保Vite能检测到变化
-			script.onload = function () {
+			script.onload = () => {
 				console.log(`JS loaded: ${path}`);
-				this.remove();
+				script.remove();
 			};
-			script.onerror = function () {
+			script.onerror = () => {
 				console.error(`Failed to load JS: ${path}`);
-				this.remove();
+				script.remove();
 			};
 			document.head.appendChild(script);
 			return script;
 		};
 		decadeModule.jsAsync = function (path) {
-			if (!path) return console.error("path");
+			if (!path) {
+				console.error("path is required");
+				return;
+			}
 			// 检查是否已经加载过相同的JS，避免重复加载
 			const existingScript = document.querySelector(`script[src*="${path}"]`);
 			if (existingScript) {
@@ -144,19 +156,22 @@ export async function precontent() {
 			script.async = true;
 			script.defer = true;
 			script.src = `${path}?v=${version}&t=${Date.now()}`; // 添加时间戳确保Vite能检测到变化
-			script.onload = function () {
+			script.onload = () => {
 				console.log(`JS (async) loaded: ${path}`);
-				this.remove();
+				script.remove();
 			};
-			script.onerror = function () {
+			script.onerror = () => {
 				console.error(`Failed to load JS (async): ${path}`);
-				this.remove();
+				script.remove();
 			};
 			document.head.appendChild(script);
 			return script;
 		};
 		decadeModule.css = function (path) {
-			if (!path) return console.error("path");
+			if (!path) {
+				console.error("path is required");
+				return;
+			}
 			// 检查是否已经加载过相同的CSS，避免重复加载
 			const existingLink = document.querySelector(`link[href*="${path}"]`);
 			if (existingLink) {
@@ -166,7 +181,7 @@ export async function precontent() {
 			link.rel = "stylesheet";
 			link.href = `${path}?v=${version}&t=${Date.now()}`; // 添加时间戳确保Vite能检测到变化
 			// 添加错误处理，确保加载失败时不会阻塞
-			link.onerror = function () {
+			link.onerror = () => {
 				console.warn(`Failed to load CSS: ${path}`);
 			};
 			document.head.appendChild(link);
@@ -174,7 +189,10 @@ export async function precontent() {
 		};
 		decadeModule.import = function (module) {
 			if (!this.modules) this.modules = [];
-			if (typeof module != "function") return console.error("import failed");
+			if (typeof module !== "function") {
+				console.error("import failed: module must be a function");
+				return;
+			}
 			this.modules.push(module);
 		};
 		// 添加角标模块
@@ -210,10 +228,10 @@ export async function precontent() {
 			set(value) {
 				this._connectMode = value;
 				if (!value || !lib.extensions) return;
-				const decadeExtension = lib.extensions.find(value => value[0] == decadeUIName);
+				const decadeExtension = lib.extensions.find(ext => ext[0] === decadeUIName);
 				if (!decadeExtension) return;
 				const startBeforeFunction = lib.init.startBefore;
-				lib.init.startBefore = function () {
+				lib.init.startBefore = function (...args) {
 					try {
 						_status.extension = decadeExtension[0];
 						_status.evaluatingExtension = decadeExtension[3];
@@ -222,9 +240,9 @@ export async function precontent() {
 						delete _status.evaluatingExtension;
 						console.log(`%c${decadeUIName}: 联机成功`, "color:blue");
 					} catch (e) {
-						console.log(e);
+						console.error(e);
 					}
-					if (startBeforeFunction) startBeforeFunction.apply(this, arguments);
+					if (startBeforeFunction) startBeforeFunction.apply(this, args);
 				};
 			},
 		},
@@ -270,7 +288,7 @@ export async function precontent() {
 			off(name, listen) {
 				return app.each(
 					this.listens[name],
-					function (item, index) {
+					(item, index) => {
 						if (listen === item || listen === item.listen) {
 							this.listens[name].splice(index, 1);
 						}
@@ -281,8 +299,8 @@ export async function precontent() {
 			emit(name, ...args) {
 				return app.each(
 					this.listens[name],
-					function (item) {
-						item.listen.apply(null, args);
+					(item) => {
+						item.listen(...args);
 						if (item.remove) this.off(name, item);
 					},
 					this
@@ -349,36 +367,43 @@ export async function precontent() {
 		},
 		importPlugin(data, setText) {
 			if (!window.JSZip) {
-				const args = arguments;
-				lib.init.js(lib.assetURL + "game", "jszip", function () {
+				const args = Array.from(arguments);
+				lib.init.js(`${lib.assetURL}game`, "jszip", () => {
 					app.importPlugin.apply(app, args);
 				});
 				return;
 			}
 			setText = typeof setText === "function" ? setText : () => { };
 			const zip = new JSZip(data);
-			const dirList = [],
-				fileList = [];
+			const dirList = [];
+			const fileList = [];
 			for (const i in zip.files) {
 				if (/\/$/.test(i)) {
-					dirList.push("extension/" + app.name + "/" + i);
+					dirList.push(`extension/${app.name}/${i}`);
 				} else if (!/^extension\.(js|css)$/.test(i)) {
+					const pathParts = i.split("/");
+					pathParts.pop(); // 移除文件名
 					fileList.push({
 						id: i,
-						path: "extension/" + app.name + "/" + i.split("/").reverse().slice(1).reverse().join("/"),
-						name: i.split("/").pop(),
+						path: `extension/${app.name}/${pathParts.join("/")}`,
+						name: pathParts[pathParts.length - 1] || i.split("/").pop(),
 						target: zip.files[i],
 					});
 				}
 			}
 			const total = dirList.length + fileList.length;
 			let finish = 0;
-			const isNode = lib.node && lib.node.fs;
+			const isNode = lib.node?.fs;
 			const writeFile = () => {
 				const file = fileList.shift();
 				if (file) {
 					setText(`正在导入(${++finish}/${total})...`);
-					game.writeFile(isNode ? file.target.asNodeBuffer() : file.target.asArrayBuffer(), file.path, file.name, writeFile);
+					game.writeFile(
+						isNode ? file.target.asNodeBuffer() : file.target.asArrayBuffer(),
+						file.path,
+						file.name,
+						writeFile
+					);
 				} else {
 					alert("导入完成");
 					setText("导入插件");
@@ -395,8 +420,8 @@ export async function precontent() {
 			ensureDir();
 		},
 		loadPlugins(callback) {
-			game.getFileList("extension/" + app.name, floders => {
-				const total = floders.length;
+			game.getFileList(`extension/${app.name}`, folders => {
+				const total = folders.length;
 				let current = 0;
 				if (total === current) {
 					callback();
@@ -409,8 +434,8 @@ export async function precontent() {
 					game.readFile(
 						`extension/${app.name}/${dir}/${file}`,
 						data => {
-							const binarry = new Uint8Array(data);
-							const blob = new Blob([binarry]);
+							const binary = new Uint8Array(data);
+							const blob = new Blob([binary]);
 							const reader = new FileReader();
 							reader.readAsText(blob);
 							reader.onload = () => {
@@ -429,8 +454,8 @@ export async function precontent() {
 					on: "main1.js",
 					othersOff: "main3.js",
 				};
-				const fileName = styleFileMap[lib.config.extension_十周年UI_newDecadeStyle] || "main2.js";
-				floders.forEach(dir => {
+				const fileName = styleFileMap[lib.config.extension_十周年UI_newDecadeStyle] ?? "main2.js";
+				folders.forEach(dir => {
 					readAndEval(dir, fileName);
 				});
 			});
@@ -445,11 +470,12 @@ export async function precontent() {
 			} else {
 				const func = target[name];
 				target[name] = function (...args) {
-					let result, cancel;
-					if (typeof replace === "function") cancel = replace.apply(this, [args].concat(args));
+					let result;
+					let cancel;
+					if (typeof replace === "function") cancel = replace.apply(this, [args, ...args]);
 					if (typeof func === "function" && !cancel) result = func.apply(this, args);
-					if (typeof str === "function") str.apply(this, [result].concat(args));
-					return cancel || result;
+					if (typeof str === "function") str.apply(this, [result, ...args]);
+					return cancel ?? result;
 				};
 			}
 			return target[name];
@@ -466,7 +492,7 @@ export async function precontent() {
 					item2 = item2 + item1;
 				}
 				if (typeof item1 === "string") {
-					item1 = RegExp(item1);
+					item1 = new RegExp(item1);
 				}
 				if (item1 instanceof RegExp && typeof item2 === "string") {
 					const funcStr = target[name].toString().replace(item1, item2);
@@ -475,9 +501,9 @@ export async function precontent() {
 					const func = target[name];
 					target[name] = function (...args) {
 						let result;
-						if (app.isFunction(item1)) result = item1.apply(this, [args].concat(args));
+						if (app.isFunction(item1)) result = item1.apply(this, [args, ...args]);
 						if (app.isFunction(func) && !result) result = func.apply(this, args);
-						if (app.isFunction(item2)) item2.apply(this, [result].concat(args));
+						if (app.isFunction(item2)) item2.apply(this, [result, ...args]);
 						return result;
 					};
 				}
@@ -569,12 +595,12 @@ export async function precontent() {
 		_clearPreviousTimers();
 		_removePreviousElement();
 		// 创建进度条容器
-		var boxContent = _createProgressContainer();
+		const boxContent = _createProgressContainer();
 		// 根据配置选择样式
-		var styleConfig = _getStyleConfig();
+		const styleConfig = _getStyleConfig();
 		_applyStyle(boxContent, styleConfig);
 		// 创建进度条元素
-		var progressElements = _createProgressElements(styleConfig);
+		const progressElements = _createProgressElements(styleConfig);
 		_appendProgressElements(boxContent, progressElements);
 		// 添加到页面
 		document.body.appendChild(boxContent);
@@ -596,19 +622,17 @@ export async function precontent() {
 			}
 		}
 		function _removePreviousElement() {
-			var existingElement = document.getElementById("jindutiaopl");
-			if (existingElement) {
-				existingElement.remove();
-			}
+			const existingElement = document.getElementById("jindutiaopl");
+			existingElement?.remove();
 		}
 		function _createProgressContainer() {
-			var container = document.createElement("div");
-			container.setAttribute("id", "jindutiaopl");
+			const container = document.createElement("div");
+			container.id = "jindutiaopl";
 			return container;
 		}
 		function _getStyleConfig() {
-			var styleType = lib.config.extension_十周年UI_jindutiaoYangshi;
-			var configs = {
+			const styleType = lib.config.extension_十周年UI_jindutiaoYangshi;
+			const configs = {
 				1: {
 					name: "手杀进度条样式",
 					container: {
@@ -705,7 +729,7 @@ export async function precontent() {
 					clearSpecial: true,
 				},
 			};
-			return configs[styleType] || configs["1"];
+			return configs[styleType] ?? configs[1];
 		}
 		function _applyStyle(container, config) {
 			if (config.clearSpecial && window.jindutiaoTeshu) {
@@ -714,12 +738,12 @@ export async function precontent() {
 			if (config.setSpecial && !window.jindutiaoTeshu) {
 				window.jindutiaoTeshu = true;
 			}
-			Object.keys(config.container).forEach(function (key) {
+			Object.keys(config.container).forEach(key => {
 				container.style[key] = config.container[key];
 			});
 		}
 		function _createProgressElements(config) {
-			var elements = {};
+			const elements = {};
 			elements.boxTime = document.createElement("div");
 			elements.boxTime.data = config.progressBar.data;
 			elements.boxTime.style.cssText = config.progressBar.style;
@@ -732,8 +756,8 @@ export async function precontent() {
 				elements.imgBg = _createImageElement(config.backgroundImage);
 			}
 			if (config.backgroundImages) {
-				elements.backgroundImages = config.backgroundImages.map(function (imgConfig, index) {
-					var img = _createImageElement(imgConfig);
+				elements.backgroundImages = config.backgroundImages.map((imgConfig, index) => {
+					const img = _createImageElement(imgConfig);
 					if (index === 0) elements.imgBg3 = img; // 为特殊定时器保存引用
 					return img;
 				});
@@ -741,8 +765,8 @@ export async function precontent() {
 			return elements;
 		}
 		function _createImageElement(imgConfig) {
-			var img = document.createElement("img");
-			img.src = lib.assetURL + imgConfig.src;
+			const img = document.createElement("img");
+			img.src = `${lib.assetURL}${imgConfig.src}`;
 			img.style.cssText = imgConfig.style;
 			return img;
 		}
@@ -759,14 +783,14 @@ export async function precontent() {
 			}
 			// 添加多个背景图片
 			if (elements.backgroundImages) {
-				elements.backgroundImages.forEach(function (img) {
+				elements.backgroundImages.forEach(img => {
 					container.appendChild(img);
 				});
 			}
 		}
 		function _startMainTimer(progressBar, container) {
-			window.timer = setInterval(function () {
-				progressBar.style.width = progressBar.data + "px";
+			window.timer = setInterval(() => {
+				progressBar.style.width = `${progressBar.data}px`;
 				// 剩余三分之一变红色
 				if (progressBar.data <= 395 / 3) {
 					progressBar.style.backgroundColor = "rgba(230, 56, 65, 0.88)";
@@ -774,28 +798,28 @@ export async function precontent() {
 					progressBar.style.backgroundColor = "rgb(230, 151, 91)";
 				}
 				progressBar.data--;
-				if (progressBar.data == 0) {
+				if (progressBar.data === 0) {
 					clearInterval(window.timer);
 					delete window.timer;
 					container.remove();
-					if (lib.config.extension_十周年UI_jindutiaotuoguan == true && _status.auto == false) {
+					if (lib.config.extension_十周年UI_jindutiaotuoguan === true && _status.auto === false) {
 						ui.click.auto();
 					}
 				}
-			}, parseFloat(lib.config["extension_十周年UI_jindutiaoST"]));
+			}, parseFloat(lib.config.extension_十周年UI_jindutiaoST));
 		}
 		function _startSpecialTimer(secondaryBar, backgroundImg) {
-			window.timer2 = setInterval(function () {
+			window.timer2 = setInterval(() => {
 				secondaryBar.data--;
-				secondaryBar.style.width = secondaryBar.data + "px";
-				if (secondaryBar.data == 0) {
+				secondaryBar.style.width = `${secondaryBar.data}px`;
+				if (secondaryBar.data === 0) {
 					clearInterval(window.timer2);
 					delete window.timer2;
 					delete window.jindutiaoTeshu;
 					secondaryBar.remove();
 					backgroundImg.remove();
 				}
-			}, parseFloat(lib.config["extension_十周年UI_jindutiaoST"]) / 2);
+			}, parseFloat(lib.config.extension_十周年UI_jindutiaoST) / 2);
 		}
 	};
 	//-----AI进度条框架----//
@@ -805,13 +829,14 @@ export async function precontent() {
 			clearInterval(window.timerai);
 			delete window.timerai;
 		}
-		var oldBar = document.getElementById("jindutiaoAI");
-		if (oldBar) oldBar.remove();
+		const oldBar = document.getElementById("jindutiaoAI");
+		oldBar?.remove();
 		// 创建进度条容器和时间条
 		window.boxContentAI = document.createElement("div");
-		var boxTimeAI = document.createElement("div");
+		const boxTimeAI = document.createElement("div");
 		boxContentAI.id = "jindutiaoAI";
-		let isShousha = lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+		const style = lib.config.extension_十周年UI_newDecadeStyle;
+		const isShousha = style !== "on" && style !== "othersOff";
 		// 样式与图片路径
 		if (isShousha) {
 			boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);left:3.5px;bottom:-12px;";
@@ -824,16 +849,21 @@ export async function precontent() {
 		}
 		boxContentAI.appendChild(boxTimeAI);
 		// 背景图片
-		var imgBg = document.createElement("img");
-		imgBg.src = lib.assetURL + (isShousha ? "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png" : "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png");
-		imgBg.style.cssText = isShousha ? "position:absolute;z-index:91;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);top:0;" : "position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);top:0;";
+		const imgBg = document.createElement("img");
+		const timeImagePath = isShousha
+			? "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png"
+			: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png";
+		imgBg.src = `${lib.assetURL}${timeImagePath}`;
+		imgBg.style.cssText = isShousha
+			? "position:absolute;z-index:91;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);top:0;"
+			: "position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);top:0;";
 		boxContentAI.appendChild(imgBg);
 		// 添加到页面
 		document.body.appendChild(boxContentAI);
 		// 进度条动画
-		window.timerai = setInterval(function () {
+		window.timerai = setInterval(() => {
 			boxTimeAI.data--;
-			boxTimeAI.style.width = boxTimeAI.data + "px";
+			boxTimeAI.style.width = `${boxTimeAI.data}px`;
 			if (boxTimeAI.data === 0) {
 				clearInterval(window.timerai);
 				delete window.timerai;
@@ -844,47 +874,57 @@ export async function precontent() {
 	// 聊天模块 --凌梦改 
 	// 别问荷花，烟花，灯笼，雪球投掷物为什么对应不上不了，因为本体没有，需要自己添加
 	if (!window.chatRecord) window.chatRecord = [];
+
+	// 获取当前玩家的辅助函数
+	const getCurrentPlayer = () => {
+		if (game.me) return game.me;
+		if (game.connectPlayers) {
+			if (game.online) {
+				return game.connectPlayers.find(p => p.playerid === game.onlineID);
+			}
+			return game.connectPlayers[0];
+		}
+		return null;
+	};
+
 	game.addChatWord = function (strx) {
-		if (window.chatRecord.length > 50) {
+		const MAX_RECORDS = 50;
+		if (window.chatRecord.length > MAX_RECORDS) {
 			//设置一下上限50条，不设也行，把这个if删除即可
-			window.chatRecord.remove(window.chatRecord[0]);
+			window.chatRecord.shift();
 		}
 		if (strx) {
 			window.chatRecord.push(strx);
 		}
-		var str = (window.chatRecord[0] || "") + "<br>";
-		if (window.chatRecord.length > 1) {
-			for (var i = 1; i < window.chatRecord.length; i++) {
-				str += "<br>" + window.chatRecord[i] + "<br>";
-			}
-		}
-		if (window.chatBackground2 != undefined) game.updateChatWord(str);
+		const str = window.chatRecord.map(record => `<br>${record}<br>`).join("");
+		if (window.chatBackground2 !== undefined) game.updateChatWord(str);
 	};
 	game.showChatWordBackgroundX = function () {
 		// 控制面板显示/隐藏逻辑
-		if (window.chatBg != undefined && window.chatBg.show) {
+		if (window.chatBg?.show) {
 			window.chatBg.hide();
 			// 关闭所有投掷物品
 			const throwItems = ["jidan", "tuoxie", "xianhua", "meijiu", "cailan", "qicai", "xiaojiu", "xueqiu", "xuwu"];
 			throwItems.forEach(item => {
-				if (window[item] && window[item].thrownn) window[item].thrownn = false;
+				if (window[item]?.thrownn) window[item].thrownn = false;
 			});
 			window.chatBg.show = false;
 			// 隐藏所有对话框
 			const dialogs = [
-				{ name: "dialog_lifesay", style: "left", value: "-" + window.dialog_lifesay?.style.width },
+				{ name: "dialog_lifesay", style: "left", value: `-${window.dialog_lifesay?.style.width}` },
 				{ name: "dialog_emoji", style: "top", value: "100%" },
 				{ name: "chatBackground", style: "left", value: "100%" },
 				{ name: "dialog_emotion", style: "bottom", value: "100%" }
 			];
 			dialogs.forEach(dialog => {
-				if (window[dialog.name]) {
-					if (window[dialog.name].show) {
-						window[dialog.name].style[dialog.style] = dialog.value;
+				const dialogElement = window[dialog.name];
+				if (dialogElement) {
+					if (dialogElement.show) {
+						dialogElement.style[dialog.style] = dialog.value;
 					}
 					setTimeout(() => {
-						window[dialog.name].hide();
-						window[dialog.name].show = false;
+						dialogElement.hide();
+						dialogElement.show = false;
 					}, dialog.name === "dialog_lifesay" ? 100 : 1000);
 				}
 			});
@@ -912,36 +952,43 @@ export async function precontent() {
 		window.hudongkuang.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/hudong.png");
 		window.chatBg.appendChild(window.hudongkuang);
 		// 点击效果函数
-		const clickFK = function (div) {
+		const clickFK = (div) => {
 			div.style.transition = "opacity 0.5s";
 			const eventType = lib.config.touchscreen ? "touchstart" : "mousedown";
 			const endEventType = lib.config.touchscreen ? "touchend" : "mouseup";
 
-			div.addEventListener(eventType, function () {
-				this.style.transform = "scale(0.95)";
+			div.addEventListener(eventType, () => {
+				div.style.transform = "scale(0.95)";
 			});
 
-			div.addEventListener(endEventType, function () {
-				this.style.transform = "";
+			div.addEventListener(endEventType, () => {
+				div.style.transform = "";
 			});
 
-			div.onmouseout = function () {
-				this.style.transform = "";
+			div.onmouseout = () => {
+				div.style.transform = "";
 			};
 		};
 		// 常用语功能
 		game.open_lifesay = function () {
 			// 隐藏其他对话框
-			["dialog_emoji", "chatBackground", "dialog_emotion"].forEach(dialog => {
-				if (window[dialog]) {
-					if (window[dialog].show) window[dialog].style[dialog === "dialog_emotion" ? "bottom" : dialog === "dialog_emoji" ? "top" : "left"] = dialog === "dialog_emoji" ? "100%" : dialog === "dialog_emotion" ? "100%" : "100%";
+			const dialogStyleMap = {
+				dialog_emoji: { prop: "top", value: "100%" },
+				chatBackground: { prop: "left", value: "100%" },
+				dialog_emotion: { prop: "bottom", value: "100%" }
+			};
+			Object.keys(dialogStyleMap).forEach(dialogName => {
+				const dialog = window[dialogName];
+				if (dialog) {
+					const style = dialogStyleMap[dialogName];
+					if (dialog.show) dialog.style[style.prop] = style.value;
 					setTimeout(() => {
-						window[dialog].hide();
-						window[dialog].show = false;
+						dialog.hide();
+						dialog.show = false;
 					}, 1000);
 				}
 			});
-			if (window.dialog_lifesay != undefined && window.dialog_lifesay.show) {
+			if (window.dialog_lifesay?.show) {
 				window.dialog_lifesay.hide();
 				window.dialog_lifesay.show = false;
 				return;
@@ -973,60 +1020,46 @@ export async function precontent() {
 			let skills = [];
 			if (game?.me?.getSkills) {
 				skills = game.me.getSkills(null, false, false).filter(skill => {
-					let info = get.info(skill);
+					const info = get.info(skill);
 					return !info || !info.charlotte;
 				});
 			}
-			let skillsx = skills;
-			for (let skill of skills) {
-				let info = get.info(skill);
-				if (info.derivation) {
+			let skillsx = [...skills];
+			for (const skill of skills) {
+				const info = get.info(skill);
+				if (info?.derivation) {
 					if (Array.isArray(info.derivation)) {
-						for (let name of info.derivation) {
-							skillsx.push(name);
-						}
+						skillsx.push(...info.derivation);
 					} else {
 						skillsx.push(info.derivation);
 					}
 				}
+			}
+			skillsx = [...new Set(skillsx)];
+			// 处理音频路径的辅助函数
+			const processAudioPath = (path) => {
+				const target = "ext:";
+				const isMatch = path.startsWith(target);
+				const actualPath = isMatch ? `../extension/${path.slice(target.length)}` : path;
+				const pathParts = actualPath.split('/');
+				const directory = pathParts[pathParts.length - 2];
+				const filename = pathParts[pathParts.length - 1].split('.')[0];
+				return { directory, filename };
 			};
-			skillsx = skillsx.filter((item, index) => {
-				return skillsx.indexOf(item) === index;
-			});
+
 			let skillIndex = 0;
-			for (let name of skillsx) {
+			for (const name of skillsx) {
 				if (!get.info(name)) continue;
-				let skillAudioData = get.Audio.skill({ skill: name, player: game.me.name });
-				let textList = skillAudioData.textList;
-				let audioList = skillAudioData.fileList;
+				const skillAudioData = get.Audio.skill({ skill: name, player: game.me.name });
+				const { textList, fileList: audioList } = skillAudioData;
 				for (let i = 0; i < textList.length; i++) {
-					let content = '「' + get.skillTranslation(name) + '」' + textList[i];
+					let content = `「${get.skillTranslation(name)}」${textList[i]}`;
 					content = content.replace(/~/g, ' ');
-					window["dialog_lifesayContent_" + skillIndex] = ui.create.div("hidden", "", function () {
-						var player = game.me;
-						if (!player) {
-							if (game.connectPlayers) {
-								if (game.online) {
-									for (var i = 0; i < game.connectPlayers.length; i++) {
-										if (game.connectPlayers[i].playerid == game.onlineID) {
-											player = game.connectPlayers[i];
-											break;
-										}
-									}
-								} else {
-									player = game.connectPlayers[0];
-								}
-							}
-						}
+					window[`dialog_lifesayContent_${skillIndex}`] = ui.create.div("hidden", "", function () {
+						const player = getCurrentPlayer();
 						if (!player) return;
-						let path = this.audioPath;
-						let target = "ext:";
-						let isMatch = path.slice(0, target.length) === target;
-						let actualPath = isMatch ? '../extension/' + path.slice(target.length) : path;
-						let pathParts = actualPath.split('/');
-						let directory = pathParts[pathParts.length - 2];
-						let filename = pathParts[pathParts.length - 1].split('.')[0];
-						let combinedMessage = `/playAudio ${directory} ${filename} ${this.content}`;
+						const { directory, filename } = processAudioPath(this.audioPath);
+						const combinedMessage = `/playAudio ${directory} ${filename} ${this.content}`;
 						if (game.online) {
 							game.send("chat", game.onlineID, combinedMessage);
 						} else {
@@ -1036,49 +1069,29 @@ export async function precontent() {
 						delete window.dialog_lifesay;
 						window.dialog_lifesay = undefined;
 					});
-					window["dialog_lifesayContent_" + skillIndex].style.cssText = "height: 10%; width: 100%; left: 0%; top: 0%; position: relative;";
-					window["dialog_lifesayContent_" + skillIndex].pos = skillIndex;
-					window["dialog_lifesayContent_" + skillIndex].content = content;
-					window["dialog_lifesayContent_" + skillIndex].audioPath = audioList[i];
-					window["dialog_lifesayContent_" + skillIndex].innerHTML = "<font color=white>" + content + "</font>";
-					window.dialog_lifesayBgColor.appendChild(window["dialog_lifesayContent_" + skillIndex]);
-					clickFK(window["dialog_lifesayContent_" + skillIndex]);
+					const contentDiv = window[`dialog_lifesayContent_${skillIndex}`];
+					contentDiv.style.cssText = "height: 10%; width: 100%; left: 0%; top: 0%; position: relative;";
+					contentDiv.pos = skillIndex;
+					contentDiv.content = content;
+					contentDiv.audioPath = audioList[i];
+					contentDiv.innerHTML = `<font color=white>${content}</font>`;
+					window.dialog_lifesayBgColor.appendChild(contentDiv);
+					clickFK(contentDiv);
 					skillIndex++;
 				}
 			}
 			// 处理阵亡语音
 			if (game.me?.name) {
-				let dieAudioData = get.Audio.die({ player: game.me.name });
-				let dieTextList = dieAudioData.textList;
-				let dieAudioList = dieAudioData.fileList;
+				const dieAudioData = get.Audio.die({ player: game.me.name });
+				const { textList: dieTextList, fileList: dieAudioList } = dieAudioData;
 				for (let i = 0; i < dieTextList.length; i++) {
-					let content = '「阵亡」' + dieTextList[i];
+					let content = `「阵亡」${dieTextList[i]}`;
 					content = content.replace(/~/g, ' ');
-					window["dialog_lifesayContent_" + skillIndex] = ui.create.div("hidden", "", function () {
-						var player = game.me;
-						if (!player) {
-							if (game.connectPlayers) {
-								if (game.online) {
-									for (var i = 0; i < game.connectPlayers.length; i++) {
-										if (game.connectPlayers[i].playerid == game.onlineID) {
-											player = game.connectPlayers[i];
-											break;
-										}
-									}
-								} else {
-									player = connectPlayers[0];
-								}
-							}
-						}
+					window[`dialog_lifesayContent_${skillIndex}`] = ui.create.div("hidden", "", function () {
+						const player = getCurrentPlayer();
 						if (!player) return;
-						let path = this.audioPath;
-						let target = "ext:";
-						let isMatch = path.slice(0, target.length) === target;
-						let actualPath = isMatch ? '../extension/' + path.slice(target.length) : path;
-						let pathParts = actualPath.split('/');
-						let directory = pathParts[pathParts.length - 2];
-						let filename = pathParts[pathParts.length - 1].split('.')[0];
-						let combinedMessage = `/playAudio ${directory} ${filename} ${this.content}`;
+						const { directory, filename } = processAudioPath(this.audioPath);
+						const combinedMessage = `/playAudio ${directory} ${filename} ${this.content}`;
 						if (game.online) {
 							game.send("chat", game.onlineID, combinedMessage);
 						} else {
@@ -1088,37 +1101,24 @@ export async function precontent() {
 						delete window.dialog_lifesay;
 						window.dialog_lifesay = undefined;
 					});
-					window["dialog_lifesayContent_" + skillIndex].style.cssText = "height: 10%; width: 100%; left: 0%; top: 0%; position: relative;";
-					window["dialog_lifesayContent_" + skillIndex].pos = skillIndex;
-					window["dialog_lifesayContent_" + skillIndex].content = content;
-					window["dialog_lifesayContent_" + skillIndex].audioPath = dieAudioList[i];
-					window["dialog_lifesayContent_" + skillIndex].innerHTML = "<font color=white>" + content + "</font>";
-					window.dialog_lifesayBgColor.appendChild(window["dialog_lifesayContent_" + skillIndex]);
-					clickFK(window["dialog_lifesayContent_" + skillIndex]);
+					const contentDiv = window[`dialog_lifesayContent_${skillIndex}`];
+					contentDiv.style.cssText = "height: 10%; width: 100%; left: 0%; top: 0%; position: relative;";
+					contentDiv.pos = skillIndex;
+					contentDiv.content = content;
+					contentDiv.audioPath = dieAudioList[i];
+					contentDiv.innerHTML = `<font color=white>${content}</font>`;
+					window.dialog_lifesayBgColor.appendChild(contentDiv);
+					clickFK(contentDiv);
 					skillIndex++;
 				}
 			}
 
 			// 快捷语音 
-			for (var i = 0; i < lib.quickVoice.length; i++) {
-				window["dialog_lifesayContent_" + (skillIndex + i)] = ui.create.div("hidden", "", function () {
-					var player = game.me;
-					var str = this.content;
-					if (!player) {
-						if (game.connectPlayers) {
-							if (game.online) {
-								for (var i = 0; i < game.connectPlayers.length; i++) {
-									if (game.connectPlayers[i].playerid == game.onlineID) {
-										player = game.connectPlayers[i];
-										break;
-									}
-								}
-							} else {
-								player = game.connectPlayers[0];
-							}
-						}
-					}
+			lib.quickVoice.forEach((voice, i) => {
+				window[`dialog_lifesayContent_${skillIndex + i}`] = ui.create.div("hidden", "", function () {
+					const player = getCurrentPlayer();
 					if (!player) return;
+					const str = this.content;
 					if (game.online) {
 						game.send("chat", game.onlineID, str);
 					} else {
@@ -1128,14 +1128,14 @@ export async function precontent() {
 					delete window.dialog_lifesay;
 					window.dialog_lifesay = undefined;
 				});
-				window["dialog_lifesayContent_" + (skillIndex + i)].style.cssText = "height: 10%; width: 100%; left: 0%; top: 0%; position: relative;";
-				window["dialog_lifesayContent_" + (skillIndex + i)].pos = skillIndex + i;
-				window["dialog_lifesayContent_" + (skillIndex + i)].content = lib.quickVoice[i];
-				window["dialog_lifesayContent_" + (skillIndex + i)].innerHTML = "<font color=white>" + lib.quickVoice[i] + "</font>";
-
-				window.dialog_lifesayBgColor.appendChild(window["dialog_lifesayContent_" + (skillIndex + i)]);
-				clickFK(window["dialog_lifesayContent_" + (skillIndex + i)]);
-			}
+				const contentDiv = window[`dialog_lifesayContent_${skillIndex + i}`];
+				contentDiv.style.cssText = "height: 10%; width: 100%; left: 0%; top: 0%; position: relative;";
+				contentDiv.pos = skillIndex + i;
+				contentDiv.content = voice;
+				contentDiv.innerHTML = `<font color=white>${voice}</font>`;
+				window.dialog_lifesayBgColor.appendChild(contentDiv);
+				clickFK(contentDiv);
+			});
 		};
 		// 常用语按钮
 		window.chatButton1 = ui.create.div("hidden", "", game.open_lifesay);
@@ -1148,19 +1148,18 @@ export async function precontent() {
 		const createThrowItem = (name, config) => {
 			const { left, bottom, image, label, emotionType } = config;
 			game[`open_${name}`] = function () {
-				var list = game.players;
-				for (let i = 0; i < game.players.length; i++) {
-					list[i].onclick = function () {
-						if (window[name].thrownn == true) {
+				game.players.forEach(player => {
+					player.onclick = function () {
+						if (window[name].thrownn === true) {
 							if (game.online) {
 								game.send("throwEmotion", this, emotionType);
 							} else {
 								game.me.throwEmotion(this, emotionType);
 							}
-							window.shuliang.innerText = window.shuliang.innerText - 1;
+							window.shuliang.innerText = parseInt(window.shuliang.innerText) - 1;
 						}
 					};
-				}
+				});
 			};
 			window[name] = ui.create.div("hidden", "", game[`open_${name}`]);
 			window[name].style.cssText = `display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:${left};bottom:${bottom};transition:none;background-size:100% 100%`;
@@ -1190,34 +1189,24 @@ export async function precontent() {
 		throwItems.forEach(item => createThrowItem(item.name, item));
 		// 特殊处理
 		game.open_xuwu = function () {
-			var list = game.players;
-			var num = 10;
-			for (let i = 0; i < game.players.length; i++) {
-				list[i].onclick = function () {
-					var target = this;
-					if (window.xuwu.thrownn == true) {
+			const num = 10;
+			game.players.forEach(player => {
+				player.onclick = function () {
+					if (window.xuwu.thrownn === true) {
 						for (let i = 0; i < num; i++) {
 							setTimeout(() => {
-								if (i <= 8) {
-									if (game.online) {
-										game.send("throwEmotion", this, "egg");
-									} else {
-										game.me.throwEmotion(this, "egg");
-									}
-									window.shuliang.innerText = window.shuliang.innerText - 1;
+								const emotionType = i <= 8 ? "egg" : "shoe";
+								if (game.online) {
+									game.send("throwEmotion", this, emotionType);
 								} else {
-									if (game.online) {
-										game.send("throwEmotion", this, "shoe");
-									} else {
-										game.me.throwEmotion(this, "shoe");
-									}
-									window.shuliang.innerText = window.shuliang.innerText - 1;
+									game.me.throwEmotion(this, emotionType);
 								}
+								window.shuliang.innerText = parseInt(window.shuliang.innerText) - 1;
 							}, 100 * i);
 						}
 					}
 				};
-			}
+			});
 		};
 		window.xuwu = ui.create.div("hidden", "", game.open_xuwu);
 		window.xuwu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:13px;transition:none;background-size:100% 100%";
@@ -1388,23 +1377,9 @@ export async function precontent() {
 		game.addChatWord();
 		// 发送信息函数 
 		window.sendInfo = function (content) {
-			var player = game.me;
-			var str = content;
-			if (!player) {
-				if (game.connectPlayers) {
-					if (game.online) {
-						for (var i = 0; i < game.connectPlayers.length; i++) {
-							if (game.connectPlayers[i].playerid == game.onlineID) {
-								player = game.connectPlayers[i];
-								break;
-							}
-						}
-					} else {
-						player = game.connectPlayers[0];
-					}
-				}
-			}
+			const player = getCurrentPlayer();
 			if (!player) return;
+			const str = content;
 			if (game.online) {
 				game.send("chat", game.onlineID, str);
 			} else {
@@ -1437,10 +1412,9 @@ export async function precontent() {
 		};
 		window.input.onkeydown = function (e) {
 			e.stopPropagation();
-			if (e.keyCode == 13) {
-				var value = this.value;
+			if (e.keyCode === 13 || e.key === "Enter") {
+				const value = String(this.value ?? "");
 				if (!value) return;
-				if (typeof value != "string") value = "" + value;
 				window.sendInfo(value);
 			}
 		};
@@ -1564,27 +1538,27 @@ export async function precontent() {
 	lib.element.player.chat = function (str) {
 		if (get.is.banWords(str)) return;
 		//URC addition
-		if (str[0] == "/") {
-			var chat = str.slice(1);
-			if (chat.indexOf(" ") != -1) {
-				chat = chat.split(" ");
-				var func = chat.shift();
-				if (func == "playAudio" && chat.length) {
-					var directory = chat.shift();
-					if ((directory == "die" || directory == "skill") && chat.length) {
-						var filename = chat.shift();
+		if (str[0] === "/") {
+			const chat = str.slice(1);
+			if (chat.includes(" ")) {
+				const parts = chat.split(" ");
+				const func = parts.shift();
+				if (func === "playAudio" && parts.length) {
+					const directory = parts.shift();
+					if ((directory === "die" || directory === "skill") && parts.length) {
+						const filename = parts.shift();
 						game.broadcastAll(
-							function (directory, filename) {
-								game.playAudio(directory, filename);
+							(dir, file) => {
+								game.playAudio(dir, file);
 							},
 							directory,
 							filename
 						);
-						if (chat.length) {
-							str = chat.join(" ");
+						if (parts.length) {
+							str = parts.join(" ");
 						} else {
-							var translation = filename;
-							while (translation == get.translation(translation) && translation.length) {
+							let translation = filename;
+							while (translation === get.translation(translation) && translation.length) {
 								translation = translation.slice(0, -1);
 							}
 							str = translation.length ? get.translation(translation) : filename;
@@ -1596,15 +1570,13 @@ export async function precontent() {
 		//URC addition end
 		this.say(str);
 		game.broadcast(
-			function (id, str) {
+			(id, message) => {
 				if (lib.playerOL[id]) {
-					lib.playerOL[id].say(str);
+					lib.playerOL[id].say(message);
 				} else if (game.connectPlayers) {
-					for (var i = 0; i < game.connectPlayers.length; i++) {
-						if (game.connectPlayers[i].playerid == id) {
-							game.connectPlayers[i].say(str);
-							return;
-						}
+					const player = game.connectPlayers.find(p => p.playerid === id);
+					if (player) {
+						player.say(message);
 					}
 				}
 			},
@@ -1626,29 +1598,28 @@ export async function precontent() {
 	};
 	game.as_showText = function (str, pos, time, font, size, color) {
 		if (!str) return false;
-		if (!pos || !Array.isArray(pos)) {
-			pos = [0, 0, 100, 100];
-		}
-		if (!time || (isNaN(time) && time !== true)) time = 3;
-		if (!font) font = "shousha";
-		if (!size) size = 16;
-		if (!color) color = "#ffffff";
+		const defaultPos = [0, 0, 100, 100];
+		pos = Array.isArray(pos) ? pos : defaultPos;
+		time = (time === true || (typeof time === "number" && !isNaN(time))) ? time : 3;
+		font = font ?? "shousha";
+		size = size ?? 16;
+		color = color ?? "#ffffff";
 		if (_status.as_showText) {
 			_status.as_showText.remove();
 			delete _status.as_showText;
 		}
-		var div = ui.create.div("", str, ui.window);
-		div.style.cssText = "z-index:-3; pointer-events:none; font-family:" + font + "; font-size:" + size + "px; color:" + color + "; line-height:" + size * 1.2 + "px; text-align:center; left:" + (pos[0] + pos[2] / 2) + "%; top:" + pos[1] + "%; width:0%; height:" + pos[3] + "%; position:absolute; transition-property:all; transition-duration:1s";
+		const div = ui.create.div("", str, ui.window);
+		div.style.cssText = `z-index:-3; pointer-events:none; font-family:${font}; font-size:${size}px; color:${color}; line-height:${size * 1.2}px; text-align:center; left:${pos[0] + pos[2] / 2}%; top:${pos[1]}%; width:0%; height:${pos[3]}%; position:absolute; transition-property:all; transition-duration:1s`;
 		_status.as_showText = div;
 		if (_status.as_showImage) {
 			_status.as_showImage.hide();
 		}
-		setTimeout(function () {
-			div.style.left = pos[0] + "%";
-			div.style.width = pos[2] + "%";
+		setTimeout(() => {
+			div.style.left = `${pos[0]}%`;
+			div.style.width = `${pos[2]}%`;
 		}, 1);
 		if (time === true) return true;
-		setTimeout(function () {
+		setTimeout(() => {
 			if (_status.as_showText) {
 				_status.as_showText.remove();
 				delete _status.as_showText;
@@ -1661,36 +1632,35 @@ export async function precontent() {
 	};
 	game.as_removeImage = function () {
 		if (_status.as_showImage) {
-			var outdiv = _status.as_showImage;
+			const outdiv = _status.as_showImage;
 			_status.as_showImage.style.animation = "left-to-right-out 1s";
 			delete _status.as_showImage;
-			setTimeout(function () {
+			setTimeout(() => {
 				outdiv.remove();
 			}, 1000);
 		}
 	};
 	game.as_showImage = function (url, pos, time) {
 		if (!url) return false;
-		if (!pos || !Array.isArray(pos)) {
-			pos = [0, 0, 100, 100];
-		}
-		if (!time || (isNaN(time) && time !== true)) time = 3;
+		const defaultPos = [0, 0, 100, 100];
+		pos = Array.isArray(pos) ? pos : defaultPos;
+		time = (time === true || (typeof time === "number" && !isNaN(time))) ? time : 3;
 		if (_status.as_showImage) {
-			var outdiv = _status.as_showImage;
+			const outdiv = _status.as_showImage;
 			_status.as_showImage.style.animation = "left-to-right-out 1s";
 			delete _status.as_showImage;
-			setTimeout(function () {
+			setTimeout(() => {
 				outdiv.remove();
 			}, 1000);
 		}
-		var div = ui.create.div("", "", ui.window);
-		div.style.cssText = "z-index:-1; pointer-events:none; left:" + pos[0] + "%; top:" + pos[1] + "%; width:8%; height:" + pos[3] + "%; position:absolute; background-size:100% 100%; background-position:center center; background-image:url(" + lib.assetURL + url + "); transition-property:all; transition-duration:1s";
+		const div = ui.create.div("", "", ui.window);
+		div.style.cssText = `z-index:-1; pointer-events:none; left:${pos[0]}%; top:${pos[1]}%; width:8%; height:${pos[3]}%; position:absolute; background-size:100% 100%; background-position:center center; background-image:url(${lib.assetURL}${url}); transition-property:all; transition-duration:1s`;
 		_status.as_showImage = div;
 		if (_status.as_showText) {
 			_status.as_showImage.hide();
 		}
 		if (time === true) return true;
-		setTimeout(function () {
+		setTimeout(() => {
 			if (_status.as_showImage) {
 				_status.as_showImage.remove();
 				delete _status.as_showImage;

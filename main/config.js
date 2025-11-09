@@ -6,7 +6,7 @@ export let config = {
 		intro: "",
 		init: true,
 		clear: true,
-		onclick: function () {
+		onclick: () => {
 			game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
 		},
 	},
@@ -38,14 +38,16 @@ export let config = {
 		onclick(control) {
 			const origin = lib.config.extension_十周年UI_newDecadeStyle;
 			game.saveConfig("extension_十周年UI_newDecadeStyle", control);
-			if (origin != control) {
+			if (origin !== control) {
 				setTimeout(() => game.reload(), 100);
 			}
 		},
 		update() {
 			if (window.decadeUI) {
-				ui.arena.dataset.newDecadeStyle = lib.config.extension_十周年UI_newDecadeStyle;
-				ui.arena.dataset.decadeLayout = lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff" || lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha" || lib.config.extension_十周年UI_newDecadeStyle == "codename" ? "on" : "off";
+				const style = lib.config.extension_十周年UI_newDecadeStyle;
+				ui.arena.dataset.newDecadeStyle = style;
+				const decadeLayoutStyles = ["on", "othersOff", "onlineUI", "babysha", "codename"];
+				ui.arena.dataset.decadeLayout = decadeLayoutStyles.includes(style) ? "on" : "off";
 			}
 		},
 	},
@@ -58,12 +60,13 @@ export let config = {
 			on: "右手",
 		},
 		update() {
-			if (lib.config["extension_十周年UI_rightLayout"] == "on" || lib.config["extension_十周年UI_rightLayout"] == "off") {
-				ui.arena.dataset.rightLayout = lib.config["extension_十周年UI_rightLayout"];
+			const layout = lib.config.extension_十周年UI_rightLayout;
+			if (layout === "on" || layout === "off") {
+				ui.arena.dataset.rightLayout = layout;
 			}
 		},
 		onclick(item) {
-			lib.config["extension_十周年UI_rightLayout"] = item || "off";
+			lib.config.extension_十周年UI_rightLayout = item ?? "off";
 			game.saveConfig("extension_十周年UI_rightLayout", item);
 			game.reload();
 		},
@@ -75,10 +78,9 @@ export let config = {
 		input: true,
 		onblur: function () {
 			this.innerHTML = this.innerHTML.replace(/<br>/g, "");
-			var value = parseFloat(this.innerHTML);
+			let value = parseFloat(this.innerHTML);
 			if (isNaN(value)) value = 0.18;
-			if (value < 0.1) value = 0.1;
-			if (value > 1) value = 1;
+			value = Math.max(0.1, Math.min(1, value));
 			this.innerHTML = value.toFixed(2);
 			game.saveConfig("extension_十周年UI_cardScale", value);
 			if (window.decadeUI) {
@@ -94,10 +96,9 @@ export let config = {
 		input: true,
 		onblur: function () {
 			this.innerHTML = this.innerHTML.replace(/<br>/g, "");
-			var value = parseFloat(this.innerHTML);
+			let value = parseFloat(this.innerHTML);
 			if (isNaN(value)) value = 0.18;
-			if (value < 0.1) value = 0.1;
-			if (value > 1) value = 1;
+			value = Math.max(0.1, Math.min(1, value));
 			this.innerHTML = value.toFixed(2);
 			game.saveConfig("extension_十周年UI_discardScale", value);
 			if (window.decadeUI) {
@@ -110,7 +111,7 @@ export let config = {
 		intro: "",
 		init: true,
 		clear: true,
-		onclick: function () {
+		onclick: () => {
 			game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
 		},
 	},
@@ -143,14 +144,14 @@ export let config = {
 			kb3: "大将军",
 			kb4: "大司马",
 		},
-		onclick: function (item) {
+		onclick: (item) => {
 			game.saveConfig("extension_十周年UI_cardbj", item);
 		},
-		visualMenu: function (node, link) {
-			node.style.height = node.offsetWidth * 1.4 + "px";
+		visualMenu: (node, link) => {
+			node.style.height = `${node.offsetWidth * 1.4}px`;
 			node.style.backgroundSize = "100% 100%";
 			node.className = "button character incardback";
-			node.setBackgroundImage("extension/十周年UI/assets/image/" + link + ".png");
+			node.setBackgroundImage(`extension/十周年UI/assets/image/${link}.png`);
 		},
 	},
 	chupaizhishi: {
@@ -169,11 +170,15 @@ export let config = {
 			random: "随机",
 			off: "关闭",
 		},
-		update: function () {
-			if (lib.config["extension_十周年UI_chupaizhishi"] == "random") {
-				var i = ["shousha", "shoushaX", "jiangjun", "weijiangjun", "cheqijiangjun", "biaoqijiangjun", "dajiangjun", "dasima"].randomGet();
-				if (window.decadeUI) decadeUI.config.chupaizhishi = i;
-			} else if (window.decadeUI) ui.arena.dataset.chupaizhishi = lib.config["extension_十周年UI_chupaizhishi"];
+		update() {
+			const config = lib.config.extension_十周年UI_chupaizhishi;
+			if (config === "random") {
+				const options = ["shousha", "shoushaX", "jiangjun", "weijiangjun", "cheqijiangjun", "biaoqijiangjun", "dajiangjun", "dasima"];
+				const selected = options.randomGet();
+				if (window.decadeUI) decadeUI.config.chupaizhishi = selected;
+			} else if (window.decadeUI) {
+				ui.arena.dataset.chupaizhishi = config;
+			}
 		},
 	},
 	killEffect: {
@@ -188,14 +193,11 @@ export let config = {
 		init: true,
 		onclick(bool) {
 			game.saveConfig("extension_十周年UI_meanPrettify", bool);
-			if (bool) lib.init.css(window.decadeUIPath + "extension/十周年UI", "menu");
-			else {
-				for (const link of document.head.querySelectorAll("link")) {
-					if (link.href.includes("menu.css")) {
-						link.remove();
-						break;
-					}
-				}
+			if (bool) {
+				lib.init.css(`${window.decadeUIPath}extension/十周年UI`, "menu");
+			} else {
+				const menuLink = document.head.querySelector("link[href*='menu.css']");
+				menuLink?.remove();
 			}
 			setTimeout(() => game.reload(), 100);
 		},
@@ -215,13 +217,13 @@ export let config = {
 		},
 		update() {
 			if (!window.decadeUI) return;
-			var item = lib.config["extension_十周年UI_dynamicBackground"];
-			if (!item || item == "off") {
+			const item = lib.config.extension_十周年UI_dynamicBackground;
+			if (!item || item === "off") {
 				decadeUI.backgroundAnimation.stopSpineAll();
 			} else {
-				var name = item.split("_");
-				var skin = name.splice(name.length - 1, 1)[0];
-				name = name.join("_");
+				const parts = item.split("_");
+				const skin = parts.pop();
+				const name = parts.join("_");
 				decadeUI.backgroundAnimation.play(name, skin);
 			}
 		},
@@ -229,11 +231,13 @@ export let config = {
 	dynamicSkin: {
 		name: "动态皮肤",
 		init: false,
-		onclick: function (value) {
+		onclick: (value) => {
 			game.saveConfig("extension_十周年UI_dynamicSkin", value);
 			lib.config.dynamicSkin = value;
 			game.saveConfig("dynamicSkin", value);
-			if (confirm("此功能需要手动导入骨骼文件以及安装《皮肤切换》和《千幻聆音》扩展\n点击确定自动重启")) game.reload();
+			if (confirm("此功能需要手动导入骨骼文件以及安装《皮肤切换》和《千幻聆音》扩展\n点击确定自动重启")) {
+				game.reload();
+			}
 		},
 	},
 	dynamicSkinOutcrop: {
@@ -241,16 +245,16 @@ export let config = {
 		init: true,
 		update() {
 			if (window.decadeUI) {
-				var enable = lib.config["extension_十周年UI_dynamicSkinOutcrop"];
+				const enable = lib.config.extension_十周年UI_dynamicSkinOutcrop;
 				ui.arena.dataset.dynamicSkinOutcrop = enable ? "on" : "off";
-				var players = game.players;
+				const players = game.players;
 				if (!players) return;
-				for (var i = 0; i < players.length; i++) {
-					if (players[i].dynamic) {
-						players[i].dynamic.outcropMask = enable;
-						players[i].dynamic.update(false);
+				players.forEach(player => {
+					if (player.dynamic) {
+						player.dynamic.outcropMask = enable;
+						player.dynamic.update(false);
 					}
-				}
+				});
 			}
 		},
 	},
@@ -263,7 +267,10 @@ export let config = {
 		name: "牌名辅助",
 		init: false,
 		update() {
-			if (window.decadeUI) ui.window.dataset.cardAlternateNameVisible = lib.config["extension_十周年UI_cardAlternateNameVisible"] ? "on" : "off";
+			if (window.decadeUI) {
+				const visible = lib.config.extension_十周年UI_cardAlternateNameVisible;
+				ui.window.dataset.cardAlternateNameVisible = visible ? "on" : "off";
+			}
 		},
 	},
 	showTemp: {
@@ -272,36 +279,34 @@ export let config = {
 		intro: "开启此选项后，视为卡牌显示将会替换为十周年UI内置替换显示",
 		onclick(bool) {
 			game.saveConfig("extension_十周年UI_showTemp", bool);
-			if (game.me && lib.config.cardtempname != "off") {
-				let cards = game.me.getCards("h", card => card._tempName);
-				const skill = _status.event.skill,
-					goon = skill && get.info(skill) && get.info(skill).viewAs && !get.info(skill).ignoreMod && cards.some(card => (ui.selected.cards || []).includes(card));
+			if (game.me && lib.config.cardtempname !== "off") {
+				const cards = game.me.getCards("h", card => card._tempName);
+				const skill = _status.event.skill;
+				const goon = skill && get.info(skill)?.viewAs && !get.info(skill).ignoreMod && cards.some(card => (ui.selected.cards || []).includes(card));
 				if (cards.length) {
-					for (let j = 0; j < cards.length; j++) {
-						const card = cards[j];
-						card._tempName.delete();
+					cards.forEach(card => {
+						card._tempName?.delete();
 						delete card._tempName;
 						let cardname, cardnature, cardskb;
 						if (!goon) {
 							cardname = get.name(card);
 							cardnature = get.nature(card);
 						} else {
-							cardskb = typeof get.info(skill).viewAs == "function" ? get.info(skill).viewAs([card], game.me) : get.info(skill).viewAs;
+							cardskb = typeof get.info(skill).viewAs === "function" ? get.info(skill).viewAs([card], game.me) : get.info(skill).viewAs;
 							cardname = get.name(cardskb);
 							cardnature = get.nature(cardskb);
 						}
-						if (card.name != cardname || !get.is.sameNature(card.nature, cardnature, true)) {
+						if (card.name !== cardname || !get.is.sameNature(card.nature, cardnature, true)) {
 							if (bool) {
 								if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
-								let tempname = "",
-									tempname2 = get.translation(cardname);
+								let tempname2 = get.translation(cardname);
 								if (cardnature) {
 									card._tempName.dataset.nature = cardnature;
-									if (cardname == "sha") {
+									if (cardname === "sha") {
 										tempname2 = get.translation(cardnature) + tempname2;
 									}
 								}
-								tempname += tempname2;
+								const tempname = tempname2;
 								card._tempName.innerHTML = tempname;
 								card._tempName.tempname = tempname;
 							} else {
@@ -309,7 +314,7 @@ export let config = {
 								if (lib.config.cardtempname !== "default") node.classList.remove("vertical");
 							}
 						}
-					}
+					});
 					//game.uncheck();
 					//game.check();
 				}
@@ -334,7 +339,9 @@ export let config = {
 			2: "图片样式",
 		},
 		update() {
-			if (window.decadeUI) ui.arena.dataset.forcestyle = lib.config["extension_十周年UI_forcestyle"];
+			if (window.decadeUI) {
+				ui.arena.dataset.forcestyle = lib.config.extension_十周年UI_forcestyle;
+			}
 		},
 	},
 	cardPrompt: {
@@ -349,10 +356,9 @@ export let config = {
 		input: true,
 		onblur: function () {
 			this.innerHTML = this.innerHTML.replace(/<br>/g, "");
-			var value = parseFloat(this.innerHTML);
+			let value = parseFloat(this.innerHTML);
 			if (isNaN(value)) value = 20;
-			if (value < 0) value = 0;
-			if (value > 100) value = 100;
+			value = Math.max(0, Math.min(100, value));
 			this.innerHTML = value;
 			game.saveConfig("extension_十周年UI_handTipHeight", value);
 			if (window.decadeUI) {
@@ -361,7 +367,7 @@ export let config = {
 		},
 		update() {
 			if (window.decadeUI) {
-				const height = lib.config["extension_十周年UI_handTipHeight"] || "20";
+				const height = lib.config.extension_十周年UI_handTipHeight ?? "20";
 				document.documentElement.style.setProperty('--hand-tip-bottom', `calc(${height}% + 10px)`);
 			}
 		},
@@ -376,14 +382,16 @@ export let config = {
 		intro: "切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整",
 		init: true,
 		update() {
-			const config = lib.config["extension_十周年UI_aloneEquip"];
-			if (window.decadeUI) ui.arena.dataset.aloneEquip = config ? "on" : "off";
+			const config = lib.config.extension_十周年UI_aloneEquip;
+			if (window.decadeUI) {
+				ui.arena.dataset.aloneEquip = config ? "on" : "off";
+			}
 			_status.nopopequip = config;
-			if (_status.gameStarted && ui && ui.equipSolts) {
+			if (_status.gameStarted && ui?.equipSolts) {
 				try {
 					ui.equipSolts.style.display = config ? "" : "none";
 				} catch (e) { }
-				if (config && game.me != ui.equipSolts.me) {
+				if (config && game.me !== ui.equipSolts.me) {
 					if (ui.equipSolts.me) {
 						ui.equipSolts.me.appendChild(ui.equipSolts.equips);
 					}
@@ -392,7 +400,7 @@ export let config = {
 					ui.equipSolts.appendChild(game.me.node.equips);
 					game.me.$syncExpand();
 				}
-				if (!config && game.me == ui.equipSolts.me) {
+				if (!config && game.me === ui.equipSolts.me) {
 					ui.equipSolts.me.appendChild(ui.equipSolts.equips);
 					ui.equipSolts.me = undefined;
 				}
@@ -415,7 +423,9 @@ export let config = {
 			off: "关闭",
 		},
 		update() {
-			if (window.decadeUI) ui.arena.dataset.outcropSkin = lib.config["extension_十周年UI_outcropSkin"];
+			if (window.decadeUI) {
+				ui.arena.dataset.outcropSkin = lib.config.extension_十周年UI_outcropSkin;
+			}
 		},
 	},
 	borderLevel: {
@@ -429,7 +439,9 @@ export let config = {
 			five: "五阶",
 		},
 		update() {
-			if (window.decadeUI) ui.arena.dataset.borderLevel = lib.config["extension_十周年UI_borderLevel"];
+			if (window.decadeUI) {
+				ui.arena.dataset.borderLevel = lib.config.extension_十周年UI_borderLevel;
+			}
 		},
 	},
 	longLevel: {
@@ -447,7 +459,9 @@ export let config = {
 			eleven: "OL等阶框·随机",
 		},
 		update() {
-			if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
+			if (window.decadeUI) {
+				ui.arena.dataset.longLevel = lib.config.extension_十周年UI_longLevel;
+			}
 		},
 	},
 	foldCardMinWidth: {
@@ -480,7 +494,9 @@ export let config = {
 			decade: "十周年",
 		},
 		update() {
-			if (window.decadeUI) ui.arena.dataset.playerMarkStyle = lib.config["extension_十周年UI_playerMarkStyle"];
+			if (window.decadeUI) {
+				ui.arena.dataset.playerMarkStyle = lib.config.extension_十周年UI_playerMarkStyle;
+			}
 		},
 	},
 	shadowStyle: {
@@ -492,7 +508,9 @@ export let config = {
 			off: "新样式",
 		},
 		update() {
-			if (window.decadeUI) ui.arena.dataset.shadowStyle = lib.config["extension_十周年UI_shadowStyle"];
+			if (window.decadeUI) {
+				ui.arena.dataset.shadowStyle = lib.config.extension_十周年UI_shadowStyle;
+			}
 		},
 	},
 	gainSkillsVisible: {
@@ -504,7 +522,9 @@ export let config = {
 			othersOn: "显示他人",
 		},
 		update() {
-			if (window.decadeUI) ui.arena.dataset.gainSkillsVisible = lib.config["extension_十周年UI_gainSkillsVisible"];
+			if (window.decadeUI) {
+				ui.arena.dataset.gainSkillsVisible = lib.config.extension_十周年UI_gainSkillsVisible;
+			}
 		},
 	},
 	loadingStyle: {
@@ -513,14 +533,16 @@ export let config = {
 		init: "off",
 		item: {
 			off: "关闭",
-			on: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog2.png);background-size: 100% 100%;"></div>',
-			On: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog1.png);background-size: 100% 100%;"></div>',
-			othersOn: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog3.png);background-size: 100% 100%;"></div>',
-			othersOff: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog4.png);background-size: 100% 100%;"></div>',
-			onlineUI: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog5.png);background-size: 100% 100%;"></div>',
+			on: `<div style="width:60px;height:40px;position:relative;background-image: url(${lib.assetURL}extension/十周年UI/assets/image/dialog2.png);background-size: 100% 100%;"></div>`,
+			On: `<div style="width:60px;height:40px;position:relative;background-image: url(${lib.assetURL}extension/十周年UI/assets/image/dialog1.png);background-size: 100% 100%;"></div>`,
+			othersOn: `<div style="width:60px;height:40px;position:relative;background-image: url(${lib.assetURL}extension/十周年UI/assets/image/dialog3.png);background-size: 100% 100%;"></div>`,
+			othersOff: `<div style="width:60px;height:40px;position:relative;background-image: url(${lib.assetURL}extension/十周年UI/assets/image/dialog4.png);background-size: 100% 100%;"></div>`,
+			onlineUI: `<div style="width:60px;height:40px;position:relative;background-image: url(${lib.assetURL}extension/十周年UI/assets/image/dialog5.png);background-size: 100% 100%;"></div>`,
 		},
 		update() {
-			if (window.decadeUI) ui.arena.dataset.loadingStyle = lib.config["extension_十周年UI_loadingStyle"];
+			if (window.decadeUI) {
+				ui.arena.dataset.loadingStyle = lib.config.extension_十周年UI_loadingStyle;
+			}
 		},
 	},
 	//手杀UI
@@ -529,7 +551,7 @@ export let config = {
 		intro: "",
 		init: true,
 		clear: true,
-		onclick: function () {
+		onclick: () => {
 			game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
 		},
 	},
@@ -620,7 +642,7 @@ export let config = {
 		intro: "",
 		init: true,
 		clear: true,
-		onclick: function () {
+		onclick: () => {
 			game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
 		},
 	},
