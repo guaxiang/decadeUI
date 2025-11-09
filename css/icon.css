@@ -1,90 +1,144 @@
-/*所以图标均为正方形素材*/
+:root {
+	--color-white: white;
+	--color-gray: gray;
+	--color-red-start: #ed6e6e;
+	--color-red-end: #ec8c69;
+
+	--size-icon-background: 50px;
+	--size-border-width: 1px;
+
+	--size-treasure-before-top: 10%;
+	--size-treasure-before-left: 10%;
+	--size-treasure-before-width: 80%;
+	--size-treasure-before-height: 60%;
+	--size-treasure-after-top: 50%;
+	--size-treasure-after-left: 10%;
+	--size-treasure-after-width: 80%;
+	--size-treasure-after-height: 40%;
+
+	--size-shield-before-top: 8%;
+	--size-shield-before-left: 15%;
+	--size-shield-before-width: 70%;
+	--size-shield-before-height: 70%;
+	--size-shield-after-width: 70%;
+	--size-shield-after-height: 84%;
+
+	--opacity-feichu: 0.8;
+
+	--bg-gradient-red: linear-gradient(to right, var(--color-red-start) 0%, var(--color-red-end) 100%);
+	--bg-gradient-white: linear-gradient(to right, var(--color-white) 0%, var(--color-white) 100%);
+	--bg-gradient-treasure-before: linear-gradient(to right, var(--color-red-start) 0%, var(--color-red-end) 100%) top no-repeat, linear-gradient(to right, var(--color-red-start) 0%, var(--color-red-end) 100%) bottom no-repeat;
+	--bg-gradient-treasure-before-white: linear-gradient(to right, var(--color-white) 0%, var(--color-white) 100%) top no-repeat, linear-gradient(to right, var(--color-white) 0%, var(--color-white) 100%) bottom no-repeat;
+	--bg-size-treasure-before: 100% 60%, 100% 30%;
+
+	--border-radius-treasure-before: 20% 20% 0 0;
+	--border-radius-treasure-after: 0 0 25% 25%;
+	--border-radius-shield-before: 50% 50% 50% 50% / 40% 40% 60% 60%;
+	--border-radius-shield-after: 15% 15% 0 0 / 20% 20% 0 0;
+
+	--clip-path-treasure-before: polygon(0 0, 100% 0, 100% 70%, 62% 70%, 62% 100%, 38% 100%, 38% 70%, 0 70%);
+	--clip-path-treasure-after: polygon(0 0, 29% 0, 29% 60%, 71% 60%, 71% 0, 100% 0, 100% 100%, 0 100%);
+	--clip-path-saber: polygon(50% 0, 65% 15%, 60% 70%, 75% 70%, 72% 80%, 56% 82%, 56% 100%, 44% 100%, 44% 82%, 28% 80%, 25% 70%, 40% 70%, 35% 15%, 50% 0);
+	--clip-path-shield-after: polygon(0 0, 100% 0, 100% 30%, 82% 72%, 50% 100%, 18% 72%, 0 30%, 0 0);
+	--clip-path-mount: polygon(50% 5%, 55% 20%, 80% 60%, 75% 65%, 75% 75%, 80% 90%, 15% 90%, 50% 70%, 50% 55%, 45% 50%, 22% 65%, 10% 50%, 45% 20%, 50% 5%);
+
+	--transform-saber: rotate(-45deg);
+}
+
 .icon.feichu,
 .icon.feichu:before,
 .icon.feichu:after {
-	opacity: 0.8;
-	background: white;
+	opacity: var(--opacity-feichu);
+	background: var(--color-white);
 }
+
 .icon-background {
-	width: 50px;
-	height: 50px;
-	border: solid 1px gray;
+	width: var(--size-icon-background);
+	height: var(--size-icon-background);
+	border: solid var(--size-border-width) var(--color-gray);
 }
+
 .icon-treasure {
 	position: relative;
 	width: 100%;
 	height: 100%;
 	background: transparent !important;
 }
+
 .icon-treasure:before {
 	content: "";
 	position: absolute;
 	display: block;
-	top: 10%;
-	left: 10%;
-	width: 80%;
-	height: 60%;
-	border-radius: 20% 20% 0 0;
-	background: linear-gradient(to right, #ed6e6e 0%, #ec8c69 100%) top no-repeat, linear-gradient(to right, #ed6e6e 0%, #ec8c69 100%) bottom no-repeat;
-	background-size: 100% 60%, 100% 30% !important;
-	clip-path: polygon(0 0, 100% 0, 100% 70%, 62% 70%, 62% 100%, 38% 100%, 38% 70%, 0 70%);
-	-webkit-clip-path: polygon(0 0, 100% 0, 100% 70%, 62% 70%, 62% 100%, 38% 100%, 38% 70%, 0 70%);
+	inset: var(--size-treasure-before-top) auto auto var(--size-treasure-before-left);
+	width: var(--size-treasure-before-width);
+	height: var(--size-treasure-before-height);
+	border-radius: var(--border-radius-treasure-before);
+	background: var(--bg-gradient-treasure-before);
+	background-size: var(--bg-size-treasure-before) !important;
+	clip-path: var(--clip-path-treasure-before);
+	-webkit-clip-path: var(--clip-path-treasure-before);
 }
+
 .icon-treasure.feichu:before {
-	background: linear-gradient(to right, white 0%, white 100%) top no-repeat, linear-gradient(to right, white 0%, white 100%) bottom no-repeat;
+	background: var(--bg-gradient-treasure-before-white);
 }
+
 .icon-treasure:after {
 	content: "";
 	position: absolute;
 	display: block;
-	top: 50%;
-	left: 10%;
-	width: 80%;
-	height: 40%;
-	border-radius: 0 0 25% 25%;
-	background: linear-gradient(to right, #ed6e6e 0%, #ec8c69 100%);
-	clip-path: polygon(0 0, 29% 0, 29% 60%, 71% 60%, 71% 0, 100% 0, 100% 100%, 0 100%);
-	-webkit-clip-path: polygon(0 0, 29% 0, 29% 60%, 71% 60%, 71% 0, 100% 0, 100% 100%, 0 100%);
+	inset: var(--size-treasure-after-top) auto auto var(--size-treasure-after-left);
+	width: var(--size-treasure-after-width);
+	height: var(--size-treasure-after-height);
+	border-radius: var(--border-radius-treasure-after);
+	background: var(--bg-gradient-red);
+	clip-path: var(--clip-path-treasure-after);
+	-webkit-clip-path: var(--clip-path-treasure-after);
 }
+
 .icon-saber {
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(to right, #ed6e6e 0%, #ec8c69 100%);
-	transform: rotate(-45deg);
-	clip-path: polygon(50% 0, 65% 15%, 60% 70%, 75% 70%, 72% 80%, 56% 82%, 56% 100%, 44% 100%, 44% 82%, 28% 80%, 25% 70%, 40% 70%, 35% 15%, 50% 0);
-	-webkit-clip-path: polygon(50% 0, 65% 15%, 60% 70%, 75% 70%, 72% 80%, 56% 82%, 56% 100%, 44% 100%, 44% 82%, 28% 80%, 25% 70%, 40% 70%, 35% 15%, 50% 0);
+	background: var(--bg-gradient-red);
+	transform: var(--transform-saber);
+	clip-path: var(--clip-path-saber);
+	-webkit-clip-path: var(--clip-path-saber);
 }
+
 .icon-shield {
 	position: relative;
 	width: 100%;
 	height: 100%;
 	background: transparent !important;
 }
+
 .icon-shield:before,
 .icon-shield:after {
 	content: "";
 	position: absolute;
 	display: block;
-	top: 8%;
-	left: 15%;
-	width: 70%;
-	height: 70%;
-	background: linear-gradient(to right, #ed6e6e 0%, #ec8c69 100%);
+	inset: var(--size-shield-before-top) auto auto var(--size-shield-before-left);
+	width: var(--size-shield-before-width);
+	height: var(--size-shield-before-height);
+	background: var(--bg-gradient-red);
 }
+
 .icon-shield:before {
-	border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+	border-radius: var(--border-radius-shield-before);
 }
+
 .icon-shield:after {
-	width: 70%;
-	height: 84%;
-	border-radius: 15% 15% 0 0 / 20% 20% 0 0;
-	clip-path: polygon(0 0, 100% 0, 100% 30%, 82% 72%, 50% 100%, 18% 72%, 0 30%, 0 0);
-	-webkit-clip-path: polygon(0 0, 100% 0, 100% 30%, 82% 72%, 50% 100%, 18% 72%, 0 30%, 0 0);
+	width: var(--size-shield-after-width);
+	height: var(--size-shield-after-height);
+	border-radius: var(--border-radius-shield-after);
+	clip-path: var(--clip-path-shield-after);
+	-webkit-clip-path: var(--clip-path-shield-after);
 }
+
 .icon-mount {
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(to right, #ed6e6e 0%, #ec8c69 100%);
-	clip-path: polygon(50% 5%, 55% 20%, 80% 60%, 75% 65%, 75% 75%, 80% 90%, 15% 90%, 50% 70%, 50% 55%, 45% 50%, 22% 65%, 10% 50%, 45% 20%, 50% 5%);
-	-webkit-clip-path: polygon(50% 5%, 55% 20%, 80% 60%, 75% 65%, 75% 75%, 80% 90%, 15% 90%, 50% 70%, 50% 55%, 45% 50%, 22% 65%, 10% 50%, 45% 20%, 50% 5%);
+	background: var(--bg-gradient-red);
+	clip-path: var(--clip-path-mount);
+	-webkit-clip-path: var(--clip-path-mount);
 }

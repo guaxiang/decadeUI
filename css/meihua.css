@@ -1,173 +1,264 @@
+:root {
+	--color-bg-dark: rgba(3, 3, 3, 0.3);
+	--color-bg-skill: rgba(0, 0, 0, 0.1);
+	--color-bg-popup: rgba(0, 0, 0, 0.7);
+	--color-text-handcard: rgb(224, 215, 174);
+	--color-white: #fff;
+	--color-blue: #4A90E2;
+	--color-blue-alpha: rgba(74, 144, 226, 0.3);
+	--color-blue-alpha-light: rgba(74, 144, 226, 0.1);
+	--color-green: #4CAF50;
+	--color-shadow: rgba(0, 0, 0, 0.2);
+
+	--font-family-yuanli: "yuanli";
+	--font-family-kaiti: kaiti;
+
+	--size-hand-width: 35px;
+	--size-hand-height: 90px;
+	--size-hand-offset: -45px;
+	--size-handcard-margin: 5px;
+	--size-handcard-font: 10px;
+
+	--size-skill-gap: 10px;
+	--size-skill-padding: 2px;
+	--size-skill-max-width: 200px;
+	--size-skill-box-min-width: 60px;
+	--size-skill-box-height: 20px;
+	--size-skill-box-padding: 6px 2px;
+	--size-skill-box-font: 15px;
+	--size-skill-box-radius: 4px;
+	--size-skill-box-shadow: 0 2px 6px var(--color-shadow);
+
+	--size-title-font: 24px;
+	--size-title-top: 5%;
+
+	--size-progress-bottom: 15%;
+	--size-progress-width: 80%;
+	--size-progress-height: 20px;
+	--size-progress-bar-height: 13px;
+
+	--size-dialog-top: 25%;
+	--size-dialog-height: 50%;
+	--size-dialog-content-top: 20%;
+	--size-dialog-content-left: 15%;
+	--size-dialog-content-width: 70%;
+	--size-dialog-content-height: 90%;
+	--size-dialog-button-width: 120px;
+	--size-dialog-button-height: 160px;
+
+	--size-epclick-width: 106px;
+	--size-epclick-height: 150px;
+	--size-epclick-offset: 2px;
+
+	--size-hand-tip-font: 17px;
+	--size-hand-tip-bottom: calc(20% + 10px);
+
+	--size-popup-border: 3px;
+	--size-popup-radius: 15px;
+	--size-popup-padding: 20px 24px 20px 16px;
+	--size-popup-font: 14px;
+	--size-popup-min-width: 250px;
+	--size-popup-max-width: 80vw;
+	--size-popup-shadow: 0 6px 20px var(--color-blue-alpha), 0 0 0 1px var(--color-blue-alpha-light);
+	--size-popup-blur: blur(5px);
+	--size-popup-title-margin: 8px;
+	--size-popup-desc-margin: 20px;
+
+	--z-index-skill: 9999;
+	--z-index-title: 10;
+	--z-index-progress: 10;
+	--z-index-progress-bar-1: 1;
+	--z-index-progress-bar-2: 2;
+	--z-index-dialog: 6;
+	--z-index-dialog-content: 7;
+	--z-index-popup: 5;
+
+	--transition-progress: width 0.1s ease-out;
+	--animation-dialog: factionDialogFadeIn 0.3s ease-out;
+
+	--bg-size-full: 100% 100%;
+	--bg-position-center: center;
+}
+
 .handdisplays {
-	background-color: rgba(3, 3, 3, 0.3);
-	width: 35px;
-	height: 90px;
-	left: -45px;
+	background-color: var(--color-bg-dark);
+	width: var(--size-hand-width);
+	height: var(--size-hand-height);
+	left: var(--size-hand-offset);
 	bottom: 0;
 	overflow: scroll;
 	opacity: 1;
 }
+
 .handdisplays .handcard {
 	position: relative;
-	margin-top: 5px;
+	margin-top: var(--size-handcard-margin);
 	text-align: center;
 	width: 100%;
 	font-weight: 700;
-	color: rgb(224, 215, 174);
-	font-family: "yuanli";
-	font-size: 10px;
+	color: var(--color-text-handcard);
+	font-family: var(--font-family-yuanli);
+	font-size: var(--size-handcard-font);
 }
+
 .baby_skill {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-start;
-	gap: 10px;
-	overflow-x: visible;
-	overflow-y: visible;
-	z-index: 9999;
-	background: rgba(0, 0, 0, 0.1);
-	padding: 2px 2px 2px 2px;
+	gap: var(--size-skill-gap);
+	overflow: visible;
+	z-index: var(--z-index-skill);
+	background: var(--color-bg-skill);
+	padding: var(--size-skill-padding);
 	box-sizing: border-box;
-	/* 确保技能框不会超出屏幕边界 */
-	max-width: 200px;
+	max-width: var(--size-skill-max-width);
 }
+
 .baby_skill_box {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	font-family: "yuanli";
-	font-size: 15px;
-	color: #fff;
+	font-family: var(--font-family-yuanli);
+	font-size: var(--size-skill-box-font);
+	color: var(--color-white);
 	background: url("../shoushaUI/skill/babysha/btnnhs3.png");
-	background-size: 100% 100%;
-	border-radius: 4px;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-	padding: 6px 2px;
-	min-width: 60px;
-	height: 20px;
+	background-size: var(--bg-size-full);
+	border-radius: var(--size-skill-box-radius);
+	box-shadow: var(--size-skill-box-shadow);
+	padding: var(--size-skill-box-padding);
+	min-width: var(--size-skill-box-min-width);
+	height: var(--size-skill-box-height);
 	margin: 0;
 }
+
 .groupTitle {
 	position: absolute;
-	top: 5%;
+	top: var(--size-title-top);
 	left: 50%;
 	transform: translateX(-50%);
-	font-family: kaiti;
-	font-size: 24px;
+	font-family: var(--font-family-kaiti);
+	font-size: var(--size-title-font);
 	font-weight: bold;
-	z-index: 10;
+	z-index: var(--z-index-title);
 	pointer-events: none;
 	text-align: center;
 	white-space: nowrap;
 }
+
 .groupJindutiao {
 	position: absolute;
-	bottom: 15%;
+	bottom: var(--size-progress-bottom);
 	left: 50%;
 	transform: translateX(-50%);
-	width: 80%;
-	height: 20px;
-	z-index: 10;
+	width: var(--size-progress-width);
+	height: var(--size-progress-height);
+	z-index: var(--z-index-progress);
 	pointer-events: none;
 }
+
 .groupJindutiao1 {
 	position: absolute;
-	top: 0;
-	left: 0;
+	inset: 0 0 auto 0;
 	width: 100%;
-	height: 13px;
-	background-size: 100% 100%;
+	height: var(--size-progress-bar-height);
+	background-size: var(--bg-size-full);
 	background-repeat: no-repeat;
-	background-position: center;
-	z-index: 1;
+	background-position: var(--bg-position-center);
+	z-index: var(--z-index-progress-bar-1);
 }
+
 .groupJindutiao2 {
 	position: absolute;
-	top: 0;
-	left: 0;
-	height: 13px;
-	background-size: 100% 100%;
+	inset: 0 0 auto 0;
+	height: var(--size-progress-bar-height);
+	background-size: var(--bg-size-full);
 	background-repeat: no-repeat;
-	background-position: center;
-	z-index: 2;
-	transition: width 0.1s ease-out;
+	background-position: var(--bg-position-center);
+	z-index: var(--z-index-progress-bar-2);
+	transition: var(--transition-progress);
 }
+
 .dialog.faction-choice {
-	z-index: 6;
-	top: 25%;
+	z-index: var(--z-index-dialog);
+	top: var(--size-dialog-top);
 	left: 0%;
 	width: 100%;
-	height: 50% !important;
-	background-size: 100% 100%;
+	height: var(--size-dialog-height) !important;
+	background-size: var(--bg-size-full);
 }
+
 .dialog.faction-choice .content {
-	z-index: 7;
-	top: 20% !important;
-	left: 15%;
-	width: 70%;
-	height: 90% !important;
+	z-index: var(--z-index-dialog-content);
+	top: var(--size-dialog-content-top) !important;
+	left: var(--size-dialog-content-left);
+	width: var(--size-dialog-content-width);
+	height: var(--size-dialog-content-height) !important;
 }
+
 .dialog.noupdate {
-	animation: factionDialogFadeIn 0.3s ease-out;
+	animation: var(--animation-dialog);
 }
+
 .dialog.faction-choice .button {
-	width: 120px;
-	height: 160px;
-	background-size: 100% 100% !important;
+	width: var(--size-dialog-button-width);
+	height: var(--size-dialog-button-height);
+	background-size: var(--bg-size-full) !important;
 	background-repeat: no-repeat;
-	background-position: center;
+	background-position: var(--bg-position-center);
 	border: none;
 	box-shadow: none !important;
 	padding: 0;
 }
+
 .epclick {
-	width: 106px;
-	height: 150px;
-	left: 2px;
-	top: 2px;
+	width: var(--size-epclick-width);
+	height: var(--size-epclick-height);
+	inset: var(--size-epclick-offset) auto auto var(--size-epclick-offset);
 	position: absolute;
 	background-image: url(../image/decoration/equipHand.png);
-	background-size: 100% 100%;
+	background-size: var(--bg-size-full);
 }
-/* 修改手牌提示字体 */
-#arena > .hand-tip,
-#arena > .hand-tip-info,
-#arena > .hand-tip span {
-	font-family: "yuanli" !important;
-	font-size: 17px !important;
-	bottom: var(--hand-tip-bottom, calc(20% + 10px)) !important;
+
+#arena>.hand-tip,
+#arena>.hand-tip-info,
+#arena>.hand-tip span {
+	font-family: var(--font-family-yuanli) !important;
+	font-size: var(--size-hand-tip-font) !important;
+	bottom: var(--hand-tip-bottom, var(--size-hand-tip-bottom)) !important;
 }
-/* 技能描述弹窗样式 */
+
 .baby_skill_popup {
 	position: fixed;
-	background: rgba(0, 0, 0, 0.7);
-	border: 3px solid #4A90E2;
-	border-radius: 15px;
-	padding: 20px 24px 20px 16px;
-	color: #fff;
-	font-size: 14px;
+	background: var(--color-bg-popup);
+	border: var(--size-popup-border) solid var(--color-blue);
+	border-radius: var(--size-popup-radius);
+	padding: var(--size-popup-padding);
+	color: var(--color-white);
+	font-size: var(--size-popup-font);
 	line-height: 1.5;
-	min-width: 250px;
-	max-width: 80vw;
+	min-width: var(--size-popup-min-width);
+	max-width: var(--size-popup-max-width);
 	width: fit-content;
 	height: fit-content;
-	z-index: 5;
-	box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3), 0 0 0 1px rgba(74, 144, 226, 0.1);
+	z-index: var(--z-index-popup);
+	box-shadow: var(--size-popup-shadow);
 	word-wrap: break-word;
 	pointer-events: auto;
 	text-align: left;
 	display: flex;
 	flex-direction: column;
-	backdrop-filter: blur(5px);
+	backdrop-filter: var(--size-popup-blur);
 }
+
 .baby_skill_popup .skill_title {
 	font-weight: bold;
-	margin-bottom: 8px;
-	color: #4CAF50;
+	margin-bottom: var(--size-popup-title-margin);
+	color: var(--color-green);
 	text-align: left;
 }
+
 .baby_skill_popup .skill_description {
 	text-align: left;
-	margin-top: 20px;
+	margin-top: var(--size-popup-desc-margin);
 }

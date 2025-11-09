@@ -1,69 +1,131 @@
+:root {
+	--color-white: white;
+	--color-white-alpha-03: rgba(255, 255, 255, 0.3);
+	--color-white-alpha-02: rgba(255, 255, 255, 0.2);
+	--color-black: black;
+	--color-black-alpha-066: rgba(0, 0, 0, 0.66);
+	--color-black-alpha-01: rgba(0, 0, 0, 0.1);
+	--color-green: #02ff02;
+	--color-orange: rgb(236, 151, 31);
+	--color-orange-active: rgb(188, 120, 24);
+	--color-yellow: rgb(200, 150, 80);
+	--color-yellow-border: rgb(120, 120, 50);
+
+	--size-slider-height: 5px;
+	--size-slider-thumb: 13px;
+	--size-slider-border-radius: 5px;
+
+	--size-chat-height: 200px;
+	--size-chat-left: -15px;
+	--size-chat-bottom: calc(1% + 185px);
+	--size-chat-radius: 4px;
+	--size-chat-opacity: 0.66;
+	--size-chat-padding: 4px;
+	--size-chat-content-offset: 8px;
+	--size-chat-shadow: 0 0 6px var(--color-yellow) inset;
+
+	--size-operation-padding: 2px;
+	--size-operation-min-height: 24px;
+	--size-operation-max-height: 32px;
+	--size-operation-input-padding: 4px 2px;
+	--size-operation-input-margin: 0 2px;
+	--size-operation-button-padding: 4px;
+	--size-operation-button-margin: 2px;
+	--size-operation-font: 16px;
+	--size-operation-line-height: 18px;
+
+	--size-border-width: 1px;
+
+	--z-index-chat: 5;
+
+	--transition-button: 0.2s;
+	--transition-button-props: background, transform, opacity;
+
+	--text-shadow-button: 0 0 2px var(--color-black);
+
+	--bg-slider: linear-gradient(rgba(240, 240, 255, 0.8), rgba(240, 240, 255, 0.8)) no-repeat rgba(200, 200, 200, 0.5);
+	--bg-slider-size: 50% 100%;
+}
+
 input[type="range"].slider {
 	position: relative;
-	height: 5px;
-	border-radius: 5px;
-	background: linear-gradient(rgba(240, 240, 255, 0.8), rgba(240, 240, 255, 0.8)) no-repeat rgba(200, 200, 200, 0.5);
-	background-size: 50% 100%;
+	height: var(--size-slider-height);
+	border-radius: var(--size-slider-border-radius);
+	background: var(--bg-slider);
+	background-size: var(--bg-slider-size);
 	-webkit-appearance: none;
+	appearance: none;
 }
+
 input[type="range"].slider:focus {
 	outline: none;
 }
+
 input[type="range"].slider::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	height: 13px;
-	width: 13px;
-	background: white;
+	height: var(--size-slider-thumb);
+	width: var(--size-slider-thumb);
+	background: var(--color-white);
 	border-radius: 50%;
-	border: solid 1px rgba(0, 0, 0, 0.1);
+	border: solid var(--size-border-width) var(--color-black-alpha-01);
 }
+
 .chat-box {
 	display: inline-flex;
 	flex-flow: column;
 	width: auto;
-	height: 200px;
-	background: rgba(0, 0, 0, 0.66);
-	border-radius: 0 0 4px 4px;
+	height: var(--size-chat-height);
+	background: var(--color-black-alpha-066);
+	border-radius: 0 0 var(--size-chat-radius) var(--size-chat-radius);
 }
-#arena > .chat-box {
-	z-index: 5;
-	left: -15px;
-	bottom: calc(1% + 185px);
+
+#arena>.chat-box {
+	z-index: var(--z-index-chat);
+	left: var(--size-chat-left);
+	bottom: var(--size-chat-bottom);
 }
+
 .chat-box.folded {
 	height: auto;
-	border-radius: 4px;
-	opacity: 0.66;
+	border-radius: var(--size-chat-radius);
+	opacity: var(--size-chat-opacity);
 }
-.chat-box.folded > div:not(.operation) {
+
+.chat-box.folded>div:not(.operation) {
 	display: none;
 }
-.chat-box.folded > .operation > input,
-.chat-box.folded > .operation > button:not(.fold-button) {
+
+.chat-box.folded>.operation>input,
+.chat-box.folded>.operation>button:not(.fold-button) {
 	display: none;
 }
-.chat-box.folded > .operation > button.fold-button {
-	background: rgba(255, 255, 255, 0.2);
+
+.chat-box.folded>.operation>button.fold-button {
+	background: var(--color-white-alpha-02);
 }
-.chat-box > div {
+
+.chat-box>div {
 	position: static;
 	width: auto;
 	height: auto;
 }
-.chat-box > .container {
+
+.chat-box>.container {
 	flex: 1;
 	position: relative;
-	padding: 4px;
-	color: white;
-	box-shadow: 0 0 6px rgb(200, 150, 80) inset;
+	padding: var(--size-chat-padding);
+	color: var(--color-white);
+	box-shadow: var(--size-chat-shadow);
 }
-.chat-box > .container > .content {
+
+.chat-box>.container>.content {
 	position: absolute;
-	width: calc(100% - 8px);
-	height: calc(100% - 8px);
+	width: calc(100% - var(--size-chat-content-offset));
+	height: calc(100% - var(--size-chat-content-offset));
 	overflow-y: auto;
 }
-.chat-box > .container > .content > div {
+
+.chat-box>.container>.content>div {
 	display: block;
 	position: static;
 	margin: 0;
@@ -71,62 +133,72 @@ input[type="range"].slider::-webkit-slider-thumb {
 	word-wrap: break-word;
 	word-break: break-all;
 }
-.chat-box > .container > .content > div > .sender {
-	color: #02ff02;
+
+.chat-box>.container>.content>div>.sender {
+	color: var(--color-green);
 }
-.chat-box > .operation {
+
+.chat-box>.operation {
 	display: flex;
 	flex-flow: row;
-	padding: 2px;
+	padding: var(--size-operation-padding);
 	height: auto;
-	min-height: 24px;
-	max-height: 32px;
+	min-height: var(--size-operation-min-height);
+	max-height: var(--size-operation-max-height);
 }
-.chat-box > .operation > div,
-.chat-box > .operation > input,
-.chat-box > .operation > button {
+
+.chat-box>.operation>div,
+.chat-box>.operation>input,
+.chat-box>.operation>button {
 	position: static;
 }
-.chat-box > .operation > .chat-input {
+
+.chat-box>.operation>.chat-input {
 	flex: 1;
-	padding: 4px 2px;
-	margin: 0px 2px;
+	padding: var(--size-operation-input-padding);
+	margin: var(--size-operation-input-margin);
 	outline: none;
-	border: 1px solid rgb(120, 120, 50);
-	color: #ffffff;
-	font-size: 16px;
-	line-height: 18px;
+	border: var(--size-border-width) solid var(--color-yellow-border);
+	color: var(--color-white);
+	font-size: var(--size-operation-font);
+	line-height: var(--size-operation-line-height);
 	background: transparent;
 }
-.chat-box > .operation > .chat-input::-webkit-input-placeholder {
-	color: rgba(255, 255, 255, 0.3);
-	line-height: 18px;
+
+.chat-box>.operation>.chat-input::-webkit-input-placeholder {
+	color: var(--color-white-alpha-03);
+	line-height: var(--size-operation-line-height);
 }
-.chat-box > .operation > input {
+
+.chat-box>.operation>input {
 	font-family: inherit;
 }
-.chat-box > .operation > button {
+
+.chat-box>.operation>button {
 	font-family: inherit;
-	text-shadow: 0 0 2px black;
+	text-shadow: var(--text-shadow-button);
 }
-.chat-box > .operation > button:active {
-	background: rgb(188, 120, 24);
+
+.chat-box>.operation>button:active {
+	background: var(--color-orange-active);
 }
-.chat-box > .operation > .fold-button,
-.chat-box > .operation > .send-button,
-.chat-box > .operation > .sticker-button {
-	padding: 4px;
-	line-height: 18px;
-	border: 1px solid transparent;
-	border-radius: 4px;
+
+.chat-box>.operation>.fold-button,
+.chat-box>.operation>.send-button,
+.chat-box>.operation>.sticker-button {
+	padding: var(--size-operation-button-padding);
+	line-height: var(--size-operation-line-height);
+	border: var(--size-border-width) solid transparent;
+	border-radius: var(--size-chat-radius);
 	outline: none;
-	color: #ffffff;
-	font-size: 16px;
+	color: var(--color-white);
+	font-size: var(--size-operation-font);
 	white-space: nowrap;
-	background: rgb(236, 151, 31);
-	transition-duration: 0.2s;
-	transition-property: background, transform, opacity;
+	background: var(--color-orange);
+	transition-duration: var(--transition-button);
+	transition-property: var(--transition-button-props);
 }
-.chat-box > .operation > .send-button {
-	margin-left: 2px;
+
+.chat-box>.operation>.send-button {
+	margin-left: var(--size-operation-button-margin);
 }
