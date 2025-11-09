@@ -32,6 +32,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 	const createUIElements = () => {
 		createConfigButton();
 		createSortButton();
+		createSelectAllButton();
 		createTopRightMenu();
 	};
 	// 创建配置按钮
@@ -88,6 +89,80 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			}
 		};
 		document.body.appendChild(sortButton);
+	};
+	// 创建全选/反选手牌按钮
+	const createSelectAllButton = () => {
+		const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
+		const selectAllButton = ui.create.node("img");
+		const updateSelectAllButtonImage = () => {
+			if (ui.selected.cards.length > 0) {
+				selectAllButton.src = `${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/uibutton/fanxuanhs.png`;
+			} else {
+				selectAllButton.src = `${lib.assetURL}extension/十周年UI/shoushaUI/lbtn/images/uibutton/quanxuanhs.png`;
+			}
+		};
+		updateSelectAllButtonImage();
+		let styleText = "display:block;position:absolute;background-color:transparent;";
+		styleText += "width:85px;height:50px;bottom: 26%;left: 22px;z-index:4;right: auto;";
+		styleText += isRightLayout ? "right: calc(100% - 295px);z-index:3;" : "right: calc(100% - 1175px);z-index:3;";
+		selectAllButton.style.cssText = styleText;
+		selectAllButton.onclick = () => {
+			const event = _status.event;
+			if (!event || !event.isMine || !event.isMine() || !event.allowChooseAll || event.complexCard || event.complexSelect) {
+				return;
+			}
+			const selectCard = event.selectCard;
+			if (!selectCard) return;
+			const range = get.select(selectCard);
+			if (range[1] <= 1) return;
+			game.playAudio("../extension/十周年UI/audio/card_click.mp3");
+			const selecteds = [...ui.selected.cards];
+			ui.selected.cards.length = 0;
+			game.check();
+			const selectables = get.selectableCards();
+			const cards = selecteds.length ? [...new Set(selectables).difference(selecteds)] : selectables;
+			if (cards.length <= range[1]) {
+				ui.selected.cards.push(...cards);
+			} else {
+				ui.selected.cards.push(...cards.randomGets(range[1]));
+			}
+			for (let i = 0; i < ui.selected.cards.length; i++) {
+				const card = ui.selected.cards[i];
+				card.classList.add("selected");
+				if (card.updateTransform) card.updateTransform(true, 0);
+			}
+			for (let i = 0; i < selecteds.length; i++) {
+				const card = selecteds[i];
+				card.classList.remove("selected");
+				if (card.updateTransform) card.updateTransform(false, 0);
+			}
+			game.check();
+			updateSelectAllButtonImage();
+			if (typeof event.custom?.add?.card === "function") {
+				event.custom.add.card();
+			}
+		};
+		// 定时检测是否有选择事件，动态显示/隐藏全选按钮
+		selectAllButton._interval = setInterval(() => {
+			const event = _status.event;
+			if (!event || !event.isMine || !event.isMine() || !event.allowChooseAll || event.complexCard || event.complexSelect) {
+				selectAllButton.style.display = "none";
+				return;
+			}
+			const selectCard = event.selectCard;
+			if (!selectCard) {
+				selectAllButton.style.display = "none";
+				return;
+			}
+			const range = get.select(selectCard);
+			if (range[1] <= 1) {
+				selectAllButton.style.display = "none";
+				return;
+			}
+			selectAllButton.style.display = "block";
+			updateSelectAllButtonImage();
+		}, 100);
+		document.body.appendChild(selectAllButton);
 	};
 	// 创建右上角菜单
 	const createTopRightMenu = () => {
@@ -733,6 +808,49 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			}
 			ui.updatec();
 			confirm.update();
+		};
+		const originalCardChooseAll = ui.create.cardChooseAll;
+		ui.create.cardChooseAll = () => null;
+		function removeCardChooseAll(event) {
+			if (!event || !event.cardChooseAll) return;
+			const el = event.cardChooseAll;
+			if (el instanceof HTMLDivElement) {
+				if (el.parentNode) el.remove();
+				if (ui.updatec) ui.updatec();
+			}
+			delete event.cardChooseAll;
+		}
+		const initObserver = () => {
+			if (!ui.control) return;
+			const observer = new MutationObserver((mutations) => {
+				for (let i = 0; i < mutations.length; i++) {
+					const added = mutations[i].addedNodes;
+					for (let j = 0; j < added.length; j++) {
+						const node = added[j];
+						if (node.nodeType === 1 && node.classList && node.classList.contains("control")) {
+							const first = node.firstElementChild;
+							if (first && /^[全反]选$/.test(first.innerHTML) && node.childElementCount === 1) {
+								node.remove();
+								if (_status.event && _status.event.cardChooseAll === node) delete _status.event.cardChooseAll;
+								if (ui.updatec) ui.updatec();
+							}
+						}
+					}
+				}
+			});
+			observer.observe(ui.control, { childList: true });
+		};
+		if (ui.control) initObserver();
+		else if (lib.arenaReady) lib.arenaReady.push(initObserver);
+
+		if (lib.hooks && lib.hooks.checkEnd) {
+			lib.hooks.checkEnd.add(removeCardChooseAll);
+		}
+		const originalCheck = game.check;
+		game.check = function (event) {
+			const result = originalCheck.apply(this, arguments);
+			removeCardChooseAll(event);
+			return result;
 		};
 		// 拦截出牌阶段的取消：有选中时仅恢复选择而不结束回合
 		(() => {

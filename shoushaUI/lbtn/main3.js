@@ -667,15 +667,16 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					confirm.node[k].removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
 					confirm.node[k].addEventListener(lib.config.touchscreen ? "touchend" : "click", (e) => {
 						e.stopPropagation();
-						if (this.classList.contains("disabled")) {
-							if (this.link === "cancel" && this.dataset.type === "endButton" && _status.event.endButton) {
+						const target = e.currentTarget;
+						if (target.classList.contains("disabled")) {
+							if (target.link === "cancel" && target.dataset.type === "endButton" && _status.event.endButton) {
 								_status.event.endButton.custom();
 								ui.confirm.close();
 							}
 							return;
 						}
-						if (this.parentNode.custom) {
-							this.parentNode.custom(this.link, this);
+						if (target.parentNode.custom) {
+							target.parentNode.custom(target.link, target);
 						}
 					});
 				}
@@ -689,7 +690,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						item.innerHTML = get.translation(skills[i]);
 						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", (e) => {
 							e.stopPropagation();
-							ui.click.skill(this.link);
+							ui.click.skill(item.link);
 						});
 						item.dataset.type = "skill2";
 						if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
