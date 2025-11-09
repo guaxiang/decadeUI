@@ -450,7 +450,7 @@ var duilib;
 			}
 			this.check = function () {
 				if (!this.gl) {
-					function empty() {}
+					function empty() { }
 					var key;
 					for (key in this.__proto__) {
 						if (typeof this.__proto__[key] == "function") {
@@ -1015,8 +1015,8 @@ var duilib;
 			var sprite =
 				typeof sprite == "string"
 					? {
-							name: sprite,
-					  }
+						name: sprite,
+					}
 					: sprite;
 			sprite.id = this.BUILT_ID++;
 			sprite.loop = true;

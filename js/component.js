@@ -2,12 +2,12 @@
 decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	decadeUI.component = {
 		slider(min, max, value) {
-			var slider = document.createElement("input");
-			var onchange = function () {
-				var percent = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
-				slider.style.backgroundSize = percent + "% " + "100%";
+			const slider = document.createElement("input");
+			const onchange = function () {
+				const percent = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+				slider.style.backgroundSize = `${percent}% 100%`;
 			};
-			var valueProp = Object.getOwnPropertyDescriptor(slider.__proto__, "value");
+			const valueProp = Object.getOwnPropertyDescriptor(slider.__proto__, "value");
 			Object.defineProperties(slider, {
 				value: {
 					configurable: true,
@@ -23,13 +23,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			slider.className = "slider";
 			slider.type = "range";
 			slider.addEventListener("input", onchange);
-			slider.min = typeof min == "number" ? min : 0;
-			slider.max = typeof max == "number" ? max : 100;
-			slider.value = typeof value == "number" ? value : (max - min) * 0.5;
+			slider.min = typeof min === "number" ? min : 0;
+			slider.max = typeof max === "number" ? max : 100;
+			slider.value = typeof value === "number" ? value : (max - min) * 0.5;
 			return slider;
 		},
 		chatBox() {
-			var box = decadeUI.dialog.create("chat-box folded");
+			const box = decadeUI.dialog.create("chat-box folded");
 			box.container = decadeUI.dialog.create("container", box);
 			box.operation = decadeUI.dialog.create("operation", box);
 			box.content = decadeUI.dialog.create("content", box.container);
@@ -41,21 +41,21 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			box.operation.sticker.innerHTML = "表情";
 			box.operation.send.innerHTML = "发送";
 			box.addEntry = function (info) {
-				var text = decadeUI.dialog.create("chat-text", box.content);
-				text.innerHTML = '<span class="sender">' + info[0] + "</span>:" + '<span class="text">' + info[1] + "</span>";
+				const text = decadeUI.dialog.create("chat-text", box.content);
+				text.innerHTML = `<span class="sender">${info[0]}</span>:<span class="text">${info[1]}</span>`;
 				if (box.overrideEntry) box.overrideEntry(info);
 				box.content.scrollTop = box.content.scrollHeight;
 			};
 			box.addEntry._origin = box;
 			box.sendInputText = function () {
 				if (input.value) {
-					var player = game.me;
-					var str = input.value;
+					let player = game.me;
+					const str = input.value;
 					if (!player) {
 						if (game.connectPlayers) {
 							if (game.online) {
-								for (var i = 0; i < game.connectPlayers.length; i++) {
-									if (game.connectPlayers[i].playerid == game.onlineID) {
+								for (let i = 0; i < game.connectPlayers.length; i++) {
+									if (game.connectPlayers[i].playerid === game.onlineID) {
 										player = game.connectPlayers[i];
 										break;
 									}
@@ -75,7 +75,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					_status.chatValue = "";
 				}
 			};
-			var input = box.operation.input;
+			const input = box.operation.input;
 			box.operation.fold.addEventListener("click", function () {
 				if (box.classList.contains("folded")) {
 					box.operation.fold.innerHTML = "<<";
@@ -93,7 +93,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				_status.chatValue = input.value;
 			});
 			input.addEventListener("keydown", function (e) {
-				if (e.keyCode == 13) box.sendInputText();
+				if (e.keyCode === 13) box.sendInputText();
 				e.stopPropagation();
 			});
 			return box;
