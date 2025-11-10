@@ -1080,34 +1080,19 @@ export async function content(config, pack) {
 										const d = document.createElement(tag);
 										for (const key in opts) {
 											if (!Object.hasOwnProperty.call(opts, key)) continue;
-											switch (key) {
-												case "class":
-													opts[key].forEach(v => d.classList.add(v));
-													break;
-												case "id":
-													d.id = opts[key];
-													break;
-												case "innerHTML":
-												case "innerText":
-													d[key] = opts[key];
-													break;
-												case "parentNode":
-													opts[key].appendChild(d);
-													break;
-												case "listen":
-													for (const evt in opts[key]) {
-														if (typeof opts[key][evt] == "function") d[evt] = opts[key][evt];
-													}
-													break;
-												case "style":
-													for (const s in opts[key]) d.style[s] = opts[key][s];
-													break;
-												case "children":
-													opts[key].forEach(v => d.appendChild(v));
-													break;
-												case "insertBefore":
-													opts[key][0].insertBefore(d, opts[key][1]);
-													break;
+											const setterMap = {
+												class: v => v.forEach(x => d.classList.add(x)),
+												id: v => d.id = v,
+												parentNode: v => v.appendChild(d),
+												listen: v => { for (const evt in v) { if (typeof v[evt] == "function") d[evt] = v[evt]; } },
+												style: v => { for (const s in v) d.style[s] = v[s]; },
+												children: v => v.forEach(x => d.appendChild(x)),
+												insertBefore: v => v[0].insertBefore(d, v[1]),
+											};
+											if (key == "innerHTML" || key == "innerText") {
+												d[key] = opts[key];
+											} else if (setterMap[key]) {
+												setterMap[key](opts[key]);
 											}
 										}
 										return d;
@@ -1296,25 +1281,14 @@ export async function content(config, pack) {
 											if (colonIndex <= 0) continue;
 											const prefix = value.slice(0, colonIndex);
 											const payload = value.slice(colonIndex + 1);
-											switch (prefix) {
-												case "img":
-													imgPrefixUrl = payload;
-													break;
-												case "ext":
-													extimage = value;
-													break;
-												case "db":
-													dbimage = value;
-													break;
-												case "mode":
-													modeimage = payload;
-													break;
-												case "character":
-													realName = payload;
-													break;
-												default:
-													break;
-											}
+											const handle = {
+												img: () => imgPrefixUrl = payload,
+												ext: () => extimage = value,
+												db: () => dbimage = value,
+												mode: () => modeimage = payload,
+												character: () => realName = payload,
+											}[prefix];
+											if (handle) handle();
 											if (imgPrefixUrl || extimage || dbimage || modeimage || realName !== name) break;
 										}
 									}
@@ -2007,34 +1981,19 @@ export async function content(config, pack) {
 									const d = document.createElement(tag);
 									for (const key in opts) {
 										if (!Object.hasOwnProperty.call(opts, key)) continue;
-										switch (key) {
-											case "class":
-												opts[key].forEach(v => d.classList.add(v));
-												break;
-											case "id":
-												d.id = opts[key];
-												break;
-											case "innerHTML":
-											case "innerText":
-												d[key] = opts[key];
-												break;
-											case "parentNode":
-												opts[key].appendChild(d);
-												break;
-											case "listen":
-												for (const evt in opts[key]) {
-													if (typeof opts[key][evt] == "function") d[evt] = opts[key][evt];
-												}
-												break;
-											case "style":
-												for (const s in opts[key]) d.style[s] = opts[key][s];
-												break;
-											case "children":
-												opts[key].forEach(v => d.appendChild(v));
-												break;
-											case "insertBefore":
-												opts[key][0].insertBefore(d, opts[key][1]);
-												break;
+										const setterMap = {
+											class: v => v.forEach(x => d.classList.add(x)),
+											id: v => d.id = v,
+											parentNode: v => v.appendChild(d),
+											listen: v => { for (const evt in v) { if (typeof v[evt] == "function") d[evt] = v[evt]; } },
+											style: v => { for (const s in v) d.style[s] = v[s]; },
+											children: v => v.forEach(x => d.appendChild(x)),
+											insertBefore: v => v[0].insertBefore(d, v[1]),
+										};
+										if (key == "innerHTML" || key == "innerText") {
+											d[key] = opts[key];
+										} else if (setterMap[key]) {
+											setterMap[key](opts[key]);
 										}
 									}
 									return d;
@@ -2265,84 +2224,24 @@ export async function content(config, pack) {
 									if (typeof node.popupNumber == "number") {
 										var popupNum = node.popupNumber;
 										if (popupNum < 0) {
-											switch (node.nature) {
-												case "thunder":
-													if (popupNum <= -2) {
-														decadeUI.animation.playSpine(
-															{
-																name: "effect_shoujidonghua",
-																action: "play6",
-															},
-															{
-																scale: 0.8,
-																parent: player,
-															}
-														);
-													} else {
-														decadeUI.animation.playSpine(
-															{
-																name: "effect_shoujidonghua",
-																action: "play5",
-															},
-															{
-																scale: 0.8,
-																parent: player,
-															}
-														);
+											if (node.nature != "water") {
+												const actionPairs = {
+													thunder: ["play5", "play6"],
+													fire: ["play3", "play4"],
+													__default: ["play1", "play2"],
+												};
+												const pair = actionPairs[node.nature] || actionPairs.__default;
+												const action = popupNum <= -2 ? pair[1] : pair[0];
+												decadeUI.animation.playSpine(
+													{
+														name: "effect_shoujidonghua",
+														action: action,
+													},
+													{
+														scale: 0.8,
+														parent: player,
 													}
-													break;
-												case "fire":
-													if (popupNum <= -2) {
-														decadeUI.animation.playSpine(
-															{
-																name: "effect_shoujidonghua",
-																action: "play4",
-															},
-															{
-																scale: 0.8,
-																parent: player,
-															}
-														);
-													} else {
-														decadeUI.animation.playSpine(
-															{
-																name: "effect_shoujidonghua",
-																action: "play3",
-															},
-															{
-																scale: 0.8,
-																parent: player,
-															}
-														);
-													}
-													break;
-												case "water":
-													break;
-												default:
-													if (popupNum <= -2) {
-														decadeUI.animation.playSpine(
-															{
-																name: "effect_shoujidonghua",
-																action: "play2",
-															},
-															{
-																scale: 0.8,
-																parent: player,
-															}
-														);
-													} else {
-														decadeUI.animation.playSpine(
-															{
-																name: "effect_shoujidonghua",
-																action: "play1",
-															},
-															{
-																scale: 0.8,
-																parent: player,
-															}
-														);
-													}
-													break;
+												);
 											}
 										} else {
 											if (node.nature == "wood") {
@@ -4300,19 +4199,25 @@ export async function content(config, pack) {
 						var sprite = decadeUI.backgroundAnimation.current;
 						if (!(sprite && sprite.name == "skin_xiaosha_default")) return;
 						decadeUI.backgroundAnimation.canvas.style.zIndex = 7;
-						switch (result) {
-							case "战斗胜利":
+						const actions = {
+							"战斗胜利": () => {
 								sprite.scaleTo(1.8, 600);
 								sprite.setAction("shengli");
-								break;
-							case "平局":
-							case "战斗失败":
+							},
+							"平局": () => {
 								if (!duicfg.rightLayout) sprite.flipX = true;
 								sprite.moveTo([0, 0.5], [0, 0.25], 600);
 								sprite.scaleTo(2.5, 600);
 								sprite.setAction("gongji");
-								break;
-						}
+							},
+							"战斗失败": () => {
+								if (!duicfg.rightLayout) sprite.flipX = true;
+								sprite.moveTo([0, 0.5], [0, 0.25], 600);
+								sprite.scaleTo(2.5, 600);
+								sprite.setAction("gongji");
+							},
+						};
+						actions[result]?.();
 					},
 				},
 				get: {
@@ -4329,22 +4234,16 @@ export async function content(config, pack) {
 					},
 					objtype(obj) {
 						obj = Object.prototype.toString.call(obj);
-						switch (obj) {
-							case "[object Array]":
-								return "array";
-							case "[object Object]":
-								return "object";
-							case "[object HTMLDivElement]":
-								return "div";
-							case "[object HTMLTableElement]":
-								return "table";
-							case "[object HTMLTableRowElement]":
-								return "tr";
-							case "[object HTMLTableCellElement]":
-								return "td";
-							case "[object HTMLBodyElement]":
-								return "td";
-						}
+						const map = {
+							"[object Array]": "array",
+							"[object Object]": "object",
+							"[object HTMLDivElement]": "div",
+							"[object HTMLTableElement]": "table",
+							"[object HTMLTableRowElement]": "tr",
+							"[object HTMLTableCellElement]": "td",
+							"[object HTMLBodyElement]": "td",
+						};
+						return map[obj];
 					},
 				},
 			};
@@ -4783,28 +4682,24 @@ export async function content(config, pack) {
 							var checked;
 							var identity = this.parentNode.dataset.color;
 							var gameMode = get.mode();
-							switch (value) {
-								case "猜":
+							const handlerMap = {
+								"猜": () => {
 									filename = "cai";
 									if (_status.mode == "purple" && identity == "cai") {
 										filename += "_blue";
 										checked = true;
 									}
-									break;
-								case "友":
-									filename = "friend";
-									break;
-								case "敌":
-									filename = "enemy";
-									break;
-								case "反":
+								},
+								"友": () => { filename = "friend"; },
+								"敌": () => { filename = "enemy"; },
+								"反": () => {
 									filename = "fan";
 									if (get.mode() == "doudizhu") {
 										filename = "nongmin";
 										checked = true;
 									}
-									break;
-								case "主":
+								},
+								"主": () => {
 									filename = "zhu";
 									if (get.mode() == "versus" && get.translation(player.side + "Color") == "wei") {
 										filename += "_blue";
@@ -4814,8 +4709,8 @@ export async function content(config, pack) {
 										filename = "dizhu";
 										checked = true;
 									}
-									break;
-								case "忠":
+								},
+								"忠": () => {
 									filename = "zhong";
 									if (gameMode == "identity" && _status.mode == "purple") {
 										filename = "qianfeng";
@@ -4824,62 +4719,43 @@ export async function content(config, pack) {
 										this.player.classList.add("opposite-camp");
 										checked = true;
 									}
-									break;
-								case "内":
+								},
+								"内": () => {
 									if (_status.mode == "purple") {
 										filename = identity == "rNei" ? "xizuo" : "xizuo_blue";
 										checked = true;
 									} else {
 										filename = "nei";
 									}
-									break;
-								case "野":
-									filename = "ye";
-									break;
-								case "首":
-									filename = "zeishou";
-									break;
-								case "帅":
-									filename = "zhushuai";
-									break;
-								case "将":
+								},
+								"野": () => { filename = "ye"; },
+								"首": () => { filename = "zeishou"; },
+								"帅": () => { filename = "zhushuai"; },
+								"将": () => {
 									filename = "dajiang";
 									if (_status.mode == "three" || get.translation(player.side + "Color") == "wei") {
 										filename = "zhushuai_blue";
 										checked = true;
 									}
-									break;
-								case "兵":
-								case "卒":
-									filename = this.player.side === false ? "qianfeng_blue" : "qianfeng";
-									checked = true;
-									break;
-								case "师":
-									filename = "junshi";
-									break;
-								case "盟":
-									filename = "mengjun";
-									break;
-								case "神":
-									filename = "boss";
-									break;
-								case "从":
-									filename = "suicong";
-									break;
-								case "先":
-									filename = "xianshou";
-									break;
-								case "后":
-									filename = "houshou";
-									break;
-								case "民":
-									filename = "commoner";
-									break;
-								default:
-									this.innerText = value;
-									this.style.visibility = "";
-									this.parentNode.style.backgroundImage = "";
-									return;
+								},
+								"兵": () => { filename = this.player.side === false ? "qianfeng_blue" : "qianfeng"; checked = true; },
+								"卒": () => { filename = this.player.side === false ? "qianfeng_blue" : "qianfeng"; checked = true; },
+								"师": () => { filename = "junshi"; },
+								"盟": () => { filename = "mengjun"; },
+								"神": () => { filename = "boss"; },
+								"从": () => { filename = "suicong"; },
+								"先": () => { filename = "xianshou"; },
+								"后": () => { filename = "houshou"; },
+								"民": () => { filename = "commoner"; },
+							};
+							const fn = handlerMap[value];
+							if (fn) {
+								fn();
+							} else {
+								this.innerText = value;
+								this.style.visibility = "";
+								this.parentNode.style.backgroundImage = "";
+								return;
 							}
 							if (!checked && this.parentNode.dataset.color) {
 								if (this.parentNode.dataset.color[0] == "b") {
@@ -6135,9 +6011,9 @@ export async function content(config, pack) {
 			card.$usedtag = tagNode;
 			if (event.blameEvent) event = event.blameEvent;
 			let tagText;
-			switch (event.name) {
-				case "judge":
-					tagText = event.judgestr + "的判定牌";
+			const tagHandlerMap = {
+				judge: (event) => {
+					const initialText = event.judgestr + "的判定牌";
 					event.addMessageHook("judgeResult", function () {
 						var event = this;
 						var card = event.result.card.clone;
@@ -6189,11 +6065,12 @@ export async function content(config, pack) {
 						loop: true,
 					});
 					event.apcard = card;
-					break;
-				default:
+					return initialText;
+				},
+				__default: (event) => {
 					let evt = _status.event;
 					_status.event = event;
-					tagText = get.cardsetion(player);
+					let text = get.cardsetion(player);
 					_status.event = evt;
 					if (["useCard", "respond"].includes(event.name)) {
 						const cardname = event.card.name,
@@ -6226,111 +6103,41 @@ export async function content(config, pack) {
 						if (event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
 							var name = event.card.name,
 								nature = event.card.nature;
-							switch (name) {
-								case "effect_caochuanjiejian":
-									decadeUI.animation.cap.playSpineTo(card, "effect_caochuanjiejian");
-									break;
-								case "sha":
-									switch (nature) {
-										case "thunder":
-											decadeUI.animation.cap.playSpineTo(card, "effect_leisha");
-											break;
-										case "fire":
-											decadeUI.animation.cap.playSpineTo(card, "effect_huosha");
-											break;
-										default:
-											if (get.color(card) == "red") {
-												decadeUI.animation.cap.playSpineTo(card, "effect_hongsha");
-											} else {
-												decadeUI.animation.cap.playSpineTo(card, "effect_heisha");
-											}
-											break;
-									}
-									break;
-								case "shan":
-									decadeUI.animation.cap.playSpineTo(card, "effect_shan");
-									break;
-								case "tao":
-									decadeUI.animation.cap.playSpineTo(card, "effect_tao", {
-										scale: 0.9,
-									});
-									break;
-								case "tiesuo":
-									decadeUI.animation.cap.playSpineTo(card, "effect_tiesuolianhuan", {
-										scale: 0.9,
-									});
-									break;
-								case "jiu":
-									decadeUI.animation.cap.playSpineTo(card, "effect_jiu", {
-										y: [-30, 0.5],
-									});
-									break;
-								case "kaihua":
-									decadeUI.animation.cap.playSpineTo(card, "effect_shushangkaihua");
-									break;
-								case "wuzhong":
-									decadeUI.animation.cap.playSpineTo(card, "effect_wuzhongshengyou");
-									break;
-								case "wuxie":
-									decadeUI.animation.cap.playSpineTo(card, "effect_wuxiekeji", {
-										y: [10, 0.5],
-										scale: 0.9,
-									});
-									break;
-								case "juedou":
-									decadeUI.animation.cap.playSpineTo(card, "SF_eff_jiangling_juedou", {
-										x: [10, 0.4],
-										scale: 1,
-									});
-									break;
-								case "nanman":
-									decadeUI.animation.cap.playSpineTo(card, "effect_nanmanruqin", {
-										scale: 0.45,
-									});
-									break;
-								case "wanjian":
-									decadeUI.animation.cap.playSpineTo(card, "effect_wanjianqifa", {
-										scale: 0.78,
-									});
-									break;
-								case "wugu":
-									decadeUI.animation.cap.playSpineTo(card, "effect_wugufengdeng", {
-										y: [10, 0.5],
-									});
-									break;
-								case "taoyuan":
-									decadeUI.animation.cap.playSpineTo(card, "SF_kapai_eff_taoyuanjieyi", {
-										y: [10, 0.5],
-									});
-									break;
-								case "shunshou":
-									decadeUI.animation.cap.playSpineTo(card, "effect_shunshouqianyang");
-									break;
-								case "huogong":
-									decadeUI.animation.cap.playSpineTo(card, "effect_huogong", {
-										x: [8, 0.5],
-										scale: 0.5,
-									});
-									break;
-								case "guohe":
-									decadeUI.animation.cap.playSpineTo(card, "effect_guohechaiqiao", {
-										y: [10, 0.5],
-									});
-									break;
-								case "yuanjiao":
-									decadeUI.animation.cap.playSpineTo(card, "effect_yuanjiaojingong");
-									break;
-								case "zhibi":
-									decadeUI.animation.cap.playSpineTo(card, "effect_zhijizhibi");
-									break;
-								case "zhulu_card":
-									decadeUI.animation.cap.playSpineTo(card, "effect_zhulutianxia");
-									break;
+							const effectMap = {
+								effect_caochuanjiejian: { key: "effect_caochuanjiejian" },
+								shan: { key: "effect_shan" },
+								tao: { key: "effect_tao", opts: { scale: 0.9 } },
+								tiesuo: { key: "effect_tiesuolianhuan", opts: { scale: 0.9 } },
+								jiu: { key: "effect_jiu", opts: { y: [-30, 0.5] } },
+								kaihua: { key: "effect_shushangkaihua" },
+								wuzhong: { key: "effect_wuzhongshengyou" },
+								wuxie: { key: "effect_wuxiekeji", opts: { y: [10, 0.5], scale: 0.9 } },
+								juedou: { key: "SF_eff_jiangling_juedou", opts: { x: [10, 0.4], scale: 1 } },
+								nanman: { key: "effect_nanmanruqin", opts: { scale: 0.45 } },
+								wanjian: { key: "effect_wanjianqifa", opts: { scale: 0.78 } },
+								wugu: { key: "effect_wugufengdeng", opts: { y: [10, 0.5] } },
+								taoyuan: { key: "SF_kapai_eff_taoyuanjieyi", opts: { y: [10, 0.5] } },
+								shunshou: { key: "effect_shunshouqianyang" },
+								huogong: { key: "effect_huogong", opts: { x: [8, 0.5], scale: 0.5 } },
+								guohe: { key: "effect_guohechaiqiao", opts: { y: [10, 0.5] } },
+								yuanjiao: { key: "effect_yuanjiaojingong" },
+								zhibi: { key: "effect_zhijizhibi" },
+								zhulu_card: { key: "effect_zhulutianxia" },
+							};
+							if (name === "sha") {
+								const natureKeyMap = { thunder: "effect_leisha", fire: "effect_huosha" };
+								const key = natureKeyMap[nature] || (get.color(card) == "red" ? "effect_hongsha" : "effect_heisha");
+								decadeUI.animation.cap.playSpineTo(card, key);
+							} else {
+								const entry = effectMap[name];
+								if (entry) decadeUI.animation.cap.playSpineTo(card, entry.key, entry.opts);
 							}
 						}
 					}
-					break;
-			}
+					return text;
+				},
+			};
+			tagText = (tagHandlerMap[event.name] || tagHandlerMap.__default)(event);
 			tagNode.innerHTML = tagText;
 		},
 		getRandom(min, max) {
@@ -6398,64 +6205,56 @@ export async function content(config, pack) {
 			var mode = get.mode();
 			var translated = false;
 			if (!chinese) {
-				switch (mode) {
-					case "identity":
+				const modeHandlers = {
+					identity: () => {
 						if (!player.isAlive() || player.identityShown || player == game.me) {
 							identity = ((player.special_identity ? player.special_identity : identity) || "").replace(/identity_/, "");
 						}
-						break;
-					case "guozhan":
+					},
+					guozhan: () => {
 						if (identity == "unknown") {
 							identity = player.wontYe() ? lib.character[player.name1][1] : "ye";
 						}
 						if (get.is.jun(player)) identity += "jun";
-						break;
-					case "versus":
-						if (!game.me) break;
-						switch (_status.mode) {
-							case "standard":
-								switch (identity) {
-									case "trueZhu":
-										return "shuai";
-									case "trueZhong":
-										return "bing";
-									case "falseZhu":
-										return "jiang";
-									case "falseZhong":
-										return "zu";
-								}
-								break;
-							case "three":
-							case "four":
-							case "guandu":
+					},
+					versus: () => {
+						if (!game.me) return;
+						const versusHandlers = {
+							standard: () => {
+								const standardMap = { trueZhu: "shuai", trueZhong: "bing", falseZhu: "jiang", falseZhong: "zu" };
+								if (standardMap[identity]) return standardMap[identity];
+							},
+							three: () => {
 								if (get.translation(player.side + "Color") == "wei") identity += "_blue";
-								break;
-							case "two":
+							},
+							four: () => {
+								if (get.translation(player.side + "Color") == "wei") identity += "_blue";
+							},
+							guandu: () => {
+								if (get.translation(player.side + "Color") == "wei") identity += "_blue";
+							},
+							two: () => {
 								var side = player.finalSide ? player.finalSide : player.side;
 								identity = game.me.side == side ? "friend" : "enemy";
-								break;
-						}
-						break;
-					case "doudizhu":
+							},
+						};
+						const h = versusHandlers[_status.mode];
+						return h && h();
+					},
+					doudizhu: () => {
 						identity = identity == "zhu" ? "dizhu" : "nongmin";
-						break;
-					case "boss":
-						switch (identity) {
-							case "zhu":
-								identity = "boss";
-								break;
-							case "zhong":
-								identity = "cong";
-								break;
-							case "cai":
-								identity = "meng";
-								break;
-						}
-						break;
-				}
+					},
+					boss: () => {
+						const bossMap = { zhu: "boss", zhong: "cong", cai: "meng" };
+						if (bossMap[identity]) identity = bossMap[identity];
+					},
+				};
+				const handler = modeHandlers[mode];
+				const ret = handler && handler();
+				if (ret !== undefined) return ret;
 			} else {
-				switch (mode) {
-					case "identity":
+				const modeHandlersZh = {
+					identity: () => {
 						if ((identity || "").indexOf("cai") < 0) {
 							if (isMark) {
 								if (player.special_identity) identity = player.special_identity + "_bg";
@@ -6463,8 +6262,8 @@ export async function content(config, pack) {
 								identity = player.special_identity ? player.special_identity : identity + "2";
 							}
 						}
-						break;
-					case "guozhan":
+					},
+					guozhan: () => {
 						if (identity == "unknown") {
 							identity = player.wontYe() ? player.trueIdentity || lib.character[player.name1][1] : "ye";
 						}
@@ -6474,64 +6273,59 @@ export async function content(config, pack) {
 							identity = identity == "ye" ? "野心家" : identity == "qun" ? "群雄" : get.translation(identity) + "将";
 						}
 						translated = true;
-						break;
-					case "versus":
+					},
+					versus: () => {
 						translated = true;
-						if (!game.me) break;
-						switch (_status.mode) {
-							case "three":
-							case "standard":
-							case "four":
-							case "guandu":
-								switch (identity) {
-									case "zhu":
-										identity = "主公";
-										break;
-									case "zhong":
-										identity = "忠臣";
-										break;
-									case "fan":
-										identity = "反贼";
-										break;
-									default:
-										translated = false;
-										break;
-								}
-								break;
-							case "two":
+						if (!game.me) return;
+						const zhVersusHandlers = {
+							three: () => {
+								const zhMap = { zhu: "主公", zhong: "忠臣", fan: "反贼" };
+								if (zhMap[identity]) identity = zhMap[identity];
+								else translated = false;
+							},
+							standard: () => {
+								const zhMap = { zhu: "主公", zhong: "忠臣", fan: "反贼" };
+								if (zhMap[identity]) identity = zhMap[identity];
+								else translated = false;
+							},
+							four: () => {
+								const zhMap = { zhu: "主公", zhong: "忠臣", fan: "反贼" };
+								if (zhMap[identity]) identity = zhMap[identity];
+								else translated = false;
+							},
+							guandu: () => {
+								const zhMap = { zhu: "主公", zhong: "忠臣", fan: "反贼" };
+								if (zhMap[identity]) identity = zhMap[identity];
+								else translated = false;
+							},
+							two: () => {
 								var side = player.finalSide ? player.finalSide : player.side;
 								identity = game.me.side == side ? "友方" : "敌方";
-								break;
-							case "siguo":
-							case "jiange":
+							},
+							siguo: () => {
 								identity = get.translation(identity) + "将";
-								break;
-							default:
+							},
+							jiange: () => {
+								identity = get.translation(identity) + "将";
+							},
+							default: () => {
 								translated = false;
-								break;
-						}
-						break;
-					case "doudizhu":
+							},
+						};
+						(zhVersusHandlers[_status.mode] || zhVersusHandlers.default)();
+					},
+					doudizhu: () => {
 						identity += "2";
-						break;
-					case "boss":
+					},
+					boss: () => {
 						translated = true;
-						switch (identity) {
-							case "zhu":
-								identity = "BOSS";
-								break;
-							case "zhong":
-								identity = "仆从";
-								break;
-							case "cai":
-								identity = "盟军";
-								break;
-							default:
-								translated = false;
-								break;
-						}
-						break;
-				}
+						const bossZhMap = { zhu: "BOSS", zhong: "仆从", cai: "盟军" };
+						if (bossZhMap[identity]) identity = bossZhMap[identity];
+						else translated = false;
+					},
+				};
+				const handlerZh = modeHandlersZh[mode];
+				handlerZh && handlerZh();
 				if (!translated) identity = get.translation(identity);
 				if (isMark) identity = identity[0];
 			}
@@ -6701,19 +6495,8 @@ export async function content(config, pack) {
 		},
 		get: {
 			judgeEffect(name, value) {
-				switch (name) {
-					case "caomu":
-					case "草木皆兵":
-					case "fulei":
-					case "浮雷":
-					case "shandian":
-					case "闪电":
-					case "bingliang":
-					case "兵粮寸断":
-					case "lebu":
-					case "乐不思蜀":
-						return value < 0 ? true : false;
-				}
+				const negativeGood = new Set(["caomu", "草木皆兵", "fulei", "浮雷", "shandian", "闪电", "bingliang", "兵粮寸断", "lebu", "乐不思蜀"]);
+				if (negativeGood.has(name)) return value < 0 ? true : false;
 				return value;
 			},
 			isWebKit() {
@@ -6756,8 +6539,9 @@ export async function content(config, pack) {
 				});
 				for (var i = 0; i >= 0 && i < cards.length; i++) {
 					var limited = false;
-					switch (get.type(cards[i])) {
-						case "basic":
+					const type = get.type(cards[i]);
+					const handler = {
+						basic: () => {
 							for (var j = 0; j < basics.length; j++) {
 								if (!cards[i].toself && basics[j].name == cards[i].name) {
 									limited = true;
@@ -6765,9 +6549,9 @@ export async function content(config, pack) {
 								}
 							}
 							if (!limited) basics.push(cards[i]);
-							break;
-						case "equip":
-							if (hasEquipSkill) break;
+						},
+						equip: () => {
+							if (hasEquipSkill) return;
 							for (var j = 0; j < equips.length; j++) {
 								if (get.subtype(equips[j]) == get.subtype(cards[i])) {
 									limited = true;
@@ -6775,8 +6559,9 @@ export async function content(config, pack) {
 								}
 							}
 							if (!limited) equips.push(cards[i]);
-							break;
-					}
+						},
+					}[type];
+					if (handler) handler();
 					if (!limited) {
 						matchs.push(cards[i]);
 						cards.splice(i--, 1);
