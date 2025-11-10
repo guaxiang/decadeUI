@@ -100,9 +100,12 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				container.show = function (player) {
 					function createLeftPane(parent) {
 						const skin = lib.config["extension_十周年UI_outcropSkin"];
-						if (skin === "shizhounian") return ui.create.div(".left3", parent);
-						if (skin === "shousha") return ui.create.div(".left2", parent);
-						return ui.create.div(".left", parent);
+						const skinClassMap = {
+							shizhounian: ".left3",
+							shousha: ".left2",
+						};
+						const cls = skinClassMap[skin] || ".left";
+						return ui.create.div(cls, parent);
 					}
 					function createStars(container, rarity) {
 						const num = { legend: 5, epic: 4, rare: 3, junk: 2 }[rarity] || 1;
@@ -362,23 +365,14 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					}
 					if (oSkills.length) {
 						let captionText = "武将技能";
-						switch (lib.config.mode) {
-							case "doudizhu":
-								captionText = "武将技能·斗地主";
-								break;
-							case "identity":
-								captionText = "武将技能·身份";
-								break;
-							case "versus":
-								captionText = "武将技能·团战";
-								break;
-							case "single":
-								captionText = "武将技能·1v1";
-								break;
-							case "guozhan":
-								captionText = "武将技能·国战";
-								break;
-						}
+						const modeCaptionMap = {
+							doudizhu: "武将技能·斗地主",
+							identity: "武将技能·身份",
+							versus: "武将技能·团战",
+							single: "武将技能·1v1",
+							guozhan: "武将技能·国战",
+						};
+						captionText = modeCaptionMap[lib.config.mode] || captionText;
 						ui.create.div(".xcaption", captionText, rightPane.firstChild);
 						oSkills.forEach(name => {
 							const skillEnabled = get.info(name).enable;

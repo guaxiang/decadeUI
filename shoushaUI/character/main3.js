@@ -381,32 +381,17 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				let peUrl;
 				if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkin === "function" && typeof game.qhly_getSkinInfo === "function") {
 					try {
-						let temp;
-						switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
-							case "xiyou":
-								temp = "rare";
-								break;
-							case "shishi":
-								temp = "epic";
-								break;
-							case "chuanshuo":
-								temp = "legend";
-								break;
-							case "putong":
-								temp = "common";
-								break;
-							case "dongtai":
-								temp = "legend";
-								break;
-							case "jueban":
-								temp = "unique";
-								break;
-							case "xianding":
-								temp = "restrictive";
-								break;
-							default:
-								temp = "junk";
-						}
+						const level = game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false);
+						const levelToRarity = {
+							xiyou: "rare",
+							shishi: "epic",
+							chuanshuo: "legend",
+							putong: "common",
+							dongtai: "legend",
+							jueban: "unique",
+							xianding: "restrictive",
+						};
+						const temp = levelToRarity[level] || "junk";
 						peUrl = `${extensionPath}character/images/xinsha/pe_${temp}.png`;
 					} catch (e) {
 						console.error("千幻聆音扩展函数调用出错:", e);

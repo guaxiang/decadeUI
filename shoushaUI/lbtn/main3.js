@@ -172,45 +172,29 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 	});
 	// 辅助函数：显示身份提示
 	function showIdentityTip(container) {
-		if (game.me.identity === "zhu") {
-			ui.create.div(".Tipzhugong", container);
-		} else if (game.me.identity === "zhong") {
-			ui.create.div(".Tipzhongchen", container);
-		} else if (game.me.identity === "fan") {
-			ui.create.div(".Tipfanzei", container);
-		} else if (game.me.identity === "nei") {
-			ui.create.div(".Tipneijian", container);
-		}
+		const map = { zhu: ".Tipzhugong", zhong: ".Tipzhongchen", fan: ".Tipfanzei", nei: ".Tipneijian" };
+		const cls = map[game.me.identity];
+		if (cls) ui.create.div(cls, container);
 	}
 	// 辅助函数：显示斗地主提示
 	function showDoudizhuTip(container) {
-		if (game.me.identity === "zhu") {
-			ui.create.div(".Tipdizhu", container);
-		} else if (game.me.identity === "fan") {
-			ui.create.div(".Tipnongmin", container);
-		}
+		const map = { zhu: ".Tipdizhu", fan: ".Tipnongmin" };
+		const cls = map[game.me.identity];
+		if (cls) ui.create.div(cls, container);
 	}
 	// 辅助函数：显示国战提示
 	function showGuozhanTip(container) {
-		if (game.me.group === "unknown" || game.me.group === "undefined") {
-			// 未选择身份势力
-			ui.create.div(".Tipundefined", container);
-		} else if (game.me.group === "wei") {
-			ui.create.div(".Tipweiguo", container);
-		} else if (game.me.group === "shu") {
-			ui.create.div(".Tipshuguo", container);
-		} else if (game.me.group === "wu") {
-			ui.create.div(".Tipwuguo", container);
-		} else if (game.me.group === "qun") {
-			ui.create.div(".Tipqunxiong", container);
-		} else if (game.me.group === "jin") {
-			ui.create.div(".Tipjinguo", container);
-		} else if (game.me.group === "ye") {
-			ui.create.div(".Tipyexinjia", container);
-		} else {
-			// 容错选项
-			ui.create.div(".Tipweizhi", container);
-		}
+		const groupMap = {
+			unknown: ".Tipundefined",
+			undefined: ".Tipundefined",
+			wei: ".Tipweiguo",
+			shu: ".Tipshuguo",
+			wu: ".Tipwuguo",
+			qun: ".Tipqunxiong",
+			jin: ".Tipjinguo",
+			ye: ".Tipyexinjia",
+		};
+		ui.create.div(groupMap[game.me.group] || ".Tipweizhi", container);
 	}
 	// 辅助函数：创建主菜单
 	function createMainMenu() {

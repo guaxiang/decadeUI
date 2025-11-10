@@ -91,32 +91,17 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				if (!rarity) rarity = "junk";
 
 				if (lib.config["extension_千幻聆音_enable"] && game.qhly_getSkin && game.qhly_getSkinLevel) {
-					let temp;
-					switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
-						case "xiyou":
-							temp = "rare";
-							break;
-						case "shishi":
-							temp = "epic";
-							break;
-						case "chuanshuo":
-							temp = "legend";
-							break;
-						case "putong":
-							temp = "common";
-							break;
-						case "dongtai":
-							temp = "legend";
-							break;
-						case "jueban":
-							temp = "unique";
-							break;
-						case "xianding":
-							temp = "restrictive";
-							break;
-						default:
-							temp = "junk";
-					}
+					const level = game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false);
+					const levelToRarity = {
+						xiyou: "rare",
+						shishi: "epic",
+						chuanshuo: "legend",
+						putong: "common",
+						dongtai: "legend",
+						jueban: "unique",
+						xianding: "restrictive",
+					};
+					const temp = levelToRarity[level] || "junk";
 					return `${extensionPath}character/images/pe_${temp}.png`;
 				}
 				return `${extensionPath}character/images/pe_${rarity}.png`;

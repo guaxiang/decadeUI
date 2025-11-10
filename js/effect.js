@@ -139,20 +139,22 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				dialog.names[0].innerHTML = `${get.translation(source)}发起`;
 				dialog.names[1].innerHTML = get.translation(target);
 
-				const getPlayerIndex = (attr) => {
-					return (attr === "player1" || attr === "source") ? 0 : 1;
+				const playerAttrToIndex = {
+					player1: 0,
+					source: 0,
+					player2: 1,
+					target: 1,
 				};
-
-				const getCardIndex = (attr) => {
-					return (attr === "card1" || attr === "sourceCard") ? 0 : 1;
+				const cardAttrToIndex = {
+					card1: 0,
+					sourceCard: 0,
+					card2: 1,
+					targetCard: 1,
 				};
 
 				dialog.set = function (attr, value) {
-					const playerAttrs = ["player1", "source", "player2", "target"];
-					const cardAttrs = ["card1", "sourceCard", "card2", "targetCard"];
-
-					if (playerAttrs.includes(attr)) {
-						const playerIndex = getPlayerIndex(attr);
+					if (attr in playerAttrToIndex) {
+						const playerIndex = playerAttrToIndex[attr];
 						const isSource = playerIndex === 0;
 						const suffix = isSource ? "发起" : "";
 
@@ -167,8 +169,8 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 						return true;
 					}
 
-					if (cardAttrs.includes(attr)) {
-						const cardIndex = getCardIndex(attr);
+					if (attr in cardAttrToIndex) {
+						const cardIndex = cardAttrToIndex[attr];
 						utils.removeChildSafely(dialog.cards[cardIndex], dialog.cards[cardIndex].firstChild);
 						dialog.cards[cardIndex].appendChild(value);
 						return true;

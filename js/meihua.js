@@ -28,18 +28,15 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				};
 				const rarityMap = ["silver", "gold", "yu", "bing", "yan"];
 				let rarity;
-				if (lib.config.extension_十周年UI_longLevel === "ten") {
-					const rarityTypes = {
-						junk: "silver",
-						common: "gold",
-						rare: "yu",
-						epic: "bing",
-						legend: "yan",
-					};
-					rarity = rarityTypes[game.getRarity(player.name)] || "silver";
-				} else if (lib.config.extension_十周年UI_longLevel === "eleven") {
-					rarity = rarityMap.randomGet();
-				}
+				const levelMode = lib.config.extension_十周年UI_longLevel;
+				const rarityHandlers = {
+					ten: () => {
+						const rarityTypes = { junk: "silver", common: "gold", rare: "yu", epic: "bing", legend: "yan" };
+						return rarityTypes[game.getRarity(player.name)] || "silver";
+					},
+					eleven: () => rarityMap.randomGet(),
+				};
+				if (rarityHandlers[levelMode]) rarity = rarityHandlers[levelMode]();
 				if (rarity && rarityConfig[rarity]) {
 					const config = rarityConfig[rarity];
 					const longtou = document.createElement("img");
@@ -98,13 +95,13 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 						ui.skepk.innerHTML = "请选择势力";
 						const getGroupImagePath = (buttonName) => {
 							const style = lib.config.extension_十周年UI_newDecadeStyle;
-							if (style === "on") {
-								return `extension/十周年UI/image/group/decade/group_${buttonName}.png`;
-							}
-							if (style === "off") {
-								return `extension/十周年UI/image/group/off/group_${buttonName}.png`;
-							}
-							return `extension/十周年UI/image/group/group_${buttonName}.png`;
+							const styleFolderMap = {
+								on: "decade",
+								off: "off",
+							};
+							const folder = styleFolderMap[style];
+							const prefix = folder ? `${folder}/` : "";
+							return `extension/十周年UI/image/group/${prefix}group_${buttonName}.png`;
 						};
 						for (const button of dialog.buttons) {
 							if (!button) continue;
@@ -251,10 +248,21 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				if (e.button !== 0) return;
 				const target = e.target;
 				let audioToPlay = null;
-				if (target.closest("#dui-controls") && (target.classList?.contains("control") || target.parentElement?.classList?.contains("control"))) {
-					audioToPlay = "BtnSure";
-				} else if (target.closest(".menubutton, .button, .card")) {
-					audioToPlay = "card_click";
+				const rules = [
+					{
+						test: (t) => t.closest("#dui-controls") && (t.classList?.contains("control") || t.parentElement?.classList?.contains("control")),
+						sound: "BtnSure",
+					},
+					{
+						test: (t) => t.closest(".menubutton, .button, .card"),
+						sound: "card_click",
+					},
+				];
+				for (const rule of rules) {
+					if (rule.test(target)) {
+						audioToPlay = rule.sound;
+						break;
+					}
 				}
 				if (audioToPlay) {
 					const now = Date.now();

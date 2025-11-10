@@ -16,50 +16,44 @@ dynamics.getById = function (id) {
 };
 onmessage = (e) => {
 	const { data } = e;
-	switch (data.message) {
-		case "CREATE":
+	const handlers = {
+		CREATE(d) {
 			if (dynamics.length >= 4) return;
-			const newDynamic = new duilib.AnimationPlayer(data.pathPrefix, "offscreen", data.canvas);
-			newDynamic.id = data.id;
+			const newDynamic = new duilib.AnimationPlayer(d.pathPrefix, "offscreen", d.canvas);
+			newDynamic.id = d.id;
 			dynamics.push(newDynamic);
-			break;
-		case "PLAY": {
-			const dynamic = dynamics.getById(data.id);
+		},
+		PLAY(d) {
+			const dynamic = dynamics.getById(d.id);
 			if (!dynamic) return;
-			update(dynamic, data);
-			const sprite = typeof data.sprite === "string" ? { name: data.sprite } : data.sprite;
+			update(dynamic, d);
+			const sprite = typeof d.sprite === "string" ? { name: d.sprite } : d.sprite;
 			sprite.loop = true;
 			const run = () => {
 				const t = dynamic.playSpine(sprite);
 				t.opacity = 0;
 				t.fadeTo(1, 600);
 			};
-			if (dynamic.hasSpine(sprite.name)) {
-				run();
-			} else {
-				dynamic.loadSpine(sprite.name, "skel", run);
-			}
-			break;
-		}
-		case "STOP": {
-			const dynamic = dynamics.getById(data.id);
+			if (dynamic.hasSpine(sprite.name)) dynamic.playSpine ? run() : dynamic.loadSpine(sprite.name, "skel", run);
+			else dynamic.loadSpine(sprite.name, "skel", run);
+		},
+		STOP(d) {
+			const dynamic = dynamics.getById(d.id);
 			if (!dynamic) return;
-			dynamic.stopSpine(data.sprite);
-			break;
-		}
-		case "STOPALL": {
-			const dynamic = dynamics.getById(data.id);
+			dynamic.stopSpine(d.sprite);
+		},
+		STOPALL(d) {
+			const dynamic = dynamics.getById(d.id);
 			if (!dynamic) return;
 			dynamic.stopSpineAll();
-			break;
-		}
-		case "UPDATE": {
-			const dynamic = dynamics.getById(data.id);
+		},
+		UPDATE(d) {
+			const dynamic = dynamics.getById(d.id);
 			if (!dynamic) return;
-			update(dynamic, data);
-			break;
-		}
-	}
+			update(dynamic, d);
+		},
+	};
+	handlers[data.message]?.(data);
 };
 const update = (dynamic, data) => {
 	dynamic.resized = false;

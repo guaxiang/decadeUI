@@ -18,39 +18,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		},
 	};
 	function buildModeWinTranslations(mode, versusMode) {
-		if (mode === "doudizhu") {
-			return { zhu: "击败所有农民", fan: "击败地主", undefined: "未选择阵营" };
-		}
-		if (mode === "single") {
-			return { zhu: "击败对手", fan: "击败对手", undefined: "未选择阵营" };
-		}
-		if (mode === "boss") {
-			return { zhu: "击败盟军", cai: "击败神祇", undefined: "未选择阵营" };
-		}
-		if (mode === "guozhan") {
-			const map = { undefined: "未选择势力", unknown: "保持隐蔽", ye: "   击败场上<br>所有其他角色", key: "   击败所有<br>非键势力角色" };
-			for (let i = 0; i < lib.group.length; i++) {
-				map[lib.group[i]] = `击败所有<br>非${get.translation(lib.group[i])}势力角色`;
-			}
-			return map;
-		}
-		if (mode === "versus") {
-			if (versusMode === "standard") return null;
-			if (versusMode === "two" || versusMode === "three") {
-				return { undefined: get.config("replace_character_two") ? "抢先击败敌人<br>所有上场角色" : "   协同队友<br>击败所有敌人" };
-			}
-			if (versusMode === "jiange") {
-				return { wei: "击败所有<br>蜀势力角色", shu: "击败所有<br>魏势力角色" };
-			}
-			if (versusMode === "siguo") {
-				const map = {};
-				for (let i = 0; i < lib.group.length; i++) {
-					map[lib.group[i]] = `获得龙船或击败<br>非${get.translation(lib.group[i])}势力角色`;
-				}
-				return map;
-			}
-		}
-		return {
+		const baseIdentityMap = {
 			rZhu: "击败冷方主公<br>与所有野心家",
 			rZhong: "保护暖方主公<br>击败冷方主公<br>与所有野心家",
 			rYe: "联合冷方野心家<br>击败其他角色",
@@ -66,6 +34,36 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			mingzhong: "保护主公<br>取得最后胜利",
 			undefined: "胜利条件",
 		};
+		const handlers = {
+			doudizhu: () => ({ zhu: "击败所有农民", fan: "击败地主", undefined: "未选择阵营" }),
+			single: () => ({ zhu: "击败对手", fan: "击败对手", undefined: "未选择阵营" }),
+			boss: () => ({ zhu: "击败盟军", cai: "击败神祇", undefined: "未选择阵营" }),
+			guozhan: () => {
+				const map = { undefined: "未选择势力", unknown: "保持隐蔽", ye: "   击败场上<br>所有其他角色", key: "   击败所有<br>非键势力角色" };
+				for (let i = 0; i < lib.group.length; i++) {
+					map[lib.group[i]] = `击败所有<br>非${get.translation(lib.group[i])}势力角色`;
+				}
+				return map;
+			},
+			versus: () => {
+				const vmHandlers = {
+					standard: () => null,
+					two: () => ({ undefined: get.config("replace_character_two") ? "抢先击败敌人<br>所有上场角色" : "   协同队友<br>击败所有敌人" }),
+					three: () => ({ undefined: get.config("replace_character_two") ? "抢先击败敌人<br>所有上场角色" : "   协同队友<br>击败所有敌人" }),
+					jiange: () => ({ wei: "击败所有<br>蜀势力角色", shu: "击败所有<br>魏势力角色" }),
+					siguo: () => {
+						const map = {};
+						for (let i = 0; i < lib.group.length; i++) {
+							map[lib.group[i]] = `获得龙船或击败<br>非${get.translation(lib.group[i])}势力角色`;
+						}
+						return map;
+					},
+				};
+				const run = vmHandlers[versusMode];
+				return run ? run() : {};
+			},
+		};
+		return (handlers[mode] && handlers[mode]()) || baseIdentityMap;
 	}
 	game.ui_identityShow_update = () => {
 		const identityShow = game.ui_identityShow; /*图层1*/
@@ -206,44 +204,35 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			tipshow.onclick = () => {
 				const popuperContainer = ui.create.div(".popup-container", ui.window);
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
-				if (lib.config.mode === "identity") {
-					if (game.me.identity === "zhu") {
-						ui.create.div(".sfrwzhugong", popuperContainer);
-					} else if (game.me.identity === "zhong") {
-						ui.create.div(".sfrwchongchen", popuperContainer);
-					} else if (game.me.identity === "fan") {
-						ui.create.div(".sfrwfanzei", popuperContainer);
-					} else if (game.me.identity === "nei") {
-						ui.create.div(".sfrwneijian", popuperContainer);
-					}
-				}
-				if (lib.config.mode === "doudizhu") {
-					if (game.me.identity === "zhu") {
-						ui.create.div(".sfrwdizhu", popuperContainer);
-					} else if (game.me.identity === "fan") {
-						ui.create.div(".sfrwnongmin", popuperContainer);
-					}
-				}
-				if (lib.config.mode === "versus") {
-					ui.create.div(".sfrwhu", popuperContainer);
-				}
-				if (lib.config.mode === "guozhan") {
-					if (game.me.group === "unknown" || game.me.group === "undefined") {
-						ui.create.div(".sfrwundefined", popuperContainer);
-					} else if (game.me.group === "wei") {
-						ui.create.div(".sfrwweiguo", popuperContainer);
-					} else if (game.me.group === "shu") {
-						ui.create.div(".sfrwshuguo", popuperContainer);
-					} else if (game.me.group === "wu") {
-						ui.create.div(".sfrwwuguo", popuperContainer);
-					} else if (game.me.group === "qun") {
-						ui.create.div(".sfrwqunxiong", popuperContainer);
-					} else if (game.me.group === "jin") {
-						ui.create.div(".sfrwjinguo", popuperContainer);
-					} else if (game.me.group === "ye") {
-						ui.create.div(".sfrwyexinjia", popuperContainer);
-					}
-				}
+				const modeHandlers = {
+					identity: () => {
+						const idMap = { zhu: ".sfrwzhugong", zhong: ".sfrwchongchen", fan: ".sfrwfanzei", nei: ".sfrwneijian" };
+						const cls = idMap[game.me.identity];
+						if (cls) ui.create.div(cls, popuperContainer);
+					},
+					doudizhu: () => {
+						const idMap = { zhu: ".sfrwdizhu", fan: ".sfrwnongmin" };
+						const cls = idMap[game.me.identity];
+						if (cls) ui.create.div(cls, popuperContainer);
+					},
+					versus: () => ui.create.div(".sfrwhu", popuperContainer),
+					guozhan: () => {
+						const groupMap = {
+							unknown: ".sfrwundefined",
+							undefined: ".sfrwundefined",
+							wei: ".sfrwweiguo",
+							shu: ".sfrwshuguo",
+							wu: ".sfrwwuguo",
+							qun: ".sfrwqunxiong",
+							jin: ".sfrwjinguo",
+							ye: ".sfrwyexinjia",
+						};
+						const cls = groupMap[game.me.group] || ".sfrwundefined";
+						ui.create.div(cls, popuperContainer);
+					},
+				};
+				const handler = modeHandlers[lib.config.mode];
+				if (handler) handler();
 				popuperContainer.addEventListener("click", event => {
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 					popuperContainer.delete(200);

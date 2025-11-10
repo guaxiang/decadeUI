@@ -306,15 +306,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (node) return;
 					if (item.type === "enable") {
 						const name = get.translation(item.name).slice(0, 2);
-						if (item.id.indexOf("jianjie_huoji") !== -1) {
-							node = ui.create.div(".skillitem_smh_huoji", self2.node.enable, name);
-						} else if (item.id.indexOf("jianjie_lianhuan") !== -1) {
-							node = ui.create.div(".skillitem_smh_lianhuan", self2.node.enable, name);
-						} else if (item.id.indexOf("jianjie_yeyan") !== -1) {
-							node = ui.create.div(".skillitem_smh_yeyan", self2.node.enable, name);
-						} else {
-							node = ui.create.div(".skillitem", self2.node.enable, name);
-						}
+						const classRules = [
+							{ key: "jianjie_huoji", cls: ".skillitem_smh_huoji" },
+							{ key: "jianjie_lianhuan", cls: ".skillitem_smh_lianhuan" },
+							{ key: "jianjie_yeyan", cls: ".skillitem_smh_yeyan" },
+						];
+						const matched = classRules.find(r => item.id.indexOf(r.key) !== -1);
+						const finalClass = matched ? matched.cls : ".skillitem";
+						node = ui.create.div(finalClass, self2.node.enable, name);
 						const remainingCount = self2.getSkillRemainingCount(item.id, game.me);
 						if (remainingCount !== null) {
 							self2.addSkillNumber(node, remainingCount);
