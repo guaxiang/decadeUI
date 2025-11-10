@@ -611,7 +611,7 @@
 }
 
 .hp:not(.text):not(.actcount):not(.treasure)>.shield {
-	background: url("../image/shield.png");
+	background: url("../image/decoration/shield.png");
 	box-shadow: none;
 	border: none;
 	background-size: 100% 100%;
