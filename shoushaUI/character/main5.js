@@ -1,7 +1,32 @@
 app.import((lib, game, ui, get, ai, _status, app) => {
+	// 获取势力背景图片路径接口
+	function getBabyBackgroundImage(group) {
+		const validGroups = ["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key", "Han", "qin"];
+		if (!validGroups.includes(group)) {
+			group = "default";
+		}
+		return `extension/十周年UI/shoushaUI/character/images/baby/baby_${group}.png`;
+	}
+
+	function getBabysBackgroundImage(group) {
+		const validGroups = ["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key", "Han", "qin"];
+		if (!validGroups.includes(group)) {
+			group = "default";
+		}
+		return `extension/十周年UI/shoushaUI/character/images/baby/babys_${group}.png`;
+	}
+
 	// 第一页
 	const plugin = {
 		name: "character",
+		// 边框背景接口，外部可通过覆盖此方法自定义背景逻辑
+		getBabyBackgroundImage(group) {
+			return getBabyBackgroundImage(group);
+		},
+		// 势力背景接口，外部可通过覆盖此方法自定义背景逻辑
+		getBabysBackgroundImage(group) {
+			return getBabysBackgroundImage(group);
+		},
 		filter() {
 			return !["chess", "tafang", "stone"].includes(get.mode());
 		},
@@ -178,11 +203,11 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			createDecorations(blackBg1, player) {
 				// 边框
 				const biankuang3 = ui.create.div(".biankuang3", blackBg1);
-				biankuang3.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/baby_${player.group}.png`);
+				biankuang3.setBackgroundImage(plugin.getBabyBackgroundImage(player.group));
 
 				// 势力
 				const biankuang4 = ui.create.div(".biankuang4", blackBg1);
-				biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/babys_${player.group}.png`);
+				biankuang4.setBackgroundImage(plugin.getBabysBackgroundImage(player.group));
 
 				return { biankuang3, biankuang4 };
 			},

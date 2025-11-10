@@ -85,9 +85,22 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		};
 		testImg.src = getLihuiPath(originalPath);
 	}
+	// 获取势力背景图片路径接口
+	function getGroupBackgroundImage(group) {
+		const validGroups = ["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key"];
+		if (!validGroups.includes(group)) {
+			group = "default";
+		}
+		return `${extensionPath}character/images/shizhounian/skt_${group}.png`;
+	}
+
 	// 主体插件
 	const plugin = {
 		name: "character",
+		// 势力背景接口，外部可通过覆盖此方法自定义背景逻辑
+		getGroupBackgroundImage(group) {
+			return getGroupBackgroundImage(group);
+		},
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
@@ -141,9 +154,9 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				const leftPane = ui.create.div(".left", dialog);
 				const rightPane = ui.create.div(".right", dialog);
 				// 势力背景
-				let group = this.group;
-				if (!["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key"].includes(group)) group = "default";
-				dialog.style.backgroundImage = `url("${extensionPath}character/images/shizhounian/skt_${group}.png")`;
+				const group = this.group;
+				const bgImagePath = plugin.getGroupBackgroundImage(group);
+				dialog.style.backgroundImage = `url("${bgImagePath}")`;
 				// 立绘
 				const skin1 = ui.create.div(".skin1", dialog);
 				const skin2 = ui.create.div(".skin2", dialog);

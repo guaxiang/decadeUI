@@ -154,30 +154,44 @@ const CONFIG_KEYS = {
 export const prefixMarkModule = {
 	prefix_configs: PREFIX_CONFIGS,
 
-	showPrefixMark(character, playerElement) {
-		if (lib.config?.[CONFIG_KEYS.NEW_DECADE_STYLE] !== "on") {
-			return;
-		}
+	shouldShowPrefixMark() {
+		return lib.config?.[CONFIG_KEYS.NEW_DECADE_STYLE] === "on";
+	},
 
+	getPrefixConfig(character) {
 		const prefixKey = `${character}_prefix`;
 		const refreshPrefix = lib.translate?.[prefixKey];
-		const config = refreshPrefix ? PREFIX_CONFIGS[refreshPrefix] : null;
+		return refreshPrefix ? PREFIX_CONFIGS[refreshPrefix] : null;
+	},
 
-		if (!config) {
-			return;
-		}
-
-		const markElement = playerElement[config.property] ??
+	createMarkElement(config, playerElement) {
+		return playerElement[config.property] ??
 			(playerElement[config.property] = dui.element.create(config.className, playerElement));
+	},
 
-		if (!playerElement.contains(markElement)) {
-			playerElement.appendChild(markElement);
-		}
-
+	updateNameElement(playerElement, character) {
 		const nameElement = playerElement.node?.name;
 		if (nameElement) {
 			nameElement.innerText = get.rawName2(character);
 		}
+	},
+
+	showPrefixMark(character, playerElement) {
+		if (!this.shouldShowPrefixMark()) {
+			return;
+		}
+
+		const config = this.getPrefixConfig(character);
+		if (!config) {
+			return;
+		}
+
+		const markElement = this.createMarkElement(config, playerElement);
+		if (!playerElement.contains(markElement)) {
+			playerElement.appendChild(markElement);
+		}
+
+		this.updateNameElement(playerElement, character);
 	},
 
 	clearPrefixMarks(playerElement) {

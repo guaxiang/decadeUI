@@ -1,102 +1,52 @@
-:root {
-	--font-family-hyzlsj: "HYZLSJ";
-	--font-family-wdzlft: "WDZLFT";
-	--font-family-fzlbjw: "FZLBJW";
-	--font-family-atll: "ATLL";
-	--font-family-fzlsft: "FZLSFT";
-	--font-family-yuanli: yuanli;
+/* 用于技能和身份的字体 */
+@font-face {
+	font-family: "HYZLSJ";
+	src: url("../shoushaUI/fonts/HYZLSJ.woff2");
+}
 
-	--size-import-dialog-width: 420px;
-	--size-import-dialog-height: 130px;
-	--size-import-dialog-padding: 15px;
-	--size-import-dialog-caption-padding-bottom: 8px;
-
-	--size-control-top: calc(200% / 3);
-	--size-control-left: calc(5% + 240px);
-	--size-control-width: calc(90% - 480px);
-
-	--size-control-padding-block: 2px;
-	--size-control-padding-inline: 4px;
-	--size-control-font: 18px;
-	--size-control-div-padding: 3px;
-	--size-control-scale: 0.2;
-
-	--size-shousha-text-font: 14px;
-	--size-shousha-text-width: 250px;
-	--size-shousha-menu-padding: 0.5px;
-	--size-shousha-menu-radius: 3px;
-
-	--size-update-close-width: 76px;
-	--size-update-close-margin: 23px;
-
-	--z-index-control: 5;
-	--z-index-glow: 89;
-	--z-index-update: 999;
-
-	--color-shousha-menu-bg: rgba(134, 200, 241, 0.5);
-
-	--bg-size-full: 100% 100%;
-	--bg-size-cover: cover;
-	--bg-image-close: url("../shoushaUI/shousha_close.png");
-
-	--font-path-hyzlsj: url("../shoushaUI/fonts/HYZLSJ.woff2");
-	--font-path-wdzlft: url("../shoushaUI/fonts/WDZLFT.woff2");
-	--font-path-fzlbjw: url("../shoushaUI/fonts/FZLBJW.woff2");
-	--font-path-atll: url("../shoushaUI/fonts/ATLL.woff2");
-	--font-path-fzlsft: url("../shoushaUI/fonts/FZLSFT.woff2");
-
-	--filter-grayscale: grayscale(100%);
-	--transform-import-dialog: translate(-50%, -50%);
-	--transform-control-removing: scale(var(--size-control-scale));
-
-	--opacity-control: 0;
-	--opacity-control-disabled: 1;
+/* 用于武将字体 */
+@font-face {
+	font-family: "WDZLFT";
+	src: url("../shoushaUI/fonts/WDZLFT.woff2");
 }
 
 @font-face {
-	font-family: var(--font-family-hyzlsj);
-	src: var(--font-path-hyzlsj);
+	font-family: "FZLBJW";
+	src: url("../shoushaUI/fonts/FZLBJW.woff2");
+}
+
+/* 用于角色弹框标题的字体 */
+@font-face {
+	font-family: "ATLL";
+	src: url("../shoushaUI/fonts/ATLL.woff2");
 }
 
 @font-face {
-	font-family: var(--font-family-wdzlft);
-	src: var(--font-path-wdzlft);
-}
-
-@font-face {
-	font-family: var(--font-family-fzlbjw);
-	src: var(--font-path-fzlbjw);
-}
-
-@font-face {
-	font-family: var(--font-family-atll);
-	src: var(--font-path-atll);
-}
-
-@font-face {
-	font-family: var(--font-family-fzlsft);
-	src: var(--font-path-fzlsft);
+	font-family: "FZLSFT";
+	src: url("../shoushaUI/fonts/FZLSFT.woff2");
 }
 
 .menu-container>.menu.main.cxy-import-dialog {
-	inset: 50% auto auto 50%;
-	width: var(--size-import-dialog-width);
-	height: var(--size-import-dialog-height);
-	padding: var(--size-import-dialog-padding);
-	transform: var(--transform-import-dialog);
+	top: 50% !important;
+	left: 50% !important;
+	width: 420px;
+	height: 130px;
+	padding: 15px;
+	transform: translate(-50%, -50%);
 }
 
 .menu.main.cxy-import-dialog>.caption {
 	padding-top: 0;
-	padding-bottom: var(--size-import-dialog-caption-padding-bottom);
+	padding-bottom: 8px;
 }
 
+/*--------（去除按钮虚化）--------*/
 #control {
 	text-align: center;
-	z-index: var(--z-index-control);
-	top: var(--size-control-top);
-	left: var(--size-control-left);
-	width: var(--size-control-width);
+	z-index: 5;
+	top: calc(200% / 3);
+	left: calc(5% + 240px);
+	width: calc(90% - 480px);
 	pointer-events: none;
 }
 
@@ -117,26 +67,31 @@
 }
 
 .control {
-	padding-block: var(--size-control-padding-block);
-	padding-inline: var(--size-control-padding-inline);
-	font-size: var(--size-control-font);
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+.control {
+	font-size: 18px;
 	white-space: nowrap;
 	overflow: hidden;
-	opacity: var(--opacity-control);
+	opacity: 0;
 }
 
 .control.removing.removing2 {
-	transform: var(--transform-control-removing);
+	transform: scale(0.2);
 }
 
 .control>div {
 	position: relative;
-	padding: var(--size-control-div-padding);
+	padding: 3px;
 	margin: 0;
 }
 
 .control.disabled {
-	opacity: var(--opacity-control-disabled) !important;
+	opacity: 1 !important;
 	cursor: default !important;
 }
 
@@ -145,21 +100,22 @@
 	left: 50%;
 }
 
+/*-----更改无懈蓝框-------*/
 .glow:not(.button):not(.card) {
 	box-shadow: none !important;
-	filter: var(--filter-grayscale);
-	-webkit-filter: var(--filter-grayscale);
-	background-size: var(--bg-size-full);
-	z-index: var(--z-index-glow);
+	-webkit-filter: grayscale(100%);
+	background-size: 100% 100%;
+	z-index: 89;
 	pointer-events: none;
 }
 
 .shousha_menu {
 	width: 100%;
-	border-radius: var(--size-shousha-menu-radius);
-	background-color: var(--color-shousha-menu-bg);
-	font-family: var(--font-family-yuanli);
-	padding: var(--size-shousha-menu-padding);
+	border-radius: 3px;
+	background-color: rgba(134, 200, 241, 0.5);
+	font-family: yuanli;
+	padding: 0.5px;
+	/*cursor: pointer;*/
 }
 
 .KZJS,
@@ -169,26 +125,27 @@
 .JMYSSM,
 .QTMHSM>.shousha_text {
 	text-align: left;
-	font-size: var(--size-shousha-text-font);
-	width: var(--size-shousha-text-width);
+	font-size: 14px;
+	width: 250px;
 	word-wrap: break-word;
 }
 
 .shousha_update {
-	z-index: var(--z-index-update);
-	background-size: var(--bg-size-cover);
+	z-index: 999;
+	background-size: cover;
 }
 
 .shousha_update>.shousha_update_close {
-	z-index: var(--z-index-update);
+	z-index: 999;
 	position: fixed;
 	overflow: hidden;
-	--w: var(--size-update-close-width);
+	--w: 76px;
 	--h: calc(var(--w) * 64 / 76);
 	width: var(--w);
 	height: var(--h);
-	inset: 0 auto auto auto;
-	margin: var(--size-update-close-margin);
-	background-size: var(--bg-size-full);
-	background-image: var(--bg-image-close);
+	top: 0px;
+	right: 0px;
+	margin: 23px;
+	background-size: 100% 100%;
+	background-image: url("../shoushaUI/shousha_close.png");
 }

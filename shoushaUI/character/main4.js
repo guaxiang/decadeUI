@@ -48,6 +48,16 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		// 图片路径前缀
 		IMAGE_PATH_PREFIX: "extension/十周年UI/shoushaUI/character/images/OL_line/",
 	};
+
+	// 获取势力背景图片路径接口
+	function getOlsBackgroundImage(group) {
+		const validGroups = ["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key", "Han", "qin"];
+		if (!validGroups.includes(group)) {
+			group = "default";
+		}
+		return `${CONSTANTS.IMAGE_PATH_PREFIX}ols_${group}.png`;
+	}
+
 	// 工具函数
 	const Utils = {
 		// 播放音频
@@ -170,7 +180,8 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			const biankuang3 = ui.create.div(".biankuang3", blackBg1);
 			Utils.createBiankuangColor(biankuang3, name === "unknown" ? player.group : lib.character[name][1]);
 			const biankuang4 = ui.create.div(".biankuang4", blackBg1);
-			biankuang4.setBackgroundImage(`${CONSTANTS.IMAGE_PATH_PREFIX}ols_${name === "unknown" ? player.group : lib.character[name][1]}.png`);
+			const groupForBg = name === "unknown" ? player.group : lib.character[name][1];
+			biankuang4.setBackgroundImage(plugin.getOlsBackgroundImage(groupForBg));
 			// 创建玩家信息
 			this.createPlayerInfo(biankuang, player, randomData);
 			// 创建关闭按钮
@@ -295,7 +306,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				const prefixName = lib.translate[charName + "_prefix"] ? `${get.prefixSpan(get.translation(charName + "_prefix"), charName)}${get.rawName(charName)}` : get.translation(charName);
 				ui.create.div(".charName", prefixName, kuang);
 				const shili = ui.create.div(`.shili`, kuang);
-				shili.setBackgroundImage(`${CONSTANTS.IMAGE_PATH_PREFIX}ols_${group}.png`);
+				shili.setBackgroundImage(plugin.getOlsBackgroundImage(group));
 				Utils.createBiankuangColor(kuang, group);
 			}
 		}
@@ -368,7 +379,8 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					this.createRightPanel(dialog, rightPane, playerx, "name2");
 					leftPane.setBackground(name2, "character");
 					Utils.createBiankuangColor(biankuang3, name2 === "unknown" ? playerx.group : lib.character[name2][1]);
-					biankuang4.setBackgroundImage(`${CONSTANTS.IMAGE_PATH_PREFIX}ols_${name2 === "unknown" ? playerx.group : lib.character[name2][1]}.png`);
+					const groupForBg2 = name2 === "unknown" ? playerx.group : lib.character[name2][1];
+					biankuang4.setBackgroundImage(plugin.getOlsBackgroundImage(groupForBg2));
 					if (!sjleft) {
 						sjleft = this.createLeftSwitchButton(leftPane, sjright, rightPane, namestyle, nametext, playerx, name, biankuang3, biankuang4, dialog);
 					} else {
@@ -393,7 +405,8 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				this.createRightPanel(dialog, rightPane, playerx, "name1");
 				leftPane.setBackground(name, "character");
 				Utils.createBiankuangColor(biankuang3, name === "unknown" ? playerx.group : lib.character[name][1]);
-				biankuang4.setBackgroundImage(`${CONSTANTS.IMAGE_PATH_PREFIX}ols_${name === "unknown" ? playerx.group : lib.character[name][1]}.png`);
+				const groupForBg1 = name === "unknown" ? playerx.group : lib.character[name][1];
+				biankuang4.setBackgroundImage(plugin.getOlsBackgroundImage(groupForBg1));
 			};
 			return sjleft;
 		}
@@ -625,6 +638,10 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 	// 插件主对象
 	const plugin = {
 		name: "character",
+		// 势力背景接口，外部可通过覆盖此方法自定义背景逻辑
+		getOlsBackgroundImage(group) {
+			return getOlsBackgroundImage(group);
+		},
 		filter() {
 			return !["chess", "tafang", "stone"].includes(get.mode());
 		},

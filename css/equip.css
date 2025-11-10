@@ -1,9 +1,10 @@
 :root {
+	/* 默认样式*/
 	--equip-right: 86px;
 	--equip-right-layout-left: 90px;
 	--player-equips-left: 10%;
 	--player-equips-right: 16%;
-
+	/* 其他样式变量 */
 	--equip-right-baby: 66px;
 	--equip-right-layout-left-baby: 108px;
 	--player-equips-left-baby: 12%;
@@ -22,92 +23,48 @@
 	--equip-right-layout-left-ol: 135px;
 	--player-equips-left-ol: 17%;
 	--player-equips-right-ol: 5%;
-
-	--color-yellow: yellow;
-	--color-red-dark: #8b0000;
-	--color-black-dark: #181818;
-	--color-black: black;
-	--color-white: white;
-	--color-bg-dark: rgb(53, 38, 32);
-	--color-bg-card: rgb(228, 207, 166);
-	--color-bg-card-alpha: rgba(228, 207, 166, 0.8);
-	--color-bg-feichu: rgb(57, 48, 33);
-	--color-border-card: rgb(90, 50, 33);
-	--color-border-player: rgb(95, 55, 45);
-
-	--size-equip-height: 27px;
-	--size-icon: 20px;
-	--size-player-equip-height: 80px;
-	--size-player-card-height: 16px;
-	--size-min-width: 130px;
-	--size-gap: 3px;
-	--size-padding: 3px;
-	--size-padding-small: 2px;
-	--size-padding-card: 4px;
-	--size-border-width: 1px;
-	--size-border-radius-small: 1px;
-	--size-transform: 10px;
-	--size-line-height: 15px;
-	--size-font-small: 13px;
-
-	--spacing-zero: 0;
-	--spacing-bottom: 3%;
-
-	--opacity-disabled: 0;
-	--opacity-codename: 0.5;
-	--opacity-card: 0.8;
-	--opacity-full: 1;
-
-	--z-index-base: 1;
-	--z-index-image: 2;
-	--z-index-player: 88;
-
-	--transition-opacity: opacity 0.5s;
-	--animation-selectable: fade-in-out-selectable 1s infinite;
-
-	--font-family: "yuanli";
-
-	--shadow-selected: 0 0 10px var(--color-yellow);
-	--shadow-selected-mobile: 0 0 2px var(--color-yellow), 0 0 4px var(--color-yellow), 0 0 8px var(--color-yellow);
-
-	--bg-gradient-corner: linear-gradient(to left, var(--color-yellow), var(--color-yellow)) left top no-repeat, linear-gradient(to bottom, var(--color-yellow), var(--color-yellow)) left top no-repeat, linear-gradient(to left, var(--color-yellow), var(--color-yellow)) right top no-repeat, linear-gradient(to bottom, var(--color-yellow), var(--color-yellow)) right top no-repeat, linear-gradient(to left, var(--color-yellow), var(--color-yellow)) left bottom no-repeat, linear-gradient(to bottom, var(--color-yellow), var(--color-yellow)) left bottom no-repeat, linear-gradient(to left, var(--color-yellow), var(--color-yellow)) right bottom no-repeat, linear-gradient(to left, var(--color-yellow), var(--color-yellow)) right bottom no-repeat;
-	--bg-size-corner: 2px 8px, 10px 2px, 2px 8px, 10px 2px;
 }
 
+/* 基础装备栏样式 */
 #arena>.equips-wrap {
 	bottom: 0%;
 	height: 100%;
 	left: auto;
-	min-width: var(--size-min-width);
+	min-width: 130px;
 	right: var(--equip-right);
 	top: auto;
 }
 
+/* 右手布局样式 */
 #arena[data-right-layout="on"]>.equips-wrap {
 	left: var(--equip-right-layout-left);
 	right: auto;
 }
 
 #arena[data-alone-equip="off"]>.equips-wrap {
-	opacity: var(--opacity-disabled);
+	opacity: 0;
 	left: auto;
 }
 
+/* 关闭触屏布局时的装备栏位置调整 - 仅在十周年样式下生效 */
 #arena[data-new-decade-style="on"][data-phonelayout="off"][data-right-layout="on"]>.equips-wrap {
 	left: 0%;
 	right: auto;
 }
 
+/* 关闭触屏布局时的装备栏位置调整 - 仅在othersOff样式下生效 */
 #arena[data-new-decade-style="othersOff"][data-phonelayout="off"][data-right-layout="on"]>.equips-wrap {
 	left: 1%;
 	right: auto;
 }
 
+/* othersOff样式下其他玩家装备向右微调 */
 #arena[data-new-decade-style="othersOff"] .player>.equips,
 #arena[data-new-decade-style="othersOff"]>.player:not(.minskin)>.equips {
 	left: calc(var(--player-equips-left) + 5%);
 }
 
+/* 装备栏背景和内容容器 */
 .equips-wrap>.equips-back {
 	align-content: center;
 	align-items: center;
@@ -116,27 +73,31 @@
 	height: 100%;
 	justify-content: flex-end;
 	position: absolute;
-	row-gap: var(--size-gap);
+	row-gap: 3px;
 	width: 100%;
 }
 
 .equips-wrap>.equips {
 	align-items: center;
-	bottom: 0;
+	bottom: 0px;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
 	justify-content: flex-end;
-	inset: 0;
+	left: 0px;
 	position: absolute;
-	row-gap: var(--size-gap);
+	right: 0px;
+	row-gap: 3px;
+	top: 0px;
 	width: 100%;
 }
 
+/* 装备栏背景装饰 */
 .equips-wrap>.equips-back>div {
-	height: var(--size-equip-height);
-	inset-inline: var(--size-padding);
+	height: 27px;
+	left: 3px;
 	position: initial;
+	right: 3px;
 	width: 100%;
 }
 
@@ -160,20 +121,22 @@
 	background-image: url("../image/decoration/equip5.png");
 }
 
+/* 装备栏内容样式 */
 .equips-wrap>.equips>div {
-	inset-inline: var(--size-padding);
-	height: var(--size-equip-height);
+	left: 3px;
+	right: 3px;
+	height: 27px;
 	width: 100%;
 	position: initial;
 	box-shadow: none;
-	border-radius: 0;
-	background: var(--color-bg-dark) !important;
+	border-radius: 0px;
+	background: rgb(53, 38, 32) !important;
 	display: flex;
 	align-items: center;
 	align-content: center;
 	justify-content: center;
 	-webkit-text-size-adjust: none;
-	z-index: var(--z-index-base);
+	z-index: 1;
 }
 
 .equips-wrap>.equips>div::before {
@@ -185,54 +148,57 @@
 }
 
 .equips-wrap>.equips>div::after {
-	background: var(--bg-gradient-corner) !important;
-	background-size: var(--bg-size-corner) !important;
-	border-radius: 0;
+	background: linear-gradient(to left, yellow, yellow) left top no-repeat, linear-gradient(to bottom, yellow, yellow) left top no-repeat, linear-gradient(to left, yellow, yellow) right top no-repeat, linear-gradient(to bottom, yellow, yellow) right top no-repeat, linear-gradient(to left, yellow, yellow) left bottom no-repeat, linear-gradient(to bottom, yellow, yellow) left bottom no-repeat, linear-gradient(to left, yellow, yellow) right bottom no-repeat, linear-gradient(to left, yellow, yellow) right bottom no-repeat !important;
+	background-size: 2px 8px, 10px 2px, 2px 8px, 10px 2px !important;
+	border-radius: 0px;
 	box-shadow: none;
 	display: block;
 	height: inherit;
 	left: auto;
-	opacity: var(--opacity-full);
+	opacity: 1;
 	top: auto;
 	width: inherit;
 	z-index: auto;
 }
 
+/* 选中和可选择状态 */
 .equips-wrap>.equips>div.selected {
-	box-shadow: var(--shadow-selected);
+	box-shadow: 0 0 10px yellow;
 }
 
 .equips-wrap>.equips>div.selectable {
 	cursor: pointer;
-	transform: translateX(calc(-1 * var(--size-transform)));
+	transform: translateX(-10px);
 }
 
 .equips-wrap>.equips>div.selectable::before {
-	animation: var(--animation-selectable);
+	animation: fade-in-out-selectable 1s infinite;
 }
 
 #arena[data-right-layout="on"]>.equips-wrap>.equips>div.selectable {
-	transform: translateX(var(--size-transform));
+	transform: translateX(10px);
 }
 
 .mobile-phone .equips-wrap>.equips>div.selected {
-	box-shadow: var(--shadow-selected-mobile);
+	box-shadow: 0 0 2px yellow, 0 0 4px yellow, 0 0 8px yellow;
 }
 
 .equips-wrap .equips>div[data-card-subype="equip5"] .equips-wrap>.equips-back>div.equip0 {
-	opacity: var(--opacity-full);
+	opacity: 1;
 }
 
+/* 图标样式 */
 .equips-wrap>.equips-back>div>.icon,
 .equips-wrap>.equips>div>.icon {
 	display: block;
-	top: var(--size-padding-card);
-	left: var(--size-padding-small);
-	width: var(--size-icon);
-	height: var(--size-icon);
-	transition: var(--transition-opacity);
+	top: 4px;
+	left: 2px;
+	width: 20px;
+	height: 20px;
+	transition: opacity 0.5s;
 }
 
+/* 装备牌内容样式 */
 .equips-wrap>.equips>.card>div {
 	position: absolute;
 	text-shadow: none;
@@ -243,70 +209,78 @@
 	align-items: center;
 	align-content: center;
 	justify-content: center;
-	margin: 0;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
 	position: static;
-	width: calc(100% - var(--size-padding-card));
-	height: calc(100% - var(--size-padding-card));
-	background-color: var(--color-bg-card);
-	border: var(--size-border-width) solid var(--color-border-card);
-	border-radius: 0;
+	width: calc(100% - 4px);
+	height: calc(100% - 4px);
+	background-color: rgb(228, 207, 166);
+	border: 1px solid rgb(90, 50, 33);
+	border-radius: 0px;
 	box-sizing: border-box;
 	font-weight: bold;
-	font-family: var(--font-family) !important;
+	font-family: "yuanli" !important;
 	white-space: pre-wrap;
 	pointer-events: none;
-	z-index: var(--z-index-base);
+	z-index: 1;
 }
 
+/* 红色装备牌颜色显示 */
 .equips-wrap>.equips>.card[data-suit="heart"]>.name2,
 .equips-wrap>.equips>.card[data-suit="diamond"]>.name2 {
-	color: var(--color-red-dark);
+	color: #8b0000;
 }
 
+/* 黑色装备牌颜色显示 */
 .equips-wrap>.equips>.card[data-suit="spade"]>.name2,
 .equips-wrap>.equips>.card[data-suit="club"]>.name2 {
-	color: var(--color-black-dark);
+	color: #181818;
 }
 
+/* 无色装备牌颜色显示 */
 .equips-wrap>.equips>.card[data-suit="none"]>.name2 {
-	background-color: var(--color-black);
-	color: var(--color-white);
+	background-color: black;
+	color: white;
 }
 
 .equips-wrap>.equips>.card.feichu>.name2 {
-	background-color: var(--color-bg-feichu);
-	color: var(--color-white);
+	background-color: rgb(57, 48, 33);
+	color: white;
 	font-weight: normal;
 }
 
+/* 装备牌图片样式 */
 .equips-wrap>.equips>.card>.image {
 	bottom: auto;
 	display: block;
-	height: var(--size-icon);
-	left: var(--size-padding);
+	height: 20px;
+	left: 3px;
 	position: absolute;
 	visibility: visible !important;
-	width: var(--size-icon);
-	z-index: var(--z-index-image);
+	width: 20px;
+	z-index: 2;
 }
 
 .equips-wrap>.equips>.card:not(.fullskin)>.image {
 	display: block !important;
 }
 
+/* 其他玩家装备栏样式 */
 .player>.equips,
 #arena>.player:not(.minskin)>.equips {
 	left: var(--player-equips-left);
 	right: var(--player-equips-right);
 	width: auto;
-	height: var(--size-player-equip-height);
-	bottom: var(--spacing-bottom);
+	height: 80px;
+	bottom: 3%;
 	box-shadow: none;
 	background: none;
 	background-image: none;
-	border-radius: 0;
+	border-radius: 0px;
 	pointer-events: none;
-	z-index: var(--z-index-player);
+	z-index: 88;
 	transform: none;
 	transform-origin: center;
 	position: absolute;
@@ -314,6 +288,7 @@
 	flex-direction: column;
 }
 
+/* 不可见玩家装备栏样式 */
 #arena.decadeUI:not(.long).mobile:not(.oldlayout) .player.unseen:not([data-position="0"]) .equips:not(*:empty),
 #arena.decadeUI:not(.long):not(.mobile):not(.oldlayout) .player.unseen .equips:not(*:empty),
 #arena.decadeUI.long.mobile:not(.oldlayout) .player.unseen2:not([data-position="0"]) .equips:not(*:empty),
@@ -324,6 +299,7 @@
 	box-shadow: none;
 }
 
+/* 其他玩家装备牌样式 */
 .player>.equips>.card,
 .player.unseen>.equips>.card,
 .player.unseen2>.equips>.card {
@@ -331,13 +307,13 @@
 	align-items: center;
 	align-content: center;
 	justify-content: center;
-	background: var(--color-bg-card-alpha) !important;
-	border: var(--size-border-width) solid var(--color-border-player);
+	background: rgba(228, 207, 166, 0.8) !important;
+	border: 1px solid rgb(95, 55, 45);
 	border-image: none !important;
 	box-sizing: border-box;
-	border-radius: var(--size-border-radius-small);
+	border-radius: 1px;
 	width: 100%;
-	height: var(--size-player-card-height);
+	height: 16px;
 	text-shadow: none;
 }
 
@@ -345,7 +321,7 @@
 #arena.decadeUI:not(.long):not(.mobile):not(.oldlayout) .player.unseen .equips:not(*:empty)>.card:not(.selected),
 #arena.decadeUI.long.mobile:not(.oldlayout) .player.unseen2:not([data-position="0"]) .equips:not(*:empty)>.card,
 #arena.decadeUI.long:not(.mobile):not(.oldlayout) .player.unseen2 .equips:not(*:empty)>.card:not(.selected) {
-	background: var(--color-bg-card-alpha) !important;
+	background: rgba(228, 207, 166, 0.8) !important;
 }
 
 .player:not(.selectable)>.equips>.card,
@@ -359,29 +335,35 @@
 
 .player>.equips>.card>.name2 {
 	position: absolute;
-	inset: 0;
+	left: 0;
+	top: 0;
 	display: flex;
 	align-items: center;
 	align-content: center;
 	justify-content: center;
 	width: 100%;
 	height: 100%;
-	line-height: var(--size-line-height);
-	color: var(--color-black-dark);
-	font-size: var(--size-font-small);
+	line-height: 15px;
+	color: #181818;
+	font-size: 13px;
 	font-weight: bold;
-	font-family: var(--font-family);
+	font-family: yuanli;
 	text-shadow: none;
 	text-align: center;
-	margin: 0;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
 	pointer-events: none;
 }
 
 .player>.equips>.card[data-suit="heart"]>.name2,
 .player>.equips>.card[data-suit="diamond"]>.name2 {
-	color: var(--color-red-dark);
+	color: #8b0000;
 }
 
+/* 样式特定的CSS变量覆盖 */
+/* babysha样式 */
 body[data-style="babysha"] {
 	--equip-right: var(--equip-right-baby);
 	--equip-right-layout-left: var(--equip-right-layout-left-baby);
@@ -389,6 +371,7 @@ body[data-style="babysha"] {
 	--player-equips-right: 16%;
 }
 
+/* onlineUI样式 */
 body[data-style="onlineUI"] {
 	--equip-right: var(--equip-right-ol);
 	--equip-right-layout-left: var(--equip-right-layout-left-ol);
@@ -396,6 +379,7 @@ body[data-style="onlineUI"] {
 	--player-equips-right: var(--player-equips-right-ol);
 }
 
+/* off样式 (使用new样式) */
 body[data-style="off"] {
 	--equip-right: var(--equip-right-new);
 	--equip-right-layout-left: var(--equip-right-layout-left-new);
@@ -403,6 +387,7 @@ body[data-style="off"] {
 	--player-equips-right: var(--player-equips-right-new);
 }
 
+/* codename样式：调整装备栏背景图透明度 */
 body[data-style="codename"] .equips-wrap>.equips-back>div {
-	opacity: var(--opacity-codename);
+	opacity: 0.5;
 }

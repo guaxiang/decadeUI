@@ -138,7 +138,11 @@
 		transform: scale(0.7);
 	}
 
-	40%,
+	40% {
+		opacity: 1;
+		transform: scale(1);
+	}
+
 	60% {
 		opacity: 1;
 		transform: scale(1);
@@ -151,10 +155,8 @@
 }
 
 @keyframes player-hurt {
-
-	0%,
-	100% {
-		transform: translateX(0);
+	0% {
+		transform: translateX(0px);
 	}
 
 	4% {
@@ -164,17 +166,23 @@
 	50% {
 		transform: translateX(-14px);
 	}
+
+	100% {
+		transform: translateX(0px);
+	}
 }
 
 @keyframes fade-in-out-selectable {
-
-	0%,
-	100% {
+	0% {
 		opacity: 0;
 	}
 
 	50% {
 		opacity: 0.2;
+	}
+
+	100% {
+		opacity: 0;
 	}
 }
 
@@ -193,44 +201,44 @@
 @keyframes kf-sprites-glow {
 	0% {
 		background-size: 2300px 100%;
-		background-position: 0 0;
+		background-position: 0px 0px;
 	}
 
-	10% {
-		background-position: -230px 0;
+	10.00% {
+		background-position: -230px 0px;
 	}
 
-	20% {
-		background-position: -460px 0;
+	20.00% {
+		background-position: -460px 0px;
 	}
 
-	30% {
-		background-position: -690px 0;
+	30.00% {
+		background-position: -690px 0px;
 	}
 
-	40% {
-		background-position: -920px 0;
+	40.00% {
+		background-position: -920px 0px;
 	}
 
-	50% {
-		background-position: -1150px 0;
+	50.00% {
+		background-position: -1150px 0px;
 	}
 
-	60% {
-		background-position: -1380px 0;
+	60.00% {
+		background-position: -1380px 0px;
 	}
 
-	70% {
-		background-position: -1610px 0;
+	70.00% {
+		background-position: -1610px 0px;
 	}
 
-	80% {
-		background-position: -1840px 0;
+	80.00% {
+		background-position: -1840px 0px;
 	}
 
-	90%,
+	90.00%,
 	100% {
 		background-size: 2300px 100%;
-		background-position: -2070px 0;
+		background-position: -2070px 0px;
 	}
 }

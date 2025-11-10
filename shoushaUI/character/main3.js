@@ -1,6 +1,34 @@
 app.import((lib, game, ui, get, ai, _status, app) => {
+	const extensionPath = `${lib.assetURL}extension/十周年UI/shoushaUI/`;
+
+	// 获取势力背景图片路径接口
+	function getGroupBackgroundImage(group) {
+		const validGroups = ["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key", "Han", "qin"];
+		if (!validGroups.includes(group)) {
+			group = "default";
+		}
+		return `${extensionPath}character/images/xinsha/yemian.png`;
+	}
+
+	// 获取龙框背景图片路径接口
+	function getLongkuangBackgroundImage(group) {
+		const validGroups = ["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key", "Han", "qin"];
+		if (!validGroups.includes(group)) {
+			group = "default";
+		}
+		return `extension/十周年UI/shoushaUI/character/images/xinsha/${group}.png`;
+	}
+
 	const plugin = {
 		name: "character",
+		// 对话框背景接口，外部可通过覆盖此方法自定义背景逻辑
+		getGroupBackgroundImage(group) {
+			return getGroupBackgroundImage(group);
+		},
+		// 龙框背景接口，外部可通过覆盖此方法自定义龙框背景逻辑
+		getLongkuangBackgroundImage(group) {
+			return getLongkuangBackgroundImage(group);
+		},
 		filter() {
 			return !["chess", "tafang", "stone", "connect"].includes(get.mode());
 		},
@@ -270,13 +298,9 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					};
 				}
 				// 设置背景
-				const extensionPath = `${lib.assetURL}extension/十周年UI/shoushaUI/`;
-				let group = player.group;
-				if (!["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key", "Han", "qin"].includes(group)) {
-					group = "default";
-				}
-				const url = `${extensionPath}character/images/xinsha/yemian.png`;
-				dialog.style.backgroundImage = `url("${url}")`;
+				const group = player.group;
+				const bgImagePath = plugin.getGroupBackgroundImage(group);
+				dialog.style.backgroundImage = `url("${bgImagePath}")`;
 				// 创建皮肤区域
 				const skin1 = ui.create.div(".skin1", dialog);
 				const skin2 = ui.create.div(".skin2", dialog);
@@ -432,7 +456,8 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				});
 				// 龙框
 				const longkuang = ui.create.div(".longkuang", dialog);
-				longkuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${group}.png`);
+				const longkuangBgPath = plugin.getLongkuangBackgroundImage(group);
+				longkuang.setBackgroundImage(longkuangBgPath);
 				// 等级标识
 				const level = ui.create.div(".level", dialog);
 				const leveltu = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];

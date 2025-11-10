@@ -1,6 +1,22 @@
 app.import((lib, game, ui, get, ai, _status, app) => {
+	// 获取势力背景图片路径接口
+	function getName2BackgroundImage(group) {
+		if (!group || group === "unknown") {
+			return `extension/十周年UI/shoushaUI/character/images/shousha/name2_unknown.png`;
+		}
+		const validGroups = ["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key", "Han", "qin"];
+		if (!validGroups.includes(group)) {
+			group = "default";
+		}
+		return `extension/十周年UI/shoushaUI/character/images/shousha/name2_${group}.png`;
+	}
+
 	const plugin = {
 		name: "character",
+		// 势力背景接口，外部可通过覆盖此方法自定义背景逻辑
+		getName2BackgroundImage(group) {
+			return getName2BackgroundImage(group);
+		},
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
@@ -103,10 +119,10 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						let biankuang = ui.create.div(".biankuang", blackBg2);
 						let leftPane = createLeftPane(biankuang);
 						if (player.classList.contains("unseen") && player !== game.me) {
-							biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_unknown.png`);
+							biankuang.setBackgroundImage(plugin.getName2BackgroundImage("unknown"));
 							leftPane.style.backgroundImage = "url('image/character/hidden_image.jpg')";
 						} else {
-							biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_${player.group}.png`);
+							biankuang.setBackgroundImage(plugin.getName2BackgroundImage(player.group));
 							leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
 						}
 						createButton(name, leftPane.firstChild);
@@ -133,18 +149,18 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						let leftPane = createLeftPane(biankuang);
 						let leftPane2 = createLeftPane(biankuang2);
 						if (player.classList.contains("unseen") && player !== game.me) {
-							biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_unknown.png`);
+							biankuang.setBackgroundImage(plugin.getName2BackgroundImage("unknown"));
 							leftPane.style.backgroundImage = "url('image/character/hidden_image.jpg')";
 						} else {
-							biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_${group1}.png`);
+							biankuang.setBackgroundImage(plugin.getName2BackgroundImage(group1));
 							leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
 						}
 
 						if (player.classList.contains("unseen2") && player !== game.me) {
-							biankuang2.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_unknown.png`);
+							biankuang2.setBackgroundImage(plugin.getName2BackgroundImage("unknown"));
 							leftPane2.style.backgroundImage = "url('image/character/hidden_image.jpg')";
 						} else {
-							biankuang2.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/name2_${group2}.png`);
+							biankuang2.setBackgroundImage(plugin.getName2BackgroundImage(group2));
 							leftPane2.setBackground(name2, "character");
 						}
 						createButton(name, leftPane.firstChild);
