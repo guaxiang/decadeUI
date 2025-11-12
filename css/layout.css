@@ -235,6 +235,13 @@ body>.background {
 	bottom: 0%;
 }
 
+#arena[data-new-decade-style="onlineUI"][data-right-layout="on"]>.hand-wrap,
+#arena[data-new-decade-style="onlineUI"][data-right-layout="on"]>.hand-back {
+	left: 230px;
+	right: 350px;
+	bottom: 0%;
+}
+
 /* 名将杀样式下的右手布局手牌位置调整 */
 #arena[data-new-decade-style="codename"][data-right-layout="on"]>.hand-wrap,
 #arena[data-new-decade-style="codename"][data-right-layout="on"]>.hand-back {
@@ -261,6 +268,11 @@ body>.background {
 	left: 95px;
 	right: 320px;
 	bottom: 0%;
+}
+
+#arena[data-new-decade-style="onlineUI"][data-alone-equip="off"][data-right-layout="on"]>.hand-wrap,
+#arena[data-new-decade-style="onlineUI"][data-alone-equip="off"][data-right-layout="on"]>.hand-back {
+	right: 350px !important;
 }
 
 .discard-zone {
@@ -798,7 +810,6 @@ body>.background {
 
 /* ---------------- 合并layout_new.css---------------- */
 /* 龙框头/尾尺寸与位置（新版） */
-body[data-style="onlineUI"] .player>.long,
 body[data-style="babysha"] .player>.long {
 	--w: 60px;
 	--h: calc(var(--w) * 110 / 60);
@@ -809,7 +820,6 @@ body[data-style="babysha"] .player>.long {
 	z-index: 63;
 }
 
-body[data-style="onlineUI"] .player>.wei,
 body[data-style="babysha"] .player>.wei {
 	--w: 80px;
 	--h: calc(var(--w) * 40 / 80);
@@ -819,37 +829,6 @@ body[data-style="babysha"] .player>.wei {
 	bottom: -10px;
 }
 
-/* 手牌区与右手布局位置（含 onlineUI 专属更大右距） */
-body[data-style="onlineUI"] #arena>.hand-wrap,
-body[data-style="onlineUI"] #arena>.hand-back {
-	left: 360px;
-	right: 320px;
-	height: 150px;
-	bottom: 0%;
-}
-
-body[data-style="onlineUI"] #arena[data-right-layout="on"]>.hand-wrap,
-body[data-style="onlineUI"] #arena[data-right-layout="on"]>.hand-back {
-	left: 255px;
-	right: 410px;
-	bottom: 0%;
-}
-
-body[data-style="onlineUI"] #arena[data-alone-equip="off"][data-right-layout="off"]>.hand-wrap,
-body[data-style="onlineUI"] #arena[data-alone-equip="off"][data-right-layout="off"]>.hand-back {
-	left: 360px;
-	right: 160px;
-	bottom: 0%;
-}
-
-body[data-style="onlineUI"] #arena[data-alone-equip="off"][data-right-layout="on"]>.hand-wrap,
-body[data-style="onlineUI"] #arena[data-alone-equip="off"][data-right-layout="on"]>.hand-back {
-	left: 110px;
-	right: 405px;
-	bottom: 0%;
-}
-
-/* babysha 与 onlineUI 共用新版右手布局更大右距 */
 body[data-style="babysha"] #arena[data-right-layout="on"]>.hand-wrap,
 body[data-style="babysha"] #arena[data-right-layout="on"]>.hand-back {
 	left: 230px;
@@ -865,24 +844,19 @@ body[data-style="babysha"] #arena[data-alone-equip="off"][data-right-layout="on"
 }
 
 /* 触摸信息位置（top/left） */
-body[data-style="onlineUI"] .touchinfo,
 body[data-style="babysha"] .touchinfo {
 	top: 1%;
 }
 
-body[data-style="onlineUI"] .touchinfo.left,
 body[data-style="babysha"] .touchinfo.left {
 	left: 84%;
 	top: 15%;
 }
 
-body[data-style="onlineUI"] .touchinfo.right,
 body[data-style="babysha"] .touchinfo.right {
 	right: 2%;
 }
 
-/* 新版手牌卡片边框与位移 */
-body[data-style="onlineUI"] .hand-cards>.handcards>.card,
 body[data-style="babysha"] .hand-cards>.handcards>.card {
 	left: 20px;
 	border: 1px solid;
