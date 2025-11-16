@@ -1323,6 +1323,42 @@ if (decadeModule)
 					name: "SSHW_TX_taijifuchen",
 				},
 				{
+					name: "taipingyaoshu"
+				},
+				{
+					name: "effect_taipingyaoshu_xiexia"
+				},
+				{
+					name: "qibaodao2"
+				},
+				{
+					name: "feilongduofeng"
+				},
+				{
+					name: "wuliu"
+				},
+				{
+					name: "sanjian"
+				},
+				{
+					name: "yitianjian"
+				},
+				{
+					name: "zhanxiang"
+				},
+				{
+					name: "SSHW_TX_chiyanzhenhun"
+				},
+				{
+					name: "SSHW_TX_xuwangzhimian"
+				},
+				{
+					name: "Ss_ZB_ZheJi"
+				},
+				{
+					name: "Ss_ZB_NvZhuang"
+				},
+				{
 					name: "effect_xianding",
 					fileType: "json",
 				},
@@ -1489,6 +1525,78 @@ if (decadeModule)
 							name: "SSHW_TX_chongyingshenfu",
 							scale: 0.5,
 							x: [0, 0.58],
+						},
+						taipingyaoshu: {
+							skill: "taipingyaoshu",
+							name: "taipingyaoshu",
+							scale: 0.75,
+						},
+						taipingyaoshu_lose: {
+							skill: "taipingyaoshu_lose",
+							name: "effect_taipingyaoshu_xiexia",
+							scale: 0.55,
+						},
+						qibaodao: {
+							skill: "qibaodao",
+							name: "qibaodao2",
+							scale: 1,
+						},
+						yitianjian: {
+							skill: "yitianjian",
+							name: "yitianjian",
+							scale: 0.5,
+						},
+						zhanxiang: {
+							skill: "zhanxiang",
+							name: "zhanxiang",
+							scale: 0.5,
+						},
+						wuliu: {
+							skill: "wuliu",
+							name: "wuliu",
+							scale: 0.5,
+						},
+						sanjian_skill: {
+							skill: "sanjian_skill",
+							name: "sanjian",
+							scale: 0.5,
+						},
+						feilongduofeng: {
+							skill: "feilongduofeng",
+							name: "feilongduofeng",
+							scale: 0.5,
+						},
+						ty_feilongduofeng_skill: {
+							skill: "ty_feilongduofeng_skill",
+							name: "feilongduofeng",
+							scale: 0.5,
+						},
+						xuwangzhimian: {
+							skill: "xuwangzhimian",
+							name: "SSHW_TX_xuwangzhimian",
+							scale: 0.5,
+							x: [0, 0.58],
+						},
+						chiyanzhenhunqin: {
+							skill: "chiyanzhenhunqin",
+							name: "SSHW_TX_chiyanzhenhun",
+							scale: 0.5,
+							x: [0, 0.55],
+						},
+						duanjian: {
+							skill: "duanjian",
+							name: "Ss_ZB_ZheJi",
+							scale: 0.5
+						},
+						serafuku: {
+							skill: "serafuku",
+							name: "Ss_ZB_NvZhuang",
+							scale: 0.5,
+						},
+						yonglv: {
+							skill: "yonglv",
+							name: "effect_numa",
+							scale: 0.4
 						},
 						bagua_skill: {
 							skill: "bagua_skill",
@@ -1683,6 +1791,15 @@ if (decadeModule)
 				}
 				var trigger = {
 					card: {
+						taipingyaoshu: {
+							onEquip() {
+								lib.animate.skill["taipingyaoshu"].call(player, "taipingyaoshu");
+							},
+							onLose() {
+								player.addTempSkill("taipingyaoshu_lose");
+								lib.animate.skill["taipingyaoshu_lose"].call(player, "taipingyaoshui_lose");
+							},
+						},
 						nvzhuang: {
 							onEquip() {
 								if (
@@ -1727,6 +1844,26 @@ if (decadeModule)
 						numa: {
 							onEquip() {
 								lib.animate.skill["numa"].call(player, "numa");
+							},
+						},
+						wuliu: {
+							onEquip() {
+								lib.animate.skill["wuliu"].call(player, "wuliu");
+							},
+						},
+						duanjian: {
+							onEquip() {
+								lib.animate.skill["duanjian"].call(player, "duanjian");
+							},
+						},
+						yonglv: {
+							onEquip() {
+								lib.animate.skill["yonglv"].call(player, "yonglv");
+							},
+						},
+						qixingbaodao: {
+							onEquip() {
+								lib.animate.skill["qixingbaodao"].call(player, "qixingbaodao");
 							},
 						},
 						lebu: {
