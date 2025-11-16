@@ -1793,11 +1793,15 @@ if (decadeModule)
 					card: {
 						taipingyaoshu: {
 							onEquip() {
-								lib.animate.skill["taipingyaoshu"].call(player, "taipingyaoshu");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["taipingyaoshu"].call(player, "taipingyaoshu");
+								}, player);
 							},
 							onLose() {
 								player.addTempSkill("taipingyaoshu_lose");
-								lib.animate.skill["taipingyaoshu_lose"].call(player, "taipingyaoshui_lose");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["taipingyaoshu_lose"].call(player, "taipingyaoshui_lose");
+								}, player);
 							},
 						},
 						nvzhuang: {
@@ -1830,7 +1834,9 @@ if (decadeModule)
 								next.player = player;
 								next.setContent(function () {
 									if (player.countCards("he")) {
-										lib.animate.skill["nvzhuang"].call(player, "nvzhuang");
+										game.broadcastAll(function (player) {
+											lib.animate.skill["nvzhuang"].call(player, "nvzhuang");
+										}, player);
 										player.chooseToDiscard(true, "he");
 									}
 								});
@@ -1838,32 +1844,44 @@ if (decadeModule)
 						},
 						zheji: {
 							onEquip() {
-								lib.animate.skill["zheji"].call(player, "zheji");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["zheji"].call(player, "zheji");
+								}, player);
 							},
 						},
 						numa: {
 							onEquip() {
-								lib.animate.skill["numa"].call(player, "numa");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["numa"].call(player, "numa");
+								}, player);
 							},
 						},
 						wuliu: {
 							onEquip() {
-								lib.animate.skill["wuliu"].call(player, "wuliu");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["wuliu"].call(player, "wuliu");
+								}, player);
 							},
 						},
 						duanjian: {
 							onEquip() {
-								lib.animate.skill["duanjian"].call(player, "duanjian");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["duanjian"].call(player, "duanjian");
+								}, player);
 							},
 						},
 						yonglv: {
 							onEquip() {
-								lib.animate.skill["yonglv"].call(player, "yonglv");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["yonglv"].call(player, "yonglv");
+								}, player);
 							},
 						},
 						qixingbaodao: {
 							onEquip() {
-								lib.animate.skill["qixingbaodao"].call(player, "qixingbaodao");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["qixingbaodao"].call(player, "qixingbaodao");
+								}, player);
 							},
 						},
 						lebu: {
