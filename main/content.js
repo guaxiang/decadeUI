@@ -6019,6 +6019,7 @@ export async function content(config, pack) {
 						var card = event.result.card.clone;
 						var apcard = event.apcard;
 						var tagText = "";
+						if (!card) return;
 						var tagNode = card.querySelector(".used-info");
 						if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
 						if (event.result.suit != get.suit(card) || event.result.number != get.number(card)) {
