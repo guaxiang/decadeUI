@@ -16,10 +16,7 @@ export async function content(config, pack) {
 	const recommendedLayouts = ["nova"];
 	const currentLayout = lib.config.layout;
 	if (!recommendedLayouts.includes(currentLayout)) {
-		const shouldSwitch = confirm(
-			"十周年UI提醒您，请使用<新版>布局以获得良好体验。\n" +
-			"点击确定自动切换到<新版>布局，点击取消保持当前布局。"
-		);
+		const shouldSwitch = confirm("十周年UI提醒您，请使用<新版>布局以获得良好体验。\n" + "点击确定自动切换到<新版>布局，点击取消保持当前布局。");
 		if (shouldSwitch) {
 			lib.config.layout = "nova";
 			game.saveConfig("layout", "nova");
@@ -60,7 +57,7 @@ export async function content(config, pack) {
 			);
 			this.initOverride();
 			const handTipHeight = lib.config["extension_十周年UI_handTipHeight"] || "20";
-			document.documentElement.style.setProperty('--hand-tip-bottom', `calc(${handTipHeight}% + 10px)`);
+			document.documentElement.style.setProperty("--hand-tip-bottom", `calc(${handTipHeight}% + 10px)`);
 			if (window.get && typeof window.get.cardsetion === "function") {
 				const oldCardsetion = window.get.cardsetion;
 				window.get.cardsetion = function (...args) {
@@ -532,8 +529,7 @@ export async function content(config, pack) {
 										return;
 									}
 								}
-								if (item && typeof item === "string" && item.startsWith("starcanxi_") &&
-									item !== "starcanxi_wangsheng" && item !== "starcanxi_xiangsi" && item !== "starcanxi_cancel") {
+								if (item && typeof item === "string" && item.startsWith("starcanxi_") && item !== "starcanxi_wangsheng" && item !== "starcanxi_xiangsi" && item !== "starcanxi_cancel") {
 									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
 										return;
 									}
@@ -620,8 +616,7 @@ export async function content(config, pack) {
 										return;
 									}
 								}
-								if (name && typeof name === "string" && name.startsWith("starcanxi_") &&
-									name !== "starcanxi_wangsheng" && name !== "starcanxi_xiangsi" && name !== "starcanxi_cancel") {
+								if (name && typeof name === "string" && name.startsWith("starcanxi_") && name !== "starcanxi_wangsheng" && name !== "starcanxi_xiangsi" && name !== "starcanxi_cancel") {
 									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
 										return;
 									}
@@ -638,8 +633,7 @@ export async function content(config, pack) {
 										return;
 									}
 								}
-								if (name && typeof name === "string" && name.startsWith("starcanxi_") &&
-									name !== "starcanxi_wangsheng" && name !== "starcanxi_xiangsi" && name !== "starcanxi_cancel") {
+								if (name && typeof name === "string" && name.startsWith("starcanxi_") && name !== "starcanxi_wangsheng" && name !== "starcanxi_xiangsi" && name !== "starcanxi_cancel") {
 									if (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
 										return;
 									}
@@ -888,7 +882,7 @@ export async function content(config, pack) {
 									} else if (Array.isArray(this.storage[name])) {
 										num = this.storage[name].length;
 									}
-									if (num/* && num !== 1*/) {
+									if (num /* && num !== 1*/) {
 										if (!mark.markcount) mark.markcount = decadeUI.element.create("mark-count", mark);
 										mark.markcount.textContent = num;
 									} else if (mark.markcount) {
@@ -1082,10 +1076,16 @@ export async function content(config, pack) {
 											if (!Object.hasOwnProperty.call(opts, key)) continue;
 											const setterMap = {
 												class: v => v.forEach(x => d.classList.add(x)),
-												id: v => d.id = v,
+												id: v => (d.id = v),
 												parentNode: v => v.appendChild(d),
-												listen: v => { for (const evt in v) { if (typeof v[evt] == "function") d[evt] = v[evt]; } },
-												style: v => { for (const s in v) d.style[s] = v[s]; },
+												listen: v => {
+													for (const evt in v) {
+														if (typeof v[evt] == "function") d[evt] = v[evt];
+													}
+												},
+												style: v => {
+													for (const s in v) d.style[s] = v[s];
+												},
 												children: v => v.forEach(x => d.appendChild(x)),
 												insertBefore: v => v[0].insertBefore(d, v[1]),
 											};
@@ -1169,9 +1169,9 @@ export async function content(config, pack) {
 											c.copy()._customintro = c._customintro;
 										});
 										if (e.type == "mouseover") {
-											player.node.showCards.onmouseleave = function () { };
+											player.node.showCards.onmouseleave = function () {};
 										} else {
-											ui.window.addEventListener("touchend", function touch() { }, { once: true });
+											ui.window.addEventListener("touchend", function touch() {}, { once: true });
 										}
 									};
 									// 监听手牌区变化
@@ -1282,11 +1282,11 @@ export async function content(config, pack) {
 											const prefix = value.slice(0, colonIndex);
 											const payload = value.slice(colonIndex + 1);
 											const handle = {
-												img: () => imgPrefixUrl = payload,
-												ext: () => extimage = value,
-												db: () => dbimage = value,
-												mode: () => modeimage = payload,
-												character: () => realName = payload,
+												img: () => (imgPrefixUrl = payload),
+												ext: () => (extimage = value),
+												db: () => (dbimage = value),
+												mode: () => (modeimage = payload),
+												character: () => (realName = payload),
 											}[prefix];
 											if (handle) handle();
 											if (imgPrefixUrl || extimage || dbimage || modeimage || realName !== name) break;
@@ -1298,11 +1298,13 @@ export async function content(config, pack) {
 								} else if (extimage) {
 									src = extimage.replace(/^ext:/, "extension/");
 								} else if (dbimage) {
-									game.getDB("image", dbimage.slice(3)).then(() => {
-										return;
-									}).catch(() => {
-										addExperienceSuffix();
-									});
+									game.getDB("image", dbimage.slice(3))
+										.then(() => {
+											return;
+										})
+										.catch(() => {
+											addExperienceSuffix();
+										});
 									return;
 								} else if (modeimage) {
 									src = `image/mode/${modeimage}/character/${realName}.jpg`;
@@ -1465,7 +1467,7 @@ export async function content(config, pack) {
 										let map = ["bingliang", "lebu", "shandian", "fulei", "hongshui", "huoshan", "caomu", "jlsgqs_shuiyanqijun", "jydiy_zouhuorumo", "jydiy_yungongliaoshang", "xwjh_biguanqingxiu", "xwjh_wushisanke", "xumou_jsrg", "dczixi_bingliang", "dczixi_lebu", "dczixi_shandian"];
 										if (map.includes(cardx.name)) {
 											let imageName = cardx.name;
-											const judgeText = (lib.translate[cardx.name + "_bg"] || get.translation(cardx.name) || "");
+											const judgeText = lib.translate[cardx.name + "_bg"] || get.translation(cardx.name) || "";
 											cardx.node.judgeMark.node.judge.innerText = "";
 											cardx.node.judgeMark.node.judge.style.fontSize = "";
 											const ext = (lib.config.extension_十周年UI_newDecadeStyle === "on" || lib.config.extension_十周年UI_newDecadeStyle === "othersOff") && ["bingliang", "lebu", "shandian"].includes(imageName) ? "1.png" : ".png";
@@ -1983,10 +1985,16 @@ export async function content(config, pack) {
 										if (!Object.hasOwnProperty.call(opts, key)) continue;
 										const setterMap = {
 											class: v => v.forEach(x => d.classList.add(x)),
-											id: v => d.id = v,
+											id: v => (d.id = v),
 											parentNode: v => v.appendChild(d),
-											listen: v => { for (const evt in v) { if (typeof v[evt] == "function") d[evt] = v[evt]; } },
-											style: v => { for (const s in v) d.style[s] = v[s]; },
+											listen: v => {
+												for (const evt in v) {
+													if (typeof v[evt] == "function") d[evt] = v[evt];
+												}
+											},
+											style: v => {
+												for (const s in v) d.style[s] = v[s];
+											},
 											children: v => v.forEach(x => d.appendChild(x)),
 											insertBefore: v => v[0].insertBefore(d, v[1]),
 										};
@@ -2428,10 +2436,13 @@ export async function content(config, pack) {
 									} else if (typeof event.animate == "function") {
 										var time = event.animate(event);
 										game.pause();
-										setTimeout(function () {
-											gainTo(cards, true);
-											game.resume();
-										}, get.delayx(time, time));
+										setTimeout(
+											function () {
+												gainTo(cards, true);
+												game.resume();
+											},
+											get.delayx(time, time)
+										);
 									} else {
 										gainTo(cards, true);
 									}
@@ -2441,7 +2452,7 @@ export async function content(config, pack) {
 								},
 							],
 							judge() {
-								"step 0";
+								"step 0"
 								var judgestr = get.translation(player) + "的" + event.judgestr + "判定";
 								event.videoId = lib.status.videoId++;
 								var cardj = event.directresult;
@@ -2478,7 +2489,7 @@ export async function content(config, pack) {
 								game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[0]);
 								game.delay(2);
 								if (!event.noJudgeTrigger) event.trigger("judge");
-								"step 1";
+								("step 1");
 								event.result = {
 									card: player.judging[0],
 									name: player.judging[0].name,
@@ -3220,7 +3231,7 @@ export async function content(config, pack) {
 							}
 						}
 					},
-					updatem(player) { },
+					updatem(player) {},
 					updatez() {
 						window.documentZoom = game.documentZoom;
 						document.body.style.zoom = game.documentZoom;
@@ -3809,11 +3820,7 @@ export async function content(config, pack) {
 							}
 						},
 						intro() {
-							if (
-								(this && this.classList && this.classList.contains("emptyequip")) ||
-								(this && this.parentNode && this.parentNode.classList && this.parentNode.classList.contains("emptyequip")) ||
-								(this && this.dataset && typeof this.dataset.name === "string" && this.dataset.name.startsWith("empty_equip"))
-							) {
+							if ((this && this.classList && this.classList.contains("emptyequip")) || (this && this.parentNode && this.parentNode.classList && this.parentNode.classList.contains("emptyequip")) || (this && this.dataset && typeof this.dataset.name === "string" && this.dataset.name.startsWith("empty_equip"))) {
 								return;
 							}
 							if (this.classList.contains("infohidden")) return;
@@ -4200,17 +4207,17 @@ export async function content(config, pack) {
 						if (!(sprite && sprite.name == "skin_xiaosha_default")) return;
 						decadeUI.backgroundAnimation.canvas.style.zIndex = 7;
 						const actions = {
-							"战斗胜利": () => {
+							战斗胜利: () => {
 								sprite.scaleTo(1.8, 600);
 								sprite.setAction("shengli");
 							},
-							"平局": () => {
+							平局: () => {
 								if (!duicfg.rightLayout) sprite.flipX = true;
 								sprite.moveTo([0, 0.5], [0, 0.25], 600);
 								sprite.scaleTo(2.5, 600);
 								sprite.setAction("gongji");
 							},
-							"战斗失败": () => {
+							战斗失败: () => {
 								if (!duicfg.rightLayout) sprite.flipX = true;
 								sprite.moveTo([0, 0.5], [0, 0.25], 600);
 								sprite.scaleTo(2.5, 600);
@@ -4683,23 +4690,27 @@ export async function content(config, pack) {
 							var identity = this.parentNode.dataset.color;
 							var gameMode = get.mode();
 							const handlerMap = {
-								"猜": () => {
+								猜: () => {
 									filename = "cai";
 									if (_status.mode == "purple" && identity == "cai") {
 										filename += "_blue";
 										checked = true;
 									}
 								},
-								"友": () => { filename = "friend"; },
-								"敌": () => { filename = "enemy"; },
-								"反": () => {
+								友: () => {
+									filename = "friend";
+								},
+								敌: () => {
+									filename = "enemy";
+								},
+								反: () => {
 									filename = "fan";
 									if (get.mode() == "doudizhu") {
 										filename = "nongmin";
 										checked = true;
 									}
 								},
-								"主": () => {
+								主: () => {
 									filename = "zhu";
 									if (get.mode() == "versus" && get.translation(player.side + "Color") == "wei") {
 										filename += "_blue";
@@ -4710,7 +4721,7 @@ export async function content(config, pack) {
 										checked = true;
 									}
 								},
-								"忠": () => {
+								忠: () => {
 									filename = "zhong";
 									if (gameMode == "identity" && _status.mode == "purple") {
 										filename = "qianfeng";
@@ -4720,7 +4731,7 @@ export async function content(config, pack) {
 										checked = true;
 									}
 								},
-								"内": () => {
+								内: () => {
 									if (_status.mode == "purple") {
 										filename = identity == "rNei" ? "xizuo" : "xizuo_blue";
 										checked = true;
@@ -4728,25 +4739,51 @@ export async function content(config, pack) {
 										filename = "nei";
 									}
 								},
-								"野": () => { filename = "ye"; },
-								"首": () => { filename = "zeishou"; },
-								"帅": () => { filename = "zhushuai"; },
-								"将": () => {
+								野: () => {
+									filename = "ye";
+								},
+								首: () => {
+									filename = "zeishou";
+								},
+								帅: () => {
+									filename = "zhushuai";
+								},
+								将: () => {
 									filename = "dajiang";
 									if (_status.mode == "three" || get.translation(player.side + "Color") == "wei") {
 										filename = "zhushuai_blue";
 										checked = true;
 									}
 								},
-								"兵": () => { filename = this.player.side === false ? "qianfeng_blue" : "qianfeng"; checked = true; },
-								"卒": () => { filename = this.player.side === false ? "qianfeng_blue" : "qianfeng"; checked = true; },
-								"师": () => { filename = "junshi"; },
-								"盟": () => { filename = "mengjun"; },
-								"神": () => { filename = "boss"; },
-								"从": () => { filename = "suicong"; },
-								"先": () => { filename = "xianshou"; },
-								"后": () => { filename = "houshou"; },
-								"民": () => { filename = "commoner"; },
+								兵: () => {
+									filename = this.player.side === false ? "qianfeng_blue" : "qianfeng";
+									checked = true;
+								},
+								卒: () => {
+									filename = this.player.side === false ? "qianfeng_blue" : "qianfeng";
+									checked = true;
+								},
+								师: () => {
+									filename = "junshi";
+								},
+								盟: () => {
+									filename = "mengjun";
+								},
+								神: () => {
+									filename = "boss";
+								},
+								从: () => {
+									filename = "suicong";
+								},
+								先: () => {
+									filename = "xianshou";
+								},
+								后: () => {
+									filename = "houshou";
+								},
+								民: () => {
+									filename = "commoner";
+								},
 							};
 							const fn = handlerMap[value];
 							if (fn) {
@@ -5001,37 +5038,67 @@ export async function content(config, pack) {
 							this._group = group;
 							this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
 							if (!decadeUI.config.campIdentityImageMode) {
-								if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-								else {
-									const name = get.translation(this._finalGroup),
-										str = get.plainText(name);
-									if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-									else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+								if (!this._finalGroup) {
+									this.node.campWrap.node.campName.innerHTML = "";
+								} else {
+									const name = get.translation(this._finalGroup);
+									const str = get.plainText(name);
+									if (str.length <= 2) {
+										this.node.campWrap.node.campName.innerHTML = name;
+									} else {
+										this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+									}
 								}
 							} else {
 								this.node.campWrap.node.campName.innerHTML = "";
 								this.node.campWrap.node.campName.style.backgroundImage = "";
-								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : decadeUI.config.newDecadeStyle == "othersOff" ? "image/decoration/name_" : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
 								const create = () => {
-									if (decadeUI.config.newDecadeStyle == "codename") {
-										this.node.campWrap.node.campName.innerHTML = "";
-									} else if (!this._finalGroup) {
+									if (decadeUI.config.newDecadeStyle == "codename" || !this._finalGroup) {
 										this.node.campWrap.node.campName.innerHTML = "";
 									} else {
-										const name = get.translation(this._finalGroup),
-											str = get.plainText(name);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+										const name = get.translation(this._finalGroup);
+										const str = get.plainText(name);
+										this.node.campWrap.node.campName.innerHTML = str.length <= 2 ? name : name.replaceAll(str, str[0]);
 									}
 								};
-								image.onerror = () => {
-									create();
+								const loadImage = url => {
+									return new Promise((resolve, reject) => {
+										const image = new Image();
+										image.onload = () => resolve(url);
+										image.onerror = () => reject(url);
+										image.src = url;
+									});
 								};
-								if (decadeUI.config.newDecadeStyle != "onlineUI") this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
-								else create();
-								image.src = url;
+								(async () => {
+									try {
+										if (decadeUI.config.newDecadeStyle == "onlineUI") {
+											create();
+											return;
+										}
+										const primaryUrl = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : "image/decoration/name_") + group + ".png";
+										await loadImage(primaryUrl);
+										this.node.campWrap.node.campName.style.backgroundImage = `url("${primaryUrl}")`;
+										return;
+									} catch {}
+									try {
+										const imageName = `group_${group}`;
+										const info = lib.card[imageName];
+										if (!info || !info.image) throw new Error();
+										let src;
+										if (info.image.startsWith("db:")) {
+											src = await game.getDB("image", info.image.slice(3));
+										} else if (info.image.startsWith("ext:")) {
+											src = `${lib.assetURL}${info.image.replace(/^ext:/, "extension/")}`;
+										} else {
+											src = `${lib.assetURL}${info.image}`;
+										}
+										await loadImage(src);
+										this.node.campWrap.node.campName.style.backgroundImage = `url("${src}")`;
+										return;
+									} catch {}
+									create();
+								})();
 							}
 						} else {
 							if (decadeUI.config.newDecadeStyle == "codename") {
@@ -5039,10 +5106,13 @@ export async function content(config, pack) {
 							} else if (!this._finalGroup) {
 								this.node.campWrap.node.campName.innerHTML = "";
 							} else {
-								const name = get.translation(this._finalGroup),
-									str = get.plainText(name);
-								if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
-								else this.node.campWrap.node.campName.innerHTML = str[0];
+								const name = get.translation(this._finalGroup);
+								const str = get.plainText(name);
+								if (str.length <= 1) {
+									this.node.campWrap.node.campName.innerHTML = name;
+								} else {
+									this.node.campWrap.node.campName.innerHTML = str[0];
+								}
 							}
 							if (decadeUI.config.newDecadeStyle == "off") {
 								var image = new Image();
@@ -5054,10 +5124,13 @@ export async function content(config, pack) {
 									} else if (!this._finalGroup) {
 										this.node.campWrap.node.campName.innerHTML = "";
 									} else {
-										const name = get.translation(this._finalGroup),
-											str = get.plainText(name);
-										if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = str[0];
+										const name = get.translation(this._finalGroup);
+										const str = get.plainText(name);
+										if (str.length <= 1) {
+											this.node.campWrap.node.campName.innerHTML = name;
+										} else {
+											this.node.campWrap.node.campName.innerHTML = str[0];
+										}
 									}
 								};
 								image.onerror = () => {
@@ -5073,10 +5146,13 @@ export async function content(config, pack) {
 								} else if (!this._finalGroup) {
 									this.node.campWrap.node.campName.innerHTML = "";
 								} else {
-									const name = get.translation(this._finalGroup),
-										str = get.plainText(name);
-									if (str.length <= 1) this.node.campWrap.node.campName.innerHTML = name;
-									else this.node.campWrap.node.campName.innerHTML = str[0];
+									const name = get.translation(this._finalGroup);
+									const str = get.plainText(name);
+									if (str.length <= 1) {
+										this.node.campWrap.node.campName.innerHTML = name;
+									} else {
+										this.node.campWrap.node.campName.innerHTML = str[0];
+									}
 								}
 							}
 						}
@@ -6013,7 +6089,7 @@ export async function content(config, pack) {
 			if (event.blameEvent) event = event.blameEvent;
 			let tagText;
 			const tagHandlerMap = {
-				judge: (event) => {
+				judge: event => {
 					const initialText = event.judgestr + "的判定牌";
 					event.addMessageHook("judgeResult", function () {
 						var event = this;
@@ -6068,7 +6144,7 @@ export async function content(config, pack) {
 					event.apcard = card;
 					return initialText;
 				},
-				__default: (event) => {
+				__default: event => {
 					let evt = _status.event;
 					_status.event = event;
 					let text = get.cardsetion(player);
@@ -6175,13 +6251,13 @@ export async function content(config, pack) {
 			if (style == null)
 				return canUseDefault
 					? {
-						width: 108,
-						height: 150,
-					}
+							width: 108,
+							height: 150,
+						}
 					: {
-						width: 0,
-						height: 0,
-					};
+							width: 0,
+							height: 0,
+						};
 			var size = {
 				width: parseFloat(style.width),
 				height: parseFloat(style.height),
@@ -6429,7 +6505,7 @@ export async function content(config, pack) {
 					$vs: decadeUI.element.create("vs", dialog.$content),
 				};
 				decadeUI.get.extend(dialog, extend);
-				decadeUI.element.create("image", dialog.$player),
+				(decadeUI.element.create("image", dialog.$player),
 					decadeUI.element.create("image", dialog.$target),
 					Object.defineProperties(dialog, {
 						player: {
@@ -6488,7 +6564,7 @@ export async function content(config, pack) {
 								if (value) this.$targetCard.appendChild(value);
 							},
 						},
-					});
+					}));
 				if (player) dialog.player = player;
 				if (target) dialog.target = target;
 				return dialog;
@@ -6900,7 +6976,7 @@ export async function content(config, pack) {
 			if (parentNode) parentNode.appendChild(element);
 			return element;
 		},
-		clone(element) { },
+		clone(element) {},
 	};
 	decadeUI.game = {
 		wait() {
@@ -6937,12 +7013,8 @@ export async function content(config, pack) {
 			if (storageResult === true) {
 				return true;
 			}
-			let effectiveSkill = parentSkill ?
-				(get && get.sourceSkillFor ? get.sourceSkillFor(parentSkill) : parentSkill) :
-				(get && get.sourceSkillFor ? get.sourceSkillFor(cleanSkillName) : cleanSkillName);
-			if (player.hasSkill(effectiveSkill, null, null, false) ||
-				player.hasSkill(cleanSkillName, null, null, false) ||
-				player.hasSkill(skillName, null, null, false)) {
+			let effectiveSkill = parentSkill ? (get && get.sourceSkillFor ? get.sourceSkillFor(parentSkill) : parentSkill) : get && get.sourceSkillFor ? get.sourceSkillFor(cleanSkillName) : cleanSkillName;
+			if (player.hasSkill(effectiveSkill, null, null, false) || player.hasSkill(cleanSkillName, null, null, false) || player.hasSkill(skillName, null, null, false)) {
 				return true;
 			}
 			let playerSkills = player.getSkills(null, null, false);
@@ -6992,9 +7064,8 @@ export async function content(config, pack) {
 		checkStorageOwnership(cleanSkillName) {
 			let storage = this.storage && this.storage[cleanSkillName];
 			if (!storage) return null;
-			let checkItem = (item) => {
-				return item === this ||
-					(item && typeof item === "object" && ((item.name && item.name === this.name) || (item.node && item.node === this.node)));
+			let checkItem = item => {
+				return item === this || (item && typeof item === "object" && ((item.name && item.name === this.name) || (item.node && item.node === this.node)));
 			};
 			if (Array.isArray(storage)) {
 				if (storage.length === 0) return null;
@@ -7713,17 +7784,17 @@ export async function content(config, pack) {
 			const playerLabel = "玩家";
 			const nickname = lib.config.connect_nickname;
 			// 获取随机名称
-			const randomNames = getCharactersFromPacks((charName) => {
+			const randomNames = getCharactersFromPacks(charName => {
 				const displayName = get.translation(charName);
 				return displayName && displayName !== charName ? displayName : null;
 			});
 			// 获取皮肤
-			const skins = getCharactersFromPacks((charName) => {
+			const skins = getCharactersFromPacks(charName => {
 				const displayName = get.translation(charName);
 				return displayName && displayName !== charName ? `${displayName}×1` : null;
 			});
 			// 获取武将
-			const generals = getCharactersFromPacks((charName) => {
+			const generals = getCharactersFromPacks(charName => {
 				let title = lib.characterTitle[charName] || "";
 				if (title.startsWith("#")) title = title.slice(2);
 				title = get.plainText(title);
