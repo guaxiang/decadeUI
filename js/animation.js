@@ -1335,13 +1335,22 @@ if (decadeModule)
 					name: "feilongduofeng"
 				},
 				{
-					name: "wuliu"
+					name: "Ss_mgk_fire"
 				},
 				{
-					name: "sanjian"
+					name: "Ss_mgk_tslh"
 				},
 				{
-					name: "yitianjian"
+					name: "Ss_Gz_WuLiuJian"
+				},
+				{
+					name: "Ss_Gz_SanJianLiangRenDao"
+				},
+				{
+					name: "Ss_ZB_YiTianJian"
+				},
+				{
+					name: "Ss_ZB_YinFengYi"
 				},
 				{
 					name: "zhanxiang"
@@ -1543,23 +1552,38 @@ if (decadeModule)
 						},
 						yitianjian: {
 							skill: "yitianjian",
-							name: "yitianjian",
+							name: "Ss_ZB_YiTianJian",
+							scale: 0.5,
+						},
+						yinfengyi: {
+							skill: "yinfengyi",
+							name: "Ss_ZB_YinFengYi",
 							scale: 0.5,
 						},
 						zhanxiang: {
 							skill: "zhanxiang",
-							name: "zhanxiang",
+							name: "Ss_ZB_ZhanXiang",
+							scale: 0.5,
+						},
+						minguangkai_cancel: {
+							skill: "minguangkai_cancel",
+							name: "Ss_mgk_fire",
+							scale: 0.5,
+						},
+						minguangkai_link: {
+							skill: "minguangkai_link",
+							name: "Ss_mgk_tslh",
 							scale: 0.5,
 						},
 						wuliu: {
 							skill: "wuliu",
-							name: "wuliu",
+							name: "Ss_Gz_WuLiuJian",
 							scale: 0.5,
 						},
 						sanjian_skill: {
 							skill: "sanjian_skill",
-							name: "sanjian",
-							scale: 0.5,
+							name: "Ss_Gz_SanJianLiangRenDao",
+							scale: 0.4,
 						},
 						feilongduofeng: {
 							skill: "feilongduofeng",
