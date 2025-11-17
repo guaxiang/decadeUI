@@ -4841,10 +4841,11 @@ export async function content(config, pack) {
 							if (!sender.skills) sender.skills = [];
 							if (!sender.skills.includes(skill) && lib.translate[skill]) {
 								//手杀样式下将获得技能显示在标记内
-								if (lib.config.extension_十周年UI_newDecadeStyle == "off") {
+								if (lib.config.extension_十周年UI_newDecadeStyle === "off" && lib.config.extension_十周年UI_gainSkillsVisible !== "off") {
 									var info = lib.skill[skill];
-									if (!info || info.charlotte || info.sub || (info.mark && !info.limited) || info.nopop || info.popup === false) return;
+									if (!info || info.charlotte || info.sub || (info.mark && !info.limited) || info.nopop || info.popup === false || info.equipSkill) return;
 									if (info.onremove && game.me != this.player.storage[skill]) return;
+									if (lib.config.extension_十周年UI_gainSkillsVisible === "othersOn" && player === game.me) return;
 									if (!info.intro)
 										info.intro = {
 											content() {

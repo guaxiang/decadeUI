@@ -1323,6 +1323,51 @@ if (decadeModule)
 					name: "SSHW_TX_taijifuchen",
 				},
 				{
+					name: "taipingyaoshu"
+				},
+				{
+					name: "effect_taipingyaoshu_xiexia"
+				},
+				{
+					name: "qibaodao2"
+				},
+				{
+					name: "feilongduofeng"
+				},
+				{
+					name: "Ss_mgk_fire"
+				},
+				{
+					name: "Ss_mgk_tslh"
+				},
+				{
+					name: "Ss_Gz_WuLiuJian"
+				},
+				{
+					name: "Ss_Gz_SanJianLiangRenDao"
+				},
+				{
+					name: "Ss_ZB_YiTianJian"
+				},
+				{
+					name: "Ss_ZB_YinFengYi"
+				},
+				{
+					name: "zhanxiang"
+				},
+				{
+					name: "SSHW_TX_chiyanzhenhun"
+				},
+				{
+					name: "SSHW_TX_xuwangzhimian"
+				},
+				{
+					name: "Ss_ZB_ZheJi"
+				},
+				{
+					name: "Ss_ZB_NvZhuang"
+				},
+				{
 					name: "effect_xianding",
 					fileType: "json",
 				},
@@ -1489,6 +1534,93 @@ if (decadeModule)
 							name: "SSHW_TX_chongyingshenfu",
 							scale: 0.5,
 							x: [0, 0.58],
+						},
+						taipingyaoshu: {
+							skill: "taipingyaoshu",
+							name: "taipingyaoshu",
+							scale: 0.75,
+						},
+						taipingyaoshu_lose: {
+							skill: "taipingyaoshu_lose",
+							name: "effect_taipingyaoshu_xiexia",
+							scale: 0.55,
+						},
+						qibaodao: {
+							skill: "qibaodao",
+							name: "qibaodao2",
+							scale: 1,
+						},
+						yitianjian: {
+							skill: "yitianjian",
+							name: "Ss_ZB_YiTianJian",
+							scale: 0.5,
+						},
+						yinfengyi: {
+							skill: "yinfengyi",
+							name: "Ss_ZB_YinFengYi",
+							scale: 0.5,
+						},
+						zhanxiang: {
+							skill: "zhanxiang",
+							name: "Ss_ZB_ZhanXiang",
+							scale: 0.5,
+						},
+						minguangkai_cancel: {
+							skill: "minguangkai_cancel",
+							name: "Ss_mgk_fire",
+							scale: 0.5,
+						},
+						minguangkai_link: {
+							skill: "minguangkai_link",
+							name: "Ss_mgk_tslh",
+							scale: 0.5,
+						},
+						wuliu: {
+							skill: "wuliu",
+							name: "Ss_Gz_WuLiuJian",
+							scale: 0.5,
+						},
+						sanjian_skill: {
+							skill: "sanjian_skill",
+							name: "Ss_Gz_SanJianLiangRenDao",
+							scale: 0.4,
+						},
+						feilongduofeng: {
+							skill: "feilongduofeng",
+							name: "feilongduofeng",
+							scale: 0.5,
+						},
+						ty_feilongduofeng_skill: {
+							skill: "ty_feilongduofeng_skill",
+							name: "feilongduofeng",
+							scale: 0.5,
+						},
+						xuwangzhimian: {
+							skill: "xuwangzhimian",
+							name: "SSHW_TX_xuwangzhimian",
+							scale: 0.5,
+							x: [0, 0.58],
+						},
+						chiyanzhenhunqin: {
+							skill: "chiyanzhenhunqin",
+							name: "SSHW_TX_chiyanzhenhun",
+							scale: 0.5,
+							x: [0, 0.55],
+						},
+						duanjian: {
+							skill: "duanjian",
+							name: "Ss_ZB_ZheJi",
+							scale: 0.5
+						},
+						serafuku: {
+							skill: "serafuku",
+							name: "Ss_ZB_NvZhuang",
+							scale: 0.5,
+						},
+						yonglv: {
+							skill: "yonglv",
+							name: "effect_numa",
+							scale: 0.4
 						},
 						bagua_skill: {
 							skill: "bagua_skill",
@@ -1683,6 +1815,19 @@ if (decadeModule)
 				}
 				var trigger = {
 					card: {
+						taipingyaoshu: {
+							onEquip() {
+								game.broadcastAll(function (player) {
+									lib.animate.skill["taipingyaoshu"].call(player, "taipingyaoshu");
+								}, player);
+							},
+							onLose() {
+								player.addTempSkill("taipingyaoshu_lose");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["taipingyaoshu_lose"].call(player, "taipingyaoshui_lose");
+								}, player);
+							},
+						},
 						nvzhuang: {
 							onEquip() {
 								if (
@@ -1713,7 +1858,9 @@ if (decadeModule)
 								next.player = player;
 								next.setContent(function () {
 									if (player.countCards("he")) {
-										lib.animate.skill["nvzhuang"].call(player, "nvzhuang");
+										game.broadcastAll(function (player) {
+											lib.animate.skill["nvzhuang"].call(player, "nvzhuang");
+										}, player);
 										player.chooseToDiscard(true, "he");
 									}
 								});
@@ -1721,12 +1868,44 @@ if (decadeModule)
 						},
 						zheji: {
 							onEquip() {
-								lib.animate.skill["zheji"].call(player, "zheji");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["zheji"].call(player, "zheji");
+								}, player);
 							},
 						},
 						numa: {
 							onEquip() {
-								lib.animate.skill["numa"].call(player, "numa");
+								game.broadcastAll(function (player) {
+									lib.animate.skill["numa"].call(player, "numa");
+								}, player);
+							},
+						},
+						wuliu: {
+							onEquip() {
+								game.broadcastAll(function (player) {
+									lib.animate.skill["wuliu"].call(player, "wuliu");
+								}, player);
+							},
+						},
+						duanjian: {
+							onEquip() {
+								game.broadcastAll(function (player) {
+									lib.animate.skill["duanjian"].call(player, "duanjian");
+								}, player);
+							},
+						},
+						yonglv: {
+							onEquip() {
+								game.broadcastAll(function (player) {
+									lib.animate.skill["yonglv"].call(player, "yonglv");
+								}, player);
+							},
+						},
+						qixingbaodao: {
+							onEquip() {
+								game.broadcastAll(function (player) {
+									lib.animate.skill["qixingbaodao"].call(player, "qixingbaodao");
+								}, player);
 							},
 						},
 						lebu: {

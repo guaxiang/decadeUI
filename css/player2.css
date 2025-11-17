@@ -1451,30 +1451,6 @@
 
 /*玩家获得的技能显示*/
 .player>.gain-skill {
-	position: absolute;
-	left: 22.7px;
-	right: 15px;
-	width: 84%;
-	/*max-height: calc(97% - 81px);*/
-	bottom: calc(3% + 81px);
-	color: white;
-	font-size: 16.3px;
-	font-weight: bold;
-	-webkit-text-stroke: 0.7px rgba(0, 0, 0, 0.5);
-	text-shadow: -1.3px 0px 2.2px #000, 0px -1.3px 2.2px #000, 1.3px 0px 2.2px #000, 0px 1.3px 2.2px #000;
-	font-family: "shousha";
-	text-align: left;
-	background-size: 100% 100%;
-	box-shadow: -13px -2px 16px rgba(0, 0, 0, 0.7), -13px 5px 16px rgba(0, 0, 0, 0.2);
-	border-radius: 2px;
-	background-image: url("../assets/image/update_bg.png");
-	/*text-align: center;
-	background: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.4) 60%, transparent 100%);*/
-	z-index: 87;
-}
-
-#arena.decadeUI[data-gain-skills-visible="off"]>.player>.gain-skill,
-#arena.decadeUI[data-gain-skills-visible="othersOn"]>.player[data-position="0"]>.gain-skill {
 	display: none;
 }
 
