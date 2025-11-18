@@ -1347,7 +1347,16 @@ export async function content(config, pack) {
 								this.dataset.maxHp = goon ? 4 : hpMax;
 								//手牌数显示修改
 								let count = this.countCards("h");
-								if (count >= 10) this.node.count.innerHTML = count;
+								if (this == game.me) {
+									let limit = typeof this.getHandcardLimit == "function" ? this.getHandcardLimit() : Infinity;
+									let limitText = isNaN(limit) ? "×" : limit == Infinity ? "∞" : limit;
+									let text = count + "/" + limitText;
+									this.node.count.innerHTML = text;
+									if (this.node.count.dataset) this.node.count.dataset.text = text;
+								} else {
+									this.node.count.innerHTML = count;
+									if (this.node.count.dataset) this.node.count.dataset.text = count;
+								}
 								//可见手牌显示刷新
 								this.decadeUI_updateShowCards();
 								return this;

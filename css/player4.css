@@ -1214,6 +1214,10 @@
 	transition: transform, opacity;
 }
 
+.player[data-position="0"]>.card-count {
+	font-size: 18px;
+}
+
 .player>.card-count::before {
 	content: attr(data-text);
 	position: absolute;
