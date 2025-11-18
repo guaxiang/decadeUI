@@ -1078,6 +1078,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		const skillDisplayManager = (() => {
 			const playerSkillArrays = new WeakMap();
 			const isOtherSkill = (skill, player) => {
+				if (!player || player === game.me) return false;
 				if (!lib.translate?.[skill]) return false;
 				const info = get.info(skill);
 				if (info && info.charlotte) return false;
@@ -1218,7 +1219,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			};
 			const updateSkillArray = (player, skill, add = true) => {
 				if (getAllPlayersCount() > 5) return;
-				if (player === game.me || !isOtherSkill(skill, player)) return;
+				if (!isOtherSkill(skill, player)) return;
 				if (!playerSkillArrays.has(player)) playerSkillArrays.set(player, []);
 				const arr = playerSkillArrays.get(player);
 				const idx = arr.indexOf(skill);
@@ -1227,7 +1228,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				updateSkillDisplay(player);
 			};
 			const refreshPlayerSkills = player => {
-				if (getAllPlayersCount() > 5) return;
+				if (getAllPlayersCount() > 5 || !player) return;
 				const avatar = player.node.avatar;
 				if (!avatar) return;
 				const merged = [...(player.skills || []), ...(player.additionalSkills ? Object.keys(player.additionalSkills) : [])].filter(skill => isOtherSkill(skill, player));
@@ -1244,6 +1245,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			});
 			const origAdd = lib.element.player.addSkill;
 			const origRemove = lib.element.player.removeSkill;
+			const origIsUnderControl = lib.element.player.isUnderControl;
 			lib.element.player.addSkill = function (skill, ...args) {
 				const res = origAdd.apply(this, [skill, ...args]);
 				const applyAdd = s => requestAnimationFrame(() => updateSkillArray(this, s, true));
@@ -1258,6 +1260,17 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				else applyRemove(skill);
 				return res;
 			};
+			if (typeof origIsUnderControl === "function") {
+				lib.element.player.isUnderControl = function (...args) {
+					const result = origIsUnderControl.apply(this, args);
+					const prev = this.__babyshaUnderControl;
+					this.__babyshaUnderControl = result;
+					if (prev !== undefined && prev !== result && getAllPlayersCount() <= 5) {
+						requestAnimationFrame(() => refreshPlayerSkills(this));
+					}
+					return result;
+				};
+			}
 			lib.skill._zhuanhuanjiUpdate = {
 				trigger: { global: "changeZhuanhuanji" },
 				forced: true,
