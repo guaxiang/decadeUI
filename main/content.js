@@ -5079,16 +5079,16 @@ export async function content(config, pack) {
 										image.src = url;
 									});
 								};
-								(async () => {
+								new Promise(async (resolve, reject) => {
 									try {
 										if (decadeUI.config.newDecadeStyle == "onlineUI") {
 											create();
-											return;
+											return resolve();
 										}
 										const primaryUrl = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : "image/decoration/name_") + group + ".png";
 										await loadImage(primaryUrl);
 										this.node.campWrap.node.campName.style.backgroundImage = `url("${primaryUrl}")`;
-										return;
+										return resolve();
 									} catch {}
 									try {
 										const imageName = `group_${group}`;
@@ -5104,10 +5104,11 @@ export async function content(config, pack) {
 										}
 										await loadImage(src);
 										this.node.campWrap.node.campName.style.backgroundImage = `url("${src}")`;
-										return;
+										return resolve();
 									} catch {}
 									create();
-								})();
+									resolve();
+								});
 							}
 						} else {
 							if (decadeUI.config.newDecadeStyle == "codename") {
