@@ -5059,36 +5059,38 @@ export async function content(config, pack) {
 									}
 								}
 							} else {
-								this.node.campWrap.node.campName.innerHTML = "";
-								this.node.campWrap.node.campName.style.backgroundImage = "";
-								this._finalGroup = group;
-								const create = () => {
-									if (decadeUI.config.newDecadeStyle == "codename" || !this._finalGroup) {
-										this.node.campWrap.node.campName.innerHTML = "";
-									} else {
-										const name = get.translation(this._finalGroup);
-										const str = get.plainText(name);
-										this.node.campWrap.node.campName.innerHTML = str.length <= 2 ? name : name.replaceAll(str, str[0]);
-									}
-								};
-								const loadImage = url => {
-									return new Promise((resolve, reject) => {
-										const image = new Image();
-										image.onload = () => resolve(url);
-										image.onerror = () => reject(url);
-										image.src = url;
-									});
-								};
-								new Promise(async (resolve, reject) => {
-									try {
-										if (decadeUI.config.newDecadeStyle == "onlineUI") {
-											create();
-											return resolve();
+								//使用队列解决异步竞争势力变更问题
+								this._lastCampTask = this._lastCampTask || Promise.resolve();
+								this._lastCampTask = this._lastCampTask.then(async () => {
+									this.node.campWrap.node.campName.innerHTML = "";
+									this.node.campWrap.node.campName.style.backgroundImage = "";
+									this._finalGroup = group;
+									const create = () => {
+										if (decadeUI.config.newDecadeStyle == "codename" || !this._finalGroup) {
+											this.node.campWrap.node.campName.innerHTML = "";
+										} else {
+											const name = get.translation(this._finalGroup);
+											const str = get.plainText(name);
+											this.node.campWrap.node.campName.innerHTML = str.length <= 2 ? name : name.replaceAll(str, str[0]);
 										}
+									};
+									const loadImage = url => {
+										return new Promise((resolve, reject) => {
+											const image = new Image();
+											image.onload = () => resolve(url);
+											image.onerror = () => reject(url);
+											image.src = url;
+										});
+									};
+									if (decadeUI.config.newDecadeStyle == "onlineUI") {
+										create();
+										return;
+									}
+									try {
 										const primaryUrl = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : "image/decoration/name_") + group + ".png";
 										await loadImage(primaryUrl);
 										this.node.campWrap.node.campName.style.backgroundImage = `url("${primaryUrl}")`;
-										return resolve();
+										return;
 									} catch {}
 									try {
 										const imageName = `group_${group}`;
@@ -5104,10 +5106,9 @@ export async function content(config, pack) {
 										}
 										await loadImage(src);
 										this.node.campWrap.node.campName.style.backgroundImage = `url("${src}")`;
-										return resolve();
+										return;
 									} catch {}
 									create();
-									resolve();
 								});
 							}
 						} else {
