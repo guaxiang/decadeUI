@@ -1,11 +1,22 @@
 import { nonameInitialized } from "../../noname/util/index.js";
-import { lib } from "../../noname.js";
+import { lib, get } from "../../noname.js";
 import { config } from "./main/config.js";
-import { precontent } from "./main/precontent.js";
 import { content } from "./main/content.js";
 import { mainpackage } from "./main/package.js";
+import { initPrecontentCore } from "./main/precontent-core.js";
+import { initPrecontentChat } from "./main/precontent-chat.js";
+import { initPrecontentUI } from "./main/precontent-ui.js";
 
 export const type = "extension";
+
+async function precontent() {
+	const mode = get.mode();
+	if (mode === "chess" || mode === "tafang" || mode === "hs_hearthstone") return;
+
+	initPrecontentCore();
+	initPrecontentChat();
+	initPrecontentUI();
+}
 
 export default async function () {
 	const infoUrl = `${lib.assetURL}extension/十周年UI/info.json`;
