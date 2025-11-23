@@ -21,7 +21,7 @@ export async function content(config, pack) {
 			lib.config.layout = "nova";
 			game.saveConfig("layout", "nova");
 			alert("布局已切换为<新版>布局，游戏将自动重启以应用新布局。");
-			setTimeout(() => location.reload(), 1000);
+			setTimeout(() => location.reload(), 100);
 		}
 	}
 	console.time(decadeUIName);
@@ -825,6 +825,68 @@ export async function content(config, pack) {
 									this.$dynamicWrap.remove();
 								}
 							},
+							async reinitCharacter(from, to, log) {
+								this.stopDynamic();
+								const result = base.lib.element.player.reinitCharacter.apply(this, arguments);
+								await Promise.resolve(result);
+								this._decadeUIApplyDynamicSkin();
+								return result;
+							},
+							_decadeUIApplyDynamicSkin() {
+								if (typeof game.qhly_changeDynamicSkin === "function") {
+									this.name1 && game.qhly_changeDynamicSkin(this, undefined, this.name1, false, true);
+									this.doubleAvatar && this.name2 && game.qhly_changeDynamicSkin(this, undefined, this.name2, true, true);
+									return;
+								}
+								if (!duicfg.dynamicSkin || _status.mode == null) return;
+								decadeUI.CUR_DYNAMIC ??= 0;
+								decadeUI.MAX_DYNAMIC ??= (decadeUI.isMobile() ? 2 : 10) + (window.OffscreenCanvas ? 8 : 0);
+								if (!this.dynamic && decadeUI.CUR_DYNAMIC >= decadeUI.MAX_DYNAMIC) return;
+								const dskins = decadeUI.dynamicSkin;
+								if (!dskins) return;
+								const avatars = this.doubleAvatar && this.name2 ? [this.name1, this.name2] : [this.name1];
+								let increased = false;
+								avatars.forEach((name, i) => {
+									const skins = dskins[name];
+									if (!skins) return;
+									const skinKeys = Object.keys(skins);
+									if (!skinKeys.length) return;
+									const skin = skins[skinKeys[0]];
+									if (!skin?.name) return;
+									const animation = {
+										name: skin.name,
+										action: skin.action,
+										loop: true,
+										loopCount: -1,
+										speed: skin.speed ?? 1,
+										filpX: skin.filpX,
+										filpY: skin.filpY,
+										opacity: skin.opacity,
+										x: skin.x,
+										y: skin.y,
+										scale: skin.scale,
+										angle: skin.angle,
+										hideSlots: skin.hideSlots,
+										clipSlots: skin.clipSlots,
+									};
+									if (skin.player || skin._transform !== undefined) {
+										animation.player = {
+											...(skin.player || {}),
+											...(skin._transform !== undefined && { _transform: skin._transform }),
+										};
+									}
+									this.playDynamic(animation, i === 1);
+									if (skin.background) {
+										this.$dynamicWrap.style.backgroundImage = `url("${decadeUIPath}assets/dynamic/${skin.background}")`;
+									} else {
+										this.$dynamicWrap.style.removeProperty("background-image");
+									}
+									if (!increased) {
+										increased = true;
+										decadeUI.CUR_DYNAMIC++;
+									}
+								});
+							},
 							say(str) {
 								str = str.replace(/##assetURL##/g, lib.assetURL);
 								if (!this.$chatBubble) {
@@ -1169,9 +1231,9 @@ export async function content(config, pack) {
 											c.copy()._customintro = c._customintro;
 										});
 										if (e.type == "mouseover") {
-											player.node.showCards.onmouseleave = function () {};
+											player.node.showCards.onmouseleave = function () { };
 										} else {
-											ui.window.addEventListener("touchend", function touch() {}, { once: true });
+											ui.window.addEventListener("touchend", function touch() { }, { once: true });
 										}
 									};
 									// 监听手牌区变化
@@ -3240,7 +3302,7 @@ export async function content(config, pack) {
 							}
 						}
 					},
-					updatem(player) {},
+					updatem(player) { },
 					updatez() {
 						window.documentZoom = game.documentZoom;
 						document.body.style.zoom = game.documentZoom;
@@ -5091,7 +5153,7 @@ export async function content(config, pack) {
 										await loadImage(primaryUrl);
 										this.node.campWrap.node.campName.style.backgroundImage = `url("${primaryUrl}")`;
 										return;
-									} catch {}
+									} catch { }
 									try {
 										const imageName = `group_${group}`;
 										const info = lib.card[imageName];
@@ -5107,7 +5169,7 @@ export async function content(config, pack) {
 										await loadImage(src);
 										this.node.campWrap.node.campName.style.backgroundImage = `url("${src}")`;
 										return;
-									} catch {}
+									} catch { }
 									create();
 								});
 							}
@@ -6262,13 +6324,13 @@ export async function content(config, pack) {
 			if (style == null)
 				return canUseDefault
 					? {
-							width: 108,
-							height: 150,
-						}
+						width: 108,
+						height: 150,
+					}
 					: {
-							width: 0,
-							height: 0,
-						};
+						width: 0,
+						height: 0,
+					};
 			var size = {
 				width: parseFloat(style.width),
 				height: parseFloat(style.height),
@@ -6987,7 +7049,7 @@ export async function content(config, pack) {
 			if (parentNode) parentNode.appendChild(element);
 			return element;
 		},
-		clone(element) {},
+		clone(element) { },
 	};
 	decadeUI.game = {
 		wait() {
