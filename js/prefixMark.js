@@ -145,6 +145,13 @@ const PREFIX_CONFIGS = Object.freeze({
 	闪耀: { className: "shanyao-mark", property: "$shanyaoMark" },
 	领主: { className: "lingzhu-mark", property: "$lingzhuMark" },
 	闪耀战姬: { className: "shanyao-mark", property: "$shanyaoMark" },
+	志气: { className: "zhi-mark", property: "$zhiMark" },
+	"旧|魔": { className: "old-mark", property: "$oldMark" },
+	"牢|谋": { className: "lao-mark", property: "$laoMark" },
+	"26|SP": { className: "sp-mark", property: "$spMark" },
+	文心雕龙: { className: "wen-mark", property: "$wenMark" },
+	礼: { className: "li-mark", property: "$liMark" },
+	"手杀|SP": { className: "sp-mark", property: "$spMark" },
 });
 
 const CONFIG_KEYS = {

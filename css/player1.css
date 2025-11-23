@@ -5,13 +5,17 @@
 	height: 180px;
 	width: 120px;
 	border-radius: 8px;
-	box-shadow: 0px -1px 3px black, 0px 3px 8px black;
+	box-shadow:
+		0px -1px 3px black,
+		0px 3px 8px black;
 	background-image: linear-gradient(rgb(53, 38, 32), rgb(53, 38, 32));
 	transition-property: transform, opacity, left, top, right, bottom;
 }
 
 .dui-mobile .player {
-	box-shadow: 0px -1px 2px black, 0px 1px 5px black;
+	box-shadow:
+		0px -1px 2px black,
+		0px 1px 5px black;
 }
 
 .player.dead {
@@ -101,11 +105,11 @@
 	opacity: 1;
 }
 
-#arena>.player {
+#arena > .player {
 	z-index: 4;
 }
 
-.player>.mask {
+.player > .mask {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -119,24 +123,24 @@
 	z-index: 66;
 }
 
-.player.un-selectable:not(.selectable)>.mask {
+.player.un-selectable:not(.selectable) > .mask {
 	opacity: 1;
 	transition: opacity 0.3s linear;
 }
 
-.player.un-selectable:not(.selectable)>.mask {
+.player.un-selectable:not(.selectable) > .mask {
 	opacity: 1;
 	transition: opacity 0.3s linear;
 }
 
-#arena:not(.fewplayer)>.player:not(.minskin),
-#arena:not(.fewplayer):not(*[data-player_height=""])>.player:not(.minskin) {
+#arena:not(.fewplayer) > .player:not(.minskin),
+#arena:not(.fewplayer):not(*[data-player_height=""]) > .player:not(.minskin) {
 	height: 180px !important;
 	width: 125px !important;
 }
 
 /*玩家锁链*/
-.player>.chain {
+.player > .chain {
 	top: 40%;
 	height: 24px;
 	visibility: hidden;
@@ -148,7 +152,7 @@
 	z-index: 86;
 }
 
-.player.linked2>.chain {
+.player.linked2 > .chain {
 	visibility: visible;
 	background-position-x: center;
 }
@@ -158,30 +162,30 @@
 /*.player[data-position='0']>.hp-wrap {
 	bottom: -6px;
 }*/
-.player[data-position="0"]>.card-count {
+.player[data-position="0"] > .card-count {
 	visibility: hidden;
 }
 
 /*主玩家位置*/
 .player[data-position="0"],
-#arena>.player[data-position="0"],
-#arena>.player[data-position="0"]:not(.minskin),
-#arena:not(*[data-player_height=""])>.player[data-position="0"],
-#arena:not(*[data-player_height=""])>.player[data-position="0"]:not(.miniskin) {
+#arena > .player[data-position="0"],
+#arena > .player[data-position="0"]:not(.minskin),
+#arena:not(*[data-player_height=""]) > .player[data-position="0"],
+#arena:not(*[data-player_height=""]) > .player[data-position="0"]:not(.miniskin) {
 	left: 25px;
 	top: auto;
 	right: auto;
 	bottom: 1%;
 }
 
-#arena[data-right-layout="on"]>.player[data-position="0"],
-#arena[data-right-layout="on"]>.player[data-position="0"]:not(.miniskin) {
+#arena[data-right-layout="on"] > .player[data-position="0"],
+#arena[data-right-layout="on"] > .player[data-position="0"]:not(.miniskin) {
 	left: auto;
 	right: 25px;
 }
 
 /*玩家姓名阵营*/
-.player>.camp-wrap {
+.player > .camp-wrap {
 	display: block;
 	left: -19px;
 	top: -9px;
@@ -191,79 +195,79 @@
 	z-index: 88;
 }
 
-.player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).camp-wrap {
+.player.connect > div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).camp-wrap {
 	display: block !important;
 }
 
 /*新增*/
-.player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).primary-avatar {
+.player.connect > div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).primary-avatar {
 	display: block !important;
 }
 
-.player>.camp-wrap div {
+.player > .camp-wrap div {
 	transition: none;
 }
 
-.player>.camp-wrap>.camp-back {
+.player > .camp-wrap > .camp-back {
 	background: linear-gradient(to bottom, rgb(155, 129, 108), rgb(73, 71, 58));
 	clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0% 90%);
 	/*新增*/
 	-webkit-clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0% 90%);
 }
 
-.player.unseen>.camp-wrap>.camp-back {
+.player.unseen > .camp-wrap > .camp-back {
 	background: linear-gradient(to bottom, rgb(92, 35, 22), rgb(50, 27, 26));
 }
 
-.player>.camp-wrap[data-camp="wei"]>.camp-back {
+.player > .camp-wrap[data-camp="wei"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(45, 103, 153), rgb(19, 45, 78));
 }
 
-.player>.camp-wrap[data-camp="shu"]>.camp-back {
+.player > .camp-wrap[data-camp="shu"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(153, 28, 34), rgb(57, 12, 17));
 }
 
-.player>.camp-wrap[data-camp="wu"]>.camp-back {
+.player > .camp-wrap[data-camp="wu"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(29, 114, 29), rgb(34, 42, 27));
 }
 
-.player>.camp-wrap[data-camp="qun"]>.camp-back {
+.player > .camp-wrap[data-camp="qun"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(154, 148, 122), rgb(74, 72, 57));
 }
 
-.player>.camp-wrap[data-camp="shen"]>.camp-back {
+.player > .camp-wrap[data-camp="shen"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(97, 87, 15), rgb(65, 50, 9), rgb(67, 52, 9));
 }
 
-.player>.camp-wrap[data-camp="shen2"]>.camp-back {
+.player > .camp-wrap[data-camp="shen2"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 
-.player>.camp-wrap[data-camp="ye"]>.camp-back {
+.player > .camp-wrap[data-camp="ye"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 
-.player>.camp-wrap[data-camp="key"]>.camp-back {
+.player > .camp-wrap[data-camp="key"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(147, 132, 183), rgb(130, 120, 160), rgb(120, 115, 154));
 }
 
-.player>.camp-wrap[data-camp="western"]>.camp-back {
+.player > .camp-wrap[data-camp="western"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(93, 44, 105), rgb(54, 18, 58));
 }
 
-.player>.camp-wrap[data-camp="jin"]>.camp-back {
+.player > .camp-wrap[data-camp="jin"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 
-.player>.camp-wrap[data-camp="devil"]>.camp-back {
+.player > .camp-wrap[data-camp="devil"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 
-.player>.camp-wrap[data-camp="daqin"]>.camp-back {
+.player > .camp-wrap[data-camp="daqin"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(100, 100, 100), rgb(0, 0, 0));
 }
 
-.player>.camp-wrap>.camp-border {
+.player > .camp-wrap > .camp-border {
 	display: block;
 	left: 0px;
 	top: 0px;
@@ -275,19 +279,19 @@
 	background-repeat: no-repeat;
 }
 
-#arena.decadeUI[data-border-level="one"] .player>.camp-wrap>.camp-border {
+#arena.decadeUI[data-border-level="one"] .player > .camp-wrap > .camp-border {
 	background-image: url("../image/decoration/border_camp1.png");
 }
 
-#arena.decadeUI[data-border-level="two"] .player>.camp-wrap>.camp-border {
+#arena.decadeUI[data-border-level="two"] .player > .camp-wrap > .camp-border {
 	background-image: url("../image/decoration/border_camp2.png");
 }
 
-#arena.decadeUI[data-border-level="three"] .player>.camp-wrap>.camp-border {
+#arena.decadeUI[data-border-level="three"] .player > .camp-wrap > .camp-border {
 	background-image: url("../image/decoration/border_camp3.png");
 }
 
-#arena.decadeUI[data-border-level="four"] .player>.camp-wrap>.camp-border {
+#arena.decadeUI[data-border-level="four"] .player > .camp-wrap > .camp-border {
 	background-image: url("../image/decoration/border_camp4.png");
 }
 
@@ -310,9 +314,9 @@
 	z-index: 89;
 }
 
-.player>.camp-wrap>.avatar-name,
-.player>.camp-wrap>.avatar-name-default,
-.player>.camp-wrap>.camp-back {
+.player > .camp-wrap > .avatar-name,
+.player > .camp-wrap > .avatar-name-default,
+.player > .camp-wrap > .camp-back {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -331,24 +335,24 @@
 	-webkit-writing-mode: vertical-rl;
 }
 
-.player.unseen>.camp-wrap>.avatar-name,
-.player:not(.unseen)>.camp-wrap>.avatar-name-default,
-.player:not(.unseen2)>.camp-wrap>.avatar2-name-default {
+.player.unseen > .camp-wrap > .avatar-name,
+.player:not(.unseen) > .camp-wrap > .avatar-name-default,
+.player:not(.unseen2) > .camp-wrap > .avatar2-name-default {
 	visibility: hidden;
 }
 
-.player>.unseen_show>.primary-avatar,
-.player>.unseen2_show>.deputy-avatar {
+.player > .unseen_show > .primary-avatar,
+.player > .unseen2_show > .deputy-avatar {
 	opacity: 0;
 }
 
-#arena:not(.observe) .player:not([data-position="0"]).unseen_show>.primary-avatar,
-#arena:not(.observe) .player:not([data-position="0"]).unseen2_show>.deputy-avatar {
+#arena:not(.observe) .player:not([data-position="0"]).unseen_show > .primary-avatar,
+#arena:not(.observe) .player:not([data-position="0"]).unseen2_show > .deputy-avatar {
 	opacity: 1 !important;
 	background-image: url("../../../image/character/hidden_image.jpg") !important;
 }
 
-.player>.camp-wrap>.camp-name {
+.player > .camp-wrap > .camp-name {
 	font-family: "yuanli";
 	font-display: swap;
 	font-size: 20px;
@@ -361,7 +365,7 @@
 	justify-content: center;
 }
 
-#arena[data-forcestyle="2"] .player>.camp-wrap>.camp-name {
+#arena[data-forcestyle="2"] .player > .camp-wrap > .camp-name {
 	font-family: xinwei, xingkai;
 	font-display: swap;
 	font-size: 26px;
@@ -378,46 +382,77 @@
 	transition: none;
 }
 
-.player>.camp-wrap[data-camp="jin"]>.camp-name {
-	text-shadow: 1px 1px 0px #7f4f79, -1px -1px 0px #7f4f79, 1px -1px 0px #7f4f79, -1px 1px 0px #7f4f79;
+.player > .camp-wrap[data-camp="jin"] > .camp-name {
+	text-shadow:
+		1px 1px 0px #7f4f79,
+		-1px -1px 0px #7f4f79,
+		1px -1px 0px #7f4f79,
+		-1px 1px 0px #7f4f79;
 }
 
-.player>.camp-wrap[data-camp="devil"]>.camp-name {
-	text-shadow: 1px 1px 0px #7f4f79, -1px -1px 0px #7f4f79, 1px -1px 0px #7f4f79, -1px 1px 0px #7f4f79;
+.player > .camp-wrap[data-camp="devil"] > .camp-name {
+	text-shadow:
+		1px 1px 0px #7f4f79,
+		-1px -1px 0px #7f4f79,
+		1px -1px 0px #7f4f79,
+		-1px 1px 0px #7f4f79;
 }
 
-.player>.camp-wrap[data-camp="wei"]>.camp-name {
-	text-shadow: 1px 1px 0px #4a4b5f, -1px -1px 0px #4a4b5f, 1px -1px 0px #4a4b5f, -1px 1px 0px #4a4b5f;
+.player > .camp-wrap[data-camp="wei"] > .camp-name {
+	text-shadow:
+		1px 1px 0px #4a4b5f,
+		-1px -1px 0px #4a4b5f,
+		1px -1px 0px #4a4b5f,
+		-1px 1px 0px #4a4b5f;
 	color: #bdc6e5;
 }
 
-.player>.camp-wrap[data-camp="shu"]>.camp-name {
-	text-shadow: 1px 1px 0px #754c50, -1px -1px 0px #754c50, 1px -1px 0px #754c50, -1px 1px 0px #754c50;
+.player > .camp-wrap[data-camp="shu"] > .camp-name {
+	text-shadow:
+		1px 1px 0px #754c50,
+		-1px -1px 0px #754c50,
+		1px -1px 0px #754c50,
+		-1px 1px 0px #754c50;
 	color: #eeae97;
 }
 
-.player>.camp-wrap[data-camp="wu"]>.camp-name {
-	text-shadow: 1px 1px 0px #48563c, -1px -1px 0px #48563c, 1px -1px 0px #48563c, -1px 1px 0px #48563c;
+.player > .camp-wrap[data-camp="wu"] > .camp-name {
+	text-shadow:
+		1px 1px 0px #48563c,
+		-1px -1px 0px #48563c,
+		1px -1px 0px #48563c,
+		-1px 1px 0px #48563c;
 	color: #bbeeaa;
 }
 
-.player>.camp-wrap[data-camp="qun"]>.camp-name {
-	text-shadow: 1px 1px 0px #685f40, -1px -1px 0px #685f40, 1px -1px 0px #685f40, -1px 1px 0px #685f40;
+.player > .camp-wrap[data-camp="qun"] > .camp-name {
+	text-shadow:
+		1px 1px 0px #685f40,
+		-1px -1px 0px #685f40,
+		1px -1px 0px #685f40,
+		-1px 1px 0px #685f40;
 	color: #e6d69b;
 }
 
-.player>.camp-wrap[data-camp="shen"]>.camp-name {
-	text-shadow: 1px 1px 0px #685f40, -1px -1px 0px #685f40, 1px -1px 0px #685f40, -1px 1px 0px #685f40;
+.player > .camp-wrap[data-camp="shen"] > .camp-name {
+	text-shadow:
+		1px 1px 0px #685f40,
+		-1px -1px 0px #685f40,
+		1px -1px 0px #685f40,
+		-1px 1px 0px #685f40;
 	color: #ebd6a1;
 }
 
-.player>.camp-wrap>.camp-name {
-	text-shadow: 0 0 5px #e0ea33, 0 0 15px #e0ea33, 0 0 25px #e0ea33;
+.player > .camp-wrap > .camp-name {
+	text-shadow:
+		0 0 5px #e0ea33,
+		0 0 15px #e0ea33,
+		0 0 25px #e0ea33;
 }
 
 /*副将名*/
-.player>.name.name2,
-#arena>.player:not(.minskin)>.name.name2 {
+.player > .name.name2,
+#arena > .player:not(.minskin) > .name.name2 {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -434,17 +469,17 @@
 	z-index: 80;
 }
 
-.player>.name.name2:empty,
-#arena>.player:not(.minskin)>.name.name2:empty {
+.player > .name.name2:empty,
+#arena > .player:not(.minskin) > .name.name2:empty {
 	display: none;
 }
 
-.player.fullskin.fullskin2>.name.name2:empty::before {
+.player.fullskin.fullskin2 > .name.name2:empty::before {
 	content: "副将";
 }
 
 /*联机名称显示*/
-.player>.nameol {
+.player > .nameol {
 	top: 5px;
 	font-size: 16px;
 	font-family: "shousha";
@@ -455,7 +490,7 @@
 }
 
 /*玩家血量显示*/
-.player>.hp-wrap {
+.player > .hp-wrap {
 	display: block;
 	right: -2px;
 	bottom: -5px;
@@ -473,27 +508,27 @@
 	z-index: 88;
 }
 
-.player[data-max-hp="1"]>.hp-wrap {
+.player[data-max-hp="1"] > .hp-wrap {
 	height: 5px;
 }
 
-.player[data-max-hp="2"]>.hp-wrap {
+.player[data-max-hp="2"] > .hp-wrap {
 	height: 20px;
 }
 
-.player[data-max-hp="3"]>.hp-wrap {
+.player[data-max-hp="3"] > .hp-wrap {
 	height: 35px;
 }
 
-.player[data-max-hp="4"]>.hp-wrap {
+.player[data-max-hp="4"] > .hp-wrap {
 	height: 50px;
 }
 
-.player[data-max-hp="5"]>.hp-wrap {
+.player[data-max-hp="5"] > .hp-wrap {
 	height: 65px;
 }
 
-.player[data-max-hp="hujia"]>.hp-wrap {
+.player[data-max-hp="hujia"] > .hp-wrap {
 	height: 78px;
 }
 
@@ -512,33 +547,60 @@
 	line-height: 24px;
 	height: 22.5px;
 	position: relative;
-	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
+	text-shadow:
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18,
+		0.3px 0px 1.8px #332c18;
 	z-index: 100;
 }
 
-.player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).hp-wrap {
+.player.connect > div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).hp-wrap {
 	display: block !important;
 }
 
-#arena.decadeUI[data-border-level="one"] .player>.hp-wrap {
+#arena.decadeUI[data-border-level="one"] .player > .hp-wrap {
 	border-image-source: url("../image/decoration/border_hp1.png");
 }
 
-#arena.decadeUI[data-border-level="two"] .player>.hp-wrap {
+#arena.decadeUI[data-border-level="two"] .player > .hp-wrap {
 	border-image-source: url("../image/decoration/border_hp2.png");
 }
 
-#arena.decadeUI[data-border-level="three"] .player>.hp-wrap {
+#arena.decadeUI[data-border-level="three"] .player > .hp-wrap {
 	border-image-source: url("../image/decoration/border_hp3.png");
 }
 
-#arena.decadeUI[data-border-level="four"] .player>.hp-wrap {
+#arena.decadeUI[data-border-level="four"] .player > .hp-wrap {
 	border-image-source: url("../image/decoration/border_hp4.png");
 }
 
-.player>.hp-wrap>.hp,
+.player > .hp-wrap > .hp,
 #arena.slim_player .player .hp,
-#window>.player:not(.minskin) .hp {
+#window > .player:not(.minskin) .hp {
 	display: flex;
 	left: 0;
 	right: 0;
@@ -554,11 +616,11 @@
 	flex-direction: column;
 }
 */
-.player>.hp-wrap>.hp.hidden {
+.player > .hp-wrap > .hp.hidden {
 	opacity: 1 !important;
 }
 
-.player>.hp-wrap>.hp>div {
+.player > .hp-wrap > .hp > div {
 	position: static;
 	margin-top: 3px;
 	width: 12px;
@@ -567,15 +629,15 @@
 	border: none;
 }
 
-.hp:not(.text):not(.actcount):not(.treasure)>.lost,
-.hp:not(.text):not(.actcount):not(.treasure)[data-condition="mid"]>div:not(.lost),
-.hp:not(.text):not(.actcount):not(.treasure)[data-condition="high"]>div:not(.lost),
-.hp:not(.text):not(.actcount):not(.treasure)[data-condition="low"]>div:not(.lost) {
+.hp:not(.text):not(.actcount):not(.treasure) > .lost,
+.hp:not(.text):not(.actcount):not(.treasure)[data-condition="mid"] > div:not(.lost),
+.hp:not(.text):not(.actcount):not(.treasure)[data-condition="high"] > div:not(.lost),
+.hp:not(.text):not(.actcount):not(.treasure)[data-condition="low"] > div:not(.lost) {
 	transform: none !important;
 }
 
 /*武将牌显示*/
-.player>.primary-avatar {
+.player > .primary-avatar {
 	left: 0;
 	top: auto;
 	bottom: 0;
@@ -589,16 +651,16 @@
 	transition-property: opacity, transform;
 }
 
-.player.fullskin2>.primary-avatar {
+.player.fullskin2 > .primary-avatar {
 	width: 50%;
 	border-radius: 8px 0 0 8px;
 }
 
-.player.bossplayer>.primary-avatar:not(.hp):not(.identity):not(.avatar):not(.framebg) {
+.player.bossplayer > .primary-avatar:not(.hp):not(.identity):not(.avatar):not(.framebg) {
 	display: block !important;
 }
 
-.player>.deputy-avatar {
+.player > .deputy-avatar {
 	left: 50%;
 	top: auto;
 	bottom: 0;
@@ -612,27 +674,27 @@
 	transition-property: opacity, transform;
 }
 
-.player.unseen>.primary-avatar,
-.player.unseen2>.deputy-avatar,
-.player.d-skin>.primary-avatar,
-.player.d-skin2>.deputy-avatar {
+.player.unseen > .primary-avatar,
+.player.unseen2 > .deputy-avatar,
+.player.d-skin > .primary-avatar,
+.player.d-skin2 > .deputy-avatar {
 	opacity: 0;
 }
 
-#arena:not(.observe)>.player[data-position="0"].unseen>.primary-avatar,
-#arena:not(.observe)>.player[data-position="0"].unseen2>.deputy-avatar {
+#arena:not(.observe) > .player[data-position="0"].unseen > .primary-avatar,
+#arena:not(.observe) > .player[data-position="0"].unseen2 > .deputy-avatar {
 	opacity: 0.3;
 }
 
 /*单将露头*/
-#arena[data-outcrop-skin="shizhounian"]>.player>.primary-avatar {
+#arena[data-outcrop-skin="shizhounian"] > .player > .primary-avatar {
 	height: 192px;
 	clip-path: url(#solo-clip);
 	/*新增*/
 	-webkit-clip-path: url(#solo-clip);
 }
 
-#arena[data-outcrop-skin="shousha"]>.player>.primary-avatar {
+#arena[data-outcrop-skin="shousha"] > .player > .primary-avatar {
 	height: 207px;
 	clip-path: url(#solo-clip);
 	/*新增*/
@@ -640,14 +702,14 @@
 }
 
 /*双将露头*/
-#arena[data-outcrop-skin="shizhounian"]>.player>.deputy-avatar {
+#arena[data-outcrop-skin="shizhounian"] > .player > .deputy-avatar {
 	height: 192px;
 	clip-path: url(#solo-clip);
 	/*新增*/
 	-webkit-clip-path: url(#duor-clip);
 }
 
-#arena[data-outcrop-skin="shousha"]>.player>.deputy-avatar {
+#arena[data-outcrop-skin="shousha"] > .player > .deputy-avatar {
 	height: 207px;
 	clip-path: url(#solo-clip);
 	/*新增*/
@@ -655,7 +717,7 @@
 }
 
 /*武将牌动皮显示*/
-.player>.dynamic-wrap {
+.player > .dynamic-wrap {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -669,7 +731,7 @@
 	z-index: 60;
 }
 
-.player>.dynamic-wrap>.animation-player {
+.player > .dynamic-wrap > .animation-player {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -683,15 +745,15 @@
 	-webkit-clip-path: inset(0 0 0 0 round 8px);
 }
 
-#arena[data-dynamic-skin-outcrop="on"]>.player>.dynamic-wrap>.animation-player {
+#arena[data-dynamic-skin-outcrop="on"] > .player > .dynamic-wrap > .animation-player {
 	clip-path: url(#dskin-clip);
 	/*新增*/
 	-webkit-clip-path: url(#dskin-clip);
 	height: 200px;
 }
 
-.player>.dynamic-wrap>.primary-bg,
-.player>.dynamic-wrap>.deputy-bg {
+.player > .dynamic-wrap > .primary-bg,
+.player > .dynamic-wrap > .deputy-bg {
 	left: 0;
 	top: auto;
 	bottom: 0;
@@ -705,17 +767,17 @@
 	transition-property: opacity, transform;
 }
 
-.player>.dynamic-wrap>.deputy-bg {
+.player > .dynamic-wrap > .deputy-bg {
 	left: 50%;
 }
 
-.player.d-skin>.dynamic-wrap>.primary-bg,
-.player.d-skin2>.dynamic-wrap>.deputy-bg {
+.player.d-skin > .dynamic-wrap > .primary-bg,
+.player.d-skin2 > .dynamic-wrap > .deputy-bg {
 	opacity: 1;
 }
 
-#arena:not(.observe)>.player[data-position="0"].unseen.d-skin>.dynamic-wrap>.primary-bg,
-#arena:not(.observe)>.player[data-position="0"].unseen2.d-skin2>.dynamic-wrap>.deputy-bg {
+#arena:not(.observe) > .player[data-position="0"].unseen.d-skin > .dynamic-wrap > .primary-bg,
+#arena:not(.observe) > .player[data-position="0"].unseen2.d-skin2 > .dynamic-wrap > .deputy-bg {
 	opacity: 0.3;
 }
 
@@ -724,7 +786,7 @@
 }
 
 /*行动*/
-.player>.primary-avatar>.action {
+.player > .primary-avatar > .action {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -737,7 +799,7 @@
 }
 
 /*玩家标记显示-灯笼*/
-.player>.dui-marks {
+.player > .dui-marks {
 	display: flex;
 	flex-direction: column;
 	left: auto;
@@ -750,7 +812,7 @@
 	transition-property: opacity, transform, background;
 }
 
-.player>.dui-marks>.mark {
+.player > .dui-marks > .mark {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -770,12 +832,12 @@
 	animation: open 0.5s;
 }
 
-.player>.dui-marks>.mark:before,
-.player>.dui-marks>.mark:after {
+.player > .dui-marks > .mark:before,
+.player > .dui-marks > .mark:after {
 	display: none;
 }
 
-.player>.dui-marks>.mark>.mark-text {
+.player > .dui-marks > .mark > .mark-text {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -798,12 +860,12 @@
 	animation: swing 1.5s alternate infinite ease-in-out;
 }
 
-.player>.dui-marks>.mark>.mark-text.small-text {
+.player > .dui-marks > .mark > .mark-text.small-text {
 	font-size: 14px;
 	line-height: 11px;
 }
 
-.player>.dui-marks>.mark>.mark-text::before {
+.player > .dui-marks > .mark > .mark-text::before {
 	content: "";
 	display: block;
 	position: absolute;
@@ -816,7 +878,7 @@
 	box-sizing: border-box;
 }
 
-.player>.dui-marks>.mark>.mark-count {
+.player > .dui-marks > .mark > .mark-count {
 	position: absolute;
 	left: auto;
 	top: -2px;
@@ -834,24 +896,26 @@
 	box-shadow: 0 0 1px black inset;
 }
 
-.player>.dui-marks>.mark>.image {
+.player > .dui-marks > .mark > .image {
 	display: none;
 }
 
-#arena[data-player-mark-style="red"]>.player>.dui-marks>.mark>.mark-text {
+#arena[data-player-mark-style="red"] > .player > .dui-marks > .mark > .mark-text {
 	color: yellow;
-	text-shadow: 0 0 1px black, 0 0 1px black;
+	text-shadow:
+		0 0 1px black,
+		0 0 1px black;
 	box-shadow: 0 0 1px yellow;
 	background-image: radial-gradient(rgb(100, 255, 100), rgb(255, 120, 0), rgb(255, 0, 0));
 }
 
-#arena[data-player-mark-style="red"]>.player>.dui-marks>.mark>.mark-count {
+#arena[data-player-mark-style="red"] > .player > .dui-marks > .mark > .mark-count {
 	color: #c86400;
 	background: #ffdc00;
 }
 
 /*玩家标记显示-新样式*/
-#arena[data-player-mark-style="decade"]>.player>.dui-marks {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks {
 	left: auto;
 	top: 34px;
 	/*下移*/
@@ -867,7 +931,7 @@
 	/*新列向左对齐*/
 }
 
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark {
 	display: flex;
 	width: 45px;
 	/*宽度*/
@@ -881,24 +945,24 @@
 	/*标记纵向间隔*/
 }
 
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark.own-skill {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.own-skill {
 	background-image: url("../assets/image/player_mark.png");
 }
 
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark.other-skill {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.other-skill {
 	background-image: url("../assets/image/new_player_mark.png");
 }
 
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark.other-skill>.mark-text {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.other-skill > .mark-text {
 	color: #ffd700;
 }
 
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark.other-skill>.mark-count {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.other-skill > .mark-count {
 	color: #ffd700;
 }
 
 /*文字文本显示*/
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-text {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark > .mark-text {
 	display: inline;
 	position: static;
 	border-radius: 0;
@@ -916,12 +980,12 @@
 	animation: none;
 }
 
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-text::before {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark > .mark-text::before {
 	display: none;
 }
 
 /*数字文本显示*/
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-count {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark > .mark-count {
 	display: inline;
 	position: static;
 	padding-top: 3px;
@@ -939,11 +1003,11 @@
 	box-shadow: none;
 }
 
-.mark-container.marks>.mark {
+.mark-container.marks > .mark {
 	overflow: visible;
 }
 
-.mark-container.marks>.mark>.mark-text {
+.mark-container.marks > .mark > .mark-text {
 	display: flex;
 	position: absolute;
 	justify-content: center;
@@ -956,7 +1020,7 @@
 	font-size: 20px;
 }
 
-.mark-container.marks>.mark>.mark-count {
+.mark-container.marks > .mark > .mark-count {
 	display: block;
 	position: absolute;
 	right: -5px;
@@ -966,8 +1030,8 @@
 }
 
 /*玩家判定标记显示*/
-.player>.judges,
-#arena>.player:not(.minskin)>.judges {
+.player > .judges,
+#arena > .player:not(.minskin) > .judges {
 	display: flex;
 	justify-content: flex-start;
 	left: 0;
@@ -980,8 +1044,8 @@
 	z-index: 99;
 }
 
-.player[data-position="0"]>.judges,
-#arena>.player[data-position="0"]:not(.minskin)>.judges {
+.player[data-position="0"] > .judges,
+#arena > .player[data-position="0"]:not(.minskin) > .judges {
 	display: flex;
 	justify-content: flex-start;
 	left: 0;
@@ -991,8 +1055,8 @@
 	width: auto;
 }
 
-.player>.judges>.card,
-#window:not(.nopointer).player.judges>.card {
+.player > .judges > .card,
+#window:not(.nopointer).player.judges > .card {
 	position: static;
 	left: auto;
 	top: auto;
@@ -1008,11 +1072,11 @@
 	overflow: visible;
 }
 
-.player>.judges>.card>.image {
+.player > .judges > .card > .image {
 	display: none;
 }
 
-.player>.judges>.card>.judge-mark {
+.player > .judges > .card > .judge-mark {
 	display: block;
 	position: relative;
 	width: 100%;
@@ -1020,7 +1084,7 @@
 	top: -10px;
 }
 
-.player>.judges>.card>.judge-mark>.back {
+.player > .judges > .card > .judge-mark > .back {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -1035,7 +1099,7 @@
 	z-index: -1;
 }
 
-.player>.judges>.card>.judge-mark>.back::before {
+.player > .judges > .card > .judge-mark > .back::before {
 	display: block;
 	position: absolute;
 	content: "";
@@ -1049,12 +1113,12 @@
 	z-index: -1;
 }
 
-.player>.judges>.card>.judge-mark>div:not(.back) .player>.judges>.card>.judge-mark>div:not(.judge) {
+.player > .judges > .card > .judge-mark > div:not(.back) .player > .judges > .card > .judge-mark > div:not(.judge) {
 	display: none;
 }
 
 /*兵乐闪判定标记图片底层代码*/
-.player>.judges>.card>.judge-mark>.judge {
+.player > .judges > .card > .judge-mark > .judge {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -1070,29 +1134,33 @@
 	font-family: xinwei, xingkai;
 	font-size: 16px;
 	color: white;
-	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000;
+	text-shadow:
+		#000 1px 0 0,
+		#000 0 1px 0,
+		#000 -1px 0 0,
+		#000 0 -1px 0,
+		0 0 8px #000;
 }
 
-.player>.judges>.card.feichu>.judge-mark>.judge::before {
+.player > .judges > .card.feichu > .judge-mark > .judge::before {
 	content: "";
 	position: absolute;
 	pointer-events: none;
 	background-image: url("../image/judgeMark/feichumark.png");
-	;
 	width: 50px;
 	height: 50px;
 	background-size: 100% 100%;
 	z-index: 3;
 }
 
-.player>.judges>.card>.background,
-.judges>.card.fakejudge.fullskin>.background,
-.judges>.card.fakejudge.fullborder>.background {
+.player > .judges > .card > .background,
+.judges > .card.fakejudge.fullskin > .background,
+.judges > .card.fakejudge.fullborder > .background {
 	display: none !important;
 }
 
 /*玩家号位显示*/
-.player>.seat {
+.player > .seat {
 	display: block;
 	position: absolute;
 	bottom: -16px;
@@ -1104,28 +1172,30 @@
 	/*字体加粗*/
 	font-size: 22px;
 	text-align: center;
-	text-shadow: 0 0 2px black, 0 0 1px black;
+	text-shadow:
+		0 0 2px black,
+		0 0 1px black;
 	white-space: nowrap;
 	z-index: 89;
 	pointer-events: none;
 }
 
-.player[data-position="0"]>.seat {
+.player[data-position="0"] > .seat {
 	bottom: -10px;
 }
 
-.player>.name_seat {
+.player > .name_seat {
 	display: none !important;
 }
 
 /* 当显示进度条时隐藏座位号 */
-.player:has(.timeai)>.seat,
-.player:has(.timePhase)>.seat {
+.player:has(.timeai) > .seat,
+.player:has(.timePhase) > .seat {
 	display: none !important;
 }
 
 /*玩家手牌数显示*/
-.player>.card-count {
+.player > .card-count {
 	position: absolute;
 	top: auto;
 	right: auto;
@@ -1150,7 +1220,7 @@
 	transition: transform, opacity;
 }
 
-.player>.card-count::before {
+.player > .card-count::before {
 	color: transparent;
 	content: attr(data-text);
 	height: 100%;
@@ -1165,8 +1235,8 @@
 }
 
 /*玩家身份标记*/
-.player>.identity,
-#arena>.player:not(.minskin)>.identity {
+.player > .identity,
+#arena > .player:not(.minskin) > .identity {
 	left: auto;
 	top: 1px;
 	right: 1px;
@@ -1182,16 +1252,28 @@
 	transition: none;
 }
 
-.player>.identity[data-color="rYe"] {
-	text-shadow: rgba(255, 120, 0, 1) 0 0 2px, rgba(255, 120, 0, 1) 0 0 5px, rgba(255, 120, 0, 1) 0 0 10px, rgba(255, 120, 0, 1) 0 0 10px, rgba(255, 120, 0, 1) 0 0 20px, rgba(255, 120, 0, 1) 0 0 20px, black 0 0 1px;
+.player > .identity[data-color="rYe"] {
+	text-shadow:
+		rgba(255, 120, 0, 1) 0 0 2px,
+		rgba(255, 120, 0, 1) 0 0 5px,
+		rgba(255, 120, 0, 1) 0 0 10px,
+		rgba(255, 120, 0, 1) 0 0 10px,
+		rgba(255, 120, 0, 1) 0 0 20px,
+		rgba(255, 120, 0, 1) 0 0 20px,
+		black 0 0 1px;
 }
 
-.player>.identity[data-color="bYe"],
-.player.opposite-camp>.identity {
-	text-shadow: 0 0 1px black, 0 0 5px blue, 0 0 10px rgb(100, 100, 250), 0 0 20px rgb(100, 100, 250), 0 0 20px white;
+.player > .identity[data-color="bYe"],
+.player.opposite-camp > .identity {
+	text-shadow:
+		0 0 1px black,
+		0 0 5px blue,
+		0 0 10px rgb(100, 100, 250),
+		0 0 20px rgb(100, 100, 250),
+		0 0 20px white;
 }
 
-.player>.identity>div:first-child {
+.player > .identity > div:first-child {
 	position: absolute;
 	left: 0px;
 	top: 0;
@@ -1204,8 +1286,8 @@
 	background-position: center;
 }
 
-.player>.identity.guozhan-mode,
-#arena>.player:not(.minskin)>.identity.guozhan-mode {
+.player > .identity.guozhan-mode,
+#arena > .player:not(.minskin) > .identity.guozhan-mode {
 	left: -20px;
 	top: -9px;
 	width: 37px;
@@ -1213,14 +1295,14 @@
 }
 
 /*人物弹出文字*/
-.player>.damage {
+.player > .damage {
 	width: 100%;
 	text-shadow: none;
 	transition: none;
 	z-index: 91;
 }
 
-.player>.damage::before {
+.player > .damage::before {
 	content: attr(data-text);
 	position: absolute;
 	left: 0;
@@ -1232,7 +1314,7 @@
 }
 
 /*联机用牌时限*/
-.player>.timerbar {
+.player > .timerbar {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -1242,13 +1324,13 @@
 	z-index: 88;
 }
 
-.player[data-position="0"]>.timerbar {
+.player[data-position="0"] > .timerbar {
 	top: -15px;
 	bottom: auto;
 }
 
-.player>.timerbar>div,
-#arena .timerbar>div {
+.player > .timerbar > div,
+#arena .timerbar > div {
 	position: absolute;
 	left: calc(50% - 50px);
 	top: auto !important;
@@ -1257,13 +1339,13 @@
 	height: 5px;
 }
 
-.player>.timerbar>div:first-child {
+.player > .timerbar > div:first-child {
 	box-shadow: 0 0 4px yellow;
 	background: rgb(100, 0, 0);
 }
 
 /*联机游戏等待中*/
-.player.connect>.gaming {
+.player.connect > .gaming {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -1283,14 +1365,14 @@
 	-webkit-filter: none;
 }
 
-.player.dead>div {
+.player.dead > div {
 	filter: grayscale(1);
 	/*新增*/
 	-webkit-filter: grayscale(1);
 }
 
 /*玩家死亡文字*/
-.player>.died-identity {
+.player > .died-identity {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -1305,7 +1387,10 @@
 	font-size: 38px;
 	font-family: xingkai, huangcao, xinwei;
 	font-display: swap;
-	text-shadow: 0 0 5px black, 0 0 10px black, 0 0 15px black;
+	text-shadow:
+		0 0 5px black,
+		0 0 10px black,
+		0 0 15px black;
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -1313,11 +1398,11 @@
 	opacity: 0;
 }
 
-.player.opposite-camp>.died-identity {
+.player.opposite-camp > .died-identity {
 	color: rgb(50, 50, 210);
 }
 
-.player.dead>.died-identity {
+.player.dead > .died-identity {
 	filter: none;
 	-webkit-filter: none;
 	animation: fade-in 0.5s forwards;
@@ -1327,7 +1412,7 @@
 }
 
 /*玩家获得的技能显示*/
-.player>.gain-skill {
+.player > .gain-skill {
 	position: absolute;
 	left: 15px;
 	right: 15px;
@@ -1340,13 +1425,13 @@
 	z-index: 87;
 }
 
-#arena.decadeUI[data-gain-skills-visible="off"]>.player>.gain-skill,
-#arena.decadeUI[data-gain-skills-visible="othersOn"]>.player[data-position="0"]>.gain-skill {
+#arena.decadeUI[data-gain-skills-visible="off"] > .player > .gain-skill,
+#arena.decadeUI[data-gain-skills-visible="othersOn"] > .player[data-position="0"] > .gain-skill {
 	display: none;
 }
 
 /*角色翻面背景*/
-.player>.turned-over {
+.player > .turned-over {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -1359,21 +1444,21 @@
 	z-index: 62;
 }
 
-.player.turnedover>.turned-over {
+.player.turnedover > .turned-over {
 	opacity: 0.8;
 }
 
-.turnedover>div {
+.turnedover > div {
 	opacity: initial;
 }
 
 /*角色边框*/
-.player>.framebg {
+.player > .framebg {
 	z-index: 63;
 }
 
 /*身份标记框*/
-.player>.identity-mark-box {
+.player > .identity-mark-box {
 	display: flex;
 	position: absolute;
 	justify-content: center;
@@ -1385,7 +1470,7 @@
 	z-index: 99;
 }
 
-.player>.identity-mark-box>.identity-mark-item {
+.player > .identity-mark-box > .identity-mark-item {
 	position: static;
 	width: auto;
 	height: auto;
@@ -1402,15 +1487,18 @@
 	font-weight: bold;
 	font-size: 20px;
 	text-shadow: none;
-	transition: opacity, background, transform 0.3s;
+	transition:
+		opacity,
+		background,
+		transform 0.3s;
 }
 
-.player>.identity-mark-box>.identity-mark-item:active {
+.player > .identity-mark-box > .identity-mark-item:active {
 	transform: scale(0.9);
 }
 
 /*说话泡泡框*/
-.player>.chat-bubble {
+.player > .chat-bubble {
 	left: 0;
 	top: 20px;
 	width: 100%;
@@ -1425,80 +1513,83 @@
 }
 
 /* 角标 */
-.player>.jie-mark,
-.player>.shen-mark,
-.player>.wu-mark,
-.player>.clan-mark,
-.player>.std-mark,
-.player>.dc-mark,
-.player>.yue-mark,
-.player>.sb-mark,
-.player>.ol-mark,
-.player>.sp-mark,
-.player>.star-mark,
-.player>.yao-mark,
-.player>.dm-mark,
-.player>.shan-mark,
-.player>.jin-mark,
-.player>.v-mark,
-.player>.mb-mark,
-.player>.xuan-mark,
-.player>.pot-mark,
-.player>.you-mark,
-.player>.tw-mark,
-.player>.huan-mark,
-.player>.jsrg-mark,
-.player>.jd-mark,
-.player>.shen-mark,
-.player>.ren-mark,
-.player>.nailong-mark,
-.player>.lie-mark,
-.player>.hanshi-mark,
-.player>.hun-mark,
-.player>.han-mark,
-.player>.kuang-mark,
-.player>.old-mark,
-.player>.lao-mark,
-.player>.Mbaby-mark,
-.player>.miao-mark,
-.player>.nian-mark,
-.player>.zhan-mark,
-.player>.wei-mark,
-.player>.ji-mark,
-.player>.sk-mark,
-.player>.sr-mark,
-.player>.tao-mark,
-.player>.chang-mark,
-.player>.wn-mark,
-.player>.jing-mark,
-.player>.sxrm-mark,
-.player>.meng-mark,
-.player>.cheng-mark,
-.player>.zhuan-mark,
-.player>.he-mark,
-.player>.shuai-mark,
-.player>.xing-mark,
-.player>.scl-mark,
-.player>.jiang-mark,
-.player>.yongjian-mark,
-.player>.jun-mark,
-.player>.xia-mark,
-.player>.k-mark,
-.player>.zhijiang-mark,
-.player>.long-mark,
-.player>.eu-mark,
-.player>.jiding-mark,
-.player>.yy-mark,
-.player>.jianghua-mark,
-.player>.she-mark,
-.player>.qingshi-mark,
-.player>.xuyuan-mark,
-.player>.fengyun-mark,
-.player>.man-mark,
-.player>.feihong-mark,
-.player>.huyi-mark,
-.player>.shanyao-mark,
-.player>.lingzhu-mark {
+.player > .jie-mark,
+.player > .shen-mark,
+.player > .wu-mark,
+.player > .clan-mark,
+.player > .std-mark,
+.player > .dc-mark,
+.player > .yue-mark,
+.player > .sb-mark,
+.player > .ol-mark,
+.player > .sp-mark,
+.player > .star-mark,
+.player > .yao-mark,
+.player > .dm-mark,
+.player > .shan-mark,
+.player > .jin-mark,
+.player > .v-mark,
+.player > .mb-mark,
+.player > .xuan-mark,
+.player > .pot-mark,
+.player > .you-mark,
+.player > .tw-mark,
+.player > .huan-mark,
+.player > .jsrg-mark,
+.player > .jd-mark,
+.player > .shen-mark,
+.player > .ren-mark,
+.player > .nailong-mark,
+.player > .lie-mark,
+.player > .hanshi-mark,
+.player > .hun-mark,
+.player > .han-mark,
+.player > .kuang-mark,
+.player > .old-mark,
+.player > .lao-mark,
+.player > .Mbaby-mark,
+.player > .miao-mark,
+.player > .nian-mark,
+.player > .zhan-mark,
+.player > .wei-mark,
+.player > .ji-mark,
+.player > .sk-mark,
+.player > .sr-mark,
+.player > .tao-mark,
+.player > .chang-mark,
+.player > .wn-mark,
+.player > .jing-mark,
+.player > .sxrm-mark,
+.player > .meng-mark,
+.player > .cheng-mark,
+.player > .zhuan-mark,
+.player > .he-mark,
+.player > .shuai-mark,
+.player > .xing-mark,
+.player > .scl-mark,
+.player > .jiang-mark,
+.player > .yongjian-mark,
+.player > .jun-mark,
+.player > .xia-mark,
+.player > .k-mark,
+.player > .zhijiang-mark,
+.player > .long-mark,
+.player > .eu-mark,
+.player > .jiding-mark,
+.player > .yy-mark,
+.player > .jianghua-mark,
+.player > .she-mark,
+.player > .qingshi-mark,
+.player > .xuyuan-mark,
+.player > .fengyun-mark,
+.player > .man-mark,
+.player > .feihong-mark,
+.player > .huyi-mark,
+.player > .shanyao-mark,
+.player > .lingzhu-mark,
+.player > .zhi-mark,
+.player > .wen-mark,
+.player > .li-mark {
 	position: absolute;
 	top: 108px;
 	left: -11px;
@@ -1509,294 +1600,306 @@
 	z-index: 87;
 }
 
-.player>.jie-mark {
+.player > .jie-mark {
 	background-image: url("../image/mark/mark_jie.png");
 }
 
-.player>.shen-mark {
+.player > .shen-mark {
 	background-image: url("../image/mark/mark_shen.png");
 }
 
-.player>.wu-mark {
+.player > .wu-mark {
 	background-image: url("../image/mark/mark_wu.png");
 }
 
-.player>.clan-mark {
+.player > .clan-mark {
 	background-image: url("../image/mark/mark_clan.png");
 }
 
-.player>.std-mark {
+.player > .std-mark {
 	background-image: url("../image/mark/mark_std.png");
 }
 
-.player>.dc-mark {
+.player > .dc-mark {
 	background-image: url("../image/mark/mark_dc.png");
 }
 
-.player>.yue-mark {
+.player > .yue-mark {
 	background-image: url("../image/mark/mark_yue.png");
 }
 
-.player>.sb-mark {
+.player > .sb-mark {
 	background-image: url("../image/mark/mark_sb.png");
 }
 
-.player>.ol-mark {
+.player > .ol-mark {
 	background-image: url("../image/mark/mark_ol.png");
 }
 
-.player>.sp-mark {
+.player > .sp-mark {
 	background-image: url("../image/mark/mark_sp.png");
 }
 
-.player>.star-mark {
+.player > .star-mark {
 	background-image: url("../image/mark/mark_star.png");
 }
 
-.player>.yao-mark {
+.player > .yao-mark {
 	background-image: url("../image/mark/mark_yao.png");
 }
 
-.player>.dm-mark {
+.player > .dm-mark {
 	background-image: url("../image/mark/mark_dm.png");
 }
 
-.player>.shan-mark {
+.player > .shan-mark {
 	background-image: url("../image/mark/mark_shan.png");
 }
 
-.player>.jin-mark {
+.player > .jin-mark {
 	background-image: url("../image/mark/mark_jin.png");
 }
 
-.player>.v-mark {
+.player > .v-mark {
 	background-image: url("../image/mark/mark_v.png");
 }
 
-.player>.mb-mark {
+.player > .mb-mark {
 	background-image: url("../image/mark/mark_mb.png");
 }
 
-.player>.xuan-mark {
+.player > .xuan-mark {
 	background-image: url("../image/mark/mark_xuan.png");
 }
 
-.player>.pot-mark {
+.player > .pot-mark {
 	background-image: url("../image/mark/mark_pot.png");
 }
 
-.player>.you-mark {
+.player > .you-mark {
 	background-image: url("../image/mark/mark_you.png");
 }
 
-.player>.tw-mark {
+.player > .tw-mark {
 	background-image: url("../image/mark/mark_tw.png");
 }
 
-.player>.huan-mark {
+.player > .huan-mark {
 	background-image: url("../image/mark/mark_huan.png");
 }
 
-.player>.jsrg-mark {
+.player > .jsrg-mark {
 	background-image: url("../image/mark/mark_jsrg.png");
 }
 
-.player>.jd-mark {
+.player > .jd-mark {
 	background-image: url("../image/mark/mark_jd.png");
 }
 
-.player>.ren-mark {
+.player > .ren-mark {
 	background-image: url("../image/mark/mark_ren.png");
 }
 
-.player>.nailong-mark {
+.player > .nailong-mark {
 	background-image: url("../image/mark/mark_nailong.png");
 }
 
-.player>.lie-mark {
+.player > .lie-mark {
 	background-image: url("../image/mark/mark_lie.png");
 }
 
-.player>.hanshi-mark {
+.player > .hanshi-mark {
 	background-image: url("../image/mark/mark_hanshi.png");
 }
 
-.player>.hun-mark {
+.player > .hun-mark {
 	background-image: url("../image/mark/mark_hun.png");
 }
 
-.player>.han-mark {
+.player > .han-mark {
 	background-image: url("../image/mark/mark_han.png");
 }
 
-.player>.kuang-mark {
+.player > .kuang-mark {
 	background-image: url("../image/mark/mark_kuang.png");
 }
 
-.player>.old-mark {
+.player > .old-mark {
 	background-image: url("../image/mark/mark_old.png");
 }
 
-.player>.miao-mark {
+.player > .miao-mark {
 	background-image: url("../image/mark/mark_miao.png");
 }
 
-.player>.nian-mark {
+.player > .nian-mark {
 	background-image: url("../image/mark/mark_nian.png");
 }
 
-.player>.zhan-mark {
+.player > .zhan-mark {
 	background-image: url("../image/mark/mark_zhan.png");
 }
 
-.player>.wei-mark {
+.player > .wei-mark {
 	background-image: url("../image/mark/mark_wei.png");
 }
 
-.player>.ji-mark {
+.player > .ji-mark {
 	background-image: url("../image/mark/mark_ji.png");
 }
 
-.player>.sk-mark {
+.player > .sk-mark {
 	background-image: url("../image/mark/mark_sk.png");
 }
 
-.player>.sr-mark {
+.player > .sr-mark {
 	background-image: url("../image/mark/mark_sr.png");
 }
 
-.player>.Mbaby-mark {
+.player > .Mbaby-mark {
 	background-image: url("../image/mark/mark_Mbaby.png");
 }
 
-.player>.tao-mark {
+.player > .tao-mark {
 	background-image: url("../image/mark/mark_tao.png");
 }
 
-.player>.chang-mark {
+.player > .chang-mark {
 	background-image: url("../image/mark/mark_chang.png");
 }
 
-.player>.wn-mark {
+.player > .wn-mark {
 	background-image: url("../image/mark/mark_wn.png");
 }
 
-.player>.jing-mark {
+.player > .jing-mark {
 	background-image: url("../image/mark/mark_jing.png");
 }
 
-.player>.lao-mark {
+.player > .lao-mark {
 	background-image: url("../image/mark/mark_lao.png");
 }
 
-.player>.sxrm-mark {
+.player > .sxrm-mark {
 	background-image: url("../image/mark/mark_sxrm.png");
 }
 
-.player>.meng-mark {
+.player > .meng-mark {
 	background-image: url("../image/mark/mark_meng.png");
 }
 
-.player>.cheng-mark {
+.player > .cheng-mark {
 	background-image: url("../image/mark/mark_cheng.png");
 }
 
-.player>.zhuan-mark {
+.player > .zhuan-mark {
 	background-image: url("../image/mark/mark_zhuan.png");
 }
 
-.player>.he-mark {
+.player > .he-mark {
 	background-image: url("../image/mark/mark_he.png");
 }
 
-.player>.shuai-mark {
+.player > .shuai-mark {
 	background-image: url("../image/mark/mark_shuai.png");
 }
 
-.player>.xing-mark {
+.player > .xing-mark {
 	background-image: url("../image/mark/mark_xing.png");
 }
 
-.player>.scl-mark {
+.player > .scl-mark {
 	background-image: url("../image/mark/mark_scl.png");
 }
 
-.player>.jiang-mark {
+.player > .jiang-mark {
 	background-image: url("../image/mark/mark_jiang.png");
 }
 
-.player>.yongjian-mark {
+.player > .yongjian-mark {
 	background-image: url("../image/mark/mark_yongjian.png");
 }
 
-.player>.jun-mark {
+.player > .jun-mark {
 	background-image: url("../image/mark/mark_jun.png");
 }
 
-.player>.xia-mark {
+.player > .xia-mark {
 	background-image: url("../image/mark/mark_xia.png");
 }
 
-.player>.k-mark {
+.player > .k-mark {
 	background-image: url("../image/mark/mark_k.png");
 }
 
-.player>.zhijiang-mark {
+.player > .zhijiang-mark {
 	background-image: url("../image/mark/mark_zhijiang.png");
 }
 
-.player>.long-mark {
+.player > .long-mark {
 	background-image: url("../image/mark/mark_long.png");
 }
 
-.player>.eu-mark {
+.player > .eu-mark {
 	background-image: url("../image/mark/mark_eu.png");
 }
 
-.player>.jiding-mark {
+.player > .jiding-mark {
 	background-image: url("../image/mark/mark_jiding.png");
 }
 
-.player>.yy-mark {
+.player > .yy-mark {
 	background-image: url("../image/mark/mark_yy.png");
 }
 
-.player>.jianghua-mark {
+.player > .jianghua-mark {
 	background-image: url("../image/mark/mark_jianghua.png");
 }
 
-.player>.she-mark {
+.player > .she-mark {
 	background-image: url("../image/mark/mark_she.png");
 }
 
-.player>.qingshi-mark {
+.player > .qingshi-mark {
 	background-image: url("../image/mark/mark_qingshi.png");
 }
 
-.player>.xuyuan-mark {
+.player > .xuyuan-mark {
 	background-image: url("../image/mark/mark_xuyuan.png");
 }
 
-.player>.fengyun-mark {
+.player > .fengyun-mark {
 	background-image: url("../image/mark/mark_fengyun.png");
 }
 
-.player>.man-mark {
+.player > .man-mark {
 	background-image: url("../image/mark/mark_man.png");
 }
 
-.player>.feihong-mark {
+.player > .feihong-mark {
 	background-image: url("../image/mark/mark_feihong.png");
 }
 
-.player>.huyi-mark {
+.player > .huyi-mark {
 	background-image: url("../image/mark/mark_huyi.png");
 }
 
-.player>.shanyao-mark {
+.player > .shanyao-mark {
 	background-image: url("../image/mark/mark_shanyao.png");
 }
 
-.player>.lingzhu-mark {
+.player > .lingzhu-mark {
 	background-image: url("../image/mark/mark_lingzhu.png");
+}
+
+.player > .zhi-mark {
+	background-image: url("../image/mark/mark_zhi.png");
+}
+
+.player > .wen-mark {
+	background-image: url("../image/mark/mark_wen.png");
+}
+
+.player > .li-mark {
+	background-image: url("../image/mark/mark_li.png");
 }
