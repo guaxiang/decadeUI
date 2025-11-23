@@ -2,7 +2,8 @@ import { lib, game, ui, get, ai, _status } from "../../../noname.js";
 import { ChildNodesWatcher } from "../../../noname/library/cache/childNodesWatcher.js";
 export async function content(config, pack) {
 	if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
-	// 检测是否开启皮肤切换扩展，开了就使用game.menuZoom = 1
+
+	// 检测是否开启皮肤切换扩展
 	if (game.hasExtension && game.hasExtension("皮肤切换")) {
 		game.menuZoom = 1;
 	} else {
@@ -10,8 +11,10 @@ export async function content(config, pack) {
 			delete game.menuZoom;
 		}
 	}
-	//单独装备栏
+
+	// 单独装备栏配置
 	_status.nopopequip = lib.config.extension_十周年UI_aloneEquip;
+
 	// 布局检查与自动切换
 	const recommendedLayouts = ["nova"];
 	const currentLayout = lib.config.layout;
@@ -50,7 +53,7 @@ export async function content(config, pack) {
 			});
 			document.addEventListener(
 				"click",
-				function (e) {
+				(e) => {
 					dui.set.activeElement(e.target);
 				},
 				true
@@ -60,7 +63,7 @@ export async function content(config, pack) {
 			document.documentElement.style.setProperty("--hand-tip-bottom", `calc(${handTipHeight}% + 10px)`);
 			if (window.get && typeof window.get.cardsetion === "function") {
 				const oldCardsetion = window.get.cardsetion;
-				window.get.cardsetion = function (...args) {
+				window.get.cardsetion = (...args) => {
 					try {
 						return oldCardsetion.apply(this, args);
 					} catch (e) {
@@ -73,7 +76,7 @@ export async function content(config, pack) {
 			}
 			if (window.get && typeof window.get.getPlayerIdentity === "function") {
 				const oldGetPlayerIdentity = window.get.getPlayerIdentity;
-				window.get.getPlayerIdentity = function (player, identity, chinese, isMark) {
+				window.get.getPlayerIdentity = (player, identity, chinese, isMark) => {
 					if (!identity) identity = player.identity;
 					if (typeof identity !== "string") identity = "";
 					if (player && typeof player.special_identity !== "undefined" && typeof player.special_identity !== "string") {
@@ -139,9 +142,9 @@ export async function content(config, pack) {
 							setModeState: lib.element.player.setModeState,
 							$dieAfter: lib.element.player.$dieAfter,
 							$skill: lib.element.player.$skill,
-							//$syncExpand: lib.element.player.$syncExpand,
 							markSkill: lib.element.player.markSkill,
 							unmarkSkill: lib.element.player.unmarkSkill,
+							reinitCharacter: lib.element.player.reinitCharacter,
 							$init: lib.element.player.$init,
 							$uninit: lib.element.player.$uninit,
 							$reinit: lib.element.player.$reinit,
@@ -916,7 +919,6 @@ export async function content(config, pack) {
 									game.playAudio("voice", this.sex === "female" ? "female" : "male", lib.quickVoice.indexOf(str));
 								}
 							},
-							/*-----------------分割线-----------------*/
 							updateMark(name, storage) {
 								if (!this.marks[name]) {
 									if (lib.skill[name] && lib.skill[name].intro && (this.storage[name] || lib.skill[name].intro.markcount)) {
@@ -932,7 +934,6 @@ export async function content(config, pack) {
 									let num = 0;
 									if (typeof lib.skill[name].intro.markcount == "function") {
 										num = lib.skill[name].intro.markcount(this.storage[name], this, name);
-										/*-----------------分割线-----------------*/
 									} else if (lib.skill[name].intro.markcount == "expansion") {
 										num = this.countCards("x", card => card.hasGaintag(name));
 									} else if (typeof this.storage[name + "_markcount"] == "number") {
@@ -971,6 +972,7 @@ export async function content(config, pack) {
 								const image = new Image();
 								const identity = decadeUI.getPlayerIdentity(this);
 								const goon = decadeUI.config.newDecadeStyle === "on" || decadeUI.config.newDecadeStyle === "othersOff";
+
 								// 为onlineUI样式设置单独的路径判断
 								let url;
 								if (decadeUI.config.newDecadeStyle === "onlineUI") {
@@ -992,6 +994,7 @@ export async function content(config, pack) {
 								image.onerror = () => {
 									that.node.dieidentity.innerHTML = `${decadeUI.getPlayerIdentity(that, that.identity, true)}<br>阵亡`;
 								};
+
 								// 离开效果仅在移动版样式下启用
 								if ((that._trueMe || that) != game.me && that != game.me && lib.config.extension_十周年UI_newDecadeStyle === "off") {
 									that.node.dieidentity.innerHTML = `<div style="width:21px; height:81px; left:22.5px; top:-12px; position:absolute; background-image: url(${lib.assetURL}extension/十周年UI/assets/image/likai.png);background-size: 100% 100%;"></div>`;
@@ -1000,8 +1003,8 @@ export async function content(config, pack) {
 								}
 								that.node.dieidentity.style.backgroundImage = 'url("' + url + '")';
 								image.src = url;
-								setTimeout(function () {
-									var rect = that.getBoundingClientRect();
+								setTimeout(() => {
+									const rect = that.getBoundingClientRect();
 									decadeUI.animation.playSpine("effect_zhenwang", {
 										parent: that,
 										scale: 0.8,
@@ -1009,7 +1012,7 @@ export async function content(config, pack) {
 								}, 250);
 							},
 							$skill(name, type, color, avatar) {
-								var _this = this;
+								const _this = this;
 								if (typeof type != "string") type = "legend";
 								game.addVideo("skill", this, [name, type, color, avatar]);
 								game.broadcastAll(
@@ -1031,7 +1034,6 @@ export async function content(config, pack) {
 							},
 							$syncExpand(map) {
 								if (this != game.me) return;
-								//if (base.lib.element.player.$syncExpand) base.lib.element.player.$syncExpand.apply(this, arguments);
 								if (!map) map = this.expandedSlots || {};
 								game.addVideo("$syncExpand", this, get.copy(map));
 								game.broadcast(
@@ -1044,7 +1046,6 @@ export async function content(config, pack) {
 								);
 								const goon = lib.skill.expandedSlots.intro.markcount(null, game.me) > 0;
 								this[goon ? "markSkill" : "unmarkSkill"]("expandedSlots");
-								//ui.equipSolts.back.innerHTML = new Array(5 + Object.values(this.expandedSlots).reduce((previousValue, currentValue) => previousValue + currentValue, 0)).fill('<div></div>').join('');
 								let ele;
 								while ((ele = ui.equipSolts.back.firstChild)) {
 									ele.remove();
@@ -1065,6 +1066,7 @@ export async function content(config, pack) {
 							$init(character, character2) {
 								base.lib.element.player.$init.apply(this, arguments);
 								this.doubleAvatar = (character2 && lib.character[character2]) !== undefined;
+
 								// 在othersOff一将成名样式下，检查武将原画是否存在，如果不存在则添加•体验后缀
 								if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff") {
 									this.checkAndAddExperienceSuffix(character);
@@ -1129,7 +1131,8 @@ export async function content(config, pack) {
 										}
 									}
 								}
-								//手牌可见
+
+								// 手牌可见功能
 								if (!this.node.showCards) {
 									const player = this;
 									function createElement(tag, opts = {}) {
@@ -1163,33 +1166,29 @@ export async function content(config, pack) {
 										class: ["handdisplays"],
 										parentNode: player,
 									}).hide();
+
 									// 自动检测武将牌位置，决定显示区域左右
 									(function adjustShowCardsPosition() {
 										const rect = player.getBoundingClientRect();
 										const winWidth = window.innerWidth || document.documentElement.clientWidth;
 										const showCards = player.node.showCards;
-										// 默认宽度，可根据实际调整
 										const offset = 10;
-										const showWidth = 120; // 预估显示区宽度
+
 										// babysha样式下，武将牌靠左就左边显示，靠右就右边显示
 										if (lib.config.extension_十周年UI_newDecadeStyle === "babysha") {
 											if (rect.left < winWidth / 2) {
-												// 靠左，显示在左侧
 												showCards.style.left = "";
 												showCards.style.right = player.offsetWidth + offset + "px";
 											} else {
-												// 靠右，显示在右侧
 												showCards.style.left = player.offsetWidth + offset + "px";
 												showCards.style.right = "";
 											}
 										} else {
 											// 其他样式保持原有逻辑
 											if (rect.left < winWidth / 2) {
-												// 靠左，显示在右侧
 												showCards.style.left = player.offsetWidth + offset + "px";
 												showCards.style.right = "";
 											} else {
-												// 靠右，显示在左侧
 												showCards.style.left = "";
 												showCards.style.right = player.offsetWidth + offset + "px";
 											}
@@ -1209,10 +1208,10 @@ export async function content(config, pack) {
 											});
 										}
 									};
+
 									// 边界修正
 									const _rect = player.node.showCards.getBoundingClientRect();
 									if (_rect.left <= 10 && !player.node.showCards.classList.contains("hidden")) {
-										// babysha样式下，如果显示在左侧且超出边界，则调整到右侧
 										if (lib.config.extension_十周年UI_newDecadeStyle === "babysha") {
 											const left = player.offsetWidth + 10;
 											player.node.showCards.style.left = left + "px";
@@ -1223,6 +1222,7 @@ export async function content(config, pack) {
 										}
 										player.node.showCards.style.top = "90px";
 									}
+
 									// 鼠标悬停/触摸事件
 									player.node.showCards.onmouseover = player.node.showCards.ontouchend = function (e) {
 										const cards = player.getCards("h");
@@ -1236,6 +1236,7 @@ export async function content(config, pack) {
 											ui.window.addEventListener("touchend", function touch() { }, { once: true });
 										}
 									};
+
 									// 监听手牌区变化
 									["handcards1", "handcards2"].forEach(handcardZone => {
 										const observer = new MutationObserver(mutationsList => {
@@ -1250,10 +1251,12 @@ export async function content(config, pack) {
 										observer.observe(player.node[handcardZone], { childList: true });
 									});
 								}
+
 								// 十周年角标
 								if (window.decadeModule && window.decadeModule.prefixMark) {
 									window.decadeModule.prefixMark.showPrefixMark(character, this);
 								}
+
 								// 刷新显示
 								this.decadeUI_updateShowCards();
 								return this;
@@ -1266,7 +1269,7 @@ export async function content(config, pack) {
 								this.stopDynamic();
 								this.doubleAvatar = false;
 								delete this.node.campWrap.dataset.camp;
-								var campName = this.node.campWrap.node.campName;
+								const campName = this.node.campWrap.node.campName;
 								while (campName.firstChild) {
 									campName.removeChild(campName.lastChild);
 								}
@@ -1384,7 +1387,8 @@ export async function content(config, pack) {
 							},
 							$update() {
 								base.lib.element.player.$update.apply(this, arguments);
-								//护甲显示修改
+
+								// 护甲显示修改
 								let hujiat = this.node.hpWrap.querySelector(".hujia");
 								if (this.hujia > 0) {
 									if (!hujiat) {
@@ -1393,7 +1397,8 @@ export async function content(config, pack) {
 									}
 									hujiat.innerText = this.hujia == Infinity ? "∞" : this.hujia;
 								} else if (hujiat) hujiat.remove();
-								//体力条显示修改
+
+								// 体力条显示修改
 								const hidden = this.classList.contains("unseen_show") || this.classList.contains("unseen2_show");
 								let hp = this.hp,
 									hpMax = hidden ? 1 : this.maxHp,
@@ -1407,7 +1412,8 @@ export async function content(config, pack) {
 									}
 								}
 								this.dataset.maxHp = goon ? 4 : hpMax;
-								//手牌数显示修改
+
+								// 手牌数显示修改
 								let count = this.countCards("h");
 								if (this == game.me) {
 									let limit = typeof this.getHandcardLimit == "function" ? this.getHandcardLimit() : Infinity;
@@ -1419,7 +1425,8 @@ export async function content(config, pack) {
 									this.node.count.innerHTML = count;
 									if (this.node.count.dataset) this.node.count.dataset.text = count;
 								}
-								//可见手牌显示刷新
+
+								// 可见手牌显示刷新
 								this.decadeUI_updateShowCards();
 								return this;
 							},
@@ -1514,14 +1521,11 @@ export async function content(config, pack) {
 												}
 											};
 										}
-										//const suit = get.translation(cardx.suit);
-										//const number = get.strNumber(cardx.number);
 										cardx.classList.add("drawinghidden");
 										if (isViewAsCard) {
 											cardx.cards = cards || [];
 											cardx.viewAs = VCard.name;
 											const bgMark = lib.translate[cardx.viewAs + "_bg"] || get.translation(cardx.viewAs)[0];
-											//cardx.node.name2.innerHTML = `${suit}${number} [${get.translation(VCard.name)}]`;
 											if (cardx.classList.contains("fullskin") || cardx.classList.contains("fullborder")) {
 												if (window.decadeUI) cardx.node.judgeMark.node.judge.innerHTML = bgMark;
 												else cardx.node.background.innerHTML = bgMark;
@@ -1529,7 +1533,6 @@ export async function content(config, pack) {
 											cardx.classList.add("fakejudge");
 										} else {
 											delete cardx.viewAs;
-											//cardx.node.name2.innerHTML = `${suit}${number} ${VCard.name}`;
 											cardx.classList.remove("fakejudge");
 											if (window.decadeUI) cardx.node.judgeMark.node.judge.innerHTML = lib.translate[cardx.name + "_bg"] || get.translation(cardx.name)[0];
 										}
@@ -1620,9 +1623,9 @@ export async function content(config, pack) {
 									game.addVideo("line", player, [target.dataset.position, config]);
 									player.checkBoundsCache(true);
 									target.checkBoundsCache(true);
-									var x1, y1;
-									var x2, y2;
-									var hand = dui.boundsCaches.hand;
+									let x1, y1;
+									let x2, y2;
+									const hand = dui.boundsCaches.hand;
 									if (player == game.me) {
 										hand.check();
 										x1 = ui.arena.offsetWidth / 2;
@@ -1643,8 +1646,8 @@ export async function content(config, pack) {
 								}
 							},
 							checkBoundsCache(forceUpdate) {
-								var update;
-								var refer = dui.boundsCaches.arena;
+								let update;
+								const refer = dui.boundsCaches.arena;
 								refer.check();
 								if (this.cacheReferW != refer.width || this.cacheReferH != refer.height || this.cachePosition != this.dataset.position) update = true;
 								this.cacheReferW = refer.width;
@@ -1697,8 +1700,8 @@ export async function content(config, pack) {
 										config
 									);
 								}
-								var cards;
-								var isDrawCard;
+								let cards;
+								let isDrawCard;
 								if (get.itemtype(num) == "cards") {
 									cards = num.concat();
 									isDrawCard = true;
@@ -1726,9 +1729,9 @@ export async function content(config, pack) {
 										isDrawCard = true;
 								}
 								if (game.me == this && !isDrawCard) return;
-								var fragment = document.createDocumentFragment();
-								var card;
-								for (var i = 0; i < cards.length; i++) {
+								const fragment = document.createDocumentFragment();
+								let card;
+								for (let i = 0; i < cards.length; i++) {
 									card = cards[i];
 									if (card == null) card = dui.element.create("card thrown drawingcard");
 									else card = card.copy("thrown", "drawingcard", false);
@@ -1736,7 +1739,7 @@ export async function content(config, pack) {
 									cards[i] = card;
 									fragment.appendChild(card);
 								}
-								var player = this;
+								const player = this;
 								dui.layoutDrawCards(cards, player, true);
 								ui.arena.appendChild(fragment);
 								dui.queueNextFrameTick(function () {
@@ -1745,8 +1748,8 @@ export async function content(config, pack) {
 								});
 							},
 							$give(cards, target, log, record) {
-								var itemtype;
-								var duiMod = cards.duiMod && game.me == target;
+								let itemtype;
+								const duiMod = cards.duiMod && game.me == target;
 								if (typeof cards == "number") {
 									itemtype = "number";
 									cards = new Array(cards);
@@ -1761,7 +1764,7 @@ export async function content(config, pack) {
 									}
 								}
 								if (record !== false) {
-									var cards2 = cards;
+									let cards2 = cards;
 									if (itemtype == "number") {
 										cards2 = cards.length;
 										game.addVideo("give", this, [cards2, target.dataset.position]);
@@ -1787,17 +1790,17 @@ export async function content(config, pack) {
 									return;
 								}
 								if (duiMod) return;
-								var card;
-								var hand = dui.boundsCaches.hand;
+								let card;
+								const hand = dui.boundsCaches.hand;
 								hand.check();
-								var draws = [];
-								var player = this;
-								var fragment = document.createDocumentFragment();
-								for (var i = 0; i < cards.length; i++) {
+								const draws = [];
+								const player = this;
+								const fragment = document.createDocumentFragment();
+								for (let i = 0; i < cards.length; i++) {
 									card = cards[i];
 									if (card) {
-										var cp = card.copy("card", "thrown", "gainingcard", false);
-										var hs = player == game.me;
+										const cp = card.copy("card", "thrown", "gainingcard", false);
+										let hs = player == game.me;
 										if (hs) {
 											if (card.throwWith) {
 												hs = card.throwWith == "h" || card.throwWith == "s";
@@ -1830,7 +1833,7 @@ export async function content(config, pack) {
 								});
 							},
 							$gain2(cards, log) {
-								var type = get.itemtype(cards);
+								let type = get.itemtype(cards);
 								if (type != "cards") {
 									if (type != "card") return;
 									type = "cards";
@@ -1844,11 +1847,11 @@ export async function content(config, pack) {
 									this,
 									cards
 								);
-								var gains = [];
-								var draws = [];
-								var card;
-								var clone;
-								for (var i = 0; i < cards.length; i++) {
+								const gains = [];
+								const draws = [];
+								let card;
+								let clone;
+								for (let i = 0; i < cards.length; i++) {
 									clone = cards[i].clone;
 									card = cards[i].copy("thrown", "gainingcard");
 									card.fixed = true;
@@ -1865,9 +1868,9 @@ export async function content(config, pack) {
 								if (cards.duiMod && this == game.me) return;
 								cards = gains.concat(draws);
 								dui.layoutDrawCards(draws, this, true);
-								var player = this;
-								var fragment = document.createDocumentFragment();
-								for (var i = 0; i < cards.length; i++) fragment.appendChild(cards[i]);
+								const player = this;
+								const fragment = document.createDocumentFragment();
+								for (let i = 0; i < cards.length; i++) fragment.appendChild(cards[i]);
 								ui.arena.appendChild(fragment);
 								dui.queueNextFrameTick(function () {
 									dui.layoutDrawCards(cards, player);
@@ -1916,8 +1919,8 @@ export async function content(config, pack) {
 								this.queueCssAnimation("player-hurt 0.3s");
 							},
 							$throw(cards, time, record, nosource) {
-								var itemtype;
-								var duiMod = cards.duiMod && game.me == this && !nosource;
+								let itemtype;
+								const duiMod = cards.duiMod && game.me == this && !nosource;
 								if (typeof cards == "number") {
 									itemtype = "number";
 									cards = new Array(cards);
@@ -1928,21 +1931,21 @@ export async function content(config, pack) {
 									} else if (itemtype == "card") {
 										cards = [cards];
 									} else {
-										var evt = _status.event;
+										const evt = _status.event;
 										if (evt && evt.card && evt.cards === cards) {
-											var card = ui.create.card().init([evt.card.suit, evt.card.number, evt.card.name, evt.card.nature]);
+											const card = ui.create.card().init([evt.card.suit, evt.card.number, evt.card.name, evt.card.nature]);
 											if (evt.card.suit == "none") card.node.suitnum.style.display = "none";
 											card.dataset.virtual = 1;
 											cards = [card];
 										}
 									}
 								}
-								var card;
-								var clone;
-								var player = this;
-								var hand = dui.boundsCaches.hand;
+								let card;
+								let clone;
+								const player = this;
+								const hand = dui.boundsCaches.hand;
 								hand.check();
-								for (var i = 0; i < cards.length; i++) {
+								for (let i = 0; i < cards.length; i++) {
 									card = cards[i];
 									if (card) {
 										clone = card.copy("thrown");
@@ -1976,14 +1979,14 @@ export async function content(config, pack) {
 									}
 									game.addVideo("throw", this, [get.cardsInfo(cards), 0, nosource]);
 								}
-								cards.sort(function (a, b) {
+								cards.sort((a, b) => {
 									if (a.tx === undefined && b.tx === undefined) return 0;
 									if (a.tx === undefined) return duicfg.rightLayout ? -1 : 1;
 									if (b.tx === undefined) return duicfg.rightLayout ? 1 : -1;
 									return a.tx - b.tx;
 								});
-								for (var i = 0; i < cards.length; i++) {
-									(function (card) {
+								for (let i = 0; i < cards.length; i++) {
+									((card) => {
 										player.$throwordered2(card, nosource);
 									})(cards[i]);
 								}
@@ -2015,7 +2018,7 @@ export async function content(config, pack) {
 									card.throwordered = undefined;
 								}
 								if (card.fixed) return ui.arena.appendChild(card);
-								var tagNode = card.querySelector(".used-info");
+								let tagNode = card.querySelector(".used-info");
 								if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
 								card.$usedtag = tagNode;
 								ui.thrown.push(card);
@@ -2085,8 +2088,7 @@ export async function content(config, pack) {
 									});
 								}
 							},
-							/*-------转换技，阴阳标记等----*/
-							//修改changezhuanhuanji函数
+							// 转换技，阴阳标记等
 							$changeZhuanhuanji(skill) {
 								base.lib.element.player.$changeZhuanhuanji.apply(this, arguments);
 								if (!get.is.zhuanhuanji(skill, this)) return;
@@ -2130,11 +2132,9 @@ export async function content(config, pack) {
 									}
 								}
 							},
-							//修改技能按钮
-							//定义两个空集合阳按钮和阴按钮（别问为啥阴不是yin而是ying，问就是拿yang复制比较简单）
-							//定义阴函数，将技能加入阴集合，并删除阳集合里的该技能。
+							// 修改技能按钮：定义两个空集合阳按钮和阴按钮
 							yangSkill(skill) {
-								var player = this;
+								const player = this;
 								game.broadcastAll(
 									function (player, skill) {
 										player.$yangSkill(skill);
@@ -2149,9 +2149,8 @@ export async function content(config, pack) {
 								this.yingedSkills ??= [];
 								this.yingedSkills.remove(skill);
 							},
-							//阳函数同理
 							yingSkill(skill) {
-								var player = this;
+								const player = this;
 								game.broadcastAll(
 									function (player, skill) {
 										player.$yingSkill(skill);
@@ -2166,10 +2165,9 @@ export async function content(config, pack) {
 								this.yangedSkills ??= [];
 								this.yangedSkills.remove(skill);
 							},
-							//添加failskill函数
-							//这是失败函数，添加到使命技的失败分支里，作用是为使命技的class样式添加一个后缀fail，这样在使命技失败的时候创建的标记就会是白底和一个x（类似限定技使用后），而使命技成功的标记就会是红底。
+							// 失败函数：为使命技的class样式添加fail后缀，失败时标记为白底和x，成功时为红底
 							failSkill(skill) {
-								var player = this;
+								const player = this;
 								game.broadcastAll(
 									function (player, skill) {
 										player.$failSkill(skill);
@@ -2180,14 +2178,12 @@ export async function content(config, pack) {
 							},
 							$failSkill(skill) {
 								if (this.hiddenSkills.includes(skill) && this !== game.me) return;
-								var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
+								const mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
 								if (mark) mark.classList.add("fail");
 							},
-							//添加失效函数
-							//构建一个失效技能的空集合
-							//失效函数是为了给技能按钮上锁的，在技能失效时，补上shixiao函数，技能就会被加入失效集合里，十周年UI那里就会检测到技能失效，从而添加上锁图片。
+							// 失效函数：给技能按钮上锁，技能失效时加入失效集合，UI会检测并添加上锁图片
 							shixiaoSkill(skill) {
-								var player = this;
+								const player = this;
 								game.broadcastAll(
 									function (player, skill) {
 										player.$shixiaoSkill(skill);
@@ -2200,10 +2196,9 @@ export async function content(config, pack) {
 								this.shixiaoedSkills ??= [];
 								this.shixiaoedSkills.add(skill);
 							},
-							//添加解除失效函数
-							//看名字就知道是干啥的
+							// 解除失效函数
 							unshixiaoSkill(skill) {
-								var player = this;
+								const player = this;
 								game.broadcastAll(
 									function (player, skill) {
 										player.$unshixiaoSkill(skill);
@@ -2218,27 +2213,33 @@ export async function content(config, pack) {
 							},
 							trySkillAnimate(name) {
 								base.lib.element.player.trySkillAnimate.apply(this, arguments);
-								var that = this;
-								//------AI技能提示条------------//
+								const that = this;
+
+								// AI技能提示条
 								if (lib.config["extension_十周年UI_enable"] && lib.config.extension_十周年UI_jindutiao == true) {
 									if (that != game.me) {
-										var cd = that.getElementsByClassName("tipshow"); //阶段，出牌提示条
-										var ef = that.getElementsByClassName("tipskill"); //技能提示条
-										//-------初始化-----//
+										const cd = that.getElementsByClassName("tipshow");
+										const ef = that.getElementsByClassName("tipskill");
+
+										// 初始化
 										if (cd[0]) cd[0].parentNode.removeChild(cd[0]);
 										if (ef[0]) ef[0].parentNode.removeChild(ef[0]);
-										var tipbanlist = ["_recasting", "jiu"]; //过滤部分触发技能，可以自己添加
+										const tipbanlist = ["_recasting", "jiu"];
+
 										if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
-											var tipskillbox = document.createElement("div"); //盒子
-											var tipshow = document.createElement("img"); //图片思考中
-											var tipskilltext = document.createElement("div"); //技能文本
-											//------盒子样式--------//
-											tipskillbox.classList.add("tipskill"); //盒子设置技能类名
+											const tipskillbox = document.createElement("div");
+											const tipshow = document.createElement("img");
+											const tipskilltext = document.createElement("div");
+
+											// 盒子样式
+											tipskillbox.classList.add("tipskill");
 											tipskillbox.style.cssText = "display:block;position:absolute;pointer-events:none;z-index:90;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:0px;";
-											//--------技能文本-----//
+
+											// 技能文本
 											tipskilltext.innerHTML = get.skillTranslation(name, that).slice(0, 2);
 											tipskilltext.style.cssText = "color:#ADC63A;text-shadow:#707852 0 0;font-size:11px;font-family:shousha;display:block;position:absolute;z-index:91;bottom:-22px;letter-spacing:1.5px;line-height:15px;left:15px;";
-											//-----思考中底图------//
+
+											// 思考中底图
 											tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/skilltip.png";
 											tipshow.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 											tipskillbox.appendChild(tipshow);
@@ -2273,7 +2274,7 @@ export async function content(config, pack) {
 											font
 										);
 									}
-									var node;
+									let node;
 									if (this.popupNodeCache && this.popupNodeCache.length) {
 										node = this.popupNodeCache.shift();
 									} else {
@@ -2296,12 +2297,12 @@ export async function content(config, pack) {
 									this.damagepopups.push(node);
 								}
 								if (this.damagepopups.length && !this.damagepopLocked) {
-									var node = this.damagepopups.shift();
+									const node = this.damagepopups.shift();
 									this.damagepopLocked = true;
 									if (this != node.parentNode) this.appendChild(node);
-									var player = this;
+									const player = this;
 									if (typeof node.popupNumber == "number") {
-										var popupNum = node.popupNumber;
+										const popupNum = node.popupNumber;
 										if (popupNum < 0) {
 											if (node.nature != "water") {
 												const actionPairs = {
@@ -2363,7 +2364,7 @@ export async function content(config, pack) {
 									card2
 								);
 								game.addVideo("compare", this, [get.cardInfo(card1), target.dataset.position, get.cardInfo(card2)]);
-								var player = this;
+								const player = this;
 								target.$throwordered2(card2.copy(false));
 								player.$throwordered2(card1.copy(false));
 							},
@@ -2378,8 +2379,8 @@ export async function content(config, pack) {
 									cards
 								);
 								game.addVideo("compareMultiple", this, [get.cardInfo(card1), get.targetsInfo(targets), get.cardsInfo(cards)]);
-								var player = this;
-								for (var i = targets.length - 1; i >= 0; i--) {
+								const player = this;
+								for (let i = targets.length - 1; i >= 0; i--) {
 									targets[i].$throwordered2(cards[i].copy(false));
 								}
 								player.$throwordered2(card1.copy(false));
@@ -2392,7 +2393,6 @@ export async function content(config, pack) {
 									event.hujia = Math.min(-num, player.hujia);
 									event.getParent().hujia = event.hujia;
 									event.num += event.hujia;
-									//game.log(player, '的护甲抵挡了' + get.cnNumber(event.hujia) + '点伤害');
 									player.changeHujia(-event.hujia).type = "damage";
 								}
 								num = event.num;
@@ -2408,7 +2408,7 @@ export async function content(config, pack) {
 									game.broadcast(function (list) {
 										_status.dying = list;
 									}, _status.dying);
-									var evt = event.getParent("_save");
+									let evt = event.getParent("_save");
 									if (evt && evt.finish) evt.finish();
 									evt = event.getParent("dying");
 									if (evt && evt.finish) evt.finish();
@@ -2420,11 +2420,11 @@ export async function content(config, pack) {
 								...base.lib.element.content.gain.slice(0, -2),
 								async (event, trigger, player) => {
 									let { cards, gaintag } = event;
-									var handcards = player.node.handcards1;
-									var fragment = document.createDocumentFragment();
-									for (var i = 0; i < cards.length; i++) {
-										var card = cards[i];
-										var sort = lib.config.sort_card(card);
+									const handcards = player.node.handcards1;
+									const fragment = document.createDocumentFragment();
+									for (let i = 0; i < cards.length; i++) {
+										const card = cards[i];
+										let sort = lib.config.sort_card(card);
 										if (lib.config.reverse_sort) sort = -sort;
 										if (["o", "d"].includes(get.position(card, true))) {
 											card.addKnower("everyone");
@@ -2439,18 +2439,18 @@ export async function content(config, pack) {
 										if (event.knowers) card.addKnower(event.knowers);
 										fragment.appendChild(card);
 										if (_status.discarded) _status.discarded.remove(card);
-										for (var j = 0; j < card.vanishtag.length; j++) {
+										for (let j = 0; j < card.vanishtag.length; j++) {
 											if (card.vanishtag[j][0] != "_") card.vanishtag.splice(j--, 1);
 										}
 									}
-									var gainTo = function (cards, nodelay) {
+									const gainTo = function (cards, nodelay) {
 										cards.duiMod = event.source;
 										if (player == game.me) {
 											dui.layoutHandDraws(cards);
 											dui.queueNextFrameTick(dui.layoutHand, dui);
 											game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
 										}
-										var s = player.getCards("s");
+										const s = player.getCards("s");
 										if (s.length) handcards.insertBefore(fragment, s[0]);
 										else handcards.appendChild(fragment);
 										game.broadcast(
@@ -2491,21 +2491,21 @@ export async function content(config, pack) {
 									} else if (event.animate == "give" || event.animate == "giveAuto") {
 										game.pause();
 										gainTo(cards);
-										var evtmap = event.losing_map;
+										const evtmap = event.losing_map;
 										if (event.animate == "give") {
-											for (var i in evtmap) {
-												var source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
+											for (const i in evtmap) {
+												const source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
 												source.$give(evtmap[i][0], player, event.log);
 											}
 										} else {
-											for (var i in evtmap) {
-												var source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
+											for (const i in evtmap) {
+												const source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
 												if (evtmap[i][1].length) source.$giveAuto(evtmap[i][1], player, event.log);
 												if (evtmap[i][2].length) source.$give(evtmap[i][2], player, event.log);
 											}
 										}
 									} else if (typeof event.animate == "function") {
-										var time = event.animate(event);
+										const time = event.animate(event);
 										game.pause();
 										setTimeout(
 											function () {
@@ -2524,25 +2524,25 @@ export async function content(config, pack) {
 							],
 							judge() {
 								"step 0"
-								var judgestr = get.translation(player) + "的" + event.judgestr + "判定";
+								const judgestr = get.translation(player) + "的" + event.judgestr + "判定";
 								event.videoId = lib.status.videoId++;
-								var cardj = event.directresult;
+								let cardj = event.directresult;
 								if (!cardj) {
 									if (player.getTopCards) cardj = player.getTopCards()[0];
 									else cardj = get.cards()[0];
 								}
-								var owner = get.owner(cardj);
+								const owner = get.owner(cardj);
 								if (owner) {
 									owner.lose(cardj, "visible", ui.ordering);
 								} else {
-									var nextj = game.cardsGotoOrdering(cardj);
+									const nextj = game.cardsGotoOrdering(cardj);
 									if (event.position != ui.discardPile) nextj.noOrdering = true;
 								}
 								player.judging.unshift(cardj);
 								game.addVideo("judge1", player, [get.cardInfo(player.judging[0]), judgestr, event.videoId]);
 								game.broadcastAll(
 									function (player, card /*, str*/, id, cardid) {
-										var event = game.online ? {} : _status.event;
+										const event = game.online ? {} : _status.event;
 										if (game.chess) event.node = card.copy("thrown", "center", ui.arena).animate("start");
 										else event.node = player.$throwordered2(card.copy(), true);
 										if (lib.cardOL) lib.cardOL[cardid] = event.node;
@@ -2570,7 +2570,7 @@ export async function content(config, pack) {
 									node: event.node,
 								};
 								if (event.fixedResult) {
-									for (var i in event.fixedResult) {
+									for (const i in event.fixedResult) {
 										event.result[i] = event.fixedResult[i];
 									}
 								}
@@ -2581,7 +2581,7 @@ export async function content(config, pack) {
 								player.judging.shift();
 								game.checkMod(player, event.result, "judge", player);
 								if (event.judge2) {
-									var judge2 = event.judge2(event.result);
+									const judge2 = event.judge2(event.result);
 									if (typeof judge2 == "boolean") player.tryJudgeAnimate(judge2);
 								}
 								if (event.clearArena != false) {
@@ -2595,7 +2595,7 @@ export async function content(config, pack) {
 								event.trigger("judgeFixing");
 								event.triggerMessage("judgeresult");
 								if (event.callback) {
-									var next = game.createEvent("judgeCallback", false);
+									const next = game.createEvent("judgeCallback", false);
 									next.player = player;
 									next.card = event.result.card;
 									next.judgeResult = get.copy(event.result);
@@ -2608,7 +2608,7 @@ export async function content(config, pack) {
 							},
 							lose: [
 								async (event, trigger, player) => {
-									var evt = event.getParent();
+									const evt = event.getParent();
 									if ((evt.name != "discard" || event.type != "discard") && (evt.name != "loseToDiscardpile" || event.type != "loseToDiscardpile")) {
 										event.delay = false;
 										if (event.blameEvent == undefined) event.animate = false;
@@ -2620,24 +2620,22 @@ export async function content(config, pack) {
 								async (event, trigger, player) => {
 									let { cards } = event;
 									event.vcards = {
-										//这玩意拿来存储假牌
 										cards: [],
 										es: [],
 										js: [],
 									};
-									//这个拿来存储虚拟牌对应的实体牌
 									event.vcard_cards = [];
 									event.gaintag_map = {};
-									var hs = [],
-										es = [],
-										js = [],
-										ss = [],
-										xs = [];
-									var unmarks = [];
+									const hs = [];
+									const es = [];
+									const js = [];
+									const ss = [];
+									const xs = [];
+									const unmarks = [];
 									if (event.insert_card && event.position == ui.cardPile) event.cards.reverse();
-									var hej = player.getCards("hejsx");
+									const hej = player.getCards("hejsx");
 									event.stockcards = cards.slice(0);
-									for (var i = 0; i < cards.length; i++) {
+									for (let i = 0; i < cards.length; i++) {
 										let cardx = [cards[i]];
 										if (!hej.includes(cards[i])) {
 											cards.splice(i--, 1);
@@ -2647,10 +2645,8 @@ export async function content(config, pack) {
 												cards[i].throwWith = cards[i].original = "e";
 												const VEquip = cards[i][cards[i].cardSymbol];
 												if (VEquip) {
-													//判断是否是假牌
 													if (cards[i].isViewAsCard) {
 														let loseCards = VEquip.cards;
-														//解体！
 														cardx.addArray(loseCards);
 														event.vcard_cards.addArray(loseCards);
 														loseCards.forEach(cardi => {
@@ -2671,10 +2667,8 @@ export async function content(config, pack) {
 												cards[i].throwWith = cards[i].original = "j";
 												const VJudge = cards[i][cards[i].cardSymbol];
 												if (VJudge) {
-													//判断是否是假牌
 													if (cards[i].isViewAsCard) {
 														let loseCards = VJudge.cards;
-														//解体！
 														cardx.addArray(loseCards);
 														event.vcard_cards.addArray(loseCards);
 														loseCards.forEach(cardi => {
@@ -2710,10 +2704,9 @@ export async function content(config, pack) {
 												cards[i].throwWith = cards[i].original = null;
 											}
 										}
-										for (var j = 0; j < cardx.length; j++) {
+										for (let j = 0; j < cardx.length; j++) {
 											if (cardx[j].gaintag && cardx[j].gaintag.length) {
 												event.gaintag_map[cardx[j].cardid] = cardx[j].gaintag.slice(0);
-												//仅移除非永久标记
 												const tags = cardx[j].gaintag.filter(tag => !tag.startsWith("eternal_"));
 												tags.forEach(tag => cardx[j].removeGaintag(tag));
 											}
@@ -2721,7 +2714,7 @@ export async function content(config, pack) {
 											cardx[j].classList.remove("glow");
 											cardx[j].classList.remove("glows");
 											cardx[j].recheck();
-											var info = lib.card[cardx[j].name];
+											const info = lib.card[cardx[j].name];
 											if ("_destroy" in cardx[j]) {
 												if (cardx[j]._destroy) {
 													cardx[j].delete();
@@ -2759,14 +2752,13 @@ export async function content(config, pack) {
 											} else {
 												cardx[j].remove();
 											}
-											//if(ss.includes(cardx[j])) cards.splice(i--,1);
 										}
 									}
 									if (player == game.me) dui.queueNextFrameTick(dui.layoutHand, dui);
 									ui.updatej(player);
 									game.broadcast(
-										function (player, cards, num) {
-											for (var i = 0; i < cards.length; i++) {
+										(player, cards, num) => {
+											for (let i = 0; i < cards.length; i++) {
 												cards[i].removeGaintag(true);
 												cards[i].classList.remove("glow");
 												cards[i].classList.remove("glows");
@@ -2782,7 +2774,7 @@ export async function content(config, pack) {
 										ui.cardPile.childNodes.length
 									);
 									if (event.animate != false) {
-										var evt = event.getParent();
+										const evt = event.getParent();
 										evt.discardid = lib.status.videoId++;
 										game.broadcastAll(
 											function (player, cards, id, visible) {
@@ -2792,9 +2784,9 @@ export async function content(config, pack) {
 													.flat();
 												cardx.duiMod = true;
 												if (visible) player.$throw(cardx, null, "nobroadcast");
-												var cardnodes = [];
+												const cardnodes = [];
 												cardnodes._discardtime = get.time();
-												for (var i = 0; i < cardx.length; i++) {
+												for (let i = 0; i < cardx.length; i++) {
 													if (cardx[i].clone) cardnodes.push(cardx[i].clone);
 												}
 												ui.todiscard[id] = cardnodes;
@@ -2806,7 +2798,7 @@ export async function content(config, pack) {
 										);
 										if (lib.config.sync_speed && cards[0]?.clone) {
 											if (evt.delay != false) {
-												var waitingForTransition = get.time();
+												const waitingForTransition = get.time();
 												evt.waitingForTransition = waitingForTransition;
 												cards[0].clone.listenTransition(function () {
 													if (_status.waitingForTransition == waitingForTransition && _status.paused) {
@@ -2816,7 +2808,7 @@ export async function content(config, pack) {
 												});
 											} else if (evt.getParent().discardTransition) {
 												delete evt.getParent().discardTransition;
-												var waitingForTransition = get.time();
+												const waitingForTransition = get.time();
 												evt.getParent().waitingForTransition = waitingForTransition;
 												cards[0].clone.listenTransition(function () {
 													if (_status.waitingForTransition == waitingForTransition && _status.paused) {
@@ -2837,11 +2829,11 @@ export async function content(config, pack) {
 									game.addVideo("loseAfter", player);
 									event.num = 0;
 									if (event.position == ui.ordering) {
-										var evt = event.relatedEvent || event.getParent();
+										const evt = event.relatedEvent || event.getParent();
 										if (!evt.orderingCards) evt.orderingCards = [];
 										if (!evt.noOrdering && !evt.cardsOrdered) {
 											evt.cardsOrdered = true;
-											var next = game.createEvent("orderingDiscard", false);
+											const next = game.createEvent("orderingDiscard", false);
 											event.next.remove(next);
 											evt.after.push(next);
 											next.relatedEvent = evt;
@@ -2854,7 +2846,7 @@ export async function content(config, pack) {
 										game.updateRoundNumber();
 									}
 									if (unmarks.length) {
-										for (var i of unmarks) {
+										for (const i of unmarks) {
 											player[(lib.skill[i] && lib.skill[i].mark) || player.hasCard(card => card.hasGaintag(i), "x") ? "markSkill" : "unmarkSkill"](i);
 										}
 									}
@@ -2966,7 +2958,7 @@ export async function content(config, pack) {
 									game.broadcastAll(
 										function (str, eventName, result) {
 											if (!window.decadeUI) {
-												var dialog = ui.create.dialog(str);
+												const dialog = ui.create.dialog(str);
 												dialog.classList.add("center");
 												setTimeout(
 													function (dialog) {
@@ -2977,7 +2969,7 @@ export async function content(config, pack) {
 												);
 												return;
 											}
-											var dialog = ui.dialogs[eventName];
+											const dialog = ui.dialogs[eventName];
 											dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
 											setTimeout(
 												function (dialog, eventName) {
@@ -3050,7 +3042,7 @@ export async function content(config, pack) {
 									game.broadcastAll(
 										function (str, eventName, result) {
 											if (!window.decadeUI) {
-												var dialog = ui.create.dialog(str);
+												const dialog = ui.create.dialog(str);
 												dialog.classList.add("center");
 												setTimeout(
 													function (dialog) {
@@ -3061,7 +3053,7 @@ export async function content(config, pack) {
 												);
 												return;
 											}
-											var dialog = ui.dialogs[eventName];
+											const dialog = ui.dialogs[eventName];
 											dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
 											setTimeout(
 												function (dialog, eventName) {
@@ -3098,13 +3090,13 @@ export async function content(config, pack) {
 									event.compareName = __compareName3;
 									event.compareId = `${event.compareName}_${get.id()}`;
 									event.addMessageHook("finished", function () {
-										var dialog = ui.dialogs[this.compareId];
+										const dialog = ui.dialogs[this.compareId];
 										if (dialog) dialog.close();
 									});
 									game.broadcastAll(
 										function (player, target, eventName, compareId) {
 											if (!window.decadeUI) return;
-											var dialog = decadeUI.create.compareDialog();
+											const dialog = decadeUI.create.compareDialog();
 											dialog.caption = get.translation(eventName) + "拼点";
 											dialog.player = player;
 											dialog.target = target;
@@ -3124,7 +3116,7 @@ export async function content(config, pack) {
 									game.broadcastAll(
 										function (eventName, playerCard) {
 											if (!window.decadeUI) return;
-											var dialog = ui.dialogs[eventName];
+											const dialog = ui.dialogs[eventName];
 											dialog.playerCard = playerCard.copy();
 										},
 										event.compareId,
@@ -3147,10 +3139,10 @@ export async function content(config, pack) {
 													player.$compare(playerCard, target, targetCard);
 													return;
 												}
-												var dialog = ui.dialogs[eventName];
+												let dialog = ui.dialogs[eventName];
 												if (!dialog && window.decadeUI) {
 													dialog = decadeUI.create.compareDialog();
-													var __captionName = typeof eventName === "string" ? get.sourceSkillFor(eventName.split("_")[0]) : "";
+													const __captionName = typeof eventName === "string" ? get.sourceSkillFor(eventName.split("_")[0]) : "";
 													dialog.caption = get.translation(__captionName) + "拼点";
 													dialog.player = player;
 													dialog.playerCard = playerCard.copy();
@@ -3185,7 +3177,7 @@ export async function content(config, pack) {
 									game.broadcastAll(
 										function (str, eventName, result) {
 											if (!window.decadeUI) {
-												var dialog = ui.create.dialog(str);
+												const dialog = ui.create.dialog(str);
 												dialog.classList.add("center");
 												setTimeout(
 													function (dialog) {
@@ -3196,7 +3188,7 @@ export async function content(config, pack) {
 												);
 												return;
 											}
-											var dialog = ui.dialogs[eventName];
+											const dialog = ui.dialogs[eventName];
 											dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
 											setTimeout(
 												function (dialog) {
@@ -3236,7 +3228,7 @@ export async function content(config, pack) {
 											event.card1,
 											event.card2
 										);
-										var next = game.createEvent("compareMultiple");
+										const next = game.createEvent("compareMultiple");
 										next.player = player;
 										next.target = event.target;
 										next.card1 = event.card1;
@@ -3254,7 +3246,7 @@ export async function content(config, pack) {
 					},
 					init: {
 						cssstyles() {
-							var temp = lib.config.glow_phase;
+							const temp = lib.config.glow_phase;
 							lib.config.glow_phase = "";
 							base.lib.init.cssstyles.call(this);
 							lib.config.glow_phase = temp;
@@ -3264,10 +3256,10 @@ export async function content(config, pack) {
 				},
 				ui: {
 					updatec() {
-						var controls = ui.control.childNodes;
-						var stayleft;
-						var offsetLeft;
-						for (var i = 0; i < controls.length; i++) {
+						const controls = ui.control.childNodes;
+						let stayleft;
+						let offsetLeft;
+						for (let i = 0; i < controls.length; i++) {
 							if (!stayleft && controls[i].stayleft) {
 								stayleft = controls[i];
 							} else if (!offsetLeft) {
@@ -3292,8 +3284,8 @@ export async function content(config, pack) {
 					},
 					updatej(player) {
 						if (!player) return;
-						var judges = player.node.judges.childNodes;
-						for (var i = 0; i < judges.length; i++) {
+						const judges = player.node.judges.childNodes;
+						for (let i = 0; i < judges.length; i++) {
 							if (judges[i].classList.contains("removing")) continue;
 							judges[i].classList.remove("drawinghidden");
 							if (_status.connectMode) {
@@ -3333,8 +3325,8 @@ export async function content(config, pack) {
 					},
 					updatejm(player, nodes, start, inv) {
 						if (typeof start != "number") start = 0;
-						for (var i = 0; i < nodes.childElementCount; i++) {
-							var node = nodes.childNodes[i];
+						for (let i = 0; i < nodes.childElementCount; i++) {
+							const node = nodes.childNodes[i];
 							if (i < start) {
 								node.style.transform = "";
 							} else if (node.classList.contains("removing")) {
@@ -3349,11 +3341,11 @@ export async function content(config, pack) {
 					})(),
 					create: {
 						prebutton(item, type, position, noclick) {
-							var button = ui.create.div();
+							const button = ui.create.div();
 							button.style.display = "none";
 							button.link = item;
 							button.activate = function () {
-								var node = ui.create.button(item, type, undefined, noclick, button);
+								const node = ui.create.button(item, type, undefined, noclick, button);
 								node.activate = undefined;
 							};
 							_status.prebutton.push(button);
@@ -3362,8 +3354,8 @@ export async function content(config, pack) {
 						},
 						rarity(button) {
 							if (!lib.config.show_rarity) return;
-							var rarity = game.getRarity(button.link);
-							var intro = button.node.intro;
+							const rarity = game.getRarity(button.link);
+							const intro = button.node.intro;
 							intro.classList.add("showintro");
 							intro.classList.add("rarity");
 							if (intro.innerText) intro.innerText = "";
@@ -3375,14 +3367,14 @@ export async function content(config, pack) {
 							return button;
 						},
 						control() {
-							var i, controls;
-							var nozoom = false;
+							let controls;
+							let nozoom = false;
 							if (Array.isArray(arguments[0])) {
 								controls = arguments[0];
 							} else {
 								controls = arguments;
 							}
-							var control = document.createElement("div");
+							const control = document.createElement("div");
 							control.className = "control";
 							control.style.opacity = 1;
 							//for (let i in lib.element.control) control[i] = lib.element.control[i];
@@ -3405,12 +3397,11 @@ export async function content(config, pack) {
 							return control;
 						},
 						dialog(...args) {
-							var hidden = false;
-							var notouchscroll = false;
-							var forcebutton = false;
-							var forcebutton = false;
+							let hidden = false;
+							let notouchscroll = false;
+							let forcebutton = false;
 							let peaceDialog = false;
-							var dialog = decadeUI.element.create("dialog");
+							const dialog = decadeUI.element.create("dialog");
 							dialog.supportsPagination = false;
 							dialog.paginationMap = new Map();
 							dialog.paginationMaxCount = new Map();
@@ -3442,9 +3433,9 @@ export async function content(config, pack) {
 							return dialog;
 						},
 						selectlist(list, init, position, onchange) {
-							var select = document.createElement("select");
-							for (var i = 0; i < list.length; i++) {
-								var option = document.createElement("option");
+							const select = document.createElement("select");
+							for (let i = 0; i < list.length; i++) {
+								const option = document.createElement("option");
 								if (Array.isArray(list[i])) {
 									option.value = list[i][0];
 									option.innerText = list[i][1];
@@ -3494,7 +3485,7 @@ export async function content(config, pack) {
 						},
 						arena() {
 							ui.updatez();
-							var result = base.ui.create.arena.apply(this, arguments);
+							const result = base.ui.create.arena.apply(this, arguments);
 							ui.arena.classList.remove("slim_player");
 							ui.arena.classList.remove("uslim_player");
 							ui.arena.classList.remove("mslim_player");
@@ -3512,12 +3503,10 @@ export async function content(config, pack) {
 							return result;
 						},
 						pause() {
-							var dialog = base.ui.create.pause.call(this);
+							const dialog = base.ui.create.pause.call(this);
 							dialog.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
 							return dialog;
 						},
-						//发动技能函数
-						//武将搜索代码摘抄至扩展ol
 						characterDialog() {
 							const dialog = base.ui.create.characterDialog.apply(this, arguments);
 							const control = lib.config.extension_十周年UI_mx_decade_characterDialog || "default";
@@ -3525,10 +3514,10 @@ export async function content(config, pack) {
 								const Searcher = dialog.querySelector(".searcher.caption");
 								if (Searcher) Searcher.parentNode.removeChild(Searcher);
 								if (control == "extension-OL-system") {
-									var content_container = dialog.childNodes[0];
-									var content = content_container.childNodes[0];
-									var switch_con = content.childNodes[0];
-									var buttons = content.childNodes[1];
+									const content_container = dialog.childNodes[0];
+									const content = content_container.childNodes[0];
+									const switch_con = content.childNodes[0];
+									const buttons = content.childNodes[1];
 									const div = ui.create.div("extension-OL-system");
 									div.style.cssText = "display: flex; justify-content: center; align-items: center; gap: 6px; height: 35px; width: 100%; padding: 0 5px; top: -2px; left: 0; font-size: 18px; font-family: xinwei, sans-serif; box-sizing: border-box;";
 									div.innerHTML = '<label style="font-size:20px;">搜索：</label><select style="height:26px; min-width:150px; font-size:15px; padding:1px 4px; border:1px solid #aaa; border-radius:4px; outline:none; flex-shrink:0;"><option value="name">名称翻译</option><option value="name1">名称ID</option><option value="name2">名称ID(精确匹配)</option><option value="skill">技能翻译</option><option value="skill1">技能ID</option><option value="skill2">技能ID(精确匹配)</option><option value="skill3">技能描述/翻译</option></select><input type="text" placeholder="非精确匹配支持正则搜索" style="height:24px; width:175px; font-size:15px; padding:1px 6px; border:1px solid #aaa; border-radius:4px; outline:none; flex-shrink:0; text-align:center;"/><button style="height:26px; padding:0 10px; font-size:15px; border:1px solid #aaa; border-radius:4px; background:#f5f5f5; cursor:pointer;">搜索</button>';
@@ -3625,7 +3614,7 @@ export async function content(config, pack) {
 								}
 								node.link = item;
 								dui.element.create("character", node);
-								var doubleCamp = get.is.double(node._link, true);
+								const doubleCamp = get.is.double(node._link, true);
 								if (doubleCamp) node._changeGroup = true;
 								if (type == "characterx" && lib.characterReplace[node._link] && lib.characterReplace[node._link].length > 1) {
 									node._replaceButton = true;
@@ -3651,7 +3640,7 @@ export async function content(config, pack) {
 										intro: decadeUI.element.create("intro", node),
 										info: decadeUI.element.create("info", node),
 									};
-									var infoitem = get.character(item);
+									const infoitem = get.character(item);
 									node.node.name.innerHTML = get.slimName(item);
 									if (lib.config.buttoncharacter_style == "default" || lib.config.buttoncharacter_style == "simple") {
 										if (lib.config.buttoncharacter_style == "simple") {
@@ -3661,9 +3650,9 @@ export async function content(config, pack) {
 										node.node.name.dataset.nature = get.groupnature(get.bordergroup(infoitem));
 										node.node.group.dataset.nature = get.groupnature(get.bordergroup(infoitem), "raw");
 										ui.create.div(node.node.hp);
-										var hp = get.infoHp(infoitem[2]),
-											maxHp = get.infoMaxHp(infoitem[2]),
-											hujia = get.infoHujia(infoitem[2]);
+										const hp = get.infoHp(infoitem[2]);
+										const maxHp = get.infoMaxHp(infoitem[2]);
+										const hujia = get.infoHujia(infoitem[2]);
 										const check =
 											(get.mode() == "single" && _status.mode == "changban") ||
 											((get.mode() == "guozhan" ||
@@ -3672,7 +3661,7 @@ export async function content(config, pack) {
 													return Boolean(config) === true;
 												})(_status.connectMode ? lib.configOL.double_character : get.config("double_character"))) &&
 												(_status.connectMode || (_status.connectMode ? lib.configOL.double_hp : get.config("double_hp")) == "pingjun"));
-										var str = get.numStr(hp / (check ? 2 : 1));
+										let str = get.numStr(hp / (check ? 2 : 1));
 										if (hp != maxHp) {
 											str += "/";
 											str += get.numStr(maxHp / (check ? 2 : 1));
@@ -3690,19 +3679,19 @@ export async function content(config, pack) {
 											ui.create.div(".text", get.numStr(hujia), node.node.hp);
 										}
 									} else {
-										var hp = get.infoHp(infoitem[2]);
-										var maxHp = get.infoMaxHp(infoitem[2]);
-										var shield = get.infoHujia(infoitem[2]);
+										const hp = get.infoHp(infoitem[2]);
+										const maxHp = get.infoMaxHp(infoitem[2]);
+										const shield = get.infoHujia(infoitem[2]);
 										if (maxHp > 14) {
 											if (typeof infoitem[2] == "string") node.node.hp.innerHTML = infoitem[2];
 											else node.node.hp.innerHTML = get.numStr(infoitem[2]);
 											node.node.hp.classList.add("text");
 										} else {
-											for (var i = 0; i < maxHp; i++) {
-												var next = ui.create.div("", node.node.hp);
+											for (let i = 0; i < maxHp; i++) {
+												const next = ui.create.div("", node.node.hp);
 												if (i >= hp) next.classList.add("exclude");
 											}
-											for (var i = 0; i < shield; i++) {
+											for (let i = 0; i < shield; i++) {
 												ui.create.div(node.node.hp, ".shield");
 											}
 										}
@@ -3720,7 +3709,7 @@ export async function content(config, pack) {
 									node.node.intro.innerText = lib.config.intro;
 									if (!noclick) lib.setIntro(node);
 									if (infoitem[1]) {
-										var doubleCamp = get.is.double(item, true);
+										const doubleCamp = get.is.double(item, true);
 										if (doubleCamp) {
 											node.node.group.innerHTML = doubleCamp.reduce((previousValue, currentValue) => `${previousValue}<div data-nature="${get.groupnature(currentValue)}">${get.translation(currentValue)}</div>`, "");
 											if (doubleCamp.length > 4)
@@ -3732,23 +3721,23 @@ export async function content(config, pack) {
 										node.node.group.style.display = "none";
 									}
 									if (node._replaceButton) {
-										var intro = ui.create.div(".button.replaceButton", node);
+										const intro = ui.create.div(".button.replaceButton", node);
 										node.node.replaceButton = intro;
 										intro.innerText = "切换";
 										intro._node = node;
 										intro.addEventListener(lib.config.touchscreen ? "touchend" : "click", function () {
 											_status.tempNoButton = true;
-											var node = this._node;
-											var list = lib.characterReplace[node._link];
-											var link = node.link;
-											var index = list.indexOf(link);
+											const node = this._node;
+											const list = lib.characterReplace[node._link];
+											let link = node.link;
+											let index = list.indexOf(link);
 											if (index == list.length - 1) index = 0;
 											else index++;
 											link = list[index];
 											node.link = link;
 											node.refresh(node, link);
 											setTimeout(
-												function (_status) {
+												(_status) => {
 													_status.tempNoButton = undefined;
 												},
 												200,
@@ -3772,10 +3761,11 @@ export async function content(config, pack) {
 							_status.clicked = true;
 							if (this.parentNode && (this.parentNode.classList.contains("judges") || this.parentNode.classList.contains("dui-marks"))) {
 								if (!(e && e instanceof MouseEvent)) {
-									var rect = this.getBoundingClientRect();
+									const rect = this.getBoundingClientRect();
+									const zoom = (game.hasExtension && game.hasExtension("皮肤切换")) ? game.documentZoom : 1;
 									e = {
-										clientX: rect.left + 10,
-										clientY: rect.top + 10,
+										clientX: (rect.left + 10) * zoom,
+										clientY: (rect.top + 10) * zoom,
 									};
 								}
 								ui.click.touchpop();
@@ -3783,7 +3773,7 @@ export async function content(config, pack) {
 								_status.clicked = false;
 								return;
 							}
-							var custom = _status.event.custom;
+							const custom = _status.event.custom;
 							if (custom.replace.card) {
 								custom.replace.card(this);
 								return;
@@ -3866,8 +3856,8 @@ export async function content(config, pack) {
 								}
 							}
 							if (game.chess && get.config("show_range") && !_status.event.skill && this.classList.contains("selected") && _status.event.isMine() && _status.event.name == "chooseToUse") {
-								var player = _status.event.player;
-								var range = get.info(this).range;
+								const player = _status.event.player;
+								const range = get.info(this).range;
 								if (range) {
 									if (typeof range.attack === "number") {
 										player.createRangeShadow(Math.min(8, player.getAttackRange(true) + range.attack - 1));
@@ -3882,7 +3872,7 @@ export async function content(config, pack) {
 							game.check();
 							if (lib.config.popequip && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
 								if (this.classList && this.classList.contains("emptyequip")) return;
-								var rect = this.getBoundingClientRect();
+								const rect = this.getBoundingClientRect();
 								ui.click.touchpop();
 								ui.click.intro.call(this.parentNode, {
 									clientX: rect.left + 18,
@@ -3897,7 +3887,7 @@ export async function content(config, pack) {
 							if (this.classList.contains("infohidden")) return;
 							// 修复十周年UI触屏布局下装备介绍被压缩的问题
 							if (this.classList.contains("card") && this.parentNode && this.parentNode.classList.contains("equips") && get.is.phoneLayout() && !get.is.mobileMe(this.parentNode.parentNode)) {
-								var e = arguments[0];
+								const e = arguments[0];
 								if (_status.dragged) {
 									return;
 								}
@@ -3917,15 +3907,15 @@ export async function content(config, pack) {
 									}
 									ui.historybar.style.zIndex = 22;
 								}
-								var uiintro = get.nodeintro(this, false, e);
+								const uiintro = get.nodeintro(this, false, e);
 								if (!uiintro) {
 									return;
 								}
 								uiintro.classList.add("popped");
 								uiintro.classList.add("static");
 								ui.window.appendChild(uiintro);
-								var layer = ui.create.div(".poplayer", ui.window);
-								var clicklayer = function (e) {
+								const layer = ui.create.div(".poplayer", ui.window);
+								const clicklayer = function (e) {
 									if (_status.touchpopping) {
 										return;
 									}
@@ -3952,7 +3942,7 @@ export async function content(config, pack) {
 									layer.oncontextmenu = clicklayer;
 								}
 								if (this.parentNode == ui.historybar && lib.config.touchscreen) {
-									var rect = this.getBoundingClientRect();
+									const rect = this.getBoundingClientRect();
 									e = { clientX: 0, clientY: rect.top + 30 };
 								}
 								lib.placePoppedDialog(uiintro, e);
@@ -3970,8 +3960,8 @@ export async function content(config, pack) {
 							return base.ui.click.intro.apply(this, arguments);
 						},
 						window() {
-							var clicked = _status.clicked;
-							var dialogtouched = false;
+							const clicked = _status.clicked;
+							let dialogtouched = false;
 							if (_status.dialogtouched) {
 								_status.dialogtouched = false;
 								dialogtouched = true;
@@ -3990,7 +3980,7 @@ export async function content(config, pack) {
 								_status.clicked2 = false;
 							} else {
 								if (_status.clickingidentity) {
-									for (var i = 0; i < _status.clickingidentity[1].length; i++) {
+									for (let i = 0; i < _status.clickingidentity[1].length; i++) {
 										_status.clickingidentity[1][i].delete();
 										_status.clickingidentity[1][i].style.transform = "";
 									}
@@ -4031,7 +4021,7 @@ export async function content(config, pack) {
 								if (get.is.phoneLayout() && ui.menuContainer && ui.menuContainer.classList.contains("hidden")) {
 									if (ui.system2.classList.contains("shown")) {
 										_status.removinground = true;
-										setTimeout(function () {
+										setTimeout(() => {
 											_status.removinground = false;
 										}, 200);
 									}
@@ -4139,8 +4129,8 @@ export async function content(config, pack) {
 							node.appendChild(avatar);
 							if (targets && targets.length == 1 && targets[0] != player && get.itemtype(targets[0]) == "player")
 								(() => {
-									var avatar2;
-									var target = targets[0];
+									let avatar2;
+									const target = targets[0];
 									if (!target.isUnseen(0)) {
 										avatar2 = target.node.avatar.cloneNode();
 									} else if (!player.isUnseen(1)) {
@@ -4274,7 +4264,7 @@ export async function content(config, pack) {
 						return result;
 					},
 					addOverDialog(dialog, result) {
-						var sprite = decadeUI.backgroundAnimation.current;
+						const sprite = decadeUI.backgroundAnimation.current;
 						if (!(sprite && sprite.name == "skin_xiaosha_default")) return;
 						decadeUI.backgroundAnimation.canvas.style.zIndex = 7;
 						const actions = {
@@ -4331,7 +4321,7 @@ export async function content(config, pack) {
 			override(get, ride.get);
 			decadeUI.get.extend(decadeUI, duilib);
 			if (decadeModule.modules) {
-				for (var i = 0; i < decadeModule.modules.length; i++) {
+				for (let i = 0; i < decadeModule.modules.length; i++) {
 					decadeModule.modules[i](lib, game, ui, get, ai, _status);
 				}
 			}
@@ -4445,13 +4435,12 @@ export async function content(config, pack) {
 			ui.click.identity = function (e) {
 				if (_status.dragged || !game.getIdentityList || _status.video || this.parentNode.forceShown) return;
 				_status.clicked = true;
-				var identityList = game.getIdentityList(this.parentNode);
+				let identityList = game.getIdentityList(this.parentNode);
 				if (!identityList) return;
 				if (lib.config.mark_identity_style == "click") {
-					var getNext = false;
-					var theNext;
-					var key;
-					var current = this.firstChild.innerText;
+					let getNext = false;
+					let theNext;
+					const current = this.firstChild.innerText;
 					for (const key in identityList) {
 						if (theNext === null || getNext) {
 							theNext = key;
@@ -4480,9 +4469,9 @@ export async function content(config, pack) {
 							if (!ui.arena.classList.contains("menupaused")) game.resume2();
 						};
 					}
-					var index = 0;
-					var node;
-					var nodes = dui.$identityMarkBox.childNodes;
+					let index = 0;
+					let node;
+					const nodes = dui.$identityMarkBox.childNodes;
 					for (const key in identityList) {
 						node = nodes[index];
 						if (!node) {
@@ -4516,12 +4505,12 @@ export async function content(config, pack) {
 				}
 			};
 			ui.click.volumn = function () {
-				var setting = ui.create.dialog("hidden");
+				const setting = ui.create.dialog("hidden");
 				setting.listen(function (e) {
 					e.stopPropagation();
 				});
-				var backVolume = decadeUI.component.slider(0, 8, parseInt(lib.config.volumn_background));
-				var gameVolume = decadeUI.component.slider(0, 8, parseInt(lib.config.volumn_audio));
+				const backVolume = decadeUI.component.slider(0, 8, parseInt(lib.config.volumn_background));
+				const gameVolume = decadeUI.component.slider(0, 8, parseInt(lib.config.volumn_audio));
 				backVolume.onchange = function () {
 					game.saveConfig("volumn_background", backVolume.value);
 					ui.backgroundMusic.volume = backVolume.value / 8;
@@ -4538,8 +4527,8 @@ export async function content(config, pack) {
 			};
 			ui.clear = function () {
 				game.addVideo("uiClear");
-				var nodes = document.getElementsByClassName("thrown");
-				for (var i = nodes.length - 1; i >= 0; i--) {
+				const nodes = document.getElementsByClassName("thrown");
+				for (let i = nodes.length - 1; i >= 0; i--) {
 					if (nodes[i].fixed) continue;
 					if (nodes[i].classList.contains("card")) decadeUI.layout.clearout(nodes[i]);
 					else nodes[i].delete();
@@ -4553,10 +4542,10 @@ export async function content(config, pack) {
 				ui.handcards1Container.onmousewheel = decadeUI.handler.handMousewheel;
 				ui.handcards2Container = ui.create.div("#handcards2");
 				ui.arena.classList.remove("nome");
-				var equipSolts = (ui.equipSolts = decadeUI.element.create("equips-wrap"));
+				const equipSolts = (ui.equipSolts = decadeUI.element.create("equips-wrap"));
 				equipSolts.back = decadeUI.element.create("equips-back", equipSolts);
-				for (var repetition = 0; repetition < 5; repetition++) {
-					var ediv = decadeUI.element.create(null, equipSolts.back);
+				for (let repetition = 0; repetition < 5; repetition++) {
+					const ediv = decadeUI.element.create(null, equipSolts.back);
 					ediv.dataset.type = repetition;
 				}
 				ui.arena.insertBefore(equipSolts, ui.me);
@@ -4593,8 +4582,8 @@ export async function content(config, pack) {
 				}
 			};
 			ui.create.player = function (position, noclick) {
-				var player = ui.create.div(".player", position);
-				var playerExtend = {
+				const player = ui.create.div(".player", position);
+				const playerExtend = {
 					node: {
 						avatar: ui.create.div(".primary-avatar", player, ui.click.avatar).hide(),
 						avatar2: ui.create.div(".deputy-avatar", player, ui.click.avatar2).hide(),
@@ -4701,14 +4690,14 @@ export async function content(config, pack) {
 						judges: [],
 					},
 				};
-				var chainImg = new Image();
+				const chainImg = new Image();
 				chainImg.onerror = function () {
-					var node = decadeUI.element.create("chain-back", player.node.chain);
-					for (var i = 0; i < 40; i++) decadeUI.element.create("cardbg", node).style.transform = "translateX(" + (i * 5 - 5) + "px)";
+					const node = decadeUI.element.create("chain-back", player.node.chain);
+					for (let i = 0; i < 40; i++) decadeUI.element.create("cardbg", node).style.transform = "translateX(" + (i * 5 - 5) + "px)";
 					chainImg.onerror = undefined;
 				};
 				chainImg.src = decadeUIPath + "assets/image/tie_suo.png";
-				var extend = {
+				const extend = {
 					$cardCount: playerExtend.node.count,
 					$dynamicWrap: decadeUI.element.create("dynamic-wrap"),
 				};
@@ -4719,7 +4708,7 @@ export async function content(config, pack) {
 				//decadeUI.get.extend(player, lib.element.player);
 				Object.setPrototypeOf(player, lib.element.Player.prototype);
 				player.node.action = ui.create.div(".action", player.node.avatar);
-				var realIdentity = ui.create.div(player.node.identity);
+				const realIdentity = ui.create.div(player.node.identity);
 				realIdentity.player = player;
 				let observer = new MutationObserver(mutationsList => {
 					for (let mutation of mutationsList) {
@@ -4749,17 +4738,17 @@ export async function content(config, pack) {
 								this.parentNode.classList.add("guozhan-mode");
 								return;
 							}
-							var currentStyle = lib.config.extension_十周年UI_newDecadeStyle;
+							const currentStyle = lib.config.extension_十周年UI_newDecadeStyle;
 							if (currentStyle === "codename" && value === "猜") {
 								this.innerText = "";
 								this.style.visibility = "";
 								this.parentNode.style.backgroundImage = "";
 								return;
 							}
-							var filename;
-							var checked;
-							var identity = this.parentNode.dataset.color;
-							var gameMode = get.mode();
+							let filename;
+							let checked;
+							const identity = this.parentNode.dataset.color;
+							const gameMode = get.mode();
 							const handlerMap = {
 								猜: () => {
 									filename = "cai";
@@ -4873,22 +4862,22 @@ export async function content(config, pack) {
 							}
 							this.innerText = value;
 							this.style.visibility = "hidden";
-							var image = new Image();
+							const image = new Image();
 							image.node = this;
 							image.onerror = function () {
 								this.node.style.visibility = "";
 							};
-							// -----------------分割线-----------------
+
 							// 不同样式身份标记
-							var style = lib.config.extension_十周年UI_newDecadeStyle;
-							var srcMap = {
+							const style = lib.config.extension_十周年UI_newDecadeStyle;
+							const srcMap = {
 								onlineUI: "image/decorationo/identity2_",
 								babysha: "image/decorationh/identity3_",
 								on: "image/decoration/identity_",
 								othersOff: "image/decoration/identity_",
 								codename: "image/decoration_code/identity5_",
 							};
-							var srcPrefix = srcMap[style] || "image/decorations/identity2_";
+							const srcPrefix = srcMap[style] || "image/decorations/identity2_";
 							image.src = decadeUIPath + srcPrefix + filename + ".png";
 							this.parentNode.style.backgroundImage = 'url("' + image.src + '")';
 						},
@@ -4916,14 +4905,14 @@ export async function content(config, pack) {
 				} else {
 					player.noclick = true;
 				}
-				var campWrap = decadeUI.element.create("camp-wrap");
-				var hpWrap = decadeUI.element.create("hp-wrap");
+				const campWrap = decadeUI.element.create("camp-wrap");
+				const hpWrap = decadeUI.element.create("hp-wrap");
 				player.insertBefore(campWrap, player.node.name);
 				player.insertBefore(hpWrap, player.node.hp);
 				player.node.campWrap = campWrap;
 				player.node.hpWrap = hpWrap;
 				hpWrap.appendChild(player.node.hp);
-				var campWrapExtend = {
+				const campWrapExtend = {
 					node: {
 						back: decadeUI.element.create("camp-back", campWrap),
 						border: decadeUI.element.create("camp-border", campWrap),
@@ -4936,21 +4925,20 @@ export async function content(config, pack) {
 				campWrap.appendChild(player.node.name);
 				campWrap.node.avatarName.className = "avatar-name";
 				campWrap.node.avatarDefaultName.innerHTML = get.mode() === "guozhan" ? "主将" : "隐匿";
-				//结束
-				var node = {
+				const node = {
 					mask: player.insertBefore(decadeUI.element.create("mask"), player.node.identity),
 					gainSkill: decadeUI.element.create("gain-skill", player),
 				};
-				var properties = {
+				const properties = {
 					gainSkill: {
 						player: player,
 						gain(skill) {
-							var sender = this;
+							const sender = this;
 							if (!sender.skills) sender.skills = [];
 							if (!sender.skills.includes(skill) && lib.translate[skill]) {
-								//手杀样式下将获得技能显示在标记内
+								// 手杀样式下将获得技能显示在标记内
 								if (lib.config.extension_十周年UI_newDecadeStyle === "off" && lib.config.extension_十周年UI_gainSkillsVisible !== "off") {
-									var info = lib.skill[skill];
+									const info = lib.skill[skill];
 									if (!info || info.charlotte || info.sub || (info.mark && !info.limited) || info.nopop || info.popup === false || info.equipSkill) return;
 									if (info.onremove && game.me != this.player.storage[skill]) return;
 									if (lib.config.extension_十周年UI_gainSkillsVisible === "othersOn" && player === game.me) return;
@@ -4991,7 +4979,7 @@ export async function content(config, pack) {
 				return player;
 			};
 			ui.create.card = function (position, info, noclick) {
-				var card = ui.create.div(".card");
+				const card = ui.create.div(".card");
 				card.node = {
 					image: ui.create.div(".image", card),
 					info: ui.create.div(".info"),
@@ -5005,7 +4993,7 @@ export async function content(config, pack) {
 					judgeMark: decadeUI.element.create("judge-mark", card),
 					cardMask: decadeUI.element.create("card-mask", card),
 				};
-				var extend = {
+				const extend = {
 					$name: decadeUI.element.create("top-name", card),
 					$vertname: card.node.name,
 					$equip: card.node.name2,
@@ -5013,7 +5001,7 @@ export async function content(config, pack) {
 					$range: card.node.range,
 					$gaintag: card.node.gaintag,
 				};
-				for (var i in extend) card[i] = extend[i];
+				for (const i in extend) card[i] = extend[i];
 				//for (var i in lib.element.card) card[i] = lib.element.card[i];
 				Object.setPrototypeOf(card, lib.element.Card.prototype);
 				card.node.intro.innerText = lib.config.intro;
@@ -5050,25 +5038,25 @@ export async function content(config, pack) {
 				return card;
 			};
 			ui.create.cards = function () {
-				var result = base.ui.create.cards.apply(this, arguments);
+				const result = base.ui.create.cards.apply(this, arguments);
 				game.updateRoundNumber();
 				return result;
 			};
 			lib.init.layout = function (layout, nosave) {
 				if (!nosave) game.saveConfig("layout", layout);
 				game.layout = layout;
-				var relayout = function () {
+				const relayout = function () {
 					ui.arena.dataset.layout = game.layout;
 					if (lib.config.phonelayout) {
 						ui.css.phone.href = lib.assetURL + "layout/default/phone.css";
 						ui.arena.classList.add("phone");
-						ui.arena.setAttribute("data-phonelayout", "on"); // 新增
+						ui.arena.setAttribute("data-phonelayout", "on");
 					} else {
 						ui.css.phone.href = "";
 						ui.arena.classList.remove("phone");
-						ui.arena.setAttribute("data-phonelayout", "off"); // 新增
+						ui.arena.setAttribute("data-phonelayout", "off");
 					}
-					for (var i = 0; i < game.players.length; i++) {
+					for (let i = 0; i < game.players.length; i++) {
 						if (get.is.linked2(game.players[i])) {
 							if (game.players[i].classList.contains("linked")) {
 								game.players[i].classList.remove("linked");
@@ -5083,12 +5071,12 @@ export async function content(config, pack) {
 					}
 					ui.updatej();
 					ui.updatem();
-					setTimeout(function () {
+					setTimeout(() => {
 						if (game.me) game.me.update();
-						setTimeout(function () {
+						setTimeout(() => {
 							ui.updatex();
 						}, 500);
-						setTimeout(function () {
+						setTimeout(() => {
 							ui.updatec();
 						}, 1000);
 					}, 100);
@@ -5188,8 +5176,8 @@ export async function content(config, pack) {
 								}
 							}
 							if (decadeUI.config.newDecadeStyle == "off") {
-								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : decadeUI.config.newDecadeStyle == "othersOff" ? "image/decoration/name_" : "image/decoration/name_") + group + ".png";
+								const image = new Image();
+								const url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : decadeUI.config.newDecadeStyle == "babysha" ? "image/decorationh/hs_" : decadeUI.config.newDecadeStyle == "othersOff" ? "image/decoration/name_" : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
 								const create = () => {
 									if (decadeUI.config.newDecadeStyle == "codename") {
@@ -5235,12 +5223,12 @@ export async function content(config, pack) {
 		},
 		dialog: {
 			create(className, parentNode, tagName) {
-				var element = !tagName ? document.createElement("div") : document.createElement(tagName);
-				for (var i in decadeUI.dialog) {
+				const element = !tagName ? document.createElement("div") : document.createElement(tagName);
+				for (const i in decadeUI.dialog) {
 					if (decadeUI.dialog[i]) element[i] = decadeUI.dialog[i];
 				}
 				element.listens = {};
-				for (var i in decadeUI.dialog.listens) {
+				for (const i in decadeUI.dialog.listens) {
 					if (decadeUI.dialog.listens[i]) element.listens[i] = decadeUI.dialog.listens[i];
 				}
 				element.listens._dialog = element;
@@ -5263,9 +5251,9 @@ export async function content(config, pack) {
 			animate(property, duration, toArray, fromArrayOptional) {
 				if (this == decadeUI.dialog) return console.error("undefined");
 				if (property == null || duration == null || toArray == null) return console.error("arguments");
-				var propArray = property.replace(/\s*/g, "").split(",");
+				const propArray = property.replace(/\s*/g, "").split(",");
 				if (!propArray || propArray.length == 0) return console.error("property");
-				var realDuration = 0;
+				let realDuration = 0;
 				if (duration.lastIndexOf("s") != -1) {
 					if (duration.lastIndexOf("ms") != -1) {
 						duration = duration.replace(/ms/, "");
@@ -5284,20 +5272,20 @@ export async function content(config, pack) {
 					realDuration = duration;
 				}
 				if (fromArrayOptional) {
-					for (var i = 0; i < propArray.length; i++) {
+					for (let i = 0; i < propArray.length; i++) {
 						this.style.setProperty(propArray[i], fromArrayOptional[i]);
 					}
 				}
-				var duraBefore = this.style.transitionDuration;
-				var propBefore = this.style.transitionProperty;
+				const duraBefore = this.style.transitionDuration;
+				const propBefore = this.style.transitionProperty;
 				this.style.transitionDuration = realDuration + "ms";
 				this.style.transitionProperty = property;
 				ui.refresh(this);
-				for (var i = 0; i < propArray.length; i++) {
+				for (let i = 0; i < propArray.length; i++) {
 					this.style.setProperty(propArray[i], toArray[i]);
 				}
-				var restore = this;
-				setTimeout(function () {
+				const restore = this;
+				setTimeout(() => {
 					restore.style.transitionDuration = duraBefore;
 					restore.style.transitionProperty = propBefore;
 				}, realDuration);
@@ -5310,9 +5298,9 @@ export async function content(config, pack) {
 					this.animate("opacity", delayTime, 0);
 				}
 				if (delayTime) {
-					var remove = this;
+					const remove = this;
 					delayTime = typeof delayTime == "number" ? delayTime : parseInt(delayTime);
-					setTimeout(function () {
+					setTimeout(() => {
 						if (remove.parentNode) remove.parentNode.removeChild(remove);
 					}, delayTime);
 					return;
@@ -5329,51 +5317,51 @@ export async function content(config, pack) {
 				},
 				remove(listenElementOptional, eventOptional, funcOptional) {
 					if (!this._dialog || !this._list) return console.error("undefined");
-					var list = this._list;
+					const list = this._list;
 					if (listenElementOptional && eventOptional && funcOptional) {
-						var index = list.indexOf(new Array(listenElementOptional, eventOptional, funcOptional));
+						const index = list.indexOf(new Array(listenElementOptional, eventOptional, funcOptional));
 						if (index != -1) {
 							list[index][0].removeEventListener(list[index][1], list[index][2]);
 							list.splice(index, 1);
 							return;
 						}
 					} else if (listenElementOptional && eventOptional) {
-						for (var i = list.length - 1; i >= 0; i--) {
+						for (let i = list.length - 1; i >= 0; i--) {
 							if (list[i][0] == listenElementOptional && list[i][1] == eventOptional) {
 								list[i][0].removeEventListener(list[i][1], list[i][2]);
 								list.splice(i, 1);
 							}
 						}
 					} else if (listenElementOptional && funcOptional) {
-						for (var i = list.length - 1; i >= 0; i--) {
+						for (let i = list.length - 1; i >= 0; i--) {
 							if (list[i][0] == listenElementOptional && list[i][2] == funcOptional) {
 								list[i][0].removeEventListener(list[i][1], list[i][2]);
 								list.splice(i, 1);
 							}
 						}
 					} else if (eventOptional && funcOptional) {
-						for (var i = list.length - 1; i >= 0; i--) {
+						for (let i = list.length - 1; i >= 0; i--) {
 							if (list[i][1] == eventOptional && list[i][2] == funcOptional) {
 								list[i][0].removeEventListener(list[i][1], list[i][2]);
 								list.splice(i, 1);
 							}
 						}
 					} else if (listenElementOptional) {
-						for (var i = list.length - 1; i >= 0; i--) {
+						for (let i = list.length - 1; i >= 0; i--) {
 							if (list[i][0] == listenElementOptional) {
 								list[i][0].removeEventListener(list[i][1], list[i][2]);
 								list.splice(i, 1);
 							}
 						}
 					} else if (eventOptional) {
-						for (var i = list.length - 1; i >= 0; i--) {
+						for (let i = list.length - 1; i >= 0; i--) {
 							if (list[i][1] == eventOptional) {
 								list[i][0].removeEventListener(list[i][1], list[i][2]);
 								list.splice(i, 1);
 							}
 						}
 					} else if (funcOptional) {
-						for (var i = list.length - 1; i >= 0; i--) {
+						for (let i = list.length - 1; i >= 0; i--) {
 							if (list[i][2] == funcOptional) {
 								list[i][0].removeEventListener(list[i][1], list[i][2]);
 								list.splice(i, 1);
@@ -5383,8 +5371,8 @@ export async function content(config, pack) {
 				},
 				clear() {
 					if (!this._dialog || !this._list) return console.error("undefined");
-					var list = this._list;
-					for (var i = list.length - 1; i >= 0; i--) {
+					const list = this._list;
+					for (let i = list.length - 1; i >= 0; i--) {
 						list[i][0].removeEventListener(list[i][1], list[i][2]);
 						list[i] = undefined;
 					}
@@ -5405,14 +5393,14 @@ export async function content(config, pack) {
 			add(frameFunc) {
 				if (typeof frameFunc != "function") return;
 				if (!this.check()) return;
-				var obj = {
+				const obj = {
 					inits: [],
 					update: frameFunc,
 					id: decadeUI.getRandom(0, 100),
 				};
 				if (arguments.length > 2) {
 					obj.inits = new Array(arguments.length - 2);
-					for (var i = 2; i < arguments.length; i++) {
+					for (let i = 2; i < arguments.length; i++) {
 						obj.inits[i - 2] = arguments[i];
 					}
 				}
@@ -5420,10 +5408,10 @@ export async function content(config, pack) {
 				if (this.frameId == undefined) this.frameId = requestAnimationFrame(this.update.bind(this));
 			},
 			update() {
-				var frameTime = performance.now();
-				var delta = frameTime - (this.frameTime == undefined ? frameTime : this.frameTime);
+				const frameTime = performance.now();
+				const delta = frameTime - (this.frameTime == undefined ? frameTime : this.frameTime);
 				this.frameTime = frameTime;
-				var e = {
+				const e = {
 					canvas: this.canvas,
 					context: this.canvas.getContext("2d"),
 					deltaTime: delta,
@@ -5437,7 +5425,7 @@ export async function content(config, pack) {
 					},
 					drawLine(x1, y1, x2, y2, color, lineWidth) {
 						if (x1 == null || y1 == null) throw "arguments";
-						var context = this.context;
+						const context = this.context;
 						context.beginPath();
 						if (color) context.strokeStyle = color;
 						if (lineWidth) context.lineWidth = lineWidth;
@@ -5451,7 +5439,7 @@ export async function content(config, pack) {
 					},
 					drawRect(x, y, width, height, color, lineWidth) {
 						if (x == null || y == null || width == null || height == null) throw "arguments";
-						var ctx = this.context;
+						const ctx = this.context;
 						ctx.beginPath();
 						if (color) ctx.strokeStyle = color;
 						if (lineWidth) ctx.lineWidth = lineWidth;
@@ -5461,7 +5449,7 @@ export async function content(config, pack) {
 					drawText(text, font, color, x, y, textAlign, textBaseline, stroke) {
 						if (!text) return;
 						if (x == null || y == null) throw "x or y";
-						var context = this.context;
+						const context = this.context;
 						if (font) context.font = font;
 						if (textAlign) context.textAlign = textAlign;
 						if (textBaseline) context.textBaseline = textBaseline;
@@ -5486,9 +5474,9 @@ export async function content(config, pack) {
 					e.canvas.height = e.canvas.parentNode.offsetHeight;
 				}
 				e.canvas.height = e.canvas.height;
-				var args;
-				var task;
-				for (var i = 0; i < this.updates.length; i++) {
+				let args;
+				let task;
+				for (let i = 0; i < this.updates.length; i++) {
 					task = this.updates[i];
 					args = Array.from(task.inits);
 					args.push(e);
@@ -5515,12 +5503,12 @@ export async function content(config, pack) {
 				this.maximumWidth = 10000 * this.width;
 				this.maximumHeight = 10000 * this.height;
 				this.events = [];
-				var expand = document.createElement("div");
+				const expand = document.createElement("div");
 				expand.style.cssText = "position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;transition:all 0s;";
-				var shrink = expand.cloneNode(false);
-				var expandChild = document.createElement("div");
+				const shrink = expand.cloneNode(false);
+				const expandChild = document.createElement("div");
 				expandChild.style.cssText = "transition: all 0s !important; animation: none !important;";
-				var shrinkChild = expandChild.cloneNode(false);
+				const shrinkChild = expandChild.cloneNode(false);
 				expandChild.style.width = this.maximumWidth + "px";
 				expandChild.style.height = this.maximumHeight + "px";
 				shrinkChild.style.width = "250%";
@@ -5534,7 +5522,7 @@ export async function content(config, pack) {
 				}
 				expand.scrollTop = shrink.scrollTop = this.maximumHeight;
 				expand.scrollLeft = shrink.scrollLeft = this.maximumWidth;
-				var sensor = this;
+				const sensor = this;
 				sensor.onscroll = function (e) {
 					sensor.w = sensor.element.clientWidth || 1;
 					sensor.h = sensor.element.clientHeight || 1;
@@ -5559,9 +5547,9 @@ export async function content(config, pack) {
 				});
 			};
 			ResizeSensor.prototype.dispatchEvent = function () {
-				var capture = true;
-				var evt;
-				for (var i = 0; i < this.events.length; i++) {
+				let capture = true;
+				let evt;
+				for (let i = 0; i < this.events.length; i++) {
 					evt = this.events[i];
 					if (evt.capture) {
 						evt.callback();
@@ -5574,8 +5562,8 @@ export async function content(config, pack) {
 				}
 			};
 			ResizeSensor.prototype.dispatchFrameEvent = function () {
-				var evt;
-				for (var i = 0; i < this.events.length; i++) {
+				let evt;
+				for (let i = 0; i < this.events.length; i++) {
 					evt = this.events[i];
 					if (!evt.capture) evt.callback();
 				}
@@ -5595,7 +5583,7 @@ export async function content(config, pack) {
 			init() {
 				if (!this.sheetList) {
 					this.sheetList = [];
-					for (var i = 0; i < document.styleSheets.length; i++) {
+					for (let i = 0; i < document.styleSheets.length; i++) {
 						if (document.styleSheets[i].href && document.styleSheets[i].href.indexOf("extension/" + encodeURI(decadeUIName)) != -1) {
 							this.sheetList.push(document.styleSheets[i]);
 						}
@@ -5609,13 +5597,13 @@ export async function content(config, pack) {
 				if (typeof selector != "string" || !selector) throw 'parameter "selector" error';
 				if (!this.cachedSheet) this.cachedSheet = {};
 				if (this.cachedSheet[selector]) return this.cachedSheet[selector];
-				var sheetList = this.sheetList;
-				var sheet;
-				var shouldBreak = false;
-				for (var j = sheetList.length - 1; j >= 0; j--) {
+				const sheetList = this.sheetList;
+				let sheet;
+				let shouldBreak = false;
+				for (let j = sheetList.length - 1; j >= 0; j--) {
 					if (typeof cssName == "string") {
 						cssName = cssName.replace(/.css/, "") + ".css";
-						for (var k = j; k >= 0; k--) {
+						for (let k = j; k >= 0; k--) {
 							if (sheetList[k].href.indexOf(cssName) != -1) {
 								sheet = sheetList[k];
 							}
@@ -5627,15 +5615,15 @@ export async function content(config, pack) {
 					}
 					// 添加try-catch保证正常运行
 					try {
-						for (var i = 0; i < sheet.cssRules.length; i++) {
+						for (let i = 0; i < sheet.cssRules.length; i++) {
 							if (!(sheet.cssRules[i] instanceof CSSMediaRule)) {
 								if (sheet.cssRules[i].selectorText == selector) {
 									this.cachedSheet[selector] = sheet.cssRules[i].style;
 									return sheet.cssRules[i].style;
 								}
 							} else {
-								var rules = sheet.cssRules[i].cssRules;
-								for (var j = 0; j < rules.length; j++) {
+								const rules = sheet.cssRules[i].cssRules;
+								for (let j = 0; j < rules.length; j++) {
 									if (rules[j].selectorText == selector) {
 										return rules[j].style;
 									}
@@ -5654,9 +5642,9 @@ export async function content(config, pack) {
 				if (!this.sheetList) this.init();
 				if (!this.sheetList) throw "sheet not loaded";
 				if (typeof rule != "string" || !rule) throw 'parameter "rule" error';
-				var sheet;
+				let sheet;
 				if (typeof cssName == "string") {
-					for (var j = sheetList.length - 1; j >= 0; j--) {
+					for (let j = sheetList.length - 1; j >= 0; j--) {
 						cssName = cssName.replace(/.css/, "") + ".css";
 						if (sheetList[j].href.indexOf(cssName) != -1) {
 							sheet = sheetList[k];
@@ -5665,7 +5653,7 @@ export async function content(config, pack) {
 					if (!sheet) throw "cssName not found";
 				}
 				if (!sheet) sheet = this.sheetList[this.sheetList.length - 1];
-				var inserted = 0;
+				let inserted = 0;
 				if (typeof index == "number") {
 					inserted = sheet.insertRule(rule, index);
 				} else {
@@ -5681,13 +5669,12 @@ export async function content(config, pack) {
 			},
 			updateHand() {
 				if (!game.me) return;
-				var handNode = ui.handcards1;
+				const handNode = ui.handcards1;
 				if (!handNode) return console.error("hand undefined");
-				var card;
-				var cards = [];
-				var childs = handNode.childNodes;
-				for (var i = 0; i < childs.length; i++) {
-					card = childs[i];
+				const cards = [];
+				const childs = handNode.childNodes;
+				for (let i = 0; i < childs.length; i++) {
+					const card = childs[i];
 					if (!card.classList.contains("removing")) {
 						cards.push(card);
 					} else {
@@ -5695,26 +5682,26 @@ export async function content(config, pack) {
 					}
 				}
 				if (!cards.length) return;
-				var bounds = dui.boundsCaches.hand;
+				const bounds = dui.boundsCaches.hand;
 				bounds.check();
-				var pw = bounds.width;
-				var ph = bounds.height;
-				var cw = bounds.cardWidth;
-				var ch = bounds.cardHeight;
-				var cs = bounds.cardScale;
-				var csw = cw * cs;
-				var x;
-				var y = Math.round((ch * cs - ch) / 2);
-				var xMargin = csw + 2;
-				var xStart = (csw - cw) / 2;
-				var totalW = cards.length * csw + (cards.length - 1) * 2;
-				var limitW = pw;
-				var expand;
+				const pw = bounds.width;
+				const ph = bounds.height;
+				const cw = bounds.cardWidth;
+				const ch = bounds.cardHeight;
+				const cs = bounds.cardScale;
+				const csw = cw * cs;
+				let x;
+				const y = Math.round((ch * cs - ch) / 2);
+				let xMargin = csw + 2;
+				let xStart = (csw - cw) / 2;
+				let totalW = cards.length * csw + (cards.length - 1) * 2;
+				const limitW = pw;
+				let expand;
 				if (totalW > limitW) {
 					xMargin = csw - Math.abs(limitW - csw * cards.length) / (cards.length - 1);
 					if (lib.config.fold_card) {
-						var foldCardMinWidth = lib.config.extension_十周年UI_foldCardMinWidth;
-						var min = cs;
+						const foldCardMinWidth = lib.config.extension_十周年UI_foldCardMinWidth;
+						let min = cs;
 						if (foldCardMinWidth == "cardWidth") {
 							min *= cw;
 						} else {
@@ -5737,10 +5724,9 @@ export async function content(config, pack) {
 						xStart = (ui.arena.offsetWidth - totalW) / 2 - bounds.x;
 					}
 				}
-				var card;
-				for (var i = 0; i < cards.length; i++) {
+				for (let i = 0; i < cards.length; i++) {
 					x = Math.round(xStart + i * xMargin);
-					card = cards[i];
+					const card = cards[i];
 					card.tx = x;
 					card.ty = y;
 					card.scaled = true;
@@ -5766,7 +5752,7 @@ export async function content(config, pack) {
 			},
 			updateDiscard() {
 				if (!ui.thrown) ui.thrown = [];
-				for (var i = ui.thrown.length - 1; i >= 0; i--) {
+				for (let i = ui.thrown.length - 1; i >= 0; i--) {
 					if (ui.thrown[i].classList.contains("drawingcard") || ui.thrown[i].classList.contains("removing") || ui.thrown[i].parentNode != ui.arena || ui.thrown[i].fixed) {
 						ui.thrown.splice(i, 1);
 					} else {
@@ -5774,31 +5760,31 @@ export async function content(config, pack) {
 					}
 				}
 				if (!ui.thrown.length) return;
-				var cards = ui.thrown;
-				var bounds = dui.boundsCaches.arena;
+				const cards = ui.thrown;
+				const bounds = dui.boundsCaches.arena;
 				bounds.check();
-				var pw = bounds.width;
-				var ph = bounds.height;
-				var cw = bounds.cardWidth;
-				var ch = bounds.cardHeight;
-				var discardScale = (lib && lib.config && lib.config.extension_十周年UI_discardScale) || 0.14;
-				var bodySize = decadeUI.get.bodySize();
-				var base = discardScale;
-				var cs = Math.min((bodySize.height * base) / ch, 1);
-				var csw = cw * cs;
-				var x;
-				var y = Math.round((ph - ch) / 2);
-				var xMargin = csw + 2;
-				var xStart = (csw - cw) / 2;
-				var totalW = cards.length * csw + (cards.length - 1) * 2;
-				var limitW = pw;
+				const pw = bounds.width;
+				const ph = bounds.height;
+				const cw = bounds.cardWidth;
+				const ch = bounds.cardHeight;
+				const discardScale = (lib && lib.config && lib.config.extension_十周年UI_discardScale) || 0.14;
+				const bodySize = decadeUI.get.bodySize();
+				const base = discardScale;
+				const cs = Math.min((bodySize.height * base) / ch, 1);
+				const csw = cw * cs;
+				let x;
+				const y = Math.round((ph - ch) / 2);
+				let xMargin = csw + 2;
+				let xStart = (csw - cw) / 2;
+				let totalW = cards.length * csw + (cards.length - 1) * 2;
+				const limitW = pw;
 				if (totalW > limitW) {
 					xMargin = csw - Math.abs(limitW - csw * cards.length) / (cards.length - 1);
 				} else {
 					xStart += (limitW - totalW) / 2;
 				}
-				var card;
-				for (var i = 0; i < cards.length; i++) {
+				let card;
+				for (let i = 0; i < cards.length; i++) {
 					x = Math.round(xStart + i * xMargin);
 					card = cards[i];
 					card.tx = x;
@@ -5826,8 +5812,8 @@ export async function content(config, pack) {
 			},
 			// 通用防抖辅助方法
 			_debounce(config) {
-				var timestamp = config.defaultDelay;
-				var nowTime = new Date().getTime();
+				let timestamp = config.defaultDelay;
+				const nowTime = new Date().getTime();
 				if (this[config.timeoutKey]) {
 					clearTimeout(this[config.timeoutKey]);
 					timestamp = nowTime - this[config.timeKey];
@@ -5840,7 +5826,7 @@ export async function content(config, pack) {
 				} else {
 					this[config.timeKey] = nowTime;
 				}
-				this[config.timeoutKey] = setTimeout(function () {
+				this[config.timeoutKey] = setTimeout(() => {
 					decadeUI.layout[config.timeoutKey] = null;
 					decadeUI.layout[config.timeKey] = null;
 					config.callback();
@@ -5895,22 +5881,22 @@ export async function content(config, pack) {
 			resize() {
 				if (decadeUI.isMobile()) ui.arena.classList.add("dui-mobile");
 				else ui.arena.classList.remove("dui-mobile");
-				var set = decadeUI.dataset;
+				const set = decadeUI.dataset;
 				set.animSizeUpdated = false;
 				set.bodySize.updated = false;
-				var caches = decadeUI.boundsCaches;
-				for (var key in caches) caches[key].updated = false;
-				var buttonsWindow = decadeUI.sheet.getStyle("#window > .dialog.popped .buttons:not(.smallzoom)");
+				const caches = decadeUI.boundsCaches;
+				for (const key in caches) caches[key].updated = false;
+				let buttonsWindow = decadeUI.sheet.getStyle("#window > .dialog.popped .buttons:not(.smallzoom)");
 				if (!buttonsWindow) {
 					buttonsWindow = decadeUI.sheet.insertRule("#window > .dialog.popped .buttons:not(.smallzoom) { zoom: 1; }");
 				}
-				var buttonsArena = decadeUI.sheet.getStyle("#arena:not(.choose-character) .buttons:not(.smallzoom)");
+				let buttonsArena = decadeUI.sheet.getStyle("#arena:not(.choose-character) .buttons:not(.smallzoom)");
 				if (!buttonsArena) {
 					buttonsArena = decadeUI.sheet.insertRule("#arena:not(.choose-character) .buttons:not(.smallzoom) { zoom: 1; }");
 				}
 				decadeUI.zooms.card = decadeUI.getCardBestScale();
 				if (ui.me) {
-					var height = Math.round(decadeUI.getHandCardSize().height * decadeUI.zooms.card + 30.4) + "px";
+					const height = Math.round(decadeUI.getHandCardSize().height * decadeUI.zooms.card + 30.4) + "px";
 					ui.me.style.height = height;
 				}
 				if (buttonsArena) {
@@ -5925,13 +5911,13 @@ export async function content(config, pack) {
 		handler: {
 			handMousewheel(e) {
 				if (!ui.handcards1Container) return console.error("ui.handcards1Container");
-				var hand = ui.handcards1Container;
+				const hand = ui.handcards1Container;
 				if (hand.scrollNum == void 0) hand.scrollNum = 0;
 				if (hand.lastFrameTime == void 0) hand.lastFrameTime = performance.now();
 				function handScroll() {
-					var now = performance.now();
-					var delta = now - hand.lastFrameTime;
-					var num = Math.round((delta / 16) * 16);
+					const now = performance.now();
+					const delta = now - hand.lastFrameTime;
+					let num = Math.round((delta / 16) * 16);
 					hand.lastFrameTime = now;
 					if (hand.scrollNum > 0) {
 						num = Math.min(hand.scrollNum, num);
@@ -5981,9 +5967,9 @@ export async function content(config, pack) {
 			if (dui._queueTick) return;
 			dui._queueTick = Promise.resolve().then(function () {
 				dui._queueTick = null;
-				var entries = dui._tickEntries;
+				const entries = dui._tickEntries;
 				dui._tickEntries = [];
-				for (var i = 0; i < entries.length; i++) entries[i].callback.call(entries[i].ctx);
+				for (let i = 0; i < entries.length; i++) entries[i].callback.call(entries[i].ctx);
 			});
 		},
 		queueNextFrameTick(callback, ctx) {
@@ -5996,8 +5982,8 @@ export async function content(config, pack) {
 			dui._queueFrameTick = requestAnimationFrame(function () {
 				dui._queueFrameTick = null;
 				setTimeout(
-					function (entries) {
-						for (var i = 0; i < entries.length; i++) entries[i].callback.call(entries[i].ctx);
+					(entries) => {
+						for (let i = 0; i < entries.length; i++) entries[i].callback.call(entries[i].ctx);
 					},
 					0,
 					dui._frameTickEntries
@@ -6009,33 +5995,33 @@ export async function content(config, pack) {
 			dui.layout.updateHand();
 		},
 		layoutHandDraws(cards) {
-			var bounds = dui.boundsCaches.hand;
+			const bounds = dui.boundsCaches.hand;
 			bounds.check();
-			var x, y;
-			var pw = bounds.width;
-			var ph = bounds.height;
-			var cw = bounds.cardWidth;
-			var ch = bounds.cardHeight;
-			var cs = bounds.cardScale;
-			var csw = cw * cs;
-			var xStart, xMargin;
-			var draws = [];
-			var card;
-			var clone;
-			var source = cards.duiMod;
+			let x, y;
+			const pw = bounds.width;
+			const ph = bounds.height;
+			const cw = bounds.cardWidth;
+			const ch = bounds.cardHeight;
+			const cs = bounds.cardScale;
+			const csw = cw * cs;
+			let xStart, xMargin;
+			const draws = [];
+			let card;
+			let clone;
+			const source = cards.duiMod;
 			if (source && source != game.me) {
 				source.checkBoundsCache();
 				xMargin = 27;
 				xStart = source.cacheLeft - bounds.x - csw / 2 - (cw - csw) / 2;
-				var totalW = xMargin * cards.length + (csw - xMargin);
-				var limitW = source.cacheWidth + csw;
+				let totalW = xMargin * cards.length + (csw - xMargin);
+				const limitW = source.cacheWidth + csw;
 				if (totalW > limitW) {
 					xMargin = csw - Math.abs(limitW - csw * cards.length) / (cards.length - 1);
 				} else {
 					xStart += (limitW - totalW) / 2;
 				}
 				y = Math.round(source.cacheTop - bounds.y - 30 + (source.cacheHeight - ch) / 2);
-				for (var i = 0; i < cards.length; i++) {
+				for (let i = 0; i < cards.length; i++) {
 					x = Math.round(xStart + i * xMargin);
 					card = cards[i];
 					card.tx = x;
@@ -6046,7 +6032,7 @@ export async function content(config, pack) {
 				}
 				return;
 			} else {
-				for (var i = 0; i < cards.length; i++) {
+				for (let i = 0; i < cards.length; i++) {
 					card = cards[i];
 					clone = card.clone;
 					if (clone && !clone.fixed && clone.parentNode == ui.arena) {
@@ -6064,7 +6050,7 @@ export async function content(config, pack) {
 			y = Math.round(-ch * cs * 2);
 			xMargin = csw * 0.5;
 			xStart = (pw - xMargin * (draws.length + 1)) / 2 - (cw - csw) / 2;
-			for (var i = 0; i < draws.length; i++) {
+			for (let i = 0; i < draws.length; i++) {
 				x = Math.round(xStart + i * xMargin);
 				card = draws[i];
 				card.tx = x;
@@ -6075,36 +6061,35 @@ export async function content(config, pack) {
 			}
 		},
 		layoutDrawCards(cards, player, center) {
-			var bounds = dui.boundsCaches.arena;
+			const bounds = dui.boundsCaches.arena;
 			if (!bounds.updated) bounds.update();
 			player.checkBoundsCache();
-			var playerX = player.cacheLeft;
-			var playerY = player.cacheTop;
-			var playerW = player.cacheWidth;
-			var playerH = player.cacheHeight;
-			var pw = bounds.width;
-			var ph = bounds.height;
-			var cw = bounds.cardWidth;
-			var ch = bounds.cardHeight;
-			var cs = bounds.cardScale;
-			var csw = cw * cs;
-			var xMargin = 27;
-			var xStart = (center ? (pw - playerW) / 2 : playerX) - csw / 2 - (cw - csw) / 2;
-			var totalW = xMargin * cards.length + (csw - xMargin);
-			var limitW = playerW + csw;
+			const playerX = player.cacheLeft;
+			const playerY = player.cacheTop;
+			const playerW = player.cacheWidth;
+			const playerH = player.cacheHeight;
+			const pw = bounds.width;
+			const ph = bounds.height;
+			const cw = bounds.cardWidth;
+			const ch = bounds.cardHeight;
+			const cs = bounds.cardScale;
+			const csw = cw * cs;
+			let xMargin = 27;
+			let xStart = (center ? (pw - playerW) / 2 : playerX) - csw / 2 - (cw - csw) / 2;
+			let totalW = xMargin * cards.length + (csw - xMargin);
+			const limitW = playerW + csw;
 			if (totalW > limitW) {
 				xMargin = csw - Math.abs(limitW - csw * cards.length) / (cards.length - 1);
 			} else {
 				xStart += (limitW - totalW) / 2;
 			}
-			var x;
-			var y;
+			let x;
+			let y;
 			if (center) y = Math.round((ph - ch) / 2);
 			else y = Math.round(playerY + (playerH - ch) / 2);
-			var card;
-			for (var i = 0; i < cards.length; i++) {
+			for (let i = 0; i < cards.length; i++) {
 				x = Math.round(xStart + i * xMargin);
-				card = cards[i];
+				let card = cards[i];
 				card.tx = x;
 				card.ty = y;
 				card.scaled = true;
@@ -6117,15 +6102,15 @@ export async function content(config, pack) {
 		delayRemoveCards(cards, delay, delay2) {
 			if (!Array.isArray(cards)) cards = [cards];
 			setTimeout(
-				function (cards, delay2) {
-					var remove = function (cards) {
-						for (var i = 0; i < cards.length; i++) cards[i].remove();
+				(cards, delay2) => {
+					const remove = (cards) => {
+						for (let i = 0; i < cards.length; i++) cards[i].remove();
 					};
 					if (delay2 == null) {
 						remove(cards);
 						return;
 					}
-					for (var i = 0; i < cards.length; i++) {
+					for (let i = 0; i < cards.length; i++) {
 						cards[i].classList.add("removing");
 					}
 					setTimeout(remove, delay2, cards);
@@ -6137,7 +6122,7 @@ export async function content(config, pack) {
 		},
 		//虚拟卡牌花色点数显示
 		cardTempSuitNum(card, cardsuit, cardnumber) {
-			var remain = false;
+			let remain = false;
 			if (card._tempSuitNum) remain = true;
 			let snnode = card._tempSuitNum || ui.create.div(".tempsuitnum", card);
 			card._tempSuitNum = snnode;
@@ -6156,7 +6141,7 @@ export async function content(config, pack) {
 		},
 		tryAddPlayerCardUseTag(card, player, event) {
 			if (!card || !player || !event) return;
-			var tagNode = card.querySelector(".used-info");
+			let tagNode = card.querySelector(".used-info");
 			if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
 			card.$usedtag = tagNode;
 			if (event.blameEvent) event = event.blameEvent;
@@ -6165,18 +6150,18 @@ export async function content(config, pack) {
 				judge: event => {
 					const initialText = event.judgestr + "的判定牌";
 					event.addMessageHook("judgeResult", function () {
-						var event = this;
-						var card = event.result.card.clone;
-						var apcard = event.apcard;
-						var tagText = "";
-						var tagNode = card.querySelector(".used-info");
+						const event = this;
+						const card = event.result.card.clone;
+						const apcard = event.apcard;
+						let tagText = "";
+						let tagNode = card.querySelector(".used-info");
 						if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
 						if (event.result.suit != get.suit(card) || event.result.number != get.number(card)) {
 							dui.cardTempSuitNum(card, event.result.suit, event.result.number);
 						}
-						var action;
-						var judgeValue;
-						var getEffect = event.judge2;
+						let action;
+						let judgeValue;
+						const getEffect = event.judge2;
 						if (getEffect) {
 							judgeValue = getEffect(event.result);
 						} else {
@@ -6228,8 +6213,8 @@ export async function content(config, pack) {
 						if (lib.config.cardtempname != "off" && (card.name != cardname || !get.is.sameNature(cardnature, card.nature, true))) {
 							if (lib.config.extension_十周年UI_showTemp) {
 								if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
-								var tempname = "";
-								var tempname2 = get.translation(cardname);
+								let tempname = "";
+								const tempname2 = get.translation(cardname);
 								if (cardnature) {
 									card._tempName.dataset.nature = cardnature;
 									if (cardname == "sha") {
@@ -6240,8 +6225,8 @@ export async function content(config, pack) {
 								card._tempName.innerHTML = tempname;
 								card._tempName.tempname = tempname;
 							} else {
-								var node = ui.create.cardTempName(event.card, card);
-								var cardtempnameConfig = lib.config.cardtempname;
+								const node = ui.create.cardTempName(event.card, card);
+								const cardtempnameConfig = lib.config.cardtempname;
 								if (cardtempnameConfig !== "default") node.classList.remove("vertical");
 							}
 						}
@@ -6251,7 +6236,7 @@ export async function content(config, pack) {
 							dui.cardTempSuitNum(card, cardsuit, cardnumber);
 						}
 						if (event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
-							var name = event.card.name,
+							const name = event.card.name,
 								nature = event.card.nature;
 							const effectMap = {
 								effect_caochuanjiejian: { key: "effect_caochuanjiejian" },
@@ -6302,7 +6287,7 @@ export async function content(config, pack) {
 				max = min - max;
 				min = min - max;
 			}
-			var diff = 0;
+			let diff = 0;
 			if (min < 0) {
 				diff = min;
 				min = 0;
@@ -6312,14 +6297,14 @@ export async function content(config, pack) {
 		},
 		getCardBestScale(size) {
 			if (!(size && size.height)) size = decadeUI.getHandCardSize();
-			var bodySize = decadeUI.get.bodySize();
+			const bodySize = decadeUI.get.bodySize();
 			// 读取用户配置的缩放基准，默认0.18；移动端和桌面端都使用配置的数值
-			var cfg = (lib && lib.config && lib.config.extension_十周年UI_cardScale) || 0.18;
-			var base = cfg;
+			const cfg = (lib && lib.config && lib.config.extension_十周年UI_cardScale) || 0.18;
+			const base = cfg;
 			return Math.min((bodySize.height * base) / size.height, 1);
 		},
 		getHandCardSize(canUseDefault) {
-			var style = decadeUI.sheet.getStyle(".media_defined > .card");
+			let style = decadeUI.sheet.getStyle(".media_defined > .card");
 			if (style == null) style = decadeUI.sheet.getStyle(".hand-cards > .handcards > .card");
 			if (style == null)
 				return canUseDefault
@@ -6331,7 +6316,7 @@ export async function content(config, pack) {
 						width: 0,
 						height: 0,
 					};
-			var size = {
+			const size = {
 				width: parseFloat(style.width),
 				height: parseFloat(style.height),
 			};
@@ -6339,9 +6324,9 @@ export async function content(config, pack) {
 		},
 		getMapElementPos(elementFrom, elementTo) {
 			if (!(elementFrom instanceof HTMLElement) || !(elementTo instanceof HTMLElement)) return console.error("arguments");
-			var rectFrom = elementFrom.getBoundingClientRect();
-			var rectTo = elementTo.getBoundingClientRect();
-			var pos = {
+			const rectFrom = elementFrom.getBoundingClientRect();
+			const rectTo = elementTo.getBoundingClientRect();
+			const pos = {
 				x: rectFrom.left - rectTo.left,
 				y: rectFrom.top - rectTo.top,
 			};
@@ -6352,8 +6337,8 @@ export async function content(config, pack) {
 		getPlayerIdentity(player, identity, chinese, isMark) {
 			if (!(player instanceof HTMLElement && get.itemtype(player) == "player")) throw "player";
 			if (!identity) identity = player.identity;
-			var mode = get.mode();
-			var translated = false;
+			let mode = get.mode();
+			let translated = false;
 			if (!chinese) {
 				const modeHandlers = {
 					identity: () => {
@@ -6384,7 +6369,7 @@ export async function content(config, pack) {
 								if (get.translation(player.side + "Color") == "wei") identity += "_blue";
 							},
 							two: () => {
-								var side = player.finalSide ? player.finalSide : player.side;
+								const side = player.finalSide ? player.finalSide : player.side;
 								identity = game.me.side == side ? "friend" : "enemy";
 							},
 						};
@@ -6449,7 +6434,7 @@ export async function content(config, pack) {
 								else translated = false;
 							},
 							two: () => {
-								var side = player.finalSide ? player.finalSide : player.side;
+								const side = player.finalSide ? player.finalSide : player.side;
 								identity = game.me.side == side ? "友方" : "敌方";
 							},
 							siguo: () => {
@@ -6483,14 +6468,14 @@ export async function content(config, pack) {
 		},
 		create: {
 			skillDialog() {
-				var dialog = document.createElement("div");
+				const dialog = document.createElement("div");
 				dialog.className = "skill-dialog";
-				var extend = {
+				const extend = {
 					caption: undefined,
 					tip: undefined,
 					open(customParent) {
 						if (!customParent) {
-							var size = decadeUI.get.bodySize();
+							const size = decadeUI.get.bodySize();
 							this.style.minHeight = parseInt(size.height * 0.42) + "px";
 							if (this.parentNode != ui.arena) ui.arena.appendChild(this);
 						}
@@ -6504,12 +6489,12 @@ export async function content(config, pack) {
 						this.style.animation = "close-dialog 0.1s forwards";
 					},
 					close() {
-						var func = function (e) {
+						const func = function (e) {
 							if (e.animationName != "close-dialog") return;
 							this.remove();
 							this.removeEventListener("animationend", func);
 						};
-						var animation = "close-dialog";
+						const animation = "close-dialog";
 						if (this.style.animationName == animation) {
 							setTimeout(
 								function (dialog) {
@@ -6524,7 +6509,7 @@ export async function content(config, pack) {
 						}
 					},
 					appendControl(text, clickFunc) {
-						var control = document.createElement("div");
+						const control = document.createElement("div");
 						control.className = "control-button";
 						control.textContent = text;
 						if (clickFunc) {
@@ -6563,10 +6548,10 @@ export async function content(config, pack) {
 				return dialog;
 			},
 			compareDialog(player, target) {
-				var dialog = decadeUI.create.skillDialog();
+				const dialog = decadeUI.create.skillDialog();
 				dialog.classList.add("compare");
 				dialog.$content.classList.add("buttons");
-				var extend = {
+				const extend = {
 					player: undefined,
 					target: undefined,
 					playerCard: undefined,
@@ -6661,17 +6646,17 @@ export async function content(config, pack) {
 			},
 			extend(target, source) {
 				if (source === null || typeof source !== "object") return target;
-				var keys = Object.keys(source);
-				var i = keys.length;
+				const keys = Object.keys(source);
+				let i = keys.length;
 				while (i--) {
 					target[keys[i]] = source[keys[i]];
 				}
 				return target;
 			},
 			bodySize() {
-				var size = decadeUI.dataset.bodySize;
+				const size = decadeUI.dataset.bodySize;
 				if (!size.updated) {
-					var body = document.body;
+					const body = document.body;
 					size.updated = true;
 					size.height = body.clientHeight;
 					size.width = body.clientWidth;
@@ -6680,19 +6665,19 @@ export async function content(config, pack) {
 			},
 			bestValueCards(cards, player) {
 				if (!player) player = _status.event.player;
-				var matchs = [];
-				var basics = [];
-				var equips = [];
-				var hasEquipSkill = player.hasSkill("xiaoji");
-				cards.sort(function (a, b) {
+				const matchs = [];
+				const basics = [];
+				const equips = [];
+				const hasEquipSkill = player.hasSkill("xiaoji");
+				cards.sort((a, b) => {
 					return get.value(b, player) - get.value(a, player);
 				});
-				for (var i = 0; i >= 0 && i < cards.length; i++) {
-					var limited = false;
+				for (let i = 0; i >= 0 && i < cards.length; i++) {
+					let limited = false;
 					const type = get.type(cards[i]);
 					const handler = {
 						basic: () => {
-							for (var j = 0; j < basics.length; j++) {
+							for (let j = 0; j < basics.length; j++) {
 								if (!cards[i].toself && basics[j].name == cards[i].name) {
 									limited = true;
 									break;
@@ -6702,7 +6687,7 @@ export async function content(config, pack) {
 						},
 						equip: () => {
 							if (hasEquipSkill) return;
-							for (var j = 0; j < equips.length; j++) {
+							for (let j = 0; j < equips.length; j++) {
 								if (get.subtype(equips[j]) == get.subtype(cards[i])) {
 									limited = true;
 									break;
@@ -6717,7 +6702,7 @@ export async function content(config, pack) {
 						cards.splice(i--, 1);
 					}
 				}
-				cards.sort(function (a, b) {
+				cards.sort((a, b) => {
 					return get.value(b, player) - get.value(a, player);
 				});
 				cards = matchs.concat(cards);
@@ -6725,11 +6710,11 @@ export async function content(config, pack) {
 			},
 			cheatJudgeCards(cards, judges, friendly) {
 				if (!cards || !judges) throw arguments;
-				var cheats = [];
-				var judgeCost;
-				for (var i = 0; i < judges.length; i++) {
-					var judge = get.judge(judges[i]);
-					cards.sort(function (a, b) {
+				const cheats = [];
+				let judgeCost;
+				for (let i = 0; i < judges.length; i++) {
+					const judge = get.judge(judges[i]);
+					cards.sort((a, b) => {
 						return friendly ? judge(b) - judge(a) : judge(a) - judge(b);
 					});
 					judgeCost = judge(cards[0]);
@@ -6742,8 +6727,8 @@ export async function content(config, pack) {
 				return cheats;
 			},
 			elementLeftFromWindow(element) {
-				var left = element.offsetLeft;
-				var current = element.offsetParent;
+				let left = element.offsetLeft;
+				let current = element.offsetParent;
 				while (current != null) {
 					left += current.offsetLeft;
 					current = current.offsetParent;
@@ -6751,8 +6736,8 @@ export async function content(config, pack) {
 				return left;
 			},
 			elementTopFromWindow(element) {
-				var top = element.offsetTop;
-				var current = element.offsetParent;
+				let top = element.offsetTop;
+				let current = element.offsetParent;
 				while (current != null) {
 					top += current.offsetTop;
 					current = current.offsetParent;
@@ -6760,13 +6745,13 @@ export async function content(config, pack) {
 				return top;
 			},
 			handcardInitPos() {
-				var hand = dui.boundsCaches.hand;
+				const hand = dui.boundsCaches.hand;
 				if (!hand.updated) hand.update();
-				var cardW = hand.cardWidth;
-				var cardH = hand.cardHeight;
-				var scale = hand.cardScale;
-				var x = -Math.round((cardW - cardW * scale) / 2);
-				var y = (cardH * scale - cardH) / 2;
+				const cardW = hand.cardWidth;
+				const cardH = hand.cardHeight;
+				const scale = hand.cardScale;
+				const x = -Math.round((cardW - cardW * scale) / 2);
+				const y = (cardH * scale - cardH) / 2;
 				return {
 					x: x,
 					y: y,
@@ -6776,7 +6761,7 @@ export async function content(config, pack) {
 		},
 		set: (function (set) {
 			set.activeElement = function (element) {
-				var deactive = dui.$activeElement;
+				const deactive = dui.$activeElement;
 				dui.$activeElement = element;
 				if (deactive && deactive != element && typeof deactive.ondeactive == "function") {
 					deactive.ondeactive();
@@ -6789,16 +6774,16 @@ export async function content(config, pack) {
 		})({}),
 		statics: {
 			cards: (function (cards) {
-				var readFiles = function (files, entry) {
-					var index, cardname, filename;
-					var cards = dui.statics.cards;
-					var format = duicfg.cardPrettify;
-					var prefix = decadeUIPath + "image/card/";
+				const readFiles = function (files, entry) {
+					let index, cardname, filename;
+					const cards = dui.statics.cards;
+					let format = duicfg.cardPrettify;
+					const prefix = decadeUIPath + "image/card/";
 					cards.READ_OK = true;
 					if (typeof format != "string") format = "webp";
 					if (format === "off") return;
 					format = "." + format.toLowerCase();
-					for (var i = 0; i < files.length; i++) {
+					for (let i = 0; i < files.length; i++) {
 						filename = entry ? files[i].name : files[i];
 						index = filename.lastIndexOf(format);
 						if (index == -1) continue;
@@ -6817,7 +6802,7 @@ export async function content(config, pack) {
 					});
 				} else if (window.resolveLocalFileSystemURL) {
 					resolveLocalFileSystemURL(decadeUIResolvePath + "image/card/", function (entry) {
-						var reader = entry.createReader();
+						const reader = entry.createReader();
 						reader.readEntries(function (entries) {
 							readFiles(entries, true);
 						});
@@ -6838,9 +6823,9 @@ export async function content(config, pack) {
 		},
 	};
 	dui.showHandTip = function (text) {
-		var tip;
-		var tips = this.statics.handTips;
-		for (var i = 0; i < tips.length; i++) {
+		let tip;
+		const tips = this.statics.handTips;
+		for (let i = 0; i < tips.length; i++) {
 			if (tip == undefined && tips[i].closed) {
 				tip = tips[i];
 				tip.closed = false;
@@ -6852,8 +6837,8 @@ export async function content(config, pack) {
 			tip = dui.element.create("hand-tip", ui.arena);
 			tips.unshift(tip);
 			tip.clear = function () {
-				var nodes = this.childNodes;
-				for (var i = 0; i < nodes.length; i++) nodes[i].textContent = "";
+				const nodes = this.childNodes;
+				for (let i = 0; i < nodes.length; i++) nodes[i].textContent = "";
 				this.dataset.text = "";
 			};
 			tip.setText = function (text, type) {
@@ -6867,15 +6852,15 @@ export async function content(config, pack) {
 			tip.appendText = function (text, type) {
 				if (text == undefined || text === "") return;
 				if (type == undefined) type = "";
-				var nodes = this.childNodes;
-				for (var i = 0; i < nodes.length; i++) {
+				const nodes = this.childNodes;
+				for (let i = 0; i < nodes.length; i++) {
 					if (nodes[i].textContent == "") {
 						nodes[i].textContent = text;
 						nodes[i].dataset.type = type;
 						return nodes[i];
 					}
 				}
-				var span = document.createElement("span");
+				const span = document.createElement("span");
 				span.textContent = text;
 				span.dataset.type = type;
 				return this.appendChild(span);
@@ -6895,16 +6880,16 @@ export async function content(config, pack) {
 				this.closed = true;
 				this.hide();
 				if (tip.$info) tip.$info.innerHTML = "";
-				var tips = dui.statics.handTips;
-				for (var i = 0; i < tips.length; i++) {
+				const tips = dui.statics.handTips;
+				for (let i = 0; i < tips.length; i++) {
 					if (tips[i].closed) continue;
 					tips[i].show();
 					return;
 				}
 			};
 			tip.isEmpty = function () {
-				var nodes = this.childNodes;
-				for (var i = 0; i < nodes.length; i++) {
+				const nodes = this.childNodes;
+				for (let i = 0; i < nodes.length; i++) {
 					if (nodes[i].textContent != "") return false;
 				}
 				return true;
@@ -6967,7 +6952,7 @@ export async function content(config, pack) {
 		};
 		BoundsCache.prototype.update = function () {
 			if (this.updateBefore) this.updateBefore();
-			var element = this.element;
+			const element = this.element;
 			this.updated = true;
 			if (element == undefined) return;
 			this._x = element.offsetLeft;
@@ -6986,15 +6971,15 @@ export async function content(config, pack) {
 			if (ui.arena == null) return;
 			this.cardScale = dui.getCardBestScale();
 			if (this.cardWidth != null) return;
-			var childs = ui.arena.childNodes;
-			for (var i = 0; i < childs.length; i++) {
+			const childs = ui.arena.childNodes;
+			for (let i = 0; i < childs.length; i++) {
 				if (childs[i].classList.contains("card")) {
 					this.cardWidth = childs[i].offsetWidth;
 					this.cardHeight = childs[i].offsetHeight;
 					return;
 				}
 			}
-			var card = dui.element.create("card");
+			const card = dui.element.create("card");
 			card.style.opacity = 0;
 			ui.arena.appendChild(card);
 			this.cardWidth = card.offsetWidth;
@@ -7006,15 +6991,15 @@ export async function content(config, pack) {
 			if (ui.handcards1 == null) return;
 			this.cardScale = dui.getCardBestScale();
 			if (this.cardWidth != null) return;
-			var childs = ui.handcards1.childNodes;
-			for (var i = 0; i < childs.length; i++) {
+			const childs = ui.handcards1.childNodes;
+			for (let i = 0; i < childs.length; i++) {
 				if (childs[i].classList.contains("card")) {
 					this.cardWidth = childs[i].offsetWidth;
 					this.cardHeight = childs[i].offsetHeight;
 					return;
 				}
 			}
-			var card = dui.element.create("card");
+			const card = dui.element.create("card");
 			card.style.opacity = 0;
 			ui.handcards1.appendChild(card);
 			this.cardWidth = card.offsetWidth;
@@ -7026,10 +7011,10 @@ export async function content(config, pack) {
 	decadeUI.element = {
 		base: {
 			removeSelf(milliseconds) {
-				var remove = this;
+				const remove = this;
 				if (milliseconds) {
 					milliseconds = typeof milliseconds == "number" ? milliseconds : parseInt(milliseconds);
-					setTimeout(function () {
+					setTimeout(() => {
 						if (remove.parentNode) remove.parentNode.removeChild(remove);
 					}, milliseconds);
 					return;
@@ -7039,10 +7024,10 @@ export async function content(config, pack) {
 			},
 		},
 		create(className, parentNode, tagName) {
-			var tag = tagName == void 0 ? "div" : tagName;
-			var element = document.createElement(tag);
+			const tag = tagName == void 0 ? "div" : tagName;
+			const element = document.createElement(tag);
 			element.view = {};
-			for (var key in this.base) {
+			for (const key in this.base) {
 				element[key] = this.base[key];
 			}
 			if (className) element.className = className;
@@ -7057,7 +7042,7 @@ export async function content(config, pack) {
 		},
 		resume() {
 			if (!game.loopLocked) {
-				var ok = false;
+				let ok = false;
 				try {
 					if (decadeUI.eventDialog && !decadeUI.eventDialog.finished && !decadeUI.eventDialog.finishing) {
 						decadeUI.eventDialog.finish();
@@ -7204,8 +7189,8 @@ export async function content(config, pack) {
 		decadeUI.config.campIdentityImageMode = true;
 	}
 	duicfg.update = function () {
-		var menu = lib.extensionMenu["extension_" + decadeUIName];
-		for (var key in menu) {
+		const menu = lib.extensionMenu["extension_" + decadeUIName];
+		for (const key in menu) {
 			if (menu[key] && typeof menu[key] == "object") {
 				if (typeof menu[key].update == "function") {
 					menu[key].update();
@@ -7219,13 +7204,13 @@ export async function content(config, pack) {
 	// ========== 工具函数统一挂载 ==========
 	if (!lib.removeFirstByClass) {
 		lib.removeFirstByClass = function (parent, className) {
-			var el = parent.getElementsByClassName(className);
+			const el = parent.getElementsByClassName(className);
 			if (el[0]) el[0].parentNode.removeChild(el[0]);
 		};
 	}
 	if (!lib.createTipImg) {
 		lib.createTipImg = function (className, src, style) {
-			var img = document.createElement("img");
+			const img = document.createElement("img");
 			img.classList.add("tipshow", className);
 			img.src = src;
 			img.style.cssText = style;
@@ -7241,7 +7226,7 @@ export async function content(config, pack) {
 			charlotte: true,
 			filter(event, player) {
 				if (!event.card) return false;
-				var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+				const cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
 				return cname == card && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 			},
 			async content(event, trigger, player) {
@@ -7261,13 +7246,13 @@ export async function content(config, pack) {
 			charlotte: true,
 			filter(event, player) {
 				event.respondix = 0;
-				for (var i = 0; i < game.players.length; i++) {
+				for (let i = 0; i < game.players.length; i++) {
 					if (game.players[i].getElementsByClassName(tipClass)[0]) event.respondix++;
 				}
 				return event.respondix > 0;
 			},
 			async content(event, trigger, player) {
-				for (var i = 0; i < game.players.length; i++) {
+				for (let i = 0; i < game.players.length; i++) {
 					lib.removeFirstByClass(game.players[i], tipClass);
 				}
 			},
@@ -7343,9 +7328,9 @@ export async function content(config, pack) {
 				return event.card && event.targets && event.targets.length;
 			},
 			async content(event, trigger, player) {
-				var boxContent = document.createElement("div");
-				var boxTime = document.createElement("div");
-				var imgBg = document.createElement("img");
+				const boxContent = document.createElement("div");
+				const boxTime = document.createElement("div");
+				const imgBg = document.createElement("img");
 				boxContent.classList.add("timeai");
 				if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
 					//--------手杀样式-------------//
@@ -7367,7 +7352,7 @@ export async function content(config, pack) {
 				boxContent.appendChild(boxTime);
 				boxContent.appendChild(imgBg);
 				if (trigger.target != (_status.event.player || game.me)) {
-					var ab = trigger.target.getElementsByClassName("timeai");
+					const ab = trigger.target.getElementsByClassName("timeai");
 					if (!ab[0]) trigger.target.appendChild(boxContent);
 				}
 				window.timerix = setInterval(() => {
@@ -7389,8 +7374,8 @@ export async function content(config, pack) {
 					},
 					filter(event, player) {
 						event.respondix = 0;
-						for (var i = 0; i < game.players.length; i++) {
-							var ab = game.players[i].getElementsByClassName("timeai");
+						for (let i = 0; i < game.players.length; i++) {
+							const ab = game.players[i].getElementsByClassName("timeai");
 							if (ab[0]) event.respondix++;
 						}
 						return event.respondix > 0;
@@ -7400,7 +7385,7 @@ export async function content(config, pack) {
 					priority: -1,
 					charlotte: true,
 					async content(event, trigger, player) {
-						for (var i = 0; i < game.players.length; i++) {
+						for (let i = 0; i < game.players.length; i++) {
 							lib.removeFirstByClass(game.players[i], "timeai");
 						}
 					},
@@ -7420,9 +7405,9 @@ export async function content(config, pack) {
 				return true;
 			},
 			async content(event, trigger, player) {
-				var boxContent = document.createElement("div");
-				var boxTime = document.createElement("div");
-				var imgBg = document.createElement("img");
+				const boxContent = document.createElement("div");
+				const boxTime = document.createElement("div");
+				const imgBg = document.createElement("img");
 				boxContent.classList.add("timeai");
 				if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
 					//--------手杀样式-------------//
@@ -7462,8 +7447,8 @@ export async function content(config, pack) {
 					},
 					filter(event, player) {
 						event.respondx = 0;
-						for (var i = 0; i < game.players.length; i++) {
-							var ab = game.players[i].getElementsByClassName("timeai");
+						for (let i = 0; i < game.players.length; i++) {
+							const ab = game.players[i].getElementsByClassName("timeai");
 							if (ab[0]) event.respondx++;
 						}
 						if (game.phaseNumber == 0) return event.respondx > 0;
@@ -7474,7 +7459,7 @@ export async function content(config, pack) {
 					priority: -1,
 					charlotte: true,
 					async content(event, trigger, player) {
-						for (var i = 0; i < game.players.length; i++) {
+						for (let i = 0; i < game.players.length; i++) {
 							lib.removeFirstByClass(game.players[i], "timeai");
 						}
 					},
@@ -7503,7 +7488,7 @@ export async function content(config, pack) {
 	//玩家进度条
 	if (get.mode() != "connect" && config.jindutiao == true) {
 		lib.onover.push(function () {
-			var bar = document.getElementById("jindutiaopl");
+			const bar = document.getElementById("jindutiaopl");
 			if (bar) bar.remove();
 		});
 		lib.skill._jindutiao_operation = {
@@ -7516,7 +7501,7 @@ export async function content(config, pack) {
 			},
 			forced: true,
 			async content(event, trigger, player) {
-				var existingBar = document.getElementById("jindutiaopl");
+				const existingBar = document.getElementById("jindutiaopl");
 				if (existingBar) {
 					existingBar.remove();
 				}
@@ -7549,7 +7534,7 @@ export async function content(config, pack) {
 							clearInterval(window.timer2);
 							delete window.timer2;
 						}
-						var bar = document.getElementById("jindutiaopl");
+						const bar = document.getElementById("jindutiaopl");
 						if (bar) bar.remove();
 					},
 				},
@@ -7564,7 +7549,7 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			if (!event.card) return false;
-			var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+			const cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
 			return cname == "shan" && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 		},
 		async content(event, trigger, player) {
@@ -7581,7 +7566,7 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			if (!event.card) return false;
-			var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+			const cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
 			return cname == "sha" && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 		},
 		async content(event, trigger, player) {
@@ -7598,7 +7583,7 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			if (!event.card) return false;
-			var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+			const cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
 			return cname == "tao" && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 		},
 		async content(event, trigger, player) {
@@ -7615,7 +7600,7 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			if (!event.card) return false;
-			var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+			const cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
 			return cname == "jiu" && _status.currentPhase != player && player != (_status.event.player || game.me) && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 		},
 		async content(event, trigger, player) {
@@ -7633,13 +7618,13 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			event.respondix = 0;
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				if (game.players[i].getElementsByClassName("playertipshan")[0]) event.respondix++;
 			}
 			return event.respondix > 0;
 		},
 		async content(event, trigger, player) {
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertipshan");
 			}
 		},
@@ -7651,13 +7636,13 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			event.respondix = 0;
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				if (game.players[i].getElementsByClassName("playertipsha")[0]) event.respondix++;
 			}
 			return event.respondix > 0;
 		},
 		async content(event, trigger, player) {
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertipsha");
 			}
 		},
@@ -7669,13 +7654,13 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			event.respondix = 0;
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				if (game.players[i].getElementsByClassName("playertiptao")[0]) event.respondix++;
 			}
 			return event.respondix > 0;
 		},
 		async content(event, trigger, player) {
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertiptao");
 			}
 		},
@@ -7687,13 +7672,13 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			event.respondix = 0;
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				if (game.players[i].getElementsByClassName("playertipjiu")[0]) event.respondix++;
 			}
 			return event.respondix > 0;
 		},
 		async content(event, trigger, player) {
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertipjiu");
 			}
 		},
@@ -7707,14 +7692,14 @@ export async function content(config, pack) {
 		forced: true,
 		charlotte: true,
 		filter(event, player) {
-			var a = player.getElementsByClassName("playertip");
+			const a = player.getElementsByClassName("playertip");
 			return player != (_status.event.player || game.me) && _status.currentPhase == player && player.isPhaseUsing() && a.length <= 0;
 		},
 		async content(event, trigger, player) {
 			lib.removeFirstByClass(player, "tipskill");
-			var a = player.getElementsByClassName("playertip");
+			const a = player.getElementsByClassName("playertip");
 			if (a.length <= 0) {
-				var tipAB = document.createElement("img");
+				const tipAB = document.createElement("img");
 				tipAB.classList.add("tipshow", "playertip");
 				if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
 					tipAB.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tip.png";
@@ -7737,14 +7722,14 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			event.respondix = 0;
-			for (var i = 0; i < game.players.length; i++) {
-				var ab = game.players[i].getElementsByClassName("playertip");
+			for (let i = 0; i < game.players.length; i++) {
+				const ab = game.players[i].getElementsByClassName("playertip");
 				if (ab[0]) event.respondix++;
 			}
 			return event.respondix > 0;
 		},
 		async content(event, trigger, player) {
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertip");
 			}
 		},
@@ -7761,9 +7746,9 @@ export async function content(config, pack) {
 		},
 		async content(event, trigger, player) {
 			lib.removeFirstByClass(player, "tipskill");
-			var a = player.getElementsByClassName("playertipQP");
+			const a = player.getElementsByClassName("playertipQP");
 			if (a.length <= 0) {
-				var tipCD = document.createElement("img");
+				const tipCD = document.createElement("img");
 				tipCD.classList.add("tipshow", "playertipQP");
 				if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
 					tipCD.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipQP.png";
@@ -7785,14 +7770,14 @@ export async function content(config, pack) {
 		charlotte: true,
 		filter(event, player) {
 			event.respondix = 0;
-			for (var i = 0; i < game.players.length; i++) {
-				var ab = game.players[i].getElementsByClassName("playertipQP");
+			for (let i = 0; i < game.players.length; i++) {
+				const ab = game.players[i].getElementsByClassName("playertipQP");
 				if (ab[0]) event.respondix++;
 			}
 			return event.respondix > 0;
 		},
 		async content(event, trigger, player) {
-			for (var i = 0; i < game.players.length; i++) {
+			for (let i = 0; i < game.players.length; i++) {
 				lib.removeFirstByClass(game.players[i], "playertipQP");
 			}
 		},
