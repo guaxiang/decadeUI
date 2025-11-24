@@ -6210,7 +6210,7 @@ export async function content(config, pack) {
 							if (lib.config.extension_十周年UI_showTemp) {
 								if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
 								let tempname = "";
-								const tempname2 = get.translation(cardname);
+								let tempname2 = get.translation(cardname);
 								if (cardnature) {
 									card._tempName.dataset.nature = cardnature;
 									if (cardname == "sha") {
