@@ -55,7 +55,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
 			get: () => ["wei", "shu", "wu", "qun", "jin"],
-			set: () => { },
+			set: () => {},
 		});
 		lib.skill._slyh = {
 			trigger: { global: "gameStart", player: "enterGame" },
@@ -93,7 +93,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 						dialog.setBackgroundImage("extension/十周年UI/image/group/scdialog.png");
 						if (!ui.skepk) ui.skepk = ui.create.div(".groupTitle", dialog);
 						ui.skepk.innerHTML = "请选择势力";
-						const getGroupImagePath = (buttonName) => {
+						const getGroupImagePath = buttonName => {
 							const style = lib.config.extension_十周年UI_newDecadeStyle;
 							const styleFolderMap = {
 								on: "decade",
@@ -244,17 +244,17 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			game._decadeUI_playAudioWrapped = true;
 		}
 		if (!game._decadeUI_uiClickAudioHandler) {
-			const uiClickAudioHandler = (e) => {
+			const uiClickAudioHandler = e => {
 				if (e.button !== 0) return;
 				const target = e.target;
 				let audioToPlay = null;
 				const rules = [
 					{
-						test: (t) => t.closest("#dui-controls") && (t.classList?.contains("control") || t.parentElement?.classList?.contains("control")),
+						test: t => t.closest("#dui-controls") && (t.classList?.contains("control") || t.parentElement?.classList?.contains("control")),
 						sound: "BtnSure",
 					},
 					{
-						test: (t) => t.closest(".menubutton, .button, .card"),
+						test: t => t.closest(".menubutton, .button, .card"),
 						sound: "card_click",
 					},
 				];
@@ -390,7 +390,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 								okButton.innerHTML = "换牌";
 							}
 						}
-						event.custom.replace.confirm = (ok) => {
+						event.custom.replace.confirm = ok => {
 							dialog.close();
 							if (ui.confirm?.close) ui.confirm.close();
 							game.resume();
@@ -1367,14 +1367,14 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		if (hasFilter) {
 			if (isMultiSelect) {
 				cardxF2.addArray(cardxF);
-				for (const cardF of player.getCards("he", (j) => {
+				for (const cardF of player.getCards("he", j => {
 					const relatedCard = j.relatedCard || j;
 					return event.position.includes(get.position(relatedCard)) && event.filterCard(relatedCard, player, event.target);
 				})) {
 					if (!ui.selected.cards) ui.selected.cards = [];
 					ui.selected.cards.add(cardF);
 					cardxF2.addArray(
-						cardx.filter((j) => {
+						cardx.filter(j => {
 							if (cardxF2.includes(j)) return false;
 							const relatedCard = j.relatedCard || j;
 							return event.position.includes(get.position(relatedCard)) && event.filterCard(relatedCard, player, event.target);
@@ -1400,7 +1400,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			return a.number - b.number;
 		});
 	}
-	lib.hooks.checkBegin.add(async (event) => {
+	lib.hooks.checkBegin.add(async event => {
 		if (lib.config["extension_十周年UI_aloneEquip"]) return;
 		const player = event.player;
 		const isValidEvent = event.position && typeof event.position === "string" && event.position.includes("e") && player.countCards("e") && !event.copyCards && ["chooseCard", "chooseToUse", "chooseToRespond", "chooseToDiscard", "chooseCardTarget", "chooseToGive"].includes(event.name);
@@ -1478,11 +1478,11 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 	});
 	// 出牌信息提示
 	if (lib.config["extension_十周年UI_cardPrompt"]) {
-		window.getDecPrompt = (text) => {
+		window.getDecPrompt = text => {
 			if (typeof text !== "string") return text;
 			return text.replace(/＃/g, "");
 		};
-		lib.hooks.checkBegin.add((event) => {
+		lib.hooks.checkBegin.add(event => {
 			if (event.name === "chooseToUse" && event.type === "dying" && event.dying && event.player === game.me) {
 				event.prompt = false;
 			}
@@ -1490,7 +1490,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				event.prompt = false;
 			}
 		});
-		lib.hooks.checkButton.add((event) => {
+		lib.hooks.checkButton.add(event => {
 			const dialog = event.dialog;
 			if (!dialog || !dialog.buttons) return;
 			const range = get.select(event.selectButton);
@@ -1525,7 +1525,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				event.custom.add.button();
 			}
 		});
-		lib.hooks.checkEnd.add((event) => {
+		lib.hooks.checkEnd.add(event => {
 			if (event.name === "chooseToDiscard" && event.player === game.me) {
 				if (ui.cardDialog) {
 					ui.cardDialog.close();
@@ -1554,8 +1554,24 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				const selectedCount = (ui.selected?.cards ?? []).length;
 				const selectRange = get.select(event.selectCard);
 				const needCount = selectRange[1] >= 0 ? selectRange[1] : selectRange[0];
-				const discardTipPrefix = showPhaseText ? "，" : "";
-				let tipText = `${discardTipPrefix}请弃置${selectedCount}/${needCount}张手牌`;
+				const minCount = selectRange[0];
+				const discardTipPrefix = showPhaseText
+					? "，"
+					: (() => {
+							discardTip.appendText("【");
+							let name = event.getParent().skill || event.getParent().name || "";
+							if (name.endsWith("_cost")) name = name.slice(0, -"_cost".length);
+							if (name.endsWith("_backup")) name = name.slice(0, -"_backup".length);
+							discardTip.appendText(get.skillTranslation(name, event.player), "phase");
+							discardTip.appendText("】：");
+							return "";
+						})();
+				let tipText = `${discardTipPrefix}${event.forced ? "请" : "是否"}弃置${selectedCount}/${needCount}张${(() => {
+					const position = event.position;
+					if (!position || position == "h") return "手";
+					if (position == "e") return "装备";
+					return "";
+				})()}牌${minCount !== needCount ? `（至少${minCount}张）` : ""}${event.forced ? "" : "？"}`;
 				tipText = tipText.replace(/<\/?.+?\/?>/g, "");
 				tipText = window.getDecPrompt(tipText);
 				discardTip.appendText(tipText);
@@ -1589,7 +1605,10 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 						event.skillDialog = false;
 					}
 					const skillTip = (ui.cardDialog = dui.showHandTip());
-					const skillName = get.skillTranslation(event.skill, event.player);
+					let name = event.skill;
+					if (name.endsWith("_cost")) name = name.slice(0, -"_cost".length);
+					if (name.endsWith("_backup")) name = name.slice(0, -"_backup".length);
+					const skillName = get.skillTranslation(name, event.player);
 					skillTip.appendText("是否发动【");
 					skillTip.appendText(skillName, "phase");
 					let tipText = "】？";
