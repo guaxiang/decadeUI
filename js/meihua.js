@@ -1476,12 +1476,20 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			}
 		}
 	});
-	// 卡牌选中提示
+	// 出牌信息提示
 	if (lib.config["extension_十周年UI_cardPrompt"]) {
 		window.getDecPrompt = (text) => {
 			if (typeof text !== "string") return text;
 			return text.replace(/＃/g, "");
 		};
+		lib.hooks.checkBegin.add((event) => {
+			if (event.name === "chooseToUse" && event.type === "dying" && event.dying && event.player === game.me) {
+				event.prompt = false;
+			}
+			if (event.name === "chooseToDiscard" && event.player === game.me) {
+				event.prompt = false;
+			}
+		});
 		lib.hooks.checkButton.add((event) => {
 			const dialog = event.dialog;
 			if (!dialog || !dialog.buttons) return;
@@ -1518,14 +1526,68 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			}
 		});
 		lib.hooks.checkEnd.add((event) => {
-			if (event.name === "chooseToUse" && event.type === "phase" && event.player === game.me && !event.skill) {
+			if (event.name === "chooseToDiscard" && event.player === game.me) {
 				if (ui.cardDialog) {
 					ui.cardDialog.close();
 					delete ui.cardDialog;
 				}
-				if ((ui.selected?.cards ?? []).length === 1) {
+				if (event.dialog) {
+					if (typeof event.dialog === "object" && event.dialog.close) {
+						event.dialog.close();
+					}
+					event.dialog = false;
+				}
+				event.prompt = false;
+				const discardTip = (ui.cardDialog = dui.showHandTip());
+				discardTip.appendText("弃牌阶段", "phase");
+				const selectedCount = (ui.selected?.cards ?? []).length;
+				const selectRange = get.select(event.selectCard);
+				const needCount = selectRange[1] >= 0 ? selectRange[1] : selectRange[0];
+				let tipText = `，请弃置${selectedCount}/${needCount}张手牌`;
+				tipText = tipText.replace(/<\/?.+?\/?>/g, "");
+				tipText = window.getDecPrompt(tipText);
+				discardTip.appendText(tipText);
+				discardTip.strokeText();
+				discardTip.show();
+			} else if (event.name === "chooseToUse" && event.player === game.me) {
+				if (ui.cardDialog) {
+					ui.cardDialog.close();
+					delete ui.cardDialog;
+				}
+				if (event.type === "dying" && event.dying) {
+					if (event.dialog) {
+						if (typeof event.dialog === "object" && event.dialog.close) {
+							event.dialog.close();
+						}
+						event.dialog = false;
+					}
+					event.prompt = false;
+					const dyingTip = (ui.cardDialog = dui.showHandTip());
+					const dyingName = get.translation(event.dying);
+					dyingTip.appendText(dyingName, "phase");
+					const taoNum = 1 - event.dying.hp;
+					let tipText = `濒死，需要${taoNum}个桃，是否帮助？`;
+					tipText = tipText.replace(/<\/?.+?\/?>/g, "");
+					tipText = window.getDecPrompt(tipText);
+					dyingTip.appendText(tipText);
+					dyingTip.strokeText();
+					dyingTip.show();
+				} else if (event.skill) {
+					if (event.skillDialog === true) {
+						event.skillDialog = false;
+					}
+					const skillTip = (ui.cardDialog = dui.showHandTip());
+					const skillName = get.skillTranslation(event.skill, event.player);
+					skillTip.appendText("是否发动【");
+					skillTip.appendText(skillName, "phase");
+					let tipText = "】？";
+					tipText = tipText.replace(/<\/?.+?\/?>/g, "");
+					tipText = window.getDecPrompt(tipText);
+					skillTip.appendText(tipText);
+					skillTip.strokeText();
+					skillTip.show();
+				} else if (event.type === "phase" && (ui.selected?.cards ?? []).length === 1) {
 					const handTip1 = (ui.cardDialog = dui.showHandTip());
-					//隐藏卡牌的特殊字符
 					let tipText = get
 						.plainText(get.translation(`${get.name(ui.selected.cards[0])}_info`))
 						.replace(/出牌阶段，/g, "")
@@ -1538,7 +1600,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 					handTip1.appendText(tipText);
 					handTip1.strokeText();
 					handTip1.show();
-				} else {
+				} else if (event.type === "phase") {
 					const handTip2 = (ui.cardDialog = dui.showHandTip());
 					handTip2.appendText("出牌阶段", "phase");
 					let tipText = "，请选择一张卡牌";

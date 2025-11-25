@@ -345,12 +345,11 @@ export let config = {
 		},
 	},
 	cardPrompt: {
-		name: "卡牌提示",
+		name: "出牌信息提示",
 		init: true,
-		intro: "开启后，在出牌阶段选择手牌时会显示卡牌描述提示",
 	},
 	handTipHeight: {
-		name: "手牌提示高度",
+		name: "出牌信息提示高度",
 		init: "20",
 		intro: "输入0~100的数值，设置手牌提示框的底部高度百分比（默认值为20）",
 		input: true,
