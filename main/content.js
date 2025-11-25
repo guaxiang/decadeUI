@@ -1,33 +1,46 @@
 import { lib, game, ui, get, ai, _status } from "../../../noname.js";
 import { ChildNodesWatcher } from "../../../noname/library/cache/childNodesWatcher.js";
-export async function content(config, pack) {
-	if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
 
-	// 检测是否开启皮肤切换扩展
-	if (game.hasExtension && game.hasExtension("皮肤切换")) {
+const bannedModes = new Set(["chess", "tafang", "hs_hearthstone"]);
+
+const shouldSkipMode = () => {
+	const mode = typeof get.mode === "function" ? get.mode() : get.mode;
+	return bannedModes.has(mode);
+};
+
+const applyMenuZoom = () => {
+	if (game.hasExtension?.("皮肤切换")) {
 		game.menuZoom = 1;
-	} else {
-		if (typeof game.menuZoom === "undefined" || game.menuZoom === null) {
-			delete game.menuZoom;
-		}
+		return;
 	}
+	if (game.menuZoom === undefined || game.menuZoom === null) delete game.menuZoom;
+};
 
-	// 单独装备栏配置
+const applyEquipConfig = () => {
 	_status.nopopequip = lib.config.extension_十周年UI_aloneEquip;
+};
 
-	// 布局检查与自动切换
+const enforceLayout = () => {
 	const recommendedLayouts = ["nova"];
 	const currentLayout = lib.config.layout;
-	if (!recommendedLayouts.includes(currentLayout)) {
-		const shouldSwitch = confirm("十周年UI提醒您，请使用<新版>布局以获得良好体验。\n" + "点击确定自动切换到<新版>布局，点击取消保持当前布局。");
-		if (shouldSwitch) {
-			lib.config.layout = "nova";
-			game.saveConfig("layout", "nova");
-			alert("布局已切换为<新版>布局，游戏将自动重启以应用新布局。");
-			setTimeout(() => location.reload(), 100);
-		}
+	if (recommendedLayouts.includes(currentLayout)) return;
+	const prompt = "十周年UI提醒您，请使用<新版>布局以获得良好体验。\n点击确定自动切换到<新版>布局，点击取消保持当前布局。";
+	if (confirm(prompt)) {
+		lib.config.layout = "nova";
+		game.saveConfig("layout", "nova");
+		alert("布局已切换为<新版>布局，游戏将自动重启以应用新布局。");
+		setTimeout(() => location.reload(), 100);
 	}
+};
+
+const bootstrapExtension = () => {
+	applyMenuZoom();
+	applyEquipConfig();
+	enforceLayout();
 	console.time(decadeUIName);
+};
+
+const buildDecadeUICore = (config, pack) => {
 	window.duicfg = config;
 	window.dui = window.decadeUI = {
 		init() {
@@ -7069,6 +7082,10 @@ export async function content(config, pack) {
 	};
 	decadeUI.init();
 	console.timeEnd(decadeUIName);
+	return window.decadeUI;
+};
+
+const registerLegacyModules = (config) => {
 	//手杀UI
 	// ========== 工具函数统一挂载 ==========
 	if (!lib.removeFirstByClass) {
@@ -7793,4 +7810,12 @@ export async function content(config, pack) {
 			}
 		}, 5000);
 	}
+};
+
+export async function content(config, pack) {
+	if (shouldSkipMode()) return;
+	bootstrapExtension();
+	const decadeUI = buildDecadeUICore(config, pack);
+	registerLegacyModules(config);
+	return decadeUI;
 }
