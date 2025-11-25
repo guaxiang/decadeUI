@@ -172,8 +172,7 @@ export const prefixMarkModule = {
 	},
 
 	createMarkElement(config, playerElement) {
-		return playerElement[config.property] ??
-			(playerElement[config.property] = dui.element.create(config.className, playerElement));
+		return playerElement[config.property] ?? (playerElement[config.property] = dui.element.create(config.className, playerElement));
 	},
 
 	updateNameElement(playerElement, character) {

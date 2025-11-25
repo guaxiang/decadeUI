@@ -25,7 +25,7 @@ export function initPrecontentCore() {
 			ui.create.div(".avatar", ui.create.div(".seat-player.fakeplayer", node)).setBackground(list.randomRemove(), "character");
 		}
 	};
-	window.decadeModule = ((decadeModule) => {
+	window.decadeModule = (decadeModule => {
 		const version = lib.extensionPack.十周年UI.version;
 		function checkVersionCompatibility() {
 			const currentVersion = lib.version;
@@ -90,7 +90,7 @@ export function initPrecontentCore() {
 				this.css(`${decadeUIPath}css/style.css`);
 			}
 
-			const jsFiles = ["js/spine.js", "js/component.js", "js/skill.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"];
+			const jsFiles = ["js/spine.js", "js/component.js", "js/skill.js", "js/effect.js", "js/meihua.js", "js/cardPrompt.js", "js/animation.js", "js/dynamicSkin.js"];
 			jsFiles.forEach(path => this.jsAsync(`${decadeUIPath}${path}`));
 
 			if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
@@ -107,9 +107,7 @@ export function initPrecontentCore() {
 			const currentMode = get.mode();
 			if (!["chess", "tafang", "hs_hearthstone"].includes(currentMode)) {
 				["character", "lbtn", "skill"].forEach(pack => {
-					const cssPath = pack === "character"
-						? `${layoutPath}${pack}/main${listmap}.css`
-						: `${layoutPath}${pack}/main${listmap}${lib.config.phonelayout ? "" : "_window"}.css`;
+					const cssPath = pack === "character" ? `${layoutPath}${pack}/main${listmap}.css` : `${layoutPath}${pack}/main${listmap}${lib.config.phonelayout ? "" : "_window"}.css`;
 					this.css(cssPath);
 					this.jsAsync(`${layoutPath}${pack}/main${listmap}.js`);
 				});
@@ -286,7 +284,7 @@ export function initPrecontentCore() {
 			emit(name, ...args) {
 				return app.each(
 					this.listens[name],
-					(item) => {
+					item => {
 						item.listen(...args);
 						if (item.remove) this.off(name, item);
 					},
@@ -360,7 +358,7 @@ export function initPrecontentCore() {
 				});
 				return;
 			}
-			setText = typeof setText === "function" ? setText : () => { };
+			setText = typeof setText === "function" ? setText : () => {};
 			const zip = new JSZip(data);
 			const dirList = [];
 			const fileList = [];
@@ -385,12 +383,7 @@ export function initPrecontentCore() {
 				const file = fileList.shift();
 				if (file) {
 					setText(`正在导入(${++finish}/${total})...`);
-					game.writeFile(
-						isNode ? file.target.asNodeBuffer() : file.target.asArrayBuffer(),
-						file.path,
-						file.name,
-						writeFile
-					);
+					game.writeFile(isNode ? file.target.asNodeBuffer() : file.target.asArrayBuffer(), file.path, file.name, writeFile);
 				} else {
 					alert("导入完成");
 					setText("导入插件");
@@ -579,4 +572,3 @@ export function initPrecontentCore() {
 		window.app = app;
 	}
 }
-

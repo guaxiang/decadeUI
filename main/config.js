@@ -22,6 +22,13 @@ export let config = {
 			game.saveConfig("extension_十周年UI_translate", bool);
 			setTimeout(() => game.reload(), 100);
 		},
+		update() {
+			const enabled = lib.config.extension_十周年UI_translate;
+			if (enabled) {
+				lib.init.js(`${lib.assetURL}extension/十周年UI/js/cardtranslate.js`);
+			}
+			game.saveConfig("enable_drag", !enabled);
+		},
 	},
 	newDecadeStyle: {
 		name: "切换样式",
@@ -144,7 +151,7 @@ export let config = {
 			kb3: "大将军",
 			kb4: "大司马",
 		},
-		onclick: (item) => {
+		onclick: item => {
 			game.saveConfig("extension_十周年UI_cardbj", item);
 		},
 		visualMenu: (node, link) => {
@@ -231,7 +238,7 @@ export let config = {
 	dynamicSkin: {
 		name: "动态皮肤",
 		init: false,
-		onclick: (value) => {
+		onclick: value => {
 			game.saveConfig("extension_十周年UI_dynamicSkin", value);
 			lib.config.dynamicSkin = value;
 			game.saveConfig("dynamicSkin", value);
@@ -361,13 +368,13 @@ export let config = {
 			this.innerHTML = value;
 			game.saveConfig("extension_十周年UI_handTipHeight", value);
 			if (window.decadeUI) {
-				document.documentElement.style.setProperty('--hand-tip-bottom', `calc(${value}% + 10px)`);
+				document.documentElement.style.setProperty("--hand-tip-bottom", `calc(${value}% + 10px)`);
 			}
 		},
 		update() {
 			if (window.decadeUI) {
 				const height = lib.config.extension_十周年UI_handTipHeight ?? "20";
-				document.documentElement.style.setProperty('--hand-tip-bottom', `calc(${height}% + 10px)`);
+				document.documentElement.style.setProperty("--hand-tip-bottom", `calc(${height}% + 10px)`);
 			}
 		},
 	},
@@ -389,7 +396,7 @@ export let config = {
 			if (_status.gameStarted && ui?.equipSolts) {
 				try {
 					ui.equipSolts.style.display = config ? "" : "none";
-				} catch (e) { }
+				} catch (e) {}
 				if (config && game.me !== ui.equipSolts.me) {
 					if (ui.equipSolts.me) {
 						ui.equipSolts.me.appendChild(ui.equipSolts.equips);
