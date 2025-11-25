@@ -1539,11 +1539,23 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				}
 				event.prompt = false;
 				const discardTip = (ui.cardDialog = dui.showHandTip());
-				discardTip.appendText("弃牌阶段", "phase");
+				const showPhaseText = (() => {
+					if (typeof event.getParent !== "function") return false;
+					let parent = event.getParent();
+					for (let depth = 0; depth < 5 && parent; depth++) {
+						if (parent.name === "phaseDiscard") return true;
+						parent = typeof parent.getParent === "function" ? parent.getParent() : null;
+					}
+					return false;
+				})();
+				if (showPhaseText) {
+					discardTip.appendText("弃牌阶段", "phase");
+				}
 				const selectedCount = (ui.selected?.cards ?? []).length;
 				const selectRange = get.select(event.selectCard);
 				const needCount = selectRange[1] >= 0 ? selectRange[1] : selectRange[0];
-				let tipText = `，请弃置${selectedCount}/${needCount}张手牌`;
+				const discardTipPrefix = showPhaseText ? "，" : "";
+				let tipText = `${discardTipPrefix}请弃置${selectedCount}/${needCount}张手牌`;
 				tipText = tipText.replace(/<\/?.+?\/?>/g, "");
 				tipText = window.getDecPrompt(tipText);
 				discardTip.appendText(tipText);
