@@ -1,4 +1,37 @@
 import { lib, game, ui, get, ai, _status } from "../../../noname.js";
+
+export const cardSkinPresets = [
+	{
+		key: "online",
+		dir: "online",
+		label: "OL卡牌",
+		extension: "jpg",
+	},
+	{
+		key: "caise",
+		dir: "caise",
+		label: "彩色卡牌",
+		extension: "webp",
+	},
+	{
+		key: "decade",
+		dir: "decade",
+		label: "原十周年",
+		extension: "png",
+	},
+	{
+		key: "bingkele",
+		dir: "bingkele",
+		label: "冰可乐喵",
+		extension: "png",
+	},
+];
+
+export const cardSkinMeta = cardSkinPresets.reduce((map, skin) => {
+	map[skin.key] = skin;
+	return map;
+}, {});
+
 export let config = {
 	FL0: {
 		name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
@@ -124,13 +157,14 @@ export let config = {
 	},
 	cardPrettify: {
 		name: "卡牌美化",
-		init: "png",
-		item: {
-			off: "关闭",
-			jpg: "OL卡牌",
-			webp: "彩色卡牌",
-			png: "原十周年",
-		},
+		init: cardSkinMeta.decade ? cardSkinMeta.decade.key : "off",
+		item: cardSkinPresets.reduce(
+			(options, skin) => {
+				options[skin.key] = skin.label;
+				return options;
+			},
+			{ off: "关闭" }
+		),
 	},
 	cardkmh: {
 		name: "卡牌边框",
