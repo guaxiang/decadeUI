@@ -192,6 +192,12 @@ decadeModule.import((lib, game, ui, get) => {
 			discardTip.appendText(tipText);
 			discardTip.strokeText();
 			discardTip.show();
+			event.filterStop = function () {
+				if (this.step > 1 && ui.cardDialog) {
+					ui.cardDialog.close();
+					delete ui.cardDialog;
+				}
+			};
 		};
 		const handleUse = () => {
 			closeDialog(ui.cardDialog);
