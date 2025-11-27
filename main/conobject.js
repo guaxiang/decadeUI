@@ -599,7 +599,8 @@ const createDecadeUIObject = () => ({
 							mark.name = item;
 							mark.skill = skill || item;
 							if (!mark.classList.contains("own-skill") && !mark.classList.contains("other-skill")) {
-								const hasCardDisplay = typeof lib.skill[mark.skill]?.intro?.mark === "function";
+								const skillIntro = lib.skill[mark.skill]?.intro;
+								const hasCardDisplay = typeof skillIntro?.mark === "function" || ["expansion", "card", "cards"].includes(skillIntro?.content);
 								mark.classList.add(hasCardDisplay ? "other-skill" : "own-skill");
 							}
 							if (typeof info == "object") {
