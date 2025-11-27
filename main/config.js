@@ -146,7 +146,7 @@ export let config = {
 			{
 				key: "bingkele",
 				dir: "bingkele",
-				label: "冰可乐喵",
+				label: "哈基米哦",
 				extension: "png",
 			},
 		];
