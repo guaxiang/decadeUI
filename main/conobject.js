@@ -11,22 +11,20 @@ const createDecadeUIObject = () => ({
 		return this;
 	},
 	initOverride() {
-		function override(dest, src) {
+		const override = (dest, src) => {
 			let ok = true;
 			for (const key in src) {
 				if (dest[key]) {
 					ok = override(dest[key], src[key]);
-					if (ok) {
-						dest[key] = src[key];
-					}
+					if (ok) dest[key] = src[key];
 				} else {
 					dest[key] = src[key];
 				}
 				ok = false;
 			}
 			return ok;
-		}
-		const base = {
+		};
+		const createBaseVariables = () => ({
 			ui: {
 				create: {
 					cards: ui.create.cards,
@@ -97,7 +95,8 @@ const createDecadeUIObject = () => ({
 					cssstyles: lib.init.cssstyles,
 				},
 			},
-		};
+		});
+		const base = createBaseVariables();
 		const ride = {
 			lib: {
 				element: {
@@ -1266,6 +1265,14 @@ const createDecadeUIObject = () => ({
 							// 十周年角标
 							if (window.decadeModule && window.decadeModule.prefixMark) {
 								window.decadeModule.prefixMark.showPrefixMark(character, this);
+							}
+
+							const cardPrettify = lib.config.extension_十周年UI_cardPrettify;
+							if (cardPrettify === "bingkele" && character === "bozai") {
+								this.node.avatar.setBackgroundImage("extension/十周年UI/image/bingkele.png");
+								if (this.node.name) {
+									this.node.name.innerHTML = "冰可乐喵";
+								}
 							}
 
 							// 刷新显示

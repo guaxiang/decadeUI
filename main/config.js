@@ -125,30 +125,10 @@ export let config = {
 	},
 	cardPrettify: (() => {
 		const cardSkinPresets = [
-			{
-				key: "online",
-				dir: "online",
-				label: "OL卡牌",
-				extension: "jpg",
-			},
-			{
-				key: "caise",
-				dir: "caise",
-				label: "彩色卡牌",
-				extension: "webp",
-			},
-			{
-				key: "decade",
-				dir: "decade",
-				label: "原十周年",
-				extension: "png",
-			},
-			{
-				key: "bingkele",
-				dir: "bingkele",
-				label: "哈基米哦",
-				extension: "png",
-			},
+			{ key: "online", dir: "online", label: "OL卡牌", extension: "jpg" },
+			{ key: "caise", dir: "caise", label: "彩色卡牌", extension: "webp" },
+			{ key: "decade", dir: "decade", label: "原十周年", extension: "png" },
+			{ key: "bingkele", dir: "bingkele", label: "哈基米哦", extension: "png" },
 		];
 		const cardSkinMeta = cardSkinPresets.reduce((map, skin) => {
 			map[skin.key] = skin;
