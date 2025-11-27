@@ -72,13 +72,24 @@ decadeModule.import((lib, game, ui, get) => {
 	const buildRespondTipText = event => {
 		if (!event) return null;
 		if (isAskWuxie(event)) return buildWuxieTipText(event);
-		const [min = 1, max = min] = get.select(event.selectCard) ?? [];
-		const needCount = max >= 0 ? max : min;
-		const prompt = sanitizePrompt(event.prompt);
+		const promptText = sanitizePrompt(event.prompt);
+		const wrapText = text => decPrompt(sanitizePrompt(text));
+		const matchOriginal = promptText?.match(/^请打出(.+?)张【(.+?)】(?:响应【(.+?)】)?$/);
+		if (matchOriginal) {
+			const [, countWord = "", cardName = "", respondName = ""] = matchOriginal;
+			const segments = [{ text: wrapText("请打出") }, { text: wrapText(`${countWord}张`) }, { text: wrapText("【") }, { text: wrapText(cardName), style: "phase" }, { text: wrapText("】") }];
+			if (respondName) {
+				segments.push({ text: wrapText("响应") }, { text: wrapText("【") }, { text: wrapText(respondName), style: "phase" }, { text: wrapText("】") });
+			}
+			return segments;
+		}
+		if (!promptText) return null;
 		let respondCardName = "";
 		let respondTargetName = "";
-		if (prompt.includes("响应")) {
-			const [before, after] = prompt.split("响应");
+		const [min = 1, max = min] = get.select(event.selectCard) ?? [];
+		const needCount = max >= 0 ? max : min;
+		if (promptText.includes("响应")) {
+			const [before, after] = promptText.split("响应");
 			respondTargetName = after?.trim() || "";
 			const matchCard = before?.match(/张(.+)/);
 			if (matchCard) respondCardName = matchCard[1].trim();
@@ -109,7 +120,6 @@ decadeModule.import((lib, game, ui, get) => {
 		}
 		if (!respondCardName) respondCardName = "牌";
 		if (!respondTargetName) respondTargetName = "当前请求";
-		const wrapText = text => decPrompt(sanitizePrompt(text));
 		return [{ text: wrapText(`请打出${needCount}张【`) }, { text: wrapText(respondCardName), style: "phase" }, { text: wrapText("】响应【") }, { text: wrapText(respondTargetName), style: "phase" }, { text: wrapText("】") }];
 	};
 	const markPhaseDiscard = event => {
