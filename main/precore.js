@@ -145,9 +145,6 @@ export function initPrecontentCore() {
 			if (lib.config.extension_十周年UI_meanPrettify) {
 				this.css(`${decadeUIPath}css/menu.css`);
 			}
-			if (lib.config.extension_十周年UI_choosecharboder) {
-				this.css(`${decadeUIPath}css/style.css`);
-			}
 
 			const jsFiles = ["js/spine.js", "js/component.js", "js/skill.js", "js/effect.js", "js/meihua.js", "js/cardPrompt.js", "js/animation.js", "js/dynamicSkin.js"];
 			jsFiles.forEach(path => this.jsAsync(`${decadeUIPath}${path}`));

@@ -162,17 +162,61 @@ const createDecadeUIObject = () => ({
 							const readOk = !!(res.READ_OK && res.READ_OK[skinKey]);
 							if (!readOk) return clone;
 							const skinCache = res[skinKey];
-							const asset = skinCache && skinCache[clone.name];
+							let asset = skinCache && skinCache[clone.name];
 							if (asset && !asset.loaded && clone.classList.contains("decade-card")) {
 								if (asset.loaded === undefined) {
 									const image = asset.image;
 									image.addEventListener("error", () => {
-										clone.style.background = asset.rawUrl;
-										clone.classList.remove("decade-card");
+										if (skinKey === "bingkele" && cardSkinMeta.decade) {
+											const decadeSkin = cardSkinMeta.decade;
+											const decadeCache = res.decade || (res.decade = {});
+											const decadeAsset = decadeCache[clone.name];
+											if (decadeAsset && decadeAsset.loaded) {
+												clone.style.background = `url("${decadeAsset.url}")`;
+											} else if (decadeAsset && decadeAsset.loaded === undefined) {
+												const decadeImage = decadeAsset.image;
+												if (decadeImage) {
+													decadeImage.addEventListener("load", () => {
+														clone.style.background = `url("${decadeAsset.url}")`;
+													});
+													decadeImage.addEventListener("error", () => {
+														clone.style.background = asset.rawUrl;
+														clone.classList.remove("decade-card");
+													});
+												} else {
+													clone.style.background = asset.rawUrl;
+													clone.classList.remove("decade-card");
+												}
+											} else {
+												clone.style.background = asset.rawUrl;
+												clone.classList.remove("decade-card");
+											}
+										} else {
+											clone.style.background = asset.rawUrl;
+											clone.classList.remove("decade-card");
+										}
 									});
 								} else {
-									clone.style.background = asset.rawUrl;
-									clone.classList.remove("decade-card");
+									if (skinKey === "bingkele" && cardSkinMeta.decade) {
+										const decadeCache = res.decade || (res.decade = {});
+										const decadeAsset = decadeCache[clone.name];
+										if (decadeAsset && decadeAsset.loaded) {
+											clone.style.background = `url("${decadeAsset.url}")`;
+										} else {
+											clone.style.background = asset.rawUrl;
+											clone.classList.remove("decade-card");
+										}
+									} else {
+										clone.style.background = asset.rawUrl;
+										clone.classList.remove("decade-card");
+									}
+								}
+							} else if (!asset && skinKey === "bingkele" && cardSkinMeta.decade) {
+								const decadeCache = res.decade || (res.decade = {});
+								const decadeAsset = decadeCache[clone.name];
+								if (decadeAsset && decadeAsset.loaded) {
+									clone.style.background = `url("${decadeAsset.url}")`;
+									clone.classList.add("decade-card");
 								}
 							}
 							return clone;
@@ -252,7 +296,18 @@ const createDecadeUIObject = () => ({
 									const readOk = !!(res.READ_OK && res.READ_OK[skinKey]);
 									if (readOk) {
 										if (asset === undefined) {
-											this.classList.remove("decade-card");
+											if (skinKey === "bingkele" && cardSkinMeta.decade) {
+												const decadeSkin = cardSkinMeta.decade;
+												const decadeCache = res.decade || (res.decade = {});
+												const decadeAsset = decadeCache[filename];
+												if (decadeAsset && decadeAsset.loaded) {
+													this.style.background = `url("${decadeAsset.url}")`;
+												} else {
+													this.classList.remove("decade-card");
+												}
+											} else {
+												this.classList.remove("decade-card");
+											}
 										} else {
 											this.style.background = `url("${asset.url}")`;
 										}
@@ -277,10 +332,32 @@ const createDecadeUIObject = () => ({
 												};
 												const cardElem = this;
 												image.onerror = function () {
-													asset.loaded = false;
+													if (skinKey === "bingkele" && cardSkinMeta.decade) {
+														const decadeSkin = cardSkinMeta.decade;
+														const decadeFolder = decadeSkin.dir || "decade";
+														const decadeExtension = decadeSkin.extension || "png";
+														const decadeUrl = lib.assetURL + `extension/${decadeUIName}/image/card/${decadeFolder}/${filename}.${decadeExtension}`;
+														const decadeImage = new Image();
+														decadeImage.onload = function () {
+															asset.loaded = true;
+															asset.url = decadeUrl;
+															cardElem.style.background = `url("${decadeUrl}")`;
+															decadeImage.onload = undefined;
+														};
+														decadeImage.onerror = function () {
+															asset.loaded = false;
+															decadeImage.onerror = undefined;
+															cardElem.style.background = asset.rawUrl;
+															cardElem.classList.remove("decade-card");
+														};
+														decadeImage.src = decadeUrl;
+													} else {
+														asset.loaded = false;
+														image.onerror = undefined;
+														cardElem.style.background = asset.rawUrl;
+														cardElem.classList.remove("decade-card");
+													}
 													image.onerror = undefined;
-													cardElem.style.background = asset.rawUrl;
-													cardElem.classList.remove("decade-card");
 												};
 												asset.url = url;
 												asset.rawUrl = this.style.background || this.style.backgroundImage;
