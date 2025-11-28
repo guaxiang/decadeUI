@@ -393,6 +393,9 @@ const createDecadeUIObject = () => ({
 						},
 						moveTo(player) {
 							if (!player) return;
+							if (this.name && (this.name.startsWith("shengbei_left_") || this.name.startsWith("shengbei_right_"))) {
+								return this;
+							}
 							const arena = dui.boundsCaches.arena;
 							if (!arena.updated) arena.update();
 							player.checkBoundsCache();
@@ -408,10 +411,16 @@ const createDecadeUIObject = () => ({
 						},
 						moveDelete(player) {
 							this.fixed = true;
-							this.moveTo(player);
-							setTimeout(() => {
-								this.delete();
-							}, 460);
+							if (this.name && (this.name.startsWith("shengbei_left_") || this.name.startsWith("shengbei_right_"))) {
+								setTimeout(() => {
+									this.delete();
+								}, 460);
+							} else {
+								this.moveTo(player);
+								setTimeout(() => {
+									this.delete();
+								}, 460);
+							}
 						},
 					},
 					control: {
@@ -4548,8 +4557,13 @@ const createDecadeUIObject = () => ({
 			const nodes = document.getElementsByClassName("thrown");
 			for (let i = nodes.length - 1; i >= 0; i--) {
 				if (nodes[i].fixed) continue;
-				if (nodes[i].classList.contains("card")) decadeUI.layout.clearout(nodes[i]);
-				else nodes[i].delete();
+				if (nodes[i].classList.contains("card")) {
+					if (nodes[i].name && (nodes[i].name.startsWith("shengbei_left_") || nodes[i].name.startsWith("shengbei_right_"))) {
+						nodes[i].delete();
+					} else {
+						decadeUI.layout.clearout(nodes[i]);
+					}
+				} else nodes[i].delete();
 			}
 		};
 		ui.create.me = function (hasme) {
@@ -5459,6 +5473,10 @@ const createDecadeUIObject = () => ({
 		clearout(card) {
 			if (!card) return;
 			if (card.fixed || card.classList.contains("removing")) return;
+			if (card.name && (card.name.startsWith("shengbei_left_") || card.name.startsWith("shengbei_right_"))) {
+				card.delete();
+				return;
+			}
 			if (ui.thrown.indexOf(card) == -1) {
 				ui.thrown.splice(0, 0, card);
 				dui.queueNextFrameTick(dui.layoutDiscard, dui);
