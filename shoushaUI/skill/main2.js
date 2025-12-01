@@ -4,7 +4,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) { },
+		content(next) {},
 		precontent() {
 			this.initTimer();
 			Object.assign(ui.create, {
@@ -433,10 +433,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			let skillMarksNode = player.node.xSkillMarks;
 			if (!skillMarksNode) return;
 			const suitMap = {
-				"spade": "spade",
-				"heart": "heart",
-				"club": "club",
-				"diamond": "diamond"
+				spade: "spade",
+				heart: "heart",
+				club: "club",
+				diamond: "diamond",
 			};
 			const faluMarks = {};
 			lib.suit.forEach(suit => {
@@ -464,12 +464,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (!skillMarksNode) return;
 			const factions = ["qun", "shu", "wei", "wu", "jin", "shen"];
 			const factionMap = {
-				"qun": "qun",
-				"shu": "shu",
-				"wei": "wei",
-				"wu": "wu",
-				"jin": "jin",
-				"shen": "shen",
+				qun: "qun",
+				shu: "shu",
+				wei: "wei",
+				wu: "wu",
+				jin: "jin",
+				shen: "shen",
 			};
 			const canxiSkills = {};
 			factions.forEach(faction => {

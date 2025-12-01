@@ -4,7 +4,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) { },
+		content(next) {},
 		precontent() {
 			this.initCreateFunctions();
 			this.initUpdateFunctions();
@@ -97,11 +97,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				enable: ui.create.div(".enable", node),
 				trigger: ui.create.div(".trigger", node),
 			};
-			if (lib.config.phonelayout) {
-				node.node.enable.style.display = "flex";
-				node.node.enable.style.flexDirection = "row";
-				node.node.enable.style.alignItems = "flex-start";
-			}
 			for (const key in plugin.controlElement) {
 				node[key] = plugin.controlElement[key];
 			}
@@ -262,75 +257,51 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 		},
 		controlElement: {
-			_getOrCreateLeftColumn() {
-				let column = this.node.enable.firstChild;
-				// 单列技能超过4个时，向左新开一列
-				if (!column || column.childNodes.length >= 4) {
-					column = ui.create.div(".skillcol", this.node.enable);
-					this.node.enable.insertBefore(column, this.node.enable.firstChild);
-					column.style.display = "flex";
-					column.style.flexDirection = "column";
-				}
-				return column;
-			},
 			add(skill, eSkills) {
 				if (Array.isArray(skill)) {
-					skill.forEach(item => this.add(item, eSkills));
+					const node = this;
+					skill.forEach(function (item) {
+						node.add(item, eSkills);
+					});
 					return this;
 				}
-				const skills = game.expandSkills([skill]).map(item => app.get.skillInfo(item));
-				const enableSkills = this.getEnableSkills(skills);
-				const showSkills = enableSkills.length ? enableSkills : skills;
-				showSkills.forEach(item => {
-					if (this.querySelector(`[data-id="${item.id}"]`)) return;
-					if (item.type === "enable") {
-						this.createEnableSkill(item);
-					} else {
-						this.createTriggerSkill(item, eSkills);
-					}
+				const self = this;
+				const skills = game.expandSkills([skill]).map(function (item) {
+					return app.get.skillInfo(item);
 				});
-				return this;
-			},
-			getEnableSkills(skills) {
 				let hasSame = false;
-				const enableSkills = skills.filter(item => {
+				const enableSkills = skills.filter(function (item) {
 					if (item.type !== "enable") return false;
 					if (item.name === skills[0].name) hasSame = true;
 					return true;
 				});
 				if (!hasSame) enableSkills.unshift(skills[0]);
-				return enableSkills;
-			},
-			createEnableSkill(item) {
-				const skillName = get.translation(item.name).slice(0, 2);
-				const isLimited = lib.skill[item.id].limited;
-				const className = isLimited ? ".xiandingji" : ".skillitem";
-				let node;
-				if (lib.config.phonelayout) {
-					const column = this._getOrCreateLeftColumn();
-					node = ui.create.div(className, column, skillName);
-					if (column.firstChild) {
-						column.insertBefore(node, column.firstChild);
+				const showSkills = enableSkills.length ? enableSkills : skills;
+				showSkills.forEach(function (item) {
+					let node = self.querySelector(`[data-id="${item.id}"]`);
+					if (node) return;
+					if (item.type === "enable") {
+						const skillName = get.translation(item.name).slice(0, 2);
+						const className = lib.skill[item.id].limited ? ".xiandingji" : ".skillitem";
+						node = ui.create.div(className, self.node.enable, skillName);
+						node.dataset.id = item.id;
+						if (lib.skill[item.id]?.zhuanhuanji) node.classList.add("zhuanhuanji");
+						if (get.is.locked(item.id, game.me)) node.classList.add("locked");
+						node.addEventListener(lib.config.touchscreen ? "touchend" : "click", function () {
+							if (lib.config["extension_十周年UI_bettersound"]) game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
+						});
+						app.listen(node, plugin.clickSkill);
+						return;
 					}
-				} else {
-					node = ui.create.div(className, this.node.enable, skillName);
-				}
-				node.dataset.id = item.id;
-				node.addEventListener("click", () => {
-					if (lib.config["extension_十周年UI_bettersound"]) game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
+					if (!item.info || !item.translation) return;
+					if (eSkills?.includes(item.id)) return;
+					const targetNode = lib.config.phonelayout ? "trigger" : "enable";
+					node = ui.create.div(".skillitem", self.node[targetNode], get.translation(item.name).slice(0, 2));
+					node.dataset.id = item.id;
+					if (lib.skill[item.id]?.zhuanhuanji) node.classList.add("zhuanhuanji");
+					if (get.is.locked(item.id, game.me)) node.classList.add("locked");
 				});
-				app.listen(node, plugin.clickSkill);
-			},
-			createTriggerSkill(item, eSkills) {
-				if (!item.info || !item.translation) return;
-				if (eSkills && eSkills.includes(item.id)) return;
-				const skillName = get.translation(item.name).slice(0, 2);
-				const targetNode = lib.config.phonelayout ? this.node.trigger : this.node.enable;
-				const node = ui.create.div(".skillitem", targetNode, skillName);
-				if (lib.config.phonelayout && targetNode.firstChild) {
-					targetNode.insertBefore(node, targetNode.firstChild);
-				}
-				node.dataset.id = item.id;
+				return this;
 			},
 			update() {
 				const skills = [];
@@ -340,18 +311,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (lib.config.phonelayout && ui.gskills) {
 					skills.addArray(ui.gskills.skills);
 				}
-				Array.from(this.node.enable.querySelectorAll(".skillitem, .xiandingji")).forEach(item => {
-					item.classList.toggle("usable", skills.includes(item.dataset.id));
-					item.classList.toggle("select", _status.event.skill === item.dataset.id);
+				Array.from(this.node.enable.childNodes).forEach(function (item) {
+					item.classList[skills.includes(item.dataset.id) ? "add" : "remove"]("usable");
+					item.classList[_status.event.skill === item.dataset.id ? "add" : "remove"]("select");
 				});
 				const level1 = Math.min(4, this.node.trigger.childNodes.length);
-				let level2 = 0;
-				if (lib.config.phonelayout) {
-					const enableCount = this.node.enable.querySelectorAll(".skillitem, .xiandingji").length;
-					level2 = enableCount > 2 ? 4 : enableCount > 0 ? 2 : 0;
-				} else {
-					level2 = this.node.enable.childNodes.length > 2 ? 4 : this.node.enable.childNodes.length > 0 ? 2 : 0;
-				}
+				const level2 = this.node.enable.childNodes.length > 2 ? 4 : this.node.enable.childNodes.length > 0 ? 2 : 0;
 				const level = Math.max(level1, level2);
 				ui.arena.dataset.sclevel = level;
 			},
@@ -465,10 +430,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			let skillMarksNode = player.node.xSkillMarks;
 			if (!skillMarksNode) return;
 			const suitMap = {
-				"spade": "spade",
-				"heart": "heart",
-				"club": "club",
-				"diamond": "diamond"
+				spade: "spade",
+				heart: "heart",
+				club: "club",
+				diamond: "diamond",
 			};
 			const faluMarks = {};
 			lib.suit.forEach(suit => {
@@ -496,12 +461,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (!skillMarksNode) return;
 			const factions = ["qun", "shu", "wei", "wu", "jin", "shen"];
 			const factionMap = {
-				"qun": "qun",
-				"shu": "shu",
-				"wei": "wei",
-				"wu": "wu",
-				"jin": "jin",
-				"shen": "shen",
+				qun: "qun",
+				shu: "shu",
+				wei: "wei",
+				wu: "wu",
+				jin: "jin",
+				shen: "shen",
 			};
 			const canxiSkills = {};
 			factions.forEach(faction => {

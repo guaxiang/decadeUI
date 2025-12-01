@@ -14,7 +14,7 @@ const dynamics = [];
 dynamics.getById = function (id) {
 	return this.find(item => item.id === id) ?? null;
 };
-onmessage = (e) => {
+onmessage = e => {
 	const { data } = e;
 	const handlers = {
 		CREATE(d) {
