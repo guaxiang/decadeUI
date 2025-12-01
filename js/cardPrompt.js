@@ -15,6 +15,19 @@ decadeModule.import((lib, game, ui, get) => {
 		if (!dialog) return;
 		if (typeof dialog === "object" && dialog.close) dialog.close();
 	};
+	const resetHandTips = () => {
+		closeDialog(ui.cardDialog);
+		delete ui.cardDialog;
+		const tips = dui?.statics?.handTips;
+		if (!Array.isArray(tips)) return;
+		tips.forEach(tip => {
+			if (!tip) return;
+			tip.clear?.();
+			tip.hide?.();
+			if (tip.$info) tip.$info.innerHTML = "";
+			tip.closed = true;
+		});
+	};
 	const ensureTip = () => {
 		if (ui.cardDialog) {
 			ui.cardDialog.close();
@@ -314,4 +327,16 @@ decadeModule.import((lib, game, ui, get) => {
 			delete ui.cardDialog;
 		}
 	});
+	const installPromptCleanup = () => {
+		if (game.__decadePromptCleanupInstalled || typeof game.over !== "function") return;
+		game.__decadePromptCleanupInstalled = true;
+		const originalGameOver = game.over;
+		game.over = function decadeUIPromptCleanup(...args) {
+			try {
+				resetHandTips();
+			} catch (error) {}
+			return originalGameOver.apply(this, args);
+		};
+	};
+	installPromptCleanup();
 });
