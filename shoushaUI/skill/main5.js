@@ -4,12 +4,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) { },
+		content(next) {},
 		precontent() {
 			this.initCreateMethods();
 			this.initUpdateMethods();
 			this.initRewrites();
 			this.initVideoContent();
+			this.initTimer();
 			ui.skillControlArea = ui.create.div();
 		},
 		initCreateMethods() {
@@ -324,9 +325,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 					const zhuanhuanImg = document.createElement("img");
 					zhuanhuanImg.className = "skill-zhuanhuan-icon";
-					zhuanhuanImg.src = imgType === "yang"
-						? "extension/十周年UI/shoushaUI/skill/babysha/mark_yanghs.png"
-						: "extension/十周年UI/shoushaUI/skill/babysha/mark_yinghs.png";
+					zhuanhuanImg.src = imgType === "yang" ? "extension/十周年UI/shoushaUI/skill/babysha/mark_yanghs.png" : "extension/十周年UI/shoushaUI/skill/babysha/mark_yinghs.png";
 					zhuanhuanImg.style.position = "absolute";
 					zhuanhuanImg.style.top = "0";
 					zhuanhuanImg.style.left = "0";
@@ -583,6 +582,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 				_status.clicked = false;
 			},
+		},
+		initTimer() {
+			if (plugin.refreshTimer) {
+				clearInterval(plugin.refreshTimer);
+			}
+			plugin.refreshTimer = setInterval(() => {
+				plugin.refreshSkillControls();
+			}, 1000);
+		},
+		refreshSkillControls() {
+			if (!game.me) return;
+			ui.updateSkillControl(game.me, true);
 		},
 		updateMark(player) {
 			const equipHeight = player.node.equips.childNodes.length * 22;

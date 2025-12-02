@@ -4,8 +4,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) { },
+		content(next) {},
 		precontent() {
+			this.initTimer();
 			Object.assign(ui.create, {
 				skills(skills) {
 					ui.skills = plugin.createSkills(skills, ui.skills);
@@ -189,7 +190,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						try {
 							const tmp = game.me.getSkills("invisible", null, false) || [];
 							nativeSkillsRaw = nativeSkillsRaw.concat(tmp);
-						} catch (e) { }
+						} catch (e) {}
 					}
 					nativeSkillsRaw.forEach(function (s) {
 						const expanded = game.expandSkills([s]) || [];
@@ -591,6 +592,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 				_status.clicked = false;
 			},
+		},
+		initTimer() {
+			if (plugin.refreshTimer) {
+				clearInterval(plugin.refreshTimer);
+			}
+			plugin.refreshTimer = setInterval(() => {
+				plugin.refreshSkillControls();
+			}, 1000);
+		},
+		refreshSkillControls() {
+			if (!game.me) return;
+			ui.updateSkillControl(game.me, true);
 		},
 		updateMark(player) {
 			const eh = player.node.equips.childNodes.length * 22;

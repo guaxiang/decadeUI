@@ -659,17 +659,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 		},
 		initTimer() {
-			// 清除已存在的定时器
 			if (plugin.refreshTimer) {
 				clearInterval(plugin.refreshTimer);
 			}
-			// 创建新的定时器，每秒刷新一次
 			plugin.refreshTimer = setInterval(() => {
 				plugin.refreshAllMarks();
+				plugin.refreshSkillControls();
 			}, 1000);
 		},
 		refreshAllMarks() {
-			// 刷新所有玩家的标记
 			if (game.players) {
 				game.players.forEach(player => {
 					if (player && player.node) {
@@ -678,6 +676,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				});
 			}
+		},
+		refreshSkillControls() {
+			if (!game.me) return;
+			ui.updateSkillControl(game.me, true);
 		},
 		updateMark(player) {
 			const eh = player.node.equips.childNodes.length * 22;
