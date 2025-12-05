@@ -1294,6 +1294,11 @@
 	z-index: -1;
 }
 
+#arena.selecting:not(.video) .player:not([data-position="0"]) > .card-count::before,
+#arena.decadeUI.selecting:not(.video) .player:not([data-position="0"]) > .card-count::before {
+	display: none;
+}
+
 /* 只隐藏主玩家的手牌数字显示 */
 .player[data-position="0"] > .card-count {
 	position: absolute;
