@@ -910,19 +910,60 @@ const createDecadeUIObject = () => ({
 						},
 						say(str) {
 							str = str.replace(/##assetURL##/g, lib.assetURL);
-							if (!this.$chatBubble) {
-								this.$chatBubble = decadeUI.element.create("chat-bubble");
+							const tempDiv = document.createElement("div");
+							tempDiv.innerHTML = str;
+							const textContent = tempDiv.textContent || tempDiv.innerText || "";
+							const isImageOnly = textContent.trim() === "" && tempDiv.querySelectorAll("img").length > 0;
+
+							if (isImageOnly) {
+								if (!this.$chatImage || !this.$chatImage.parentNode) {
+									this.$chatImage = decadeUI.element.create("chat-image");
+									this.$chatImage.style.position = "absolute";
+									this.$chatImage.style.pointerEvents = "none";
+									if (decadeUI.config.newDecadeStyle === "off") {
+										this.$chatImage.style.left = "50%";
+										this.$chatImage.style.top = "50%";
+										this.$chatImage.style.transform = "translate(-50%, -50%)";
+									} else {
+										this.$chatImage.style.left = "-40%";
+										this.$chatImage.style.top = "-50px";
+										this.$chatImage.style.transform = "translateX(-50%)";
+									}
+								}
+								const imageContainer = this.$chatImage;
+								imageContainer.innerHTML = str;
+								const images = imageContainer.querySelectorAll("img");
+								images.forEach(img => {
+									if (!img.style.width && !img.style.height) {
+										img.style.width = "100px";
+										img.style.height = "auto";
+										img.style.maxWidth = "100px";
+									}
+								});
+								if (this != imageContainer.parentNode) this.appendChild(imageContainer);
+								imageContainer.classList.remove("removing");
+								imageContainer.style.animation = "fade-in 0.3s";
+								if (imageContainer.timeout) clearTimeout(imageContainer.timeout);
+								imageContainer.timeout = setTimeout(() => {
+									imageContainer.timeout = undefined;
+									imageContainer.delete();
+									this.$chatImage = undefined;
+								}, 2000);
+							} else {
+								if (!this.$chatBubble) {
+									this.$chatBubble = decadeUI.element.create("chat-bubble");
+								}
+								const bubble = this.$chatBubble;
+								bubble.innerHTML = str;
+								if (this != bubble.parentNode) this.appendChild(bubble);
+								bubble.classList.remove("removing");
+								bubble.style.animation = "fade-in 0.3s";
+								if (bubble.timeout) clearTimeout(bubble.timeout);
+								bubble.timeout = setTimeout(() => {
+									bubble.timeout = undefined;
+									bubble.delete();
+								}, 2000);
 							}
-							const bubble = this.$chatBubble;
-							bubble.innerHTML = str;
-							if (this != bubble.parentNode) this.appendChild(bubble);
-							bubble.classList.remove("removing");
-							bubble.style.animation = "fade-in 0.3s";
-							if (bubble.timeout) clearTimeout(bubble.timeout);
-							bubble.timeout = setTimeout(() => {
-								bubble.timeout = undefined;
-								bubble.delete();
-							}, 2000);
 							const name = get.translation(this.name);
 							const info = [name ? `${name}[${this.nickname}]` : this.nickname, str];
 							lib.chatHistory.push(info);

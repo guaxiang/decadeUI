@@ -1,4 +1,4 @@
-.menu-container>.menu.main {
+.menu-container > .menu.main {
 	/*框整体*/
 	width: 80%;
 	margin-left: 9%;
@@ -12,18 +12,18 @@
 }
 
 /* 非触屏布局样式 */
-.menu-container:not(.phonelayout)>.menu.main {
+.menu-container:not(.phonelayout) > .menu.main {
 	left: calc(50% - 48%);
 	top: calc(50% - 45%);
 	transform-origin: center center;
 }
 
-.menu-container>.menu.main.center {
+.menu-container > .menu.main.center {
 	top: 12px !important;
 	left: 10px !important;
 }
 
-.menu.main>.menu-tab>div {
+.menu.main > .menu-tab > div {
 	/*标题栏文字显示*/
 	display: inline-block;
 	height: 27.5px;
@@ -41,17 +41,17 @@
 	background-size: 100% 100%;
 }
 
-.menu.main>.menu-tab>div:hover {
+.menu.main > .menu-tab > div:hover {
 	background-image: url("../image/button/square_light.png");
 }
 
-.menu.main>.menu-tab>div:not(.active):not(*:hover),
-.menu.main>.menu-tab>.disabled {
+.menu.main > .menu-tab > div:not(.active):not(*:hover),
+.menu.main > .menu-tab > .disabled {
 	color: #ffffff;
 	background-image: url("../image/button/square_drck.png");
 }
 
-.menu.main>.menu-content>div>.left.pane>div {
+.menu.main > .menu-content > div > .left.pane > div {
 	width: calc(100% - 45px);
 	top: 25px;
 	margin-top: -3px;
@@ -70,24 +70,24 @@
 	box-shadow: none;
 }
 
-.menu.main>.menu-content>div>.left.pane>div:hover {
+.menu.main > .menu-content > div > .left.pane > div:hover {
 	background-image: url("../image/button/square_light.png") !important;
 }
 
-.menu.main>.menu-content>div>.left.pane>div:not(.active):not(*:hover),
-.menu.main>.menu-content>div>.left.pane>.disabled {
+.menu.main > .menu-content > div > .left.pane > div:not(.active):not(*:hover),
+.menu.main > .menu-content > div > .left.pane > .disabled {
 	color: #ffffff;
 	background-image: url("../image/button/square_drck.png") !important;
 }
 
-.menu.main>.menu-content>div>.left.pane>div {
+.menu.main > .menu-content > div > .left.pane > div {
 	overflow: hidden;
 	/* 隐藏超出的内容 */
 	position: relative;
 	/* 设置相对定位 */
 }
 
-.menu.main>.menu-content>div>.left.pane>div.no-scroll {
+.menu.main > .menu-content > div > .left.pane > div.no-scroll {
 	-webkit-overflow-scrolling: disabled;
 	/* 在iOS设备上禁止滑动 */
 	scroll-behavior: block;
@@ -116,7 +116,7 @@
 	line-height: 40px;
 }
 
-.menu.main>.menu-tab {
+.menu.main > .menu-tab {
 	/*菜单顶部标题栏*/
 	height: 40px;
 	left: -60px;
@@ -132,18 +132,18 @@
 	border-style: solid;
 }
 
-.menu.main>.menu-content>div>.left.pane>.lefttext {
+.menu.main > .menu-content > div > .left.pane > .lefttext {
 	/*全部开启和恢复默认*/
 	font-size: 15px;
 	margin-left: 8px;
 }
 
-.menu.main>.menu-tab-bar {
+.menu.main > .menu-tab-bar {
 	/*标题栏进度条*/
 	display: none;
 }
 
-.menu.main>.menu-content>div>.right.pane {
+.menu.main > .menu-content > div > .right.pane {
 	/*右侧内容栏*/
 	left: 22%;
 	width: 70%;
@@ -151,7 +151,7 @@
 	top: 3%;
 }
 
-.menu.main>.menu-content>div>.left.pane {
+.menu.main > .menu-content > div > .left.pane {
 	/*菜单栏左侧标题*/
 	width: 20%;
 	left: 2%;
@@ -159,7 +159,7 @@
 	overflow: scroll;
 }
 
-.menu.main>.menu-content {
+.menu.main > .menu-content {
 	/*菜单具体内容*/
 	height: calc(100% - 38px);
 	position: relative;
@@ -169,7 +169,7 @@
 	font-size: 20px;
 }
 
-.config.config.toggle>div {
+.config.config.toggle > div {
 	/*开关按钮-关闭*/
 	--w: 60px;
 	--h: calc(var(--w) * 83 / 158);
@@ -184,17 +184,17 @@
 	box-shadow: none;
 }
 
-.config.config.toggle.on>div {
+.config.config.toggle.on > div {
 	/*开关按钮-开启*/
 	background-image: url("../image/button/kg_on.png");
 	box-shadow: none;
 }
 
-.config.config.toggle>div>div {
+.config.config.toggle > div > div {
 	visibility: hidden;
 }
 
-.menu.main>.menu-content>div>.left.pane>div img {
+.menu.main > .menu-content > div > .left.pane > div img {
 	display: block !important;
 	margin-left: auto !important;
 	margin-right: auto !important;
