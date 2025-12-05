@@ -294,11 +294,14 @@ decadeModule.import((lib, game, ui, get) => {
 		const handleRespond = () => {
 			closeDialog(ui.cardDialog);
 			delete ui.cardDialog;
-			closeDialog(event.dialog);
-			event.dialog = false;
+			event.prompt = false;
+			event.prompt2 = false;
+			if (event.dialog && typeof event.dialog.addText === "function") {
+				closeDialog(event.dialog);
+			}
+			delete event.dialog;
 			const tip = ensureTip();
 			const respondTipText = buildRespondTipText(event);
-			event.prompt = false;
 			appendTipText(tip, respondTipText);
 			tip.strokeText();
 			tip.show();
