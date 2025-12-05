@@ -1234,11 +1234,6 @@
 	z-index: -1;
 }
 
-#arena.selecting:not(.video) .player:not([data-position="0"]) > .card-count::before,
-#arena.decadeUI.selecting:not(.video) .player:not([data-position="0"]) > .card-count::before {
-	display: none;
-}
-
 /*玩家身份标记*/
 .player > .identity,
 #arena > .player:not(.minskin) > .identity {
