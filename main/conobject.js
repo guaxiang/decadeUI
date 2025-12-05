@@ -4328,30 +4328,6 @@ const createDecadeUIObject = () => ({
 					[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 					return result;
 				},
-				addOverDialog(dialog, result) {
-					const sprite = decadeUI.backgroundAnimation.current;
-					if (!(sprite && sprite.name == "skin_xiaosha_default")) return;
-					decadeUI.backgroundAnimation.canvas.style.zIndex = 7;
-					const actions = {
-						战斗胜利: () => {
-							sprite.scaleTo(1.8, 600);
-							sprite.setAction("shengli");
-						},
-						平局: () => {
-							if (!duicfg.rightLayout) sprite.flipX = true;
-							sprite.moveTo([0, 0.5], [0, 0.25], 600);
-							sprite.scaleTo(2.5, 600);
-							sprite.setAction("gongji");
-						},
-						战斗失败: () => {
-							if (!duicfg.rightLayout) sprite.flipX = true;
-							sprite.moveTo([0, 0.5], [0, 0.25], 600);
-							sprite.scaleTo(2.5, 600);
-							sprite.setAction("gongji");
-						},
-					};
-					actions[result]?.();
-				},
 			},
 			get: {
 				//十周年UI技能排除
