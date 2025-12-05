@@ -102,6 +102,183 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		};
 		document.body.appendChild(questionBtn);
 	}
+	function createQuickMessages(rightbg) {
+		let skills = game.me.getSkills(null, false, false).filter(skill => {
+			let info = get.info(skill);
+			return !info || !info.charlotte;
+		});
+		let skillsx = skills;
+		for (let skill of skills) {
+			let info = get.info(skill);
+			if (info.derivation) {
+				if (Array.isArray(info.derivation)) {
+					for (let name of info.derivation) {
+						skillsx.push(name);
+					}
+				} else {
+					skillsx.push(info.derivation);
+				}
+			}
+		}
+		skillsx = skillsx.filter((item, index) => skillsx.indexOf(item) === index);
+		for (let name of skillsx) {
+			if (!get.info(name)) continue;
+			let textList = game.parseSkillText(name, game.me.name);
+			let audioList = game.parseSkillAudio(name, game.me.name);
+			for (let i = 0; i < textList.length; i++) {
+				ui.create.div(".talkquick", `[${get.skillTranslation(name)}]${textList[i]}`, rightbg, function () {
+					let actualPath;
+					if (audioList[i].slice(0, 4) === "ext:") actualPath = `../extension/${audioList[i].slice(4)}`;
+					else actualPath = `../audio/${audioList[i]}`;
+					if (game.online) {
+						game.send("chat", game.onlineID, textList[i]);
+						game.send("chat", game.onlineID, `/audio${actualPath}`);
+					} else {
+						game.me.chat(textList[i]);
+						game.broadcastAll(function (receivedPath) {
+							if (lib.config.background_speak) game.playAudio(receivedPath);
+						}, actualPath);
+					}
+				});
+			}
+		}
+		for (let i = 0; i < lib.quickVoice.length; i++) {
+			let chat = lib.quickVoice[i];
+			ui.create.div(".talkquick", chat, rightbg, function () {
+				if (game.online) game.send("chat", game.onlineID, chat);
+				else game.me.chat(chat);
+			});
+		}
+	}
+	function createEmotionPanel(rightbg) {
+		const gridStyle = { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridGap: "5px", width: "max-content", margin: "0 auto" };
+		let list1, list2;
+		function createDivWithStyle(className, content, style) {
+			const div = ui.create.div(className, content);
+			Object.assign(div.style, style);
+			return div;
+		}
+		function createEmotionButton(pack, emotionID) {
+			const button = ui.create.div(".card.fullskin", `<img src="${lib.assetURL}image/emotion/${pack}/${emotionID}.gif" width="80" height="80">`, () => {
+				if (game.online) game.send("emotion", game.onlineID, pack, emotionID);
+				else game.me.emotion(pack, emotionID);
+			});
+			button.emotionID = emotionID;
+			button.pack = pack;
+			Object.assign(button.style, { width: "80px", height: "80px" });
+			return button;
+		}
+		function createEmotionPack(pack) {
+			const packDiv = ui.create.div(".card.fullskin", `<img src="${lib.assetURL}image/emotion/${pack}/1.gif" width="80" height="80">`, () => {
+				list2.innerHTML = "";
+				const count = lib.emotionList[pack];
+				for (let j = 1; j <= count; j++) {
+					const emotionButton = createEmotionButton(pack, j);
+					list2.appendChild(emotionButton);
+				}
+				list1.style.display = "none";
+				list2.style.display = "grid";
+			});
+			packDiv.pack = pack;
+			Object.assign(packDiv.style, { width: "80px", height: "80px" });
+			return packDiv;
+		}
+		if (!list1) list1 = createDivWithStyle(".emotionbg", rightbg, gridStyle);
+		else list1.style.display = "grid";
+		if (!list2) list2 = createDivWithStyle(".emotionbg", rightbg, gridStyle);
+		list1.innerHTML = "";
+		list2.innerHTML = "";
+		for (const pack in lib.emotionList) {
+			const emotionPack = createEmotionPack(pack);
+			list1.appendChild(emotionPack);
+		}
+	}
+	function createHistoryPanel(rightbg) {
+		const nameColor = "rgb(220, 170, 50)";
+		for (let chat of lib.chatHistory) {
+			const content = `<span style="color:${nameColor};">${chat[0]}：</span><br>${chat[1]}`;
+			ui.create.div(".talkhistory", content, rightbg);
+		}
+		rightbg.scrollTop = rightbg.scrollHeight;
+	}
+	function createTypeChangeButtons(typechanges, typechange, rightbg, defaultTab) {
+		let allButtons = [];
+		for (let [buttonName, config] of Object.entries(typechange)) {
+			let button = ui.create.div(".typechange", config.name, typechanges);
+			allButtons.push(button);
+			let originalClick = config.click;
+			button.onclick = function () {
+				allButtons.forEach(btn => btn.classList.remove("typechangelight"));
+				this.classList.add("typechangelight");
+				while (rightbg.firstChild) {
+					rightbg.removeChild(rightbg.firstChild);
+				}
+				if (originalClick) originalClick.call(this);
+			};
+		}
+		typechange.quick.click();
+		if (allButtons.length > 0) allButtons[0].classList.add("typechangelight");
+		if (defaultTab) {
+			const order = ["quick", "emoje", "history"];
+			const idx = order.indexOf(defaultTab);
+			if (idx >= 0 && allButtons[idx]) allButtons[idx].onclick();
+		}
+	}
+	function setupInputHandler(dazi, getShuru, setShuru, rightbg, container) {
+		dazi.addEventListener("click", function (event) {
+			event.stopPropagation();
+			let shuru = getShuru();
+			if (!shuru) {
+				shuru = document.createElement("input");
+				shuru.type = "text";
+				shuru.placeholder = "请输入要说的话";
+				Object.assign(shuru.style, {
+					position: "absolute",
+					left: "50%",
+					transform: "translateX(-50%)",
+					zIndex: "1000",
+					top: "5%",
+					width: "60%",
+					height: "10%",
+					fontSize: "30px",
+					backgroundColor: "rgba(255, 255, 255, 0.9)",
+					border: "2px solid #C1AD92",
+					borderRadius: "5px",
+					padding: "5px",
+					outline: "none",
+					pointerEvents: "auto",
+				});
+				ui.window.appendChild(shuru);
+				setShuru(shuru);
+			}
+			shuru.style.display = "block";
+			shuru.focus();
+		});
+		ui.window.addEventListener("click", function (event) {
+			let shuru = getShuru();
+			if (shuru && shuru.style.display === "block") {
+				if (!shuru.contains(event.target) && event.target !== dazi) {
+					shuru.style.display = "none";
+				}
+			}
+		});
+		document.addEventListener("keydown", function (event) {
+			let shuru = getShuru();
+			if (shuru && shuru.style.display === "block" && event.key === "Enter") {
+				let inputValue = shuru.value.trim();
+				if (inputValue) {
+					if (game.online) game.send("chat", game.onlineID, inputValue);
+					else game.me.chat(inputValue);
+					while (rightbg.firstChild) {
+						rightbg.removeChild(rightbg.firstChild);
+					}
+					createHistoryPanel(rightbg);
+				}
+				shuru.value = "";
+				shuru.style.display = "none";
+			}
+		});
+	}
 	// 创建手牌整理按钮
 	function createSortButton() {
 		const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
@@ -201,7 +378,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				},
 				ui.window
 			);
-			const guanbi = ui.create.div(".bgback", popuperContainer, (e) => {
+			const guanbi = ui.create.div(".bgback", popuperContainer, e => {
 				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 				popuperContainer.hide();
 				game.resume2();
@@ -221,10 +398,10 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				img.dataset.name = fileName;
 
 				if (fileName.startsWith("custom_")) {
-					game.getDB("image", fileName, (fileToLoad) => {
+					game.getDB("image", fileName, fileToLoad => {
 						if (fileToLoad) {
 							const fileReader = new FileReader();
-							fileReader.onload = (fileLoadedEvent) => {
+							fileReader.onload = fileLoadedEvent => {
 								const data = fileLoadedEvent.target.result;
 								img.style.backgroundImage = `url(${data})`;
 								img.style.backgroundSize = "cover";
@@ -290,7 +467,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						}
 					}
 					let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
-					allSelectedElements.forEach((selectedElement) => {
+					allSelectedElements.forEach(selectedElement => {
 						selectedElement.parentNode.removeChild(selectedElement);
 					});
 					ui.create.div(".bgxuanzhong", img);
@@ -302,7 +479,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				let backgroundName = backgroundItems[fileName];
 				ui.create.div(".buttontext", backgroundName, img);
 			}
-			((container) => {
+			(container => {
 				const addItem = ui.create.div(".backgrounds", container);
 				ui.create.div(".buttontext", "添加背景", addItem);
 				const input = document.createElement("input");
@@ -315,7 +492,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 					input.click();
 				});
-				input.onchange = (e) => {
+				input.onchange = e => {
 					const files = e.target.files;
 					if (!files || files.length === 0) return;
 					const fileList = Array.from(files);
@@ -363,7 +540,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					this.classList.toggle("active");
 					const items = Array.from(container.querySelectorAll(".backgrounds"));
 					const self = this;
-					items.slice(0, Math.max(0, items.length - 2)).forEach((item) => {
+					items.slice(0, Math.max(0, items.length - 2)).forEach(item => {
 						const fname = item.dataset.name;
 						if (!fname) return;
 						const textDiv = item.querySelector(".buttontext");
@@ -551,7 +728,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			})();
 		},
 		create: {
-			control() { },
+			control() {},
 			confirm() {
 				const confirm = ui.create.control("<span>确定</span>", "cancel");
 				confirm.classList.add("lbtn-confirm");
@@ -643,21 +820,21 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					if (isRightLayout) {
 						if (isXPJ) {
 							ui.create.div(".huanfuButton", ui.arena, plugin.click.huanfu);
-							ui.create.div(".jiluButton", ui.arena, ui.click.pause);
+							ui.create.div(".jiluButton", ui.arena, plugin.click.talk);
 						} else {
 							ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
-							ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
-							ui.create.div(".meiguiButton_new", ui.arena);
-							ui.create.div(".xiaolianButton_new", ui.arena);
+							ui.create.div(".jiluButton_new", ui.arena, plugin.click.talk);
+							ui.create.div(".meiguiButton_new", ui.arena, ui.click.pause);
+							ui.create.div(".xiaolianButton_new", ui.arena, plugin.click.xiaolian);
 						}
 					} else {
 						if (isXPJ) {
 							ui.create.div(".huanfuButton1", ui.arena, plugin.click.huanfu);
-							ui.create.div(".jiluButton1", ui.arena, ui.click.pause);
+							ui.create.div(".jiluButton1", ui.arena, plugin.click.talk);
 						} else {
 							ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
-							ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
-							ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
+							ui.create.div(".jiluButton_new1", ui.arena, plugin.click.talk);
+							ui.create.div(".meiguiButton_new1", ui.arena, ui.click.pause);
 							ui.create.div(".xiaolianButton_new1", ui.arena, plugin.click.xiaolian);
 						}
 					}
@@ -765,7 +942,37 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				// 玫瑰按钮点击处理
 			},
 			xiaolian() {
-				// 笑脸按钮点击处理
+				plugin.click.talk("emoje");
+			},
+			talk(defaultTab) {
+				if (!game.me) return;
+				let shuru = null;
+				let container = ui.create.div(".popup-container", ui.window, function (e) {
+					if (e.target === container) container.hide();
+					if (shuru) {
+						shuru.value = "";
+						shuru.style.display = "none";
+					}
+				});
+				let bg = ui.create.div(".talkbg", container);
+				let typechanges = ui.create.div(".typechanges", bg);
+				let rightbg = ui.create.div(".talkrightbg", bg);
+				const typechange = {
+					quick: { name: "快捷", click: () => createQuickMessages(rightbg) },
+					emoje: { name: "表情", click: () => createEmotionPanel(rightbg) },
+					history: { name: "消息", click: () => createHistoryPanel(rightbg) },
+				};
+				createTypeChangeButtons(typechanges, typechange, rightbg, defaultTab);
+				let dazi = ui.create.div(".dazi", "打字", bg);
+				setupInputHandler(
+					dazi,
+					() => shuru,
+					val => {
+						shuru = val;
+					},
+					rightbg,
+					container
+				);
 			},
 			setting() {
 				// 设置按钮点击处理

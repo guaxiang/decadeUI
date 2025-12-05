@@ -398,7 +398,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		const updatePlayerNicknames = () => {
 			game.countPlayer(current => {
 				const namex = current === game.me ? lib.config.connect_nickname : ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "无语", "小曦", "墨渊", "k9", "扶苏", "皇叔"].randomGet();
-				if (!game.hasPlayer(current => { })) if (!current.nickname) current.nickname = namex;
+				if (!game.hasPlayer(current => {})) if (!current.nickname) current.nickname = namex;
 			});
 		};
 		const buildIdentityString = () => {
@@ -674,23 +674,25 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const editbg = function () {
 					this.classList.toggle("active");
 					const items = Array.from(container.querySelectorAll(".backgrounds"));
-					items.slice(0, Math.max(0, items.length - 2)).forEach(function (item) {
-						const fname = item.dataset.name;
-						if (!fname) return;
-						const textDiv = item.querySelector(".buttontext");
-						if (!textDiv) return;
-						let str;
-						if (this.classList.contains("active")) {
-							if (fname.startsWith("custom_") || fname.startsWith("cdv_")) {
-								str = "删除";
+					items.slice(0, Math.max(0, items.length - 2)).forEach(
+						function (item) {
+							const fname = item.dataset.name;
+							if (!fname) return;
+							const textDiv = item.querySelector(".buttontext");
+							if (!textDiv) return;
+							let str;
+							if (this.classList.contains("active")) {
+								if (fname.startsWith("custom_") || fname.startsWith("cdv_")) {
+									str = "删除";
+								} else {
+									str = "隐藏";
+								}
 							} else {
-								str = "隐藏";
+								str = lib.configMenu.appearence.config.image_background.item[fname] || fname;
 							}
-						} else {
-							str = lib.configMenu.appearence.config.image_background.item[fname] || fname;
-						}
-						textDiv.innerHTML = str;
-					}.bind(this));
+							textDiv.innerHTML = str;
+						}.bind(this)
+					);
 				};
 				editItem.addEventListener("click", function () {
 					Utils.playAudio(CONSTANTS.AUDIO.BUTTON);
@@ -1171,7 +1173,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	};
 	// 创建工具函数
 	const CreateUtils = {
-		control() { },
+		control() {},
 		confirm() {
 			const confirm = ui.create.control("<span>确定</span>", "cancel");
 			confirm.classList.add("lbtn-confirm");

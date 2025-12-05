@@ -920,14 +920,16 @@ const createDecadeUIObject = () => ({
 									this.$chatImage = decadeUI.element.create("chat-image");
 									this.$chatImage.style.position = "absolute";
 									this.$chatImage.style.pointerEvents = "none";
-									if (decadeUI.config.newDecadeStyle === "off") {
+									if (decadeUI.config.newDecadeStyle === "off" || decadeUI.config.newDecadeStyle === "on" || decadeUI.config.newDecadeStyle === "othersOff") {
 										this.$chatImage.style.left = "50%";
 										this.$chatImage.style.top = "50%";
 										this.$chatImage.style.transform = "translate(-50%, -50%)";
+										this.$chatImage.style.zIndex = "90";
 									} else {
 										this.$chatImage.style.left = "-40%";
 										this.$chatImage.style.top = "-50px";
 										this.$chatImage.style.transform = "translateX(-50%)";
+										this.$chatImage.style.zIndex = "90";
 									}
 								}
 								const imageContainer = this.$chatImage;
@@ -1023,7 +1025,7 @@ const createDecadeUIObject = () => ({
 							return this;
 						},
 						$dieAfter() {
-							const keepDynamicSkin = !!(lib.config && lib.config.extension_十周年UI_dynamicSkin_dieAfter);
+							const keepDynamicSkin = !!(lib.config && (lib.config.extension_十周年UI_dynamicSkin ?? lib.config.extension_十周年UI_dynamicSkin_dieAfter));
 							if (!keepDynamicSkin) this.stopDynamic();
 							this.node.gainSkill.innerHTML = null;
 							if (!this.node.dieidentity) this.node.dieidentity = ui.create.div("died-identity", this);

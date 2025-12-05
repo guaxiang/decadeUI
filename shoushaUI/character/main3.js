@@ -35,10 +35,10 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		content(next) {
 			app.waitAllFunction(
 				[
-					(next) => {
+					next => {
 						next();
 					},
-					(next) => {
+					next => {
 						lib.init.css(`${lib.assetURL}extension/${app.name}/${plugin.name}`, "main2", next);
 					},
 				],
@@ -82,7 +82,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				if (plugin.playerDialog) {
 					return plugin.playerDialog.show(this);
 				}
-				const container = ui.create.div(".popup-container.hidden", ui.window, (e) => {
+				const container = ui.create.div(".popup-container.hidden", ui.window, e => {
 					if (e.target === container) {
 						container.hide();
 						game.resume2();
@@ -100,7 +100,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				const dengji = ui.create.div(".dengji", dialog);
 				// 技能按钮
 				const skill = ui.create.div(".skillx", dialog);
-				skill.addEventListener("click", (event) => {
+				skill.addEventListener("click", event => {
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 					clearRightPane();
 					container.show(player, true);
@@ -109,7 +109,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				});
 				// 装备按钮
 				const equip = ui.create.div(".equip", dialog);
-				equip.addEventListener("click", (event) => {
+				equip.addEventListener("click", event => {
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 					clearRightPane();
 					if (skill) skill.classList.remove("active");
@@ -143,7 +143,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
 						const zbbigdialog = ui.create.div(".zbbigdialog", popuperContainer);
 						const guanbi = ui.create.div(".guanbi", popuperContainer, get.translation("   "));
-						guanbi.addEventListener("click", (event) => {
+						guanbi.addEventListener("click", event => {
 							game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 							popuperContainer.delete(200);
 							event.stopPropagation();
@@ -201,13 +201,13 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 							bigdialog,
 							get.translation(
 								"公会：" +
-								(
-									player._guildInfo ||
-									(player._guildInfo = {
-										name: ["武将美化群", "活动武将群", "😋精致小杀", "萌新花园", "😋精致小酒", "小爱莉の动物园", "Ciallo～(∠・ω< )⌒★", "美图交流群", "无名杀主题样式", "💎备用💎", "无名杀琉璃版", "圣杯战争"].randomGet(1),
-										icon: ["c1", "c2", "c3"].randomGet(),
-									})
-								).name
+									(
+										player._guildInfo ||
+										(player._guildInfo = {
+											name: ["武将美化群", "活动武将群", "😋精致小杀", "萌新花园", "😋精致小酒", "小爱莉の动物园", "Ciallo～(∠・ω< )⌒★", "美图交流群", "无名杀主题样式", "💎备用💎", "无名杀琉璃版", "圣杯战争"].randomGet(1),
+											icon: ["c1", "c2", "c3"].randomGet(),
+										})
+									).name
 							)
 						);
 						const gonghuiimg = document.createElement("div");
@@ -279,7 +279,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						deng.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.lampData.img}.png`);
 						// 关闭按钮
 						const haoyou3 = ui.create.div(".haoyou3", bigdialog, get.translation("   "));
-						haoyou3.addEventListener("click", (event) => {
+						haoyou3.addEventListener("click", event => {
 							game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 							popuperContainer.delete(200);
 							event.stopPropagation();
@@ -296,7 +296,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						}
 						minixingxiang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.miniXingxiangData.img}.png`);
 					};
-				}
+				};
 				// 设置背景
 				const group = player.group;
 				const bgImagePath = plugin.getGroupBackgroundImage(group);
@@ -434,7 +434,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				// 关闭按钮
 				const diaozhui = ui.create.div(".diaozhui", dialog);
 				diaozhui.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/guanbi.png");
-				diaozhui.addEventListener("click", (event) => {
+				diaozhui.addEventListener("click", event => {
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 					container.hide();
 					game.resume2();
@@ -470,7 +470,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						createProfilePage();
 					}
 					let oSkills = player.getSkills(null, false, false).slice(0);
-					oSkills = oSkills.filter((skill) => {
+					oSkills = oSkills.filter(skill => {
 						if (!lib.skill[skill] || skill === "jiu") return false;
 						if (lib.skill[skill].nopop || lib.skill[skill].equipSkill) return false;
 						return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] !== "";
@@ -482,7 +482,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						if (skill) skill.classList.add("active");
 						// 显示武将技能
 						if (oSkills.length) {
-							oSkills.forEach((name) => {
+							oSkills.forEach(name => {
 								if (player.forbiddenSkills[name]) {
 									if (player.forbiddenSkills[name].length) {
 										ui.create.div(".xskill", `<div data-color><span style="opacity:0.5">${lib.translate[name]}</span></div><div><span style="opacity:0.5">（与${get.translation(player.forbiddenSkills[name])}冲突）${get.skillInfoTranslation(name, player, false)}</span></div>`, rightPane.firstChild);
@@ -545,12 +545,12 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						const eSkills = player.getVCards("e");
 						if (eSkills.length) {
 							ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
-							eSkills.forEach((card) => {
+							eSkills.forEach(card => {
 								const cardx = game.createCard(get.name(card, false), get.suit(card, false), get.number(card, false), get.nature(card, false));
 								cardx.style.zoom = "0.7";
 								rightPane.firstChild.appendChild(cardx);
 							});
-							eSkills.forEach((card) => {
+							eSkills.forEach(card => {
 								const str = [get.translation(card), get.translation(card.name + "_info")];
 								const cards = card.cards;
 								if (cards?.length && (cards?.length !== 1 || cards[0].name !== card.name)) {
@@ -564,7 +564,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						// 显示手牌区域
 						if (shownHs.length) {
 							ui.create.div(".xcaption", player.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区域", rightPane.firstChild);
-							shownHs.forEach((item) => {
+							shownHs.forEach(item => {
 								const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 								card.style.zoom = "0.6";
 								rightPane.firstChild.appendChild(card);
@@ -574,7 +574,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 								hs.removeArray(shownHs);
 								if (hs.length) {
 									ui.create.div(".xcaption", "其他手牌", rightPane.firstChild);
-									hs.forEach((item) => {
+									hs.forEach(item => {
 										const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 										card.style.zoom = "0.6";
 										rightPane.firstChild.appendChild(card);
@@ -585,7 +585,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 							const hs = player.getCards("h");
 							if (hs.length) {
 								ui.create.div(".xcaption", "手牌区域", rightPane.firstChild);
-								hs.forEach((item) => {
+								hs.forEach(item => {
 									const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 									card.style.zoom = "0.6";
 									rightPane.firstChild.appendChild(card);
@@ -596,7 +596,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						const judges = player.getVCards("j");
 						if (judges.length) {
 							ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
-							judges.forEach((card) => {
+							judges.forEach(card => {
 								const cardx = game.createCard(get.name(card, false), get.suit(card, false), get.number(card, false), get.nature(card, false));
 								cardx.style.zoom = "0.8";
 								rightPane.firstChild.appendChild(cardx);
@@ -607,7 +607,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 						}
 					}
 					container.classList.remove("hidden");
-					if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();
+					game.pause2();
 				};
 				plugin.characterDialog = container;
 				container.show(player, true, true);

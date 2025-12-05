@@ -146,7 +146,7 @@ export function initPrecontentCore() {
 				this.css(`${decadeUIPath}css/menu.css`);
 			}
 
-			const jsFiles = ["js/spine.js", "js/component.js", "js/skill.js", "js/effect.js", "js/meihua.js", "js/cardPrompt.js", "js/animation.js", "js/dynamicSkin.js"];
+			const jsFiles = ["js/spine.js", "js/component.js", "js/skill.js", "js/effect.js", "js/meihua.js", "js/audioHooks.js", "js/cardPrompt.js", "js/animation.js", "js/dynamicSkin.js"];
 			jsFiles.forEach(path => this.jsAsync(`${decadeUIPath}${path}`));
 
 			if (!lib.config.asset_version) {

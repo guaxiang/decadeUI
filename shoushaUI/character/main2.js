@@ -90,7 +90,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) { },
+		content(next) {},
 		precontent() {
 			app.reWriteFunction(lib, {
 				setIntro: [
@@ -130,7 +130,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				if (plugin.playerDialog) {
 					return plugin.playerDialog.show(this);
 				}
-				const container = ui.create.div(".popup-container.hidden", ui.window, (e) => {
+				const container = ui.create.div(".popup-container.hidden", ui.window, e => {
 					if (e.target === container) {
 						container.hide();
 						game.resume2();
@@ -323,7 +323,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					});
 				}
 				container.classList.remove("hidden");
-				if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();
+				game.pause2();
 				plugin.characterDialog = container;
 			},
 		},

@@ -30,7 +30,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		filter() {
 			return !["chess", "tafang", "stone"].includes(get.mode());
 		},
-		content(next) { },
+		content(next) {},
 		precontent() {
 			app.reWriteFunction(lib, {
 				setIntro: [
@@ -153,7 +153,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		ui: {
 			// 创建基础对话框
 			createBaseDialog() {
-				const container = ui.create.div(".popup-container.hidden", ui.window, (e) => {
+				const container = ui.create.div(".popup-container.hidden", ui.window, e => {
 					if (e.target === container) {
 						container.hide();
 						game.resume2();
@@ -172,13 +172,9 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 
 			// 创建武将边框
 			createCharacterFrame(blackBg1, player) {
-				const biankuang = lib.config.extension_十周年UI_ZLLT === true
-					? ui.create.div(".biankuang", blackBg1)
-					: ui.create.div(".biankuang2", blackBg1);
+				const biankuang = lib.config.extension_十周年UI_ZLLT === true ? ui.create.div(".biankuang", blackBg1) : ui.create.div(".biankuang2", blackBg1);
 
-				const leftPane = lib.config.extension_十周年UI_ZLLT === true
-					? ui.create.div(".left", biankuang)
-					: ui.create.div(".left2", biankuang);
+				const leftPane = lib.config.extension_十周年UI_ZLLT === true ? ui.create.div(".left", biankuang) : ui.create.div(".left2", biankuang);
 				leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
 
 				return { biankuang, leftPane };
@@ -262,7 +258,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				diaozhui.style.cursor = "pointer";
 				diaozhui.style.pointerEvents = "auto";
 				diaozhui.style.zIndex = "1000";
-				diaozhui.addEventListener("click", (event) => {
+				diaozhui.addEventListener("click", event => {
 					event.stopPropagation();
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
 					container.hide();
@@ -278,7 +274,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			lib.setScroll(rightPane.firstChild);
 
 			let oSkills = player.getSkills(null, false, false).slice(0);
-			oSkills = oSkills.filter((skill) => {
+			oSkills = oSkills.filter(skill => {
 				if (!lib.skill[skill] || skill === "jiu") return false;
 				if (lib.skill[skill].nopop || lib.skill[skill].equipSkill) return false;
 				return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] !== "";
@@ -311,7 +307,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 
 			if (shownHs.length) {
 				ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区域", container);
-				shownHs.forEach((item) => {
+				shownHs.forEach(item => {
 					const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 					card.style.zoom = "0.6";
 					container.appendChild(card);
@@ -322,7 +318,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					hs.removeArray(shownHs);
 					if (hs.length) {
 						ui.create.div(".xcaption", "其他手牌", container);
-						hs.forEach((item) => {
+						hs.forEach(item => {
 							const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 							card.style.zoom = "0.6";
 							container.appendChild(card);
@@ -333,7 +329,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				const hs = player.getCards("h");
 				if (hs.length) {
 					ui.create.div(".xcaption", "手牌区域", container);
-					hs.forEach((item) => {
+					hs.forEach(item => {
 						const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 						card.style.zoom = "0.6";
 						container.appendChild(card);
@@ -430,7 +426,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			const eSkills = player.getVCards("e");
 			if (eSkills.length) {
 				ui.create.div(".xcaption", "装备区域", container);
-				eSkills.forEach((card) => {
+				eSkills.forEach(card => {
 					const str = [get.translation(card), get.translation(card.name + "_info")];
 					const cards = card.cards;
 					if (cards?.length && (cards?.length !== 1 || cards[0].name !== card.name)) {
@@ -448,7 +444,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			const judges = player.getVCards("j");
 			if (judges.length) {
 				ui.create.div(".xcaption", "判定区域", container);
-				judges.forEach((card) => {
+				judges.forEach(card => {
 					const cards = card.cards;
 					let str = get.translation(card);
 					if (cards?.length && (cards?.length !== 1 || cards[0].name !== card.name)) {
@@ -489,7 +485,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				// 创建基础对话框
 				const { container, dialog, blackBg1, blackBg2, basicInfo, rightPane } = plugin.ui.createBaseDialog();
 
-				container.show = (player) => {
+				container.show = player => {
 					let name = player.name1 || player.name;
 					let name2 = player.name2;
 
@@ -547,7 +543,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					plugin.createSkillInfo(rightPane, player, container);
 
 					container.classList.remove("hidden");
-					if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();
+					game.pause2();
 				};
 
 				plugin.characterDialog = container;

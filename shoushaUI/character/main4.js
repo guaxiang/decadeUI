@@ -335,7 +335,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				// 创建右侧信息面板
 				this.createRightPanel(dialog, rightPane, player, nametype);
 				container.classList.remove("hidden");
-				if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();
+				game.pause2();
 			}
 		}
 		// 创建详细资料按钮
@@ -439,7 +439,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			} else {
 				skills = player.getSkills(null, false, false).slice(0);
 			}
-			skills = skills.filter((skill) => {
+			skills = skills.filter(skill => {
 				if (!lib.skill[skill] || skill === "jiu") return false;
 				if (lib.skill[skill].nopop || lib.skill[skill].equipSkill) return false;
 				return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] !== "";
@@ -579,7 +579,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			const shownHs = player.getShownCards();
 			if (shownHs.length) {
 				ui.create.div(".xcaption", player.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区", container);
-				shownHs.forEach((item) => {
+				shownHs.forEach(item => {
 					const card = Utils.createCardElement(item);
 					container.appendChild(card);
 				});
@@ -588,7 +588,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 					hs.removeArray(shownHs);
 					if (hs.length) {
 						ui.create.div(".xcaption", "其他手牌", container);
-						hs.forEach((item) => {
+						hs.forEach(item => {
 							const card = Utils.createCardElement(item);
 							container.appendChild(card);
 						});
@@ -598,7 +598,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 				const hs = player.getCards("h");
 				if (hs.length) {
 					ui.create.div(".xcaption", "手牌区", container);
-					hs.forEach((item) => {
+					hs.forEach(item => {
 						const card = Utils.createCardElement(item);
 						container.appendChild(card);
 					});
@@ -610,7 +610,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			const eSkills = player.getCards("e");
 			if (!eSkills.length) return;
 			ui.create.div(".xcaption", "装备区", container);
-			eSkills.forEach((card) => {
+			eSkills.forEach(card => {
 				const suitConfig = CONSTANTS.SUIT_CONFIG[card.suit] || { symbol: "", color: "#FFFFFF" };
 				const typeIcon = CONSTANTS.EQUIP_TYPE_ICONS[get.subtype(card)] || "default.png";
 				const dianshu = get.strNumber(card.number);
@@ -625,7 +625,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 			const judges = player.getCards("j");
 			if (!judges.length) return;
 			ui.create.div(".xcaption", "判定区域", container);
-			judges.forEach((card) => {
+			judges.forEach(card => {
 				const cards = card.cards;
 				const str = [get.translation(card), get.translation(card.name + "_info")];
 				if ((Array.isArray(cards) && cards.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) {
@@ -645,7 +645,7 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 		filter() {
 			return !["chess", "tafang", "stone"].includes(get.mode());
 		},
-		content(next) { },
+		content(next) {},
 		precontent() {
 			app.reWriteFunction(lib, {
 				setIntro: [

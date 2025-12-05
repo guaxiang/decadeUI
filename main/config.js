@@ -230,29 +230,9 @@ export let config = {
 		intro: "开启后，对局内点击卡牌或按钮和出牌弃牌会有音效播放",
 		init: true,
 	},
-	dynamicBackground: {
-		name: "动态背景",
-		init: "skin_xiaosha_default",
-		item: {
-			off: "关闭",
-			skin_xiaosha_default: "小杀",
-			skin_chengzhu_城主边框: "城主边框",
-		},
-		update() {
-			if (!window.decadeUI) return;
-			const item = lib.config.extension_十周年UI_dynamicBackground;
-			if (!item || item === "off") {
-				decadeUI.backgroundAnimation.stopSpineAll();
-			} else {
-				const parts = item.split("_");
-				const skin = parts.pop();
-				const name = parts.join("_");
-				decadeUI.backgroundAnimation.play(name, skin);
-			}
-		},
-	},
 	dynamicSkin: {
 		name: "动态皮肤",
+		intro: "开启后显示动态皮肤，阵亡后也保留",
 		init: false,
 		onclick: value => {
 			game.saveConfig("extension_十周年UI_dynamicSkin", value);
@@ -265,7 +245,7 @@ export let config = {
 	},
 	dynamicSkinOutcrop: {
 		name: "动皮露头",
-		init: true,
+		init: false,
 		update() {
 			if (window.decadeUI) {
 				const enable = lib.config.extension_十周年UI_dynamicSkinOutcrop;
@@ -280,11 +260,6 @@ export let config = {
 				});
 			}
 		},
-	},
-	dynamicSkin_dieAfter: {
-		name: "保留动皮",
-		intro: "阵亡后依旧显示动态皮肤",
-		init: true,
 	},
 	cardAlternateNameVisible: {
 		name: "牌名辅助",
@@ -430,11 +405,6 @@ export let config = {
 			game.uncheck();
 			game.check();
 		},
-	},
-	viewInformationPause: {
-		name: "查看武将资料页不暂停",
-		intro: "打开此选项后，单机模式下查看本扩展设计的武将资料页时游戏不会暂停",
-		init: false,
 	},
 	outcropSkin: {
 		name: "露头样式",

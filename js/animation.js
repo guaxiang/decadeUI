@@ -50,7 +50,7 @@ var duilib;
 	duilib.lerp = function (min, max, fraction) {
 		return (max - min) * fraction + min;
 	};
-	(duilib.ease = function (fraction) {
+	((duilib.ease = function (fraction) {
 		if (!duilib.b3ease) duilib.b3ease = new duilib.CubicBezierEase(0.25, 0.1, 0.25, 1);
 		return duilib.b3ease.ease(fraction);
 	}),
@@ -79,7 +79,7 @@ var duilib;
 				return t * (this.cY + t * (this.bY + t * this.aY));
 			};
 			return CubicBezierEase;
-		})());
+		})()));
 	duilib.TimeStep = (function () {
 		function TimeStep(initParam) {
 			this.start = initParam.start;
@@ -450,7 +450,7 @@ var duilib;
 			}
 			this.check = function () {
 				if (!this.gl) {
-					function empty() { }
+					function empty() {}
 					var key;
 					for (key in this.__proto__) {
 						if (typeof this.__proto__[key] == "function") {
@@ -1015,8 +1015,8 @@ var duilib;
 			var sprite =
 				typeof sprite == "string"
 					? {
-						name: sprite,
-					}
+							name: sprite,
+						}
 					: sprite;
 			sprite.id = this.BUILT_ID++;
 			sprite.loop = true;
@@ -1323,49 +1323,49 @@ if (decadeModule)
 					name: "SSHW_TX_taijifuchen",
 				},
 				{
-					name: "taipingyaoshu"
+					name: "taipingyaoshu",
 				},
 				{
-					name: "effect_taipingyaoshu_xiexia"
+					name: "effect_taipingyaoshu_xiexia",
 				},
 				{
-					name: "qibaodao2"
+					name: "qibaodao2",
 				},
 				{
-					name: "feilongduofeng"
+					name: "feilongduofeng",
 				},
 				{
-					name: "Ss_mgk_fire"
+					name: "Ss_mgk_fire",
 				},
 				{
-					name: "Ss_mgk_tslh"
+					name: "Ss_mgk_tslh",
 				},
 				{
-					name: "Ss_Gz_WuLiuJian"
+					name: "Ss_Gz_WuLiuJian",
 				},
 				{
-					name: "Ss_Gz_SanJianLiangRenDao"
+					name: "Ss_Gz_SanJianLiangRenDao",
 				},
 				{
-					name: "Ss_ZB_YiTianJian"
+					name: "Ss_ZB_YiTianJian",
 				},
 				{
-					name: "Ss_ZB_YinFengYi"
+					name: "Ss_ZB_YinFengYi",
 				},
 				{
-					name: "zhanxiang"
+					name: "zhanxiang",
 				},
 				{
-					name: "SSHW_TX_chiyanzhenhun"
+					name: "SSHW_TX_chiyanzhenhun",
 				},
 				{
-					name: "SSHW_TX_xuwangzhimian"
+					name: "SSHW_TX_xuwangzhimian",
 				},
 				{
-					name: "Ss_ZB_ZheJi"
+					name: "Ss_ZB_ZheJi",
 				},
 				{
-					name: "Ss_ZB_NvZhuang"
+					name: "Ss_ZB_NvZhuang",
 				},
 				{
 					name: "effect_xianding",
@@ -1610,7 +1610,7 @@ if (decadeModule)
 						duanjian: {
 							skill: "duanjian",
 							name: "Ss_ZB_ZheJi",
-							scale: 0.5
+							scale: 0.5,
 						},
 						serafuku: {
 							skill: "serafuku",
@@ -1620,7 +1620,7 @@ if (decadeModule)
 						yonglv: {
 							skill: "yonglv",
 							name: "effect_numa",
-							scale: 0.4
+							scale: 0.4,
 						},
 						bagua_skill: {
 							skill: "bagua_skill",
@@ -1948,489 +1948,6 @@ if (decadeModule)
 					}
 				}
 			})();
-			return animation;
-		})();
-		decadeUI.backgroundAnimation = (function () {
-			var animation = new decadeUI.AnimationPlayer(decadeUIPath + "assets/dynamic/", document.body, "decadeUI-canvas-background");
-			decadeUI.bodySensor.addListener(function () {
-				animation.resized = false;
-			}, true);
-			animation.dprAdaptive = true;
-			animation.definedAssets = {
-				skin_xiaosha: {
-					default: {
-						name: "skin_xiaosha_default",
-						x: [0, 0.7],
-						y: [0, 0.3],
-						height: [0, 0.2],
-					},
-				},
-				skin_chengzhu: {
-					//由于设备不同，无法完美适配，自行调参数
-					城主边框: {
-						name: "skin_chengzhu_ChengZhuBianKuang",
-						x: [24, 0.89],
-						y: [17, 0.15],
-						height: [0, 0.5],
-					},
-				},
-				skin_caojinyu: {
-					惊鸿: {
-						name: "skin_caojinyu_JHQY1",
-						x: [200, 0.5],
-						y: [-50, 0.5],
-						height: [0, 0.9],
-					},
-					倩影: {
-						name: "skin_caojinyu_JHQY2",
-						x: [100, 0.5],
-						y: [-20, 0.5],
-						height: [0, 0.75],
-					},
-				},
-				skin_wangrong: {
-					云裳花容: {
-						name: "skin_wanrong_YunChangHuaRong",
-						x: [-20, 0.5],
-						y: [-30, 0.5],
-						height: [0, 0.8],
-					},
-				},
-				skin_daqiao: {
-					战场绝版: {
-						name: "skin_daqiao_ZhanChang",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					清萧清丽: {
-						name: "skin_daqiao_QingXiaoQingLi",
-						x: [0, 0.5],
-						y: [0, 0.33],
-						height: [0, 0.8],
-					},
-					衣垂绿川: {
-						name: "skin_daqiao_YiChuiLvChuan",
-						action: "DaiJi",
-						x: [0, 0.5],
-						y: [-100, 0.5],
-						height: [0, 1.2],
-						disableMask: true,
-					},
-				},
-				skin_caojie: {
-					凤历迎春: {
-						name: "skin_caojie_FengLiYingChun",
-						y: [75, 0.3],
-						height: [0, 1.5],
-					},
-					战场绝版: {
-						name: "skin_caojie_ZhanChang",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_caoying: {
-					巾帼花舞: {
-						name: "fullskin_caoying_JinGuoHuaWu",
-						x: [0, 0.4],
-						y: [75, 0.3],
-						height: [0, 0.9],
-					},
-				},
-				skin_baosanniang: {
-					舞剑铸缘: {
-						name: "skin_baosanniang_WuJianZhuYuan",
-						action: "DaiJi",
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					漫花剑俏: {
-						name: "skin_baosanniang_ManHuaJianQiao",
-						// x: [0, 0.7],
-						y: [50, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_caiwenji: {
-					才颜双绝: {
-						name: "skin_caiwenji_CaiYanShuangJue",
-						y: [-80, 0.5],
-						height: [0, 0.8],
-					},
-				},
-				skin_daqiaoxiaoqiao: {
-					战场绝版: {
-						name: "skin_daqiaoxiaoqiao_ZhanChang",
-						//x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_diaochan: {
-					玉婵仙子: {
-						name: "skin_diaochan_YuChanXianZi",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					战场绝版: {
-						name: "skin_diaochan_ZhanChang",
-						y: [75, 0.3],
-						height: [0, 1],
-					},
-				},
-				skin_dongbai: {
-					娇俏伶俐: {
-						name: "skin_dongbai_JiaoQiaoLingLi",
-						x: [0, 0.5],
-						y: [0, 0.33],
-						height: [0, 0.96],
-					},
-				},
-				skin_fanyufeng: {
-					斟酒入情: {
-						name: "skin_fanyufeng_ZhenJiuRuQing",
-						x: [0, 0.5],
-						y: [0, 0.28],
-						height: [0, 1],
-					},
-				},
-				skin_fuhuanghou: {
-					万福千灯: {
-						name: "skin_fuhuanghou_WanFuQianDeng",
-						//x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_guozhao: {
-					雍容尊雅: {
-						name: "skin_guozhao_YongRongZunYa",
-						x: [0, 0.5],
-						y: [0, 0.33],
-						height: [0, 0.7],
-					},
-				},
-				skin_hetaihou: {
-					鸩毒除患: {
-						name: "skin_hetaihou_ZhenDuChuHuan",
-						y: [0, 0.33],
-						height: [0, 0.65],
-					},
-					蛇蝎为心: {
-						name: "skin_hetaihou_SheXieWeiXin",
-						action: "DaiJi",
-						y: [5, 0.33],
-						height: [0, 0.76],
-						hideSlots: "jiubei",
-					},
-					耀紫迷幻: {
-						name: "skin_hetaihou_YaoZiMiHuan",
-						y: [5, 0.33],
-						height: [0, 0.76],
-					},
-				},
-				skin_huaman: {
-					经典形象: {
-						name: "skin_huaman_default",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					花俏蛮娇: {
-						name: "skin_huaman_HuaQiaoManJiao",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_lukang: {
-					毁堰破晋: {
-						name: "skin_lukang_HuiYanPoJin",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_luxun: {
-					谋定天下: {
-						name: "skin_luxun_MouDingTianXia",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_luxunlvmeng: {
-					清雨踏春: {
-						name: "skin_luxunlvmeng_QingYuTaChun",
-						// x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_mayunlu: {
-					战场绝版: {
-						name: "skin_mayunlu_ZhanChang",
-						x: [0, 0.6],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_sundengzhoufei: {
-					鹊星夕情: {
-						name: "skin_sundengzhoufei_QueXingXiQing",
-						// x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_sunluban: {
-					宵靥谜君: {
-						name: "skin_sunluban_XiaoYeMiJun",
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_sunluyu: {
-					娇俏伶俐: {
-						name: "skin_sunluyu_JiaoQiaoLingLi",
-						y: [0, 0.3],
-						height: [0, 0.9],
-					},
-				},
-				skin_shuxiangxiang: {
-					花好月圆: {
-						name: "skin_shuxiangxiang_HuaHaoYueYuan",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					花曳心牵: {
-						name: "skin_shuxiangxiang_HuaYeXinQian",
-						x: [0, 0.5],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_wangrong: {
-					云裳花容: {
-						name: "skin_wangrong_YunShangHuaRong",
-						y: [75, 0.3],
-						height: [0, 1],
-					},
-				},
-				skin_wangyi: {
-					绝色异彩: {
-						name: "skin_wangyi_JueSeYiCai",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					战场绝版: {
-						name: "skin_wangyi_ZhanChang",
-						x: [0, 0.7],
-						y: [75, 0.35],
-						height: [0, 0.8],
-					},
-				},
-				skin_wolongzhuge: {
-					隆中陇亩: {
-						name: "skin_wolongzhuge_LongZhongLongMu",
-						// x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_wuxian: {
-					锦运福绵: {
-						name: "skin_wuxian_JinYunFuMian",
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					金玉满堂: {
-						name: "fullskin_wuxian_JinYuManTang",
-						y: [0, 0.35],
-						height: [0, 0.8],
-					},
-				},
-				skin_xiahoushi: {
-					端华夏莲: {
-						name: "skin_xiahoushi_DuanHuaXiaLian",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					战场绝版: {
-						name: "skin_xiahoushi_ZhanChang",
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_xiaoqiao: {
-					花好月圆: {
-						name: "skin_xiaoqiao_HuaHaoYueYuan",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					采莲江南: {
-						name: "skin_xiaoqiao_CaiLianJiangNan",
-						action: "DaiJi",
-						x: [0, 0.5],
-						y: [-100, 0.5],
-						height: [0, 1.2],
-					},
-				},
-				skin_xinxianying: {
-					英装素果: {
-						name: "skin_xinxianying_YingZhuangSuGuo",
-						//x: [0, 0.7],
-						y: [75, 0.26],
-						//height: [0, 0.8],
-					},
-				},
-				skin_xushi: {
-					拈花思君: {
-						name: "skin_xushi_NianHuaSiJun",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					为夫弑敌: {
-						name: "skin_xushi_WeiFuShiDi",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_zhangchangpu: {
-					钟桂香蒲: {
-						name: "skin_zhangchangpu_ZhongGuiXiangPu",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_zhangchunhua: {
-					花好月圆: {
-						name: "skin_zhangchunhua_HuaHaoYueYuan",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					战场绝版: {
-						name: "skin_zhangchunhua_ZhanChang",
-						//x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_zhangqiying: {
-					岁稔年丰: {
-						name: "skin_zhangqiying_SuiRenNianFeng",
-						y: [0, 0.33],
-						height: [0, 0.8],
-					},
-					逐鹿天下: {
-						name: "skin_zhangqiying_ZhuLuTianXia",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 1],
-					},
-				},
-				skin_zhangxingcai: {
-					凯旋星花: {
-						name: "skin_zhangxingcai_KaiXuanXingHua",
-						x: [0, 0.45],
-						y: [0, 0.33],
-						height: [0, 0.8],
-					},
-				},
-				skin_zhenji: {
-					才颜双绝: {
-						name: "skin_zhenji_CaiYanShuangJue",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					洛神御水: {
-						name: "skin_zhenji_LuoShenYuShui",
-						x: [0, 0.6],
-						y: [75, 0.3],
-						//height: [0, 0.8],
-					},
-				},
-				skin_zhoufei: {
-					晴空暖鸢: {
-						name: "skin_zhoufei_QingKongNuanYuan",
-						x: [0, 0.5],
-						y: [0, 0.33],
-						height: [0, 0.8],
-					},
-				},
-				skin_zhugeguo: {
-					兰荷艾莲: {
-						name: "skin_zhugeguo_LanHeAiLian",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-					仙池起舞: {
-						name: "skin_zhugeguo_XianChiQiWU",
-						action: "DaiJi",
-						x: [0, 0.48],
-						y: [0, 0.35],
-						height: [0, 1.5],
-					},
-					英装素果: {
-						name: "skin_zhugeguo_YingZhuangSuGuo",
-						//x: [0, 0.7],
-						y: [75, 0.3],
-						//height: [0, 0.8],
-					},
-				},
-				skin_zhugeliang: {
-					空城退敌: {
-						name: "skin_zhugeliang_KongChengTuiDi",
-						x: [0, 0.7],
-						y: [75, 0.3],
-						height: [0, 0.8],
-					},
-				},
-				skin_zhouyi: {
-					剑舞浏漓: {
-						name: "fullskin_zhouyi_JianWuLiuLi",
-						y: [0, 0.5],
-						height: [0, 1.2],
-					},
-				},
-			};
-			animation.stop = animation.stopSpineAll;
-			animation.play = function (name, skin) {
-				var definedAssets = this.definedAssets;
-				if (definedAssets[name] == void 0 || definedAssets[name][skin] == void 0) return console.log("没有预定义[asset:" + name + ", skin:" + skin + "]的动态背景.");
-				if (this.current && this.current.name == name) return;
-				this.stopSpineAll();
-				var playAsset = definedAssets[name][skin];
-				if (!this.hasSpine(playAsset.name)) {
-					var _this = this;
-					_this.loadSpine(playAsset.name, "skel", function () {
-						if (_this.current && _this.current.name == playAsset.name) return;
-						_this.current = _this.loopSpine(playAsset);
-					});
-				} else {
-					this.current = this.loopSpine(playAsset);
-				}
-			};
-			animation.check();
-			var background = duicfg.dynamicBackground;
-			if (background != void 0 && background != "off") {
-				var name = background.split("_");
-				var skin = name.splice(name.length - 1, 1)[0];
-				animation.play(name.join("_"), skin);
-			}
 			return animation;
 		})();
 		// 下面是我自用的，可能会删掉
