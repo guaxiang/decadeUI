@@ -196,7 +196,9 @@ app.import((lib, game, ui, get, ai, _status, app) => {
 	function createHistoryPanel(rightbg) {
 		const nameColor = "rgb(220, 170, 50)";
 		for (let chat of lib.chatHistory) {
-			const content = `<span style="color:${nameColor};">${chat[0]}：</span><br>${chat[1]}`;
+			let displayName = chat[0] || "";
+			displayName = displayName.replace(/\[undefined\]/g, "");
+			const content = `<span style="color:${nameColor};">${displayName}：</span><br>${chat[1]}`;
 			ui.create.div(".talkhistory", content, rightbg);
 		}
 		rightbg.scrollTop = rightbg.scrollHeight;
