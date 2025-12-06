@@ -230,6 +230,11 @@ export let config = {
 		intro: "开启后，对局内点击卡牌或按钮和出牌弃牌会有音效播放",
 		init: true,
 	},
+	skillDieAudio: {
+		name: "技能死亡台词",
+		intro: "开启后，使用技能和死亡时会播放对应台词",
+		init: true,
+	},
 	dynamicSkin: {
 		name: "动态皮肤",
 		intro: "开启后显示动态皮肤，阵亡后也保留",

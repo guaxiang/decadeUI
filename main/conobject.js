@@ -1025,7 +1025,7 @@ const createDecadeUIObject = () => ({
 							return this;
 						},
 						$dieAfter() {
-							const keepDynamicSkin = !!(lib.config && (lib.config.extension_十周年UI_dynamicSkin ?? lib.config.extension_十周年UI_dynamicSkin_dieAfter));
+							const keepDynamicSkin = !!(lib.config && lib.config.extension_十周年UI_dynamicSkin);
 							if (!keepDynamicSkin) this.stopDynamic();
 							this.node.gainSkill.innerHTML = null;
 							if (!this.node.dieidentity) this.node.dieidentity = ui.create.div("died-identity", this);
