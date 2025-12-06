@@ -5,7 +5,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		if (!nobroadcast) {
 			game.broadcast(game.trySkillAudio, skill, player, directaudio, nobroadcast, skillInfo, args);
 		}
-		if (!lib.config.background_speak) return;
+		if (!lib.config.background_speak || !lib.config.extension_十周年UI_skillDieAudio) return;
 
 		const info = skillInfo || lib.skill[skill];
 		if (!info) return;
@@ -22,7 +22,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 	// 死亡的时候发言对应台词
 	game.tryDieAudio = function (player, dieInfo) {
 		game.broadcast(game.tryDieAudio, player, dieInfo);
-		if (!lib.config.background_speak) return;
+		if (!lib.config.background_speak || !lib.config.extension_十周年UI_skillDieAudio) return;
 		if (!player) return;
 		const audioObj = get.Audio.die({ player, info: dieInfo });
 		const pick = audioObj.audioList.slice().randomRemove();
