@@ -3465,6 +3465,7 @@ const createDecadeUIObject = () => ({
 						let hidden = false;
 						let notouchscroll = false;
 						let forcebutton = false;
+						let noforcebutton = false;
 						let peaceDialog = false;
 						const dialog = decadeUI.element.create("dialog");
 						dialog.supportsPagination = false;
@@ -3479,6 +3480,7 @@ const createDecadeUIObject = () => ({
 							else if (args[i] == "hidden") hidden = true;
 							else if (args[i] == "notouchscroll") notouchscroll = true;
 							else if (args[i] == "forcebutton") forcebutton = true;
+							else if (args[i] == "noforcebutton") noforcebutton = true;
 							else if (args[i] == "peaceDialog") peaceDialog = true;
 							else dialog.add(args[i]);
 						}
@@ -3490,7 +3492,9 @@ const createDecadeUIObject = () => ({
 							dialog.contentContainer.style.WebkitOverflowScrolling = "touch";
 							dialog.ontouchstart = ui.click.dragtouchdialog;
 						}
-						if (forcebutton) {
+						if (noforcebutton) {
+							dialog.noforcebutton = true;
+						} else if (forcebutton) {
 							dialog.forcebutton = true;
 							dialog.classList.add("forcebutton");
 						}
