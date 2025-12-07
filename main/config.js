@@ -213,7 +213,7 @@ export let config = {
 	meanPrettify: {
 		name: "菜单美化",
 		intro: "开启全屏的菜单样式",
-		init: true,
+		init: false,
 		onclick(bool) {
 			game.saveConfig("extension_十周年UI_meanPrettify", bool);
 			if (bool) {
