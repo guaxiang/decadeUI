@@ -126,7 +126,7 @@ const registerLegacyModules = config => {
 			priority: -10,
 			charlotte: true,
 			filter(event, player) {
-				return event.card && event.targets && event.targets.length;
+				return event.card && event.targets && event.targets.length && event.target != game.me;
 			},
 			async content(event, trigger, player) {
 				const boxContent = document.createElement("div");
@@ -152,10 +152,8 @@ const registerLegacyModules = config => {
 				}
 				boxContent.appendChild(boxTime);
 				boxContent.appendChild(imgBg);
-				if (trigger.target != (_status.event.player || game.me)) {
-					const ab = trigger.target.getElementsByClassName("timeai");
-					if (!ab[0]) trigger.target.appendChild(boxContent);
-				}
+				const ab = trigger.target.getElementsByClassName("timeai");
+				if (!ab[0]) trigger.target.appendChild(boxContent);
 				window.timerix = setInterval(() => {
 					boxTime.data--;
 					boxTime.style.width = boxTime.data + "px";
@@ -176,6 +174,7 @@ const registerLegacyModules = config => {
 					filter(event, player) {
 						event.respondix = 0;
 						for (let i = 0; i < game.players.length; i++) {
+							if (game.players[i] == game.me) continue;
 							const ab = game.players[i].getElementsByClassName("timeai");
 							if (ab[0]) event.respondix++;
 						}
@@ -187,6 +186,7 @@ const registerLegacyModules = config => {
 					charlotte: true,
 					async content(event, trigger, player) {
 						for (let i = 0; i < game.players.length; i++) {
+							if (game.players[i] == game.me) continue;
 							lib.removeFirstByClass(game.players[i], "timeai");
 						}
 					},
@@ -203,7 +203,7 @@ const registerLegacyModules = config => {
 			priority: -1,
 			charlotte: true,
 			filter(event, player) {
-				return true;
+				return player != game.me;
 			},
 			async content(event, trigger, player) {
 				const boxContent = document.createElement("div");
@@ -229,7 +229,7 @@ const registerLegacyModules = config => {
 				}
 				boxContent.appendChild(boxTime);
 				boxContent.appendChild(imgBg);
-				if (player != game.me) player.appendChild(boxContent);
+				player.appendChild(boxContent);
 				window.timerx = setInterval(() => {
 					boxTime.data--;
 					boxTime.style.width = boxTime.data + "px";
@@ -249,6 +249,7 @@ const registerLegacyModules = config => {
 					filter(event, player) {
 						event.respondx = 0;
 						for (let i = 0; i < game.players.length; i++) {
+							if (game.players[i] == game.me) continue;
 							const ab = game.players[i].getElementsByClassName("timeai");
 							if (ab[0]) event.respondx++;
 						}
@@ -261,6 +262,7 @@ const registerLegacyModules = config => {
 					charlotte: true,
 					async content(event, trigger, player) {
 						for (let i = 0; i < game.players.length; i++) {
+							if (game.players[i] == game.me) continue;
 							lib.removeFirstByClass(game.players[i], "timeai");
 						}
 					},
