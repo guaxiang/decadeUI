@@ -992,9 +992,9 @@
 
 #arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark {
 	display: flex;
-	width: 45px;
+	width: 50px;
 	/*宽度*/
-	height: 23px;
+	height: 25px;
 	/*高度*/
 	white-space: nowrap;
 	background-image: url("../assets/image/player_mark.png");
@@ -1030,7 +1030,7 @@
 	font-family: yuanli;
 	line-height: 18px;
 	/*换行高度*/
-	font-size: 15px;
+	font-size: 14px;
 	/*字体大小*/
 	color: white;
 	/*字体颜色*/
