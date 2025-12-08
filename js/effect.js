@@ -110,6 +110,11 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			const scale = decadeUI.getRandom(1, 10) / 10;
 			return { x, y, scale };
 		},
+		getPlayerNameWithPrefix(player, useName2 = false) {
+			const name = useName2 ? player.name2 : player.name;
+			if (!name) return "";
+			return lib.translate[name + "_prefix"] ? `${get.prefixSpan(get.translation(name + "_prefix"), name)}${get.rawName(name)}` : get.translation(name);
+		},
 	};
 	decadeUI.effect = {
 		dialog: {
@@ -118,26 +123,17 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			},
 			compare(source, target) {
 				const dialog = this.create();
-				dialog.characters = [
-					utils.createElement("player1 character", dialog),
-					utils.createElement("player2 character", dialog)
-				];
+				dialog.characters = [utils.createElement("player1 character", dialog), utils.createElement("player2 character", dialog)];
 				dialog.characters.forEach(char => {
 					utils.createElement("back", char);
 				});
 				dialog.content = utils.createElement("content", dialog);
 				dialog.buttons = utils.createElement("buttons", dialog.content);
-				dialog.cards = [
-					utils.createElement("player1 card", dialog.buttons),
-					utils.createElement("player2 card", dialog.buttons)
-				];
-				dialog.names = [
-					utils.createElement("player1 name", dialog.buttons),
-					utils.createElement("player2 name", dialog.buttons)
-				];
+				dialog.cards = [utils.createElement("player1 card", dialog.buttons), utils.createElement("player2 card", dialog.buttons)];
+				dialog.names = [utils.createElement("player1 name", dialog.buttons), utils.createElement("player2 name", dialog.buttons)];
 				dialog.buttons.vs = utils.createElement("vs", dialog.buttons);
-				dialog.names[0].innerHTML = `${get.translation(source)}发起`;
-				dialog.names[1].innerHTML = get.translation(target);
+				dialog.names[0].innerHTML = `${utils.getPlayerNameWithPrefix(source)}发起`;
+				dialog.names[1].innerHTML = utils.getPlayerNameWithPrefix(target);
 
 				const playerAttrToIndex = {
 					player1: 0,
@@ -160,12 +156,12 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 
 						if (get.itemtype(value) !== "player" || value.isUnseen()) {
 							dialog.characters[playerIndex].firstChild.style.backgroundImage = "";
-							dialog.names[playerIndex].innerHTML = `${get.translation(value)}${suffix}`;
+							dialog.names[playerIndex].innerHTML = `${utils.getPlayerNameWithPrefix(value)}${suffix}`;
 							return false;
 						}
 						const avatar = utils.getPlayerAvatar(value, value.isUnseen(0));
 						dialog.characters[playerIndex].firstChild.style.backgroundImage = avatar.style.backgroundImage;
-						dialog.names[playerIndex].innerHTML = `${get.translation(value)}${suffix}`;
+						dialog.names[playerIndex].innerHTML = `${utils.getPlayerNameWithPrefix(value)}${suffix}`;
 						return true;
 					}
 
@@ -268,7 +264,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			}
 
 			const camp = player.group;
-			const playerName = vice === "vice" ? get.translation(player.name2) : get.translation(player.name);
+			const playerName = utils.getPlayerNameWithPrefix(player, vice === "vice");
 			const playerAvatar = utils.getPlayerAvatar(player, vice === "vice");
 
 			this._loadSkillImages(playerAvatar, camp, player, skillName, playerName).catch(error => {
@@ -391,7 +387,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				top: `calc(50% - ${CONSTANTS.SKILL.GENERAL_OFFSET_Y * spriteScale}px)`,
 			};
 
-			const toKebabCase = (str) => str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
+			const toKebabCase = str => str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
 			nameEffect.style.cssText = Object.entries(generalStyles)
 				.map(([key, value]) => `${toKebabCase(key)}: ${value}`)
 				.join("; ");

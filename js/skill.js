@@ -163,7 +163,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			popup: false,
 			priority: -100,
 			async content(event, trigger, player) {
-				game.broadcastAll((id) => {
+				game.broadcastAll(id => {
 					if (window.decadeUI) {
 						ui.todiscard = [];
 						ui.clear();
@@ -341,7 +341,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 							}
 						};
 						canvas.onmousedown = () => {
-							canvas.onmousemove = (e) => {
+							canvas.onmousemove = e => {
 								if (_status.xinfu_pingcai_finished) return;
 								ctx.beginPath();
 								ctx.clearRect(e.offsetX / game.documentZoom - 16, e.offsetY / game.documentZoom - 16, 32, 32);
@@ -349,7 +349,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 							};
 						};
 						canvas.ontouchstart = () => {
-							canvas.ontouchmove = (e) => {
+							canvas.ontouchmove = e => {
 								if (_status.xinfu_pingcai_finished) return;
 								ctx.beginPath();
 								const rect = canvas.getBoundingClientRect();
@@ -407,9 +407,9 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 							player,
 						});
 					}
-				}
-			]
-			, ai: {
+				},
+			],
+			ai: {
 				order: 7,
 				fireAttack: true,
 				threaten: 1.7,
@@ -545,7 +545,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 							await player.lose(puts, ui.special);
 							await player.gain(gains, "gain2");
 							const hs = moved[1].reverse();
-							hs.forEach((card) => {
+							hs.forEach(card => {
 								player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild);
 							});
 							dui.queueNextFrameTick(dui.layoutHand, dui);
@@ -562,10 +562,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 							if (cards.reduce((num, card) => num + get.number(card), 0) > sum && player.countCards("h")) {
 								const {
 									result: { bool },
-								} = await player.chooseBool(`易城：是否使用全部手牌交换${get.translation(cards)}？`).set(
-									"choice",
-									cards.reduce((num, card) => num + get.value(card), 0) > player.getCards("h").reduce((num, card) => num + get.value(card), 0)
-								);
+								} = await player.chooseBool(`易城：是否使用全部手牌交换${get.translation(cards)}？`).set("choice", cards.reduce((num, card) => num + get.value(card), 0) > player.getCards("h").reduce((num, card) => num + get.value(card), 0));
 								if (bool) {
 									const hs = player.getCards("h");
 									player.$throw(hs, 1000);
@@ -594,16 +591,16 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 					.chooseTarget(get.prompt2("twtanfeng"), (card, player, target) => {
 						return target !== player && target.countDiscardableCards(player, "hej") > 0;
 					})
-					.set("ai", (target) => {
+					.set("ai", target => {
 						const player = _status.event.player;
 						let num = 1;
 						if (get.attitude(player, target) > 0) num = 3;
 						else if (!target.countCards("he") || !target.canUse("sha", player)) {
 							if (
 								target.hp +
-								target.countCards("hs", {
-									name: ["tao", "jiu"],
-								}) <=
+									target.countCards("hs", {
+										name: ["tao", "jiu"],
+									}) <=
 								1
 							)
 								num = 2;
@@ -636,7 +633,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				next.set("custom", {
 					add: {},
 					replace: {
-						window() { },
+						window() {},
 					},
 				});
 				next.backup("twtanfeng_backup");
@@ -767,7 +764,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 					const result = await next.forResult();
 					if (!result?.bool) return;
 					const hs = result.moved[0].reverse();
-					hs.forEach((card) => {
+					hs.forEach(card => {
 						player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild);
 					});
 					dui.queueNextFrameTick(dui.layoutHand, dui);
@@ -778,16 +775,16 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			undist: {
 				init(player, skill) {
 					if (player._distanceDisplay) {
-						player._distanceDisplay.style.display = 'none';
+						player._distanceDisplay.style.display = "none";
 					}
 				},
 				onremove(player, skill) {
 					if (player._distanceDisplay) {
-						player._distanceDisplay.style.display = '';
+						player._distanceDisplay.style.display = "";
 					}
-				}
-			}
-		}
+				},
+			},
+		},
 	};
 	if (!_status.connectMode) {
 		for (const key of Object.keys(decadeUI.animateSkill)) {
