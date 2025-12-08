@@ -152,6 +152,7 @@ const PREFIX_CONFIGS = Object.freeze({
 	文心雕龙: { className: "wen-mark", property: "$wenMark" },
 	礼: { className: "li-mark", property: "$liMark" },
 	"手杀|SP": { className: "sp-mark", property: "$spMark" },
+	书: { className: "shu-mark", property: "$shuMark" },
 });
 
 const CONFIG_KEYS = {

@@ -1589,7 +1589,8 @@
 .player > .lingzhu-mark,
 .player > .zhi-mark,
 .player > .wen-mark,
-.player > .li-mark {
+.player > .li-mark,
+.player > .shu-mark {
 	position: absolute;
 	top: 108px;
 	left: -11px;
@@ -1598,6 +1599,10 @@
 	background-size: 100% 100%;
 	pointer-events: none;
 	z-index: 87;
+}
+
+.player > .shu-mark {
+	background-image: url("../image/mark/mark_shu.png");
 }
 
 .player > .jie-mark {
