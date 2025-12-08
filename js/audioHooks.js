@@ -4,33 +4,6 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 	const findPlayer = name => game.players?.find(p => hasName(p, name));
 	const playAudio = file => game.playAudio("..", "extension", "十周年UI", `audio/caidan/${file}`);
 
-	game.trySkillAudio = function (skill, player, directaudio, nobroadcast, skillInfo, args) {
-		if (!nobroadcast) {
-			game.broadcast(game.trySkillAudio, skill, player, directaudio, nobroadcast, skillInfo, args);
-		}
-		if (!lib.config.background_speak) return;
-		const info = skillInfo || lib.skill[skill];
-		if (!info) return;
-		if (info.direct && !directaudio) return;
-		if (lib.skill.global.includes(skill) && !info.forceaudio) return;
-		const audioObj = get.Audio.skill({ skill, player, info: skillInfo, args });
-		const pick = audioObj.audioList.slice().randomRemove();
-		if (!pick) return;
-		if (pick.text && player?.say && lib.config.extension_十周年UI_skillDieAudio) player.say(pick.text);
-		return game.tryAudio({ audioList: [pick.file], random: false });
-	};
-
-	game.tryDieAudio = function (player, dieInfo) {
-		game.broadcast(game.tryDieAudio, player, dieInfo);
-		if (!lib.config.background_speak) return;
-		if (!player) return;
-		const audioObj = get.Audio.die({ player, info: dieInfo });
-		const pick = audioObj.audioList.slice().randomRemove();
-		if (!pick) return;
-		if (pick.text && player.say && lib.config.extension_十周年UI_skillDieAudio) player.say(pick.text);
-		return game.tryAudio({ audioList: [pick.file], random: false });
-	};
-
 	// 使用卡牌彩蛋
 	const cardEasterEggs = [
 		{ cards: ["jiu"], player: "zhugeliang", text: "北伐，启动！", audio: "zhugeliang1.mp3" },
@@ -48,6 +21,13 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ cards: ["sha", "juedou"], player: "zhangliao", condition: ctx => ctx.targets?.some(t => t.group === "wu"), text: "雁门张文远在此！", audio: "zhangliao1.mp3" },
 		{ cards: ["sha", "juedou"], player: "diaochan", text: "哈哈，嗯~", audio: "diaochan2.mp3" },
 		{ cards: ["baiyin"], player: "zhangfei", condition: () => game.players?.some(p => hasName(p, "machao")), text: "马超！汝的头在此！敢来取否！", audio: "zhangfei3.mp3" },
+		{ cards: ["tiesuo"], player: "caocao", condition: () => game.players?.some(p => hasName(p, "pangtong")), text: "非先生良谋，安能破东吴也？", audio: "caocao6.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "chendao", condition: ctx => ctx.targets?.find(t => hasName(t, "liubei")), text: "主公，我来救你！", audio: "chendao1.mp3" },
+		{ cards: ["sha", "juedou"], player: "simayi", condition: ctx => ctx.targets?.some(t => hasName(t, "caoshuang")), text: "汝当真以为老夫病入膏肓？哈哈哈哈哈！", audio: "simayi1.mp3" },
+		{ cards: ["lebu"], player: "caoshuang", condition: ctx => ctx.targets?.some(t => hasName(t, "simayi")), text: "老贼装疯卖傻，当我等皆三岁小儿？", audio: "caoshuang1.mp3" },
+		{ cards: ["sha", "juedou"], player: "caopi", condition: ctx => ctx.targets?.some(t => hasName(t, "sunquan")), text: "吴王颇知学乎？", audio: "caopi2.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "guojia", condition: ctx => ctx.targets?.find(t => hasName(t, "caocao")), target: "caocao", text: "有奉孝在，不使吾有此失也！", audio: "caocao10.mp3" },
+		{ cards: ["sha", "juedou"], player: "machao", condition: ctx => ctx.targets?.find(t => hasName(t, "caocao")), target: "caocao", text: "马儿不死，我无葬身之地！", audio: "caocao8.mp3" },
 	];
 
 	const originalUseCard = lib.element.Player.prototype.useCard;
@@ -70,7 +50,7 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		return event;
 	};
 
-	//受伤特殊语音
+	// 受伤特殊语音，真不是乃杀
 	const damageEasterEggs = [{ player: "diaochan", text: "嗯啊~", audio: "diaochan1.mp3" }];
 
 	const originalDamage = lib.element.Player.prototype.damage;
@@ -90,7 +70,24 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		return event;
 	};
 
-	//真是一对苦命鸳鸯啊
+	// 这何尝不是一种苦命鸳鸯
+	const deathEasterEggs = [{ deceased: "yuanshao", speaker: "caocao", text: "今本初已丧，我不能不为之流涕也", audio: "caocao7.mp3" }];
+
+	const originalDie = lib.element.Player.prototype.$die;
+	lib.element.Player.prototype.$die = function (...args) {
+		const result = originalDie.apply(this, args);
+		for (const rule of deathEasterEggs) {
+			if (!hasName(this, rule.deceased)) continue;
+			const speaker = findPlayer(rule.speaker);
+			if (!speaker) continue;
+			speaker.say?.(rule.text);
+			if (rule.audio) playAudio(rule.audio);
+			break;
+		}
+		return result;
+	};
+
+	// 真是一对苦命鸳鸯啊
 	const gameStartDialogues = [
 		{
 			players: ["lvbu", "dongzhuo"],
@@ -106,14 +103,21 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				{ player: "chengong", text: "汝心术不正！吾不栖汝！", audio: "chengong1.mp3", delay: 1500 },
 			],
 		},
+		{
+			players: ["wanglang", "zhugeliang"],
+			dialogues: [
+				{ player: "wanglang", text: "诸葛村夫，怎敢与管仲乐毅自恃？", audio: "wanglang1.mp3", delay: 500 },
+				{ player: "zhugeliang", text: "我从未见过！有如此厚颜无耻之人！", audio: "zhugeliang2.mp3", delay: 1500 },
+			],
+		},
 		{ players: ["zhugeliang", "luji"], dialogues: [{ player: "zhugeliang", text: "此真，旧病复发也。哈哈哈哈", audio: "zhugeliang4.mp3", delay: 500 }] },
 		{ players: ["zhugeliang", "simayi"], dialogues: [{ player: "zhugeliang", text: "仲达，想要我的四轮车吗？", audio: "zhugeliang3.mp3", delay: 500 }] },
 		{ players: ["simahui", "zhugeliang"], dialogues: [{ player: "simahui", text: "孔明虽得其主，不得其时。", audio: "simahui1.mp3", delay: 500 }] },
 		{ players: ["zhangfei", "zhugeliang"], dialogues: [{ player: "zhangfei", text: "诸葛亮！俺今天就算绑，也要把你绑回去！", audio: "zhangfei2.mp3", delay: 500 }] },
 		{ players: ["caocao", "guanyu"], dialogues: [{ player: "caocao", text: "云长，别来无恙否？", audio: "caocao2.mp3", delay: 500 }] },
 		{ players: ["caocao", "miheng"], dialogues: [{ player: "caocao", text: "你以为辱骂几句，便能彰显才学？", audio: "caocao5.mp3", delay: 500 }] },
-		{ players: ["zhugeliang", "wanglang"], dialogues: [{ player: "zhugeliang", text: "我从未见过！有如此厚颜无耻之人！", audio: "zhugeliang2.mp3", delay: 500 }] },
-		{ players: ["wanglang", "zhugeliang"], dialogues: [{ player: "wanglang", text: "诸葛村夫，怎敢与管仲乐毅自恃？", audio: "wanglang1.mp3", delay: 500 }] },
+		{ players: ["caocao", "yuanshu"], dialogues: [{ player: "caocao", text: "竖子不足与谋！", audio: "caocao9.mp3", delay: 500 }] },
+		{ players: ["caopi", "sunquan"], dialogues: [{ player: "caopi", text: "孙权小丑，凭江悖暴。", audio: "caopi1.mp3", delay: 500 }] },
 	];
 
 	lib.announce.subscribe("gameStart", () => {
