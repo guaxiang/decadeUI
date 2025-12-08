@@ -1578,6 +1578,17 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 	};
 	const originalPrefixSpan = get.prefixSpan;
 	get.prefixSpan = function (prefix, name) {
-		return hiddenPrefixes.includes(prefix) ? "" : originalPrefixSpan.call(this, prefix, name);
+		if (hiddenPrefixes.includes(prefix)) return "";
+		const result = originalPrefixSpan.call(this, prefix, name);
+		if (!result) return result;
+		const tempDiv = document.createElement("div");
+		tempDiv.innerHTML = result;
+		const span = tempDiv.querySelector("span");
+		if (span) {
+			span.style.color = "#c47b21";
+			span.removeAttribute("data-nature");
+			return span.outerHTML;
+		}
+		return result;
 	};
 });
