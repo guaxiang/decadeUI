@@ -1293,9 +1293,9 @@ const createDecadeUIObject = () => ({
 										c.copy()._customintro = c._customintro;
 									});
 									if (e.type == "mouseover") {
-										player.node.showCards.onmouseleave = function () {};
+										player.node.showCards.onmouseleave = function () { };
 									} else {
-										ui.window.addEventListener("touchend", function touch() {}, { once: true });
+										ui.window.addEventListener("touchend", function touch() { }, { once: true });
 									}
 								};
 
@@ -1625,6 +1625,8 @@ const createDecadeUIObject = () => ({
 										cardx.node.judgeMark.node.judge.style.zIndex = "99";
 										cardx.node.judgeMark.node.judge.parentElement.children[0].style.background = "none";
 										cardx.node.judgeMark.node.judge.parentElement.children[0].style.display = "none";
+									} else {
+										cardx.node.judgeMark.node.judge.style.backgroundImage = `url("${lib.assetURL}extension/十周年UI/image/judgeMark/tongyong.png")`;
 									}
 									ui.updatej(player);
 								},
@@ -3359,7 +3361,7 @@ const createDecadeUIObject = () => ({
 						}
 					}
 				},
-				updatem(player) {},
+				updatem(player) { },
 				updatez() {
 					window.documentZoom = game.documentZoom;
 					document.body.style.zoom = game.documentZoom;
@@ -5191,7 +5193,7 @@ const createDecadeUIObject = () => ({
 									await loadImage(primaryUrl);
 									this.node.campWrap.node.campName.style.backgroundImage = `url("${primaryUrl}")`;
 									return;
-								} catch {}
+								} catch { }
 								try {
 									const imageName = `group_${group}`;
 									const info = lib.card[imageName];
@@ -5207,7 +5209,7 @@ const createDecadeUIObject = () => ({
 									await loadImage(src);
 									this.node.campWrap.node.campName.style.backgroundImage = `url("${src}")`;
 									return;
-								} catch {}
+								} catch { }
 								create();
 							});
 						}
