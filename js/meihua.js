@@ -1544,4 +1544,40 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			}
 		}
 	});
+	// 统一隐藏线上服务器前缀
+	const hiddenPrefixes = ["新杀", "手杀", "OL", "TW"];
+	const removeLeadingHiddenPrefix = name => {
+		const hiddenPrefix = hiddenPrefixes.find(hp => name.startsWith(hp));
+		return hiddenPrefix ? name.slice(hiddenPrefix.length) : name;
+	};
+	get.slimNameHorizontal = function (str) {
+		let slimName = lib.translate[`${str}_ab`] || lib.translate[str];
+		if (!slimName) return "";
+		if (!lib.translate[`${str}_prefix`]) {
+			return removeLeadingHiddenPrefix(slimName);
+		}
+		const prefixList = lib.translate[str + "_prefix"].split("|").filter(p => !hiddenPrefixes.includes(p));
+		const setPrefix = [];
+		let processedName = slimName;
+		for (const prefix of prefixList) {
+			const hiddenPrefixBefore = hiddenPrefixes.find(hp => processedName.startsWith(hp + prefix));
+			if (hiddenPrefixBefore) {
+				setPrefix.push(prefix);
+				processedName = processedName.slice(hiddenPrefixBefore.length + prefix.length);
+			} else if (processedName.startsWith(prefix)) {
+				setPrefix.push(prefix);
+				processedName = processedName.slice(prefix.length);
+			} else {
+				break;
+			}
+		}
+		if (setPrefix.length) {
+			return `${setPrefix.map(prefix => get.prefixSpan(prefix, str)).join("")}<span>${removeLeadingHiddenPrefix(processedName)}</span>`;
+		}
+		return removeLeadingHiddenPrefix(processedName);
+	};
+	const originalPrefixSpan = get.prefixSpan;
+	get.prefixSpan = function (prefix, name) {
+		return hiddenPrefixes.includes(prefix) ? "" : originalPrefixSpan.call(this, prefix, name);
+	};
 });
