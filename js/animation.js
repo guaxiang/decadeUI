@@ -450,7 +450,7 @@ var duilib;
 			}
 			this.check = function () {
 				if (!this.gl) {
-					function empty() {}
+					function empty() { }
 					var key;
 					for (key in this.__proto__) {
 						if (typeof this.__proto__[key] == "function") {
@@ -1015,8 +1015,8 @@ var duilib;
 			var sprite =
 				typeof sprite == "string"
 					? {
-							name: sprite,
-						}
+						name: sprite,
+					}
 					: sprite;
 			sprite.id = this.BUILT_ID++;
 			sprite.loop = true;
@@ -1261,6 +1261,9 @@ if (decadeModule)
 				},
 				{
 					name: "effect_nvzhuang",
+				},
+				{
+					name: "Ss_ZB_QiXingDao"
 				},
 				{
 					name: "effect_wufengjian",
@@ -1615,6 +1618,11 @@ if (decadeModule)
 						serafuku: {
 							skill: "serafuku",
 							name: "Ss_ZB_NvZhuang",
+							scale: 0.5,
+						},
+						qixingbaodao: {
+							skill: "qixingbaodao",
+							name: "Ss_ZB_QiXingDao",
 							scale: 0.5,
 						},
 						yonglv: {
