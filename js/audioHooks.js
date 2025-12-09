@@ -27,7 +27,6 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ cards: ["lebu"], player: "caoshuang", condition: ctx => ctx.targets?.some(t => hasName(t, "simayi")), text: "老贼装疯卖傻，当我等皆三岁小儿？", audio: "caoshuang1.mp3" },
 		{ cards: ["sha", "juedou"], player: "caopi", condition: ctx => ctx.targets?.some(t => hasName(t, "sunquan")), text: "吴王颇知学乎？", audio: "caopi2.mp3" },
 		{ cards: ["tao", "taoyuan"], player: "guojia", condition: ctx => ctx.targets?.find(t => hasName(t, "caocao")), target: "caocao", text: "有奉孝在，不使吾有此失也！", audio: "caocao10.mp3" },
-		{ cards: ["sha", "juedou"], player: "machao", condition: ctx => ctx.targets?.find(t => hasName(t, "caocao")), target: "caocao", text: "马儿不死，我无葬身之地！", audio: "caocao8.mp3" },
 		{ cards: ["zhangba"], player: "zhangfei", text: "得此神兵，某自当纵横天下！", audio: "zhangfei4.mp3" },
 		{ cards: ["zhangba"], player: "liuyan", text: "哈哈哈哈哈，我会图谋不轨？", audio: "liuyan1.mp3" },
 		{ cards: ["tao", "taoyuan"], player: "caoying", condition: ctx => ctx.targets?.find(t => hasName(t, "zhaoyun")), text: "赵子龙，只能死在我手上", audio: "caoying1.mp3" },
@@ -35,6 +34,24 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ cards: ["sha", "juedou"], player: "dingshangwan", condition: ctx => ctx.targets?.some(t => hasName(t, "zoushi")), text: "祸水！还我儿命来！", audio: "dingshangwan2.mp3" },
 		{ cards: ["shunshou"], player: "guozhao", condition: ctx => ctx.targets?.some(t => hasName(t, "zhenji")), text: "姐姐的凤冠，妹妹笑纳了", audio: "guozhao1.mp3" },
 		{ cards: ["shunshou"], player: "liuyan", condition: ctx => ctx.targets?.some(t => hasName(t, "zhangfei")), text: "求借将军兵器一用！", audio: "liuyan2.mp3" },
+		{
+			cards: ["sha", "juedou"],
+			player: "machao",
+			condition: ctx => ctx.targets?.find(t => hasName(t, "caocao")),
+			sequence: [
+				{ text: "穿红袍是曹贼！", audio: "machao1.mp3" },
+				{ text: "长髯者是曹贼！", audio: "machao2.mp3" },
+				{ text: "短髯者是曹贼！", audio: "machao3.mp3" },
+			],
+			sequenceKey: () => "machao-cao-cao",
+		},
+		{ cards: ["sha", "juedou"], player: "lvbu", condition: ctx => ctx.targets?.some(t => hasName(t, "dingyuan")), text: "义父再送儿一场富贵如何！", audio: "lvbu1.mp3" },
+		{ cards: ["chitu"], player: "lvbu", text: "赤兔马，我们走！", audio: "lvbu2.mp3" },
+		{ cards: ["fangtian"], player: "lvbu", text: "得方天画戟，弑天下群雄！", audio: "lvbu3.mp3" },
+		{ cards: ["sha", "juedou"], player: "zhangchangpu", condition: ctx => ctx.targets?.some(t => hasName(t, "zhonghui")), text: "从小到大，最不乖的就是你！", audio: "zhangchangpu1.mp3" },
+		{ cards: ["bingliang"], player: "zhangchangpu", condition: ctx => ctx.targets?.some(t => hasName(t, "zhonghui")), text: "功课没做完不许吃饭！", audio: "zhangchangpu2.mp3" },
+		{ cards: ["sha", "juedou"], player: "bozai", text: "哈！" },
+		{ cards: ["sha", "juedou"], player: "xiangjiaoduanwu", text: "哈！" },
 	];
 
 	const originalUseCard = lib.element.Player.prototype.useCard;
@@ -49,12 +66,25 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 			if (rule.condition && !rule.condition(ctx)) continue;
 			const speaker = rule.target ? ctx.targets?.find(t => hasName(t, rule.target)) : event.player;
 			if (speaker) {
-				speaker.say?.(rule.text);
-				playAudio(rule.audio);
+				const seq = nextSequence(rule, ctx);
+				const text = seq?.text || rule.text;
+				const audio = seq?.audio || rule.audio;
+				if (text) speaker.say?.(text);
+				if (audio) playAudio(audio);
 				break;
 			}
 		}
 		return event;
+	};
+
+	const sequenceState = new Map();
+	const nextSequence = (rule, ctx) => {
+		if (!rule.sequence?.length) return null;
+		const key = (typeof rule.sequenceKey === "function" && rule.sequenceKey(ctx)) || `${rule.player}-${rule.cards.join(",")}`;
+		const index = sequenceState.get(key) || 0;
+		const result = rule.sequence[index % rule.sequence.length];
+		sequenceState.set(key, index + 1);
+		return result;
 	};
 
 	// 受伤特殊语音，真不是乃杀
@@ -153,6 +183,9 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ players: ["caocao", "yuanshu"], dialogues: [{ player: "caocao", text: "竖子不足与谋！", audio: "caocao9.mp3", delay: 500 }] },
 		{ players: ["caopi", "sunquan"], dialogues: [{ player: "caopi", text: "孙权小丑，凭江悖暴。", audio: "caopi1.mp3", delay: 500 }] },
 		{ players: ["chenshi", "simayi"], dialogues: [{ player: "chenshi", text: "司马懿，现在就来抓你！", audio: "chenshi1.mp3", delay: 500 }] },
+		{ players: ["caocao", "machao"], dialogues: [{ player: "caocao", text: "马儿不死，我无葬身之地！", audio: "caocao8.mp3", delay: 500 }] },
+		{ players: ["zhugeliang", "jiangwei"], dialogues: [{ player: "zhugeliang", text: "吾得伯约，如得一凤凰尔", audio: "zhugeliang5.mp3", delay: 500 }] },
+		{ players: ["zhugeliang", "pangtong"], dialogues: [{ player: "zhugeliang", text: "士元兄，倘若不如意，一定要来荆州啊", audio: "zhugeliang6.mp3", delay: 500 }] },
 	];
 
 	lib.announce.subscribe("gameStart", () => {
