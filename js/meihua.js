@@ -1397,19 +1397,6 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 	};
 	const originalPrefixSpan = get.prefixSpan;
 	get.prefixSpan = function (prefix, name) {
-		if (hiddenPrefixes.includes(prefix)) return "";
-		const result = originalPrefixSpan.call(this, prefix, name);
-		if (!result) return result;
-		const tempDiv = document.createElement("div");
-		tempDiv.innerHTML = result;
-		const spans = tempDiv.querySelectorAll("span");
-		if (spans.length > 0) {
-			spans.forEach(span => {
-				span.style.color = "#c47b21";
-				span.removeAttribute("data-nature");
-			});
-			return tempDiv.innerHTML;
-		}
-		return result.replace(/data-nature="[^"]*"/gi, "").replace(/data-nature='[^']*'/gi, "");
+		return hiddenPrefixes.includes(prefix) ? "" : originalPrefixSpan.call(this, prefix, name);
 	};
 });
