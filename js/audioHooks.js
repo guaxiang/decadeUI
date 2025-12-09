@@ -28,6 +28,13 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ cards: ["sha", "juedou"], player: "caopi", condition: ctx => ctx.targets?.some(t => hasName(t, "sunquan")), text: "吴王颇知学乎？", audio: "caopi2.mp3" },
 		{ cards: ["tao", "taoyuan"], player: "guojia", condition: ctx => ctx.targets?.find(t => hasName(t, "caocao")), target: "caocao", text: "有奉孝在，不使吾有此失也！", audio: "caocao10.mp3" },
 		{ cards: ["sha", "juedou"], player: "machao", condition: ctx => ctx.targets?.find(t => hasName(t, "caocao")), target: "caocao", text: "马儿不死，我无葬身之地！", audio: "caocao8.mp3" },
+		{ cards: ["zhangba"], player: "zhangfei", text: "得此神兵，某自当纵横天下！", audio: "zhangfei4.mp3" },
+		{ cards: ["zhangba"], player: "liuyan", text: "哈哈哈哈哈，我会图谋不轨？", audio: "liuyan1.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "caoying", condition: ctx => ctx.targets?.find(t => hasName(t, "zhaoyun")), text: "赵子龙，只能死在我手上", audio: "caoying1.mp3" },
+		{ cards: ["sha", "juedou"], player: "dingshangwan", condition: ctx => ctx.targets?.some(t => hasName(t, "caocao")), text: "原来你曹孟德也会痛", audio: "dingshangwan1.mp3" },
+		{ cards: ["sha", "juedou"], player: "dingshangwan", condition: ctx => ctx.targets?.some(t => hasName(t, "zoushi")), text: "祸水！还我儿命来！", audio: "dingshangwan2.mp3" },
+		{ cards: ["shunshou"], player: "guozhao", condition: ctx => ctx.targets?.some(t => hasName(t, "zhenji")), text: "姐姐的凤冠，妹妹笑纳了", audio: "guozhao1.mp3" },
+		{ cards: ["shunshou"], player: "liuyan", condition: ctx => ctx.targets?.some(t => hasName(t, "zhangfei")), text: "求借将军兵器一用！", audio: "liuyan2.mp3" },
 	];
 
 	const originalUseCard = lib.element.Player.prototype.useCard;
@@ -87,6 +94,27 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		return result;
 	};
 
+	// 回合开始彩蛋
+	const phaseStartEasterEggs = [{ player: "caiwenji", text: "聆听吧，这是献给你的镇魂曲（", audio: "caiwenji1.mp3" }];
+
+	const originalTrigger = lib.element.GameEvent.prototype.trigger;
+	lib.element.GameEvent.prototype.trigger = function (name) {
+		const result = originalTrigger.apply(this, arguments);
+		if (name === "phaseBeginStart") {
+			const phasedPlayer = _status.currentPhase;
+			if (phasedPlayer) {
+				for (const rule of phaseStartEasterEggs) {
+					if (hasName(phasedPlayer, rule.player)) {
+						phasedPlayer.say?.(rule.text);
+						if (rule.audio) playAudio(rule.audio);
+						break;
+					}
+				}
+			}
+		}
+		return result;
+	};
+
 	// 真是一对苦命鸳鸯啊
 	const gameStartDialogues = [
 		{
@@ -110,14 +138,21 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				{ player: "zhugeliang", text: "我从未见过！有如此厚颜无耻之人！", audio: "zhugeliang2.mp3", delay: 1500 },
 			],
 		},
+		{
+			players: ["caocao", "miheng"],
+			dialogues: [
+				{ player: "caocao", text: "你以为辱骂几句，便能彰显才学？", audio: "caocao5.mp3", delay: 500 },
+				{ player: "miheng", text: "我就骂你！我就骂你！", audio: "miheng1.mp3", delay: 1500 },
+			],
+		},
 		{ players: ["zhugeliang", "luji"], dialogues: [{ player: "zhugeliang", text: "此真，旧病复发也。哈哈哈哈", audio: "zhugeliang4.mp3", delay: 500 }] },
 		{ players: ["zhugeliang", "simayi"], dialogues: [{ player: "zhugeliang", text: "仲达，想要我的四轮车吗？", audio: "zhugeliang3.mp3", delay: 500 }] },
 		{ players: ["simahui", "zhugeliang"], dialogues: [{ player: "simahui", text: "孔明虽得其主，不得其时。", audio: "simahui1.mp3", delay: 500 }] },
 		{ players: ["zhangfei", "zhugeliang"], dialogues: [{ player: "zhangfei", text: "诸葛亮！俺今天就算绑，也要把你绑回去！", audio: "zhangfei2.mp3", delay: 500 }] },
 		{ players: ["caocao", "guanyu"], dialogues: [{ player: "caocao", text: "云长，别来无恙否？", audio: "caocao2.mp3", delay: 500 }] },
-		{ players: ["caocao", "miheng"], dialogues: [{ player: "caocao", text: "你以为辱骂几句，便能彰显才学？", audio: "caocao5.mp3", delay: 500 }] },
 		{ players: ["caocao", "yuanshu"], dialogues: [{ player: "caocao", text: "竖子不足与谋！", audio: "caocao9.mp3", delay: 500 }] },
 		{ players: ["caopi", "sunquan"], dialogues: [{ player: "caopi", text: "孙权小丑，凭江悖暴。", audio: "caopi1.mp3", delay: 500 }] },
+		{ players: ["chenshi", "simayi"], dialogues: [{ player: "chenshi", text: "司马懿，现在就来抓你！", audio: "chenshi1.mp3", delay: 500 }] },
 	];
 
 	lib.announce.subscribe("gameStart", () => {
