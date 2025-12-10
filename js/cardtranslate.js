@@ -34,6 +34,9 @@
 
 	dui.updateHandLayout = () =>
 		raf(() => {
+			if (dui.isContainerScrollable() && dui.sourceNode) {
+				dui.cleanupDrag(true);
+			}
 			if (typeof dui.layout?.updateHand === "function") {
 				dui.layout.updateHand();
 			}
@@ -51,8 +54,43 @@
 			card._transform = transformValue;
 		});
 	};
+	dui.isContainerScrollable = () => {
+		if (!ui?.handcards1Container) return false;
+		return ui.handcards1Container.classList.contains("scrollh") || getComputedStyle(ui.handcards1Container).overflowX === "scroll";
+	};
+
+	dui.cleanupDrag = async (skipLayoutUpdate = false) => {
+		const sourceCard = dui.sourceNode;
+		if (!sourceCard) return;
+		if (dui.isDragging) {
+			if (!dui.movedNode) {
+				sourceCard.style.transform = `translate(${sourceCard.initialTranslateX}px, ${sourceCard.initialTranslateY}px) scale(${sourceCard.scale})`;
+			}
+		}
+		Object.assign(sourceCard.style, {
+			transition: "",
+			pointerEvents: dui.originalPointerEvents ?? "",
+			opacity: "1",
+			zIndex: "",
+		});
+		document.removeEventListener(dui.evts[1], dui.dragCardMove);
+		document.removeEventListener(dui.evts[2], dui.dragCardEnd);
+		window.removeEventListener(dui.evts[2], dui.dragCardEnd);
+		dui.sourceNode = null;
+		dui.movedNode = null;
+		dui.isDragging = false;
+		if (!skipLayoutUpdate) {
+			raf(() => {
+				if (typeof dui.layout?.updateHand === "function") {
+					dui.layout.updateHand();
+				}
+			});
+		}
+	};
+
 	dui.dragCardStart = async e => {
 		if (!dui.supportsPointer && e.button === 2) return;
+		if (dui.isContainerScrollable()) return;
 		const cardElement = dui.getCardElement(e.target);
 		if (!cardElement) return;
 		const { clientX: startX, clientY: startY } = getPoint(e);
@@ -69,16 +107,25 @@
 		dui.originalPointerEvents = getComputedStyle(cardElement).pointerEvents;
 		document.addEventListener(dui.evts[1], dui.dragCardMove, { passive: false });
 		document.addEventListener(dui.evts[2], dui.dragCardEnd, { passive: false });
+		window.addEventListener(dui.evts[2], dui.dragCardEnd, { once: true, passive: false });
 	};
 	dui.dragCardMove = async e => {
 		const sourceCard = dui.sourceNode;
 		if (!sourceCard) return;
+		if (dui.isContainerScrollable()) {
+			await dui.cleanupDrag();
+			return;
+		}
 		const { clientX: currentX, clientY: currentY, pageX, pageY } = getPoint(e);
 		const dx = currentX - sourceCard.startX;
 		const dy = currentY - sourceCard.startY;
 		if (!dui.isDragging) {
 			const distance = Math.sqrt(dx * dx + dy * dy);
 			if (distance > dui.dragThreshold) {
+				if (dui.isContainerScrollable()) {
+					await dui.cleanupDrag();
+					return;
+				}
 				dui.isDragging = true;
 				e.preventDefault();
 				e.stopPropagation();
@@ -130,27 +177,7 @@
 		await dui.updateHandLayout();
 	};
 	dui.dragCardEnd = async e => {
-		const sourceCard = dui.sourceNode;
-		if (!sourceCard) return;
-		if (dui.isDragging) {
-			e.preventDefault();
-			e.stopPropagation();
-			if (!dui.movedNode) {
-				sourceCard.style.transform = `translate(${sourceCard.initialTranslateX}px, ${sourceCard.initialTranslateY}px) scale(${sourceCard.scale})`;
-			}
-		}
-		Object.assign(sourceCard.style, {
-			transition: "",
-			pointerEvents: dui.originalPointerEvents ?? "",
-			opacity: "1",
-			zIndex: "",
-		});
-		document.removeEventListener(dui.evts[1], dui.dragCardMove);
-		document.removeEventListener(dui.evts[2], dui.dragCardEnd);
-		dui.sourceNode = null;
-		dui.movedNode = null;
-		dui.isDragging = false;
-		await dui.updateHandLayout();
+		await dui.cleanupDrag();
 	};
 	dui.ensureCardPositions = async () => {
 		if (!ui?.handcards1) return;
