@@ -52,6 +52,13 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ cards: ["bingliang"], player: "zhangchangpu", condition: ctx => ctx.targets?.some(t => hasName(t, "zhonghui")), text: "功课没做完不许吃饭！", audio: "zhangchangpu2.mp3" },
 		{ cards: ["sha", "juedou"], player: "bozai", text: "哈！" },
 		{ cards: ["sha", "juedou"], player: "xiangjiaoduanwu", text: "哈！" },
+		{ cards: ["qinggang"], player: "caocao", text: "此剑，终物归原主！", audio: "caocao11.mp3" },
+		{ cards: ["shunshou"], player: "caocao", condition: ctx => ctx.targets?.some(t => hasName(t, "qinyilu")), text: "汝妻子我养之！", audio: "caocao12.mp3" },
+		{ cards: ["jiu"], player: "caocao", text: "醉酒当歌！人生几何！", audio: "caocao13.mp3" },
+		{ cards: ["jiu"], player: "caochun", text: "壮士醉沙场！烈马啸西风！", audio: "caochun1.mp3" },
+		{ cards: ["jiu"], player: "zhonghui", text: "偷本非礼，所以不拜", audio: "zhonghui.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "zhonghui", condition: ctx => ctx.targets?.some(t => hasName(t, "jiangwei")), text: "伯约何来迟也", audio: "zhonghui2.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "jiaxu", condition: ctx => ctx.targets?.some(t => hasName(t, "zhangxiu")), target: "zhangxiu", text: "多谢文和，拉兄弟一把！", audio: "zhangxiu2.mp3" },
 	];
 
 	const originalUseCard = lib.element.Player.prototype.useCard;
@@ -108,7 +115,10 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 	};
 
 	// 这何尝不是一种苦命鸳鸯
-	const deathEasterEggs = [{ deceased: "yuanshao", speaker: "caocao", text: "今本初已丧，我不能不为之流涕也", audio: "caocao7.mp3" }];
+	const deathEasterEggs = [
+		{ deceased: "yuanshao", speaker: "caocao", text: "今本初已丧，我不能不为之流涕也", audio: "caocao7.mp3" },
+		{ deceased: "liuhong", speaker: "zhangjiao", text: "带着你的大汉，去死吧！", audio: "zhangjiao2.mp3" },
+	];
 
 	const originalDie = lib.element.Player.prototype.$die;
 	lib.element.Player.prototype.$die = function (...args) {
@@ -186,6 +196,9 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ players: ["caocao", "machao"], dialogues: [{ player: "caocao", text: "马儿不死，我无葬身之地！", audio: "caocao8.mp3", delay: 500 }] },
 		{ players: ["zhugeliang", "jiangwei"], dialogues: [{ player: "zhugeliang", text: "吾得伯约，如得一凤凰尔", audio: "zhugeliang5.mp3", delay: 500 }] },
 		{ players: ["zhugeliang", "pangtong"], dialogues: [{ player: "zhugeliang", text: "士元兄，倘若不如意，一定要来荆州啊", audio: "zhugeliang6.mp3", delay: 500 }] },
+		{ players: ["caocao", "dingshangwan"], dialogues: [{ player: "caocao", text: "逝者已往，夫人何必画地为牢", audio: "caocao14.mp3", delay: 500 }] },
+		{ players: ["caojinyu", "heyan"], dialogues: [{ player: "caojinyu", text: "身为男儿身，却无英雄志", audio: "caojinyu1.mp3", delay: 500 }] },
+		{ players: ["zhangjiao", "liuhong"], dialogues: [{ player: "zhangjiao", text: "这覆舟的水，都是百姓的泪！", audio: "zhangjiao1.mp3", delay: 500 }] },
 	];
 
 	lib.announce.subscribe("gameStart", () => {
