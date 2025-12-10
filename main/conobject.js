@@ -1293,9 +1293,9 @@ const createDecadeUIObject = () => ({
 										c.copy()._customintro = c._customintro;
 									});
 									if (e.type == "mouseover") {
-										player.node.showCards.onmouseleave = function () {};
+										player.node.showCards.onmouseleave = function () { };
 									} else {
-										ui.window.addEventListener("touchend", function touch() {}, { once: true });
+										ui.window.addEventListener("touchend", function touch() { }, { once: true });
 									}
 								};
 
@@ -3361,7 +3361,7 @@ const createDecadeUIObject = () => ({
 						}
 					}
 				},
-				updatem(player) {},
+				updatem(player) { },
 				updatez() {
 					window.documentZoom = game.documentZoom;
 					document.body.style.zoom = game.documentZoom;
@@ -4997,7 +4997,7 @@ const createDecadeUIObject = () => ({
 								if (!info.intro)
 									info.intro = {
 										content() {
-											return get.translation(skill + "_info");
+											return get.skillInfoTranslation(skill, player, false);
 										},
 									};
 								player.markSkill(skill);
@@ -5193,7 +5193,7 @@ const createDecadeUIObject = () => ({
 									await loadImage(primaryUrl);
 									this.node.campWrap.node.campName.style.backgroundImage = `url("${primaryUrl}")`;
 									return;
-								} catch {}
+								} catch { }
 								try {
 									const imageName = `group_${group}`;
 									const info = lib.card[imageName];
@@ -5209,7 +5209,7 @@ const createDecadeUIObject = () => ({
 									await loadImage(src);
 									this.node.campWrap.node.campName.style.backgroundImage = `url("${src}")`;
 									return;
-								} catch {}
+								} catch { }
 								create();
 							});
 						}
