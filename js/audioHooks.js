@@ -59,6 +59,13 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ cards: ["jiu"], player: "zhonghui", text: "偷本非礼，所以不拜", audio: "zhonghui.mp3" },
 		{ cards: ["tao", "taoyuan"], player: "zhonghui", condition: ctx => ctx.targets?.some(t => hasName(t, "jiangwei")), text: "伯约何来迟也", audio: "zhonghui2.mp3" },
 		{ cards: ["tao", "taoyuan"], player: "jiaxu", condition: ctx => ctx.targets?.some(t => hasName(t, "zhangxiu")), target: "zhangxiu", text: "多谢文和，拉兄弟一把！", audio: "zhangxiu2.mp3" },
+		{ cards: ["jiu"], player: "zerong", text: "酒肉穿肠过，佛祖心中留", audio: "zerong1.mp3" },
+		{ cards: ["shunshou"], player: "zhouxuan", condition: ctx => ctx.targets?.some(t => hasName(t, "caopi")), text: "待我一观陛下手相", audio: "zhouxuan1.mp3" },
+		{ cards: ["qinglong"], player: "guanyu", text: "青龙在手，可斩天下豪杰！", audio: "guanyu1.mp3" },
+		{ cards: ["chitu"], player: "guanyu", text: "得此宝马，兄虽距千里，亦可一夕而至！", audio: "guanyu2.mp3" },
+		{ cards: ["jiu"], player: "guanyu", text: "走马杀贼，提酒尚温", audio: "guanyu3.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "guanyu", condition: ctx => ctx.targets?.some(t => hasName(t, "caocao")), text: "今恩义两清！再见，当较生死！", audio: "guanyu4.mp3" },
+		{ cards: ["wugu"], player: "zhangfei", text: "俺颇有家资！", audio: "zhangfei5.mp3" },
 	];
 
 	const originalUseCard = lib.element.Player.prototype.useCard;
@@ -152,7 +159,25 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 				}
 			}
 		}
+		if (name === "chooseToCompareAfter" || (name === "compare" && ["chooseToCompare", "chooseToCompareMultiple"].includes(this.name))) {
+			handleZhangfeiTie(this);
+		}
 		return result;
+	};
+
+	// 拼点相同彩蛋
+	const handleZhangfeiTie = event => {
+		if (event._zhangfeiTieHandled) return;
+		const { player, target, result, num1, num2 } = event;
+		const participants = [player, target].filter(p => p && get.itemtype(p) === "player");
+		if (participants.length < 2) return;
+		const tie = result?.tie || (typeof num1 === "number" && typeof num2 === "number" && num1 === num2);
+		if (!tie) return;
+		const speaker = participants.find(p => hasName(p, "zhangfei"));
+		if (!speaker) return;
+		speaker.say?.("俺也一样！");
+		playAudio("zhangfei6.mp3");
+		event._zhangfeiTieHandled = true;
 	};
 
 	// 真是一对苦命鸳鸯啊
@@ -199,6 +224,8 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ players: ["caocao", "dingshangwan"], dialogues: [{ player: "caocao", text: "逝者已往，夫人何必画地为牢", audio: "caocao14.mp3", delay: 500 }] },
 		{ players: ["caojinyu", "heyan"], dialogues: [{ player: "caojinyu", text: "身为男儿身，却无英雄志", audio: "caojinyu1.mp3", delay: 500 }] },
 		{ players: ["zhangjiao", "liuhong"], dialogues: [{ player: "zhangjiao", text: "这覆舟的水，都是百姓的泪！", audio: "zhangjiao1.mp3", delay: 500 }] },
+		{ players: ["sunlingluan", "zhangfen"], dialogues: [{ player: "sunlingluan", text: "我终于，等到你了", audio: "sunlingluan1.mp3", delay: 500 }] },
+		{ players: ["dianwei", "caocao"], dialogues: [{ player: "dianwei", text: "主公，戒色！", audio: "dianwei2.mp3", delay: 500 }] },
 	];
 
 	lib.announce.subscribe("gameStart", () => {
