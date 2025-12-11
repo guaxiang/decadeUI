@@ -1125,6 +1125,26 @@ const createDecadeUIObject = () => ({
 								ediv.dataset.type = repetition;
 							}
 						},
+						_addPrefixSeparator() {
+							if (lib.config.extension_十周年UI_newDecadeStyle !== "off" || !this.node.name) return;
+							setTimeout(() => {
+								const nameNode = this.node.name;
+								if (!nameNode) return;
+								const children = Array.from(nameNode.childNodes);
+								for (let i = 0; i < children.length - 1; i++) {
+									const current = children[i];
+									const next = children[i + 1];
+									if (current.nodeType === Node.ELEMENT_NODE && next.nodeType === Node.TEXT_NODE && next.textContent.trim() && !next.textContent.startsWith("•")) {
+										next.textContent = "•" + next.textContent;
+										return;
+									}
+								}
+								if (nameNode.firstChild && nameNode.firstChild.nodeType === Node.ELEMENT_NODE && nameNode.childNodes.length > 1) {
+									const separator = document.createTextNode("•");
+									nameNode.insertBefore(separator, nameNode.childNodes[1]);
+								}
+							}, 0);
+						},
 						$init(character, character2) {
 							base.lib.element.player.$init.apply(this, arguments);
 							this.doubleAvatar = (character2 && lib.character[character2]) !== undefined;
@@ -1293,9 +1313,9 @@ const createDecadeUIObject = () => ({
 										c.copy()._customintro = c._customintro;
 									});
 									if (e.type == "mouseover") {
-										player.node.showCards.onmouseleave = function () { };
+										player.node.showCards.onmouseleave = function () {};
 									} else {
-										ui.window.addEventListener("touchend", function touch() { }, { once: true });
+										ui.window.addEventListener("touchend", function touch() {}, { once: true });
 									}
 								};
 
@@ -1318,6 +1338,8 @@ const createDecadeUIObject = () => ({
 							if (window.decadeModule && window.decadeModule.prefixMark) {
 								window.decadeModule.prefixMark.showPrefixMark(character, this);
 							}
+
+							this._addPrefixSeparator();
 
 							const cardPrettify = lib.config.extension_十周年UI_cardPrettify;
 							if (cardPrettify === "bingkele" && character === "bozai") {
@@ -1359,6 +1381,7 @@ const createDecadeUIObject = () => ({
 									window.decadeModule.prefixMark.showPrefixMark(currentCharacter, this);
 								}
 							}
+							this._addPrefixSeparator();
 							return this;
 						},
 						setSeatNum() {
@@ -3361,7 +3384,7 @@ const createDecadeUIObject = () => ({
 						}
 					}
 				},
-				updatem(player) { },
+				updatem(player) {},
 				updatez() {
 					window.documentZoom = game.documentZoom;
 					document.body.style.zoom = game.documentZoom;
@@ -5193,7 +5216,7 @@ const createDecadeUIObject = () => ({
 									await loadImage(primaryUrl);
 									this.node.campWrap.node.campName.style.backgroundImage = `url("${primaryUrl}")`;
 									return;
-								} catch { }
+								} catch {}
 								try {
 									const imageName = `group_${group}`;
 									const info = lib.card[imageName];
@@ -5209,7 +5232,7 @@ const createDecadeUIObject = () => ({
 									await loadImage(src);
 									this.node.campWrap.node.campName.style.backgroundImage = `url("${src}")`;
 									return;
-								} catch { }
+								} catch {}
 								create();
 							});
 						}

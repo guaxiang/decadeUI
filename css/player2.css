@@ -377,7 +377,7 @@
 	transform: translateX(-50%);
 	line-height: -3px;
 	font-family: "shousha" !important;
-	font-size: 17px;
+	font-size: 15px;
 	letter-spacing: -2px;
 	white-space: nowrap;
 	writing-mode: vertical-rl;
@@ -512,7 +512,7 @@
 	top: 0px;
 	width: 18px;
 	height: 96px;
-	font-size: 16px;
+	font-size: 15px;
 	/*字体大小*/
 	line-height: 15px;
 	/*字体间隔*/
