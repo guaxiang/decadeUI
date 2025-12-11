@@ -1125,10 +1125,9 @@ const createDecadeUIObject = () => ({
 								ediv.dataset.type = repetition;
 							}
 						},
-						_addPrefixSeparator() {
-							if (lib.config.extension_十周年UI_newDecadeStyle !== "off" || !this.node.name) return;
+						_addPrefixSeparator(nameNode) {
+							if (lib.config.extension_十周年UI_newDecadeStyle !== "off" || !nameNode) return;
 							setTimeout(() => {
-								const nameNode = this.node.name;
 								if (!nameNode) return;
 								const children = Array.from(nameNode.childNodes);
 								for (let i = 0; i < children.length - 1; i++) {
@@ -1337,9 +1336,15 @@ const createDecadeUIObject = () => ({
 							// 十周年角标
 							if (window.decadeModule && window.decadeModule.prefixMark) {
 								window.decadeModule.prefixMark.showPrefixMark(character, this);
+								if (character2 && this.doubleAvatar) {
+									window.decadeModule.prefixMark.showPrefixMark(character2, this);
+								}
 							}
 
-							this._addPrefixSeparator();
+							this._addPrefixSeparator(this.node.name);
+							if (this.doubleAvatar && this.node.name2) {
+								this._addPrefixSeparator(this.node.name2);
+							}
 
 							const cardPrettify = lib.config.extension_十周年UI_cardPrettify;
 							if (cardPrettify === "bingkele" && character === "bozai") {
@@ -1380,8 +1385,14 @@ const createDecadeUIObject = () => ({
 								if (currentCharacter) {
 									window.decadeModule.prefixMark.showPrefixMark(currentCharacter, this);
 								}
+								if (this.doubleAvatar && this.name2) {
+									window.decadeModule.prefixMark.showPrefixMark(this.name2, this);
+								}
 							}
-							this._addPrefixSeparator();
+							this._addPrefixSeparator(this.node.name);
+							if (this.doubleAvatar && this.node.name2) {
+								this._addPrefixSeparator(this.node.name2);
+							}
 							return this;
 						},
 						setSeatNum() {
