@@ -66,6 +66,12 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ cards: ["jiu"], player: "guanyu", text: "走马杀贼，提酒尚温", audio: "guanyu3.mp3" },
 		{ cards: ["tao", "taoyuan"], player: "guanyu", condition: ctx => ctx.targets?.some(t => hasName(t, "caocao")), text: "今恩义两清！再见，当较生死！", audio: "guanyu4.mp3" },
 		{ cards: ["wugu"], player: "zhangfei", text: "俺颇有家资！", audio: "zhangfei5.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "chengong", condition: ctx => ctx.targets?.some(t => hasName(t, "caocao")), text: "我欲弃此县令！随公去图大事！", audio: "chengong2.mp3" },
+		{ cards: ["jiu"], player: "chunyuqiong", text: "接着奏乐！嗝~接着喝！", audio: "chunyuqiong1.mp3" },
+		{ cards: ["huogong"], player: "caocao", condition: ctx => ctx.targets?.some(t => hasName(t, "chunyuqiong")), target: "chunyuqiong", text: "阿满！烧我粮是吧！", audio: "chunyuqiong2.mp3" },
+		{ cards: ["shunshou"], player: "dongzhuo", condition: ctx => ctx.targets?.some(t => hasName(t, "wangyun")), text: "老王，你还有个女儿啊！", audio: "dongzhuo1.mp3" },
+		{ cards: ["sha"], player: "xusheng", condition: ctx => ctx.targets?.some(t => hasName(t, "caochong")), text: "今儿，给冲儿来刀狠的！", audio: "xusheng1.mp3" },
+		{ cards: ["guding"], player: "xusheng", text: "在下，要给诸位来刀狠的", audio: "xusheng2.mp3" },
 	];
 
 	const originalUseCard = lib.element.Player.prototype.useCard;
