@@ -654,7 +654,7 @@
 .guanjiewenzi {
 	display: block;
 	position: absolute;
-	bottom: -2%;
+	bottom: -2.5%;
 	left: -1%;
 	width: 104%;
 	color: #ffee99;
@@ -719,13 +719,7 @@
 	text-shadow: none;
 	top: 18.5%;
 	left: 37.5%;
-	z-index: 81;
-	font-weight: 300;
-	/* 添加边缘模糊效果 */
-	text-shadow:
-		0 0 2px rgba(255, 255, 255, 0.8),
-		/* 轻微模糊 */ 0 0 4px rgba(255, 255, 255, 0.6);
-	/* 稍强模糊 */
+	z-index: 83;
 }
 
 /* 进度条 */
@@ -752,7 +746,7 @@
 
 /* 玩家信息文字 */
 .nameX {
-	font-size: 17px;
+	font-size: 16.5px;
 	font-family: "shousha";
 	color: rgba(255, 255, 255, 0.9);
 	position: absolute;
@@ -783,16 +777,14 @@
 
 /* 公会信息 */
 .gonghui {
-	font-size: 17px;
+	font-size: 16px;
 	font-family: "shousha";
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(255, 255, 255, 0.4); 
 	/* 半透明白色文字 */
 	position: absolute;
-	/* 确保定位生效 */
-	top: 5.5%;
+	top: 5%;
 	left: 50%;
 	transform: translateX(-50%);
-	/* 水平居中 */
 	z-index: 81;
 	font-weight: 300;
 	white-space: nowrap;
@@ -831,7 +823,6 @@
 .useless2 {
 	left: 61%;
 	top: 83%;
-	font-size: 15px;
 }
 
 .useless3 {
