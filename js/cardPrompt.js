@@ -20,7 +20,13 @@ decadeModule.import((lib, game, ui, get) => {
 		if (!name) return null;
 		const prefixKey = name + "_prefix";
 		if (lib.translate?.[prefixKey]) {
-			return `${get.prefixSpan(get.translation(prefixKey), name)}${get.rawName(name)}`;
+			const translation = get.translation(prefixKey);
+			const prefixList = translation == null ? [] : Array.isArray(translation) ? translation : String(translation).split("|");
+			const prefixSpan = prefixList
+				.filter(Boolean)
+				.map(prefix => get.prefixSpan(prefix, name))
+				.join("");
+			if (prefixSpan) return `${prefixSpan}${get.rawName(name)}`;
 		}
 		return get.translation(name);
 	};
@@ -285,18 +291,12 @@ decadeModule.import((lib, game, ui, get) => {
 	};
 	const handleSkillUse = event => {
 		if (!event.skill) return false;
-		if (event.skillDialog === true) event.skillDialog = false;
 		const skillTip = ensureTip();
 		skillTip.appendText("是否发动");
 		appendSkillName(skillTip, event.skill, event.player);
 		const tipText = decPrompt(stripTags("？"));
 		skillTip.appendText(tipText);
 		showTip(skillTip);
-		const skillInfo = lib.translate?.[event.skill + "_info"];
-		if (skillInfo) {
-			const skillName = get.translation(event.skill);
-			event.skillDialog = ui.create.dialog(skillName, '<div><div style="width:100%">' + skillInfo + "</div></div>");
-		}
 		return true;
 	};
 	const cleanCardInfoText = text => {
