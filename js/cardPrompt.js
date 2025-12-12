@@ -98,7 +98,8 @@ decadeModule.import((lib, game, ui, get) => {
 	};
 	const appendSkillName = (tipNode, skillName, player) => {
 		tipNode.appendText("【");
-		tipNode.appendText(get.skillTranslation(cleanSkillName(skillName), player), "phase");
+		const resolvedSkill = get.sourceSkillFor ? get.sourceSkillFor(cleanSkillName(skillName)) : cleanSkillName(skillName);
+		tipNode.appendText(get.skillTranslation(resolvedSkill, player), "phase");
 		tipNode.appendText("】");
 	};
 	const isAskWuxie = event => {
