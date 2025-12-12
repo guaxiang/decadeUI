@@ -1520,7 +1520,12 @@ const createDecadeUIObject = () => ({
 							// 手牌数显示修改
 							let count = this.countCards("h");
 							if (this == game.me) {
-								this.node.count.innerHTML = count + "/" + this.getHandcardLimit();
+								const currentStyle = lib.config.extension_十周年UI_newDecadeStyle;
+								if (currentStyle === "onlineUI" || currentStyle === "babysha" || currentStyle === "codename") {
+									this.node.count.innerHTML = count + "/" + this.getHandcardLimit();
+								} else {
+									this.node.count.innerHTML = count;
+								}
 							} else if (count >= 10) {
 								this.node.count.innerHTML = count;
 							}
