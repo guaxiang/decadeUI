@@ -72,6 +72,16 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ cards: ["shunshou"], player: "dongzhuo", condition: ctx => ctx.targets?.some(t => hasName(t, "wangyun")), text: "老王，你还有个女儿啊！", audio: "dongzhuo1.mp3" },
 		{ cards: ["sha"], player: "xusheng", condition: ctx => ctx.targets?.some(t => hasName(t, "caochong")), text: "今儿，给冲儿来刀狠的！", audio: "xusheng1.mp3" },
 		{ cards: ["guding"], player: "xusheng", text: "在下，要给诸位来刀狠的", audio: "xusheng2.mp3" },
+		{ cards: ["sha", "juedou"], player: "sunce", condition: ctx => ctx.targets?.some(t => hasName(t, "yuji")), text: "此乃妖人，能以妖术惑众，不可不除！", audio: "sunce1.mp3" },
+		{ cards: ["sha", "juedou"], player: "sunshangxiang", condition: ctx => ctx.targets?.some(t => hasName(t, "dingfeng")), text: "你只怕周瑜，独不怕我？", audio: "sunshangxiang1.mp3" },
+		{ cards: ["sha", "juedou"], player: "sunshangxiang", condition: ctx => ctx.targets?.some(t => hasName(t, "xusheng")), text: "周瑜杀得尔等，我岂杀不得周瑜？", audio: "sunshangxiang2.mp3" },
+		{ cards: ["sha", "juedou"], player: "zhonghui", condition: ctx => ctx.targets?.some(t => hasName(t, "simazhao")), text: "你司马家做得，我便做不得？", audio: "zhonghui3.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "zhonghui", condition: ctx => ctx.targets?.some(t => hasName(t, "zhangchangpu")), text: "母亲自幼严教，方有儿今日不世之功。", audio: "zhonghui4.mp3" },
+		{ cards: ["sha", "juedou"], player: "zhangxiu", condition: ctx => ctx.targets?.some(t => hasName(t, "caoang")), text: "父债子偿，今日你在劫难逃！", audio: "zhangxiu4.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "huatuo", condition: ctx => ctx.targets?.some(t => hasName(t, "guanyu")), text: "刮骨之痛若无误，将军神人也！", audio: "huatuo1.mp3" },
+		{ cards: ["tao", "taoyuan"], player: "huatuo", condition: ctx => ctx.targets?.some(t => hasName(t, "caocao")), text: "医者如何能见死不救", audio: "huatuo2.mp3" },
+		{ cards: ["sha", "juedou"], player: "jiangwei", condition: ctx => ctx.targets?.some(t => hasName(t, "zhaoyun")), text: "老将军可知天水姜伯约！", audio: "jiangwei1.mp3" },
+		{ cards: ["sha", "juedou"], player: "jiangwei", condition: ctx => ctx.targets?.some(t => hasName(t, "dengai")), text: "身后无主，纵使夺得祁山九寨又将何为？", audio: "jiangwei2.mp3" },
 	];
 
 	const originalUseCard = lib.element.Player.prototype.useCard;
@@ -232,6 +242,9 @@ decadeModule.import((lib, game, ui, get, ai, _status) => {
 		{ players: ["zhangjiao", "liuhong"], dialogues: [{ player: "zhangjiao", text: "这覆舟的水，都是百姓的泪！", audio: "zhangjiao1.mp3", delay: 500 }] },
 		{ players: ["sunlingluan", "zhangfen"], dialogues: [{ player: "sunlingluan", text: "我终于，等到你了", audio: "sunlingluan1.mp3", delay: 500 }] },
 		{ players: ["dianwei", "caocao"], dialogues: [{ player: "dianwei", text: "主公，戒色！", audio: "dianwei2.mp3", delay: 500 }] },
+		{ players: ["zhangxiu", "caocao"], dialogues: [{ player: "zhangxiu", text: "明年的今天，便是你的祭日！", audio: "zhangxiu3.mp3", delay: 500 }] },
+		{ players: ["jiangwei", "liubei"], dialogues: [{ player: "jiangwei", text: "往昔未见先主，今日始见龙颜！", audio: "jiangwei3.mp3", delay: 500 }] },
+		{ players: ["jiangwei", "liushan"], dialogues: [{ player: "jiangwei", text: "愿陛下忍数日之辱，臣必使社稷危而复安!", audio: "jiangwei4.mp3", delay: 500 }] },
 	];
 
 	lib.announce.subscribe("gameStart", () => {
