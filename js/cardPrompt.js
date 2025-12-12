@@ -14,7 +14,16 @@ decadeModule.import((lib, game, ui, get) => {
 		if (!target) return null;
 		return Array.isArray(target) ? (target[0] ?? null) : target;
 	};
-	const resolveName = target => (target ? get.translation(target) : null);
+	const resolveName = target => {
+		if (!target) return null;
+		const name = typeof target === "object" && target.name ? target.name : target;
+		if (!name) return null;
+		const prefixKey = name + "_prefix";
+		if (lib.translate?.[prefixKey]) {
+			return `${get.prefixSpan(get.translation(prefixKey), name)}${get.rawName(name)}`;
+		}
+		return get.translation(name);
+	};
 	const closeDialog = dialog => {
 		if (!dialog) return;
 		if (typeof dialog === "object" && dialog.close) dialog.close();
@@ -39,15 +48,40 @@ decadeModule.import((lib, game, ui, get) => {
 		closeCardDialog();
 		return (ui.cardDialog = dui.showHandTip());
 	};
+	const appendTipHTML = (tipNode, html, style) => {
+		if (!html) return;
+		const nodes = tipNode.childNodes;
+		for (let i = 0; i < nodes.length; i++) {
+			if (nodes[i].textContent === "") {
+				nodes[i].innerHTML = html;
+				if (style) nodes[i].dataset.type = style;
+				return nodes[i];
+			}
+		}
+		const span = document.createElement("span");
+		span.innerHTML = html;
+		if (style) span.dataset.type = style;
+		return tipNode.appendChild(span);
+	};
 	const appendTipText = (tipNode, content) => {
 		if (!content) return;
 		if (Array.isArray(content)) {
 			content.forEach(segment => {
-				if (segment?.text) tipNode.appendText(segment.text, segment.style);
+				if (segment?.text) {
+					if (segment.text.includes("<") || segment.text.includes("&lt;")) {
+						appendTipHTML(tipNode, segment.text, segment.style);
+					} else {
+						tipNode.appendText(segment.text, segment.style);
+					}
+				}
 			});
 			return;
 		}
-		tipNode.appendText(content);
+		if (typeof content === "string" && (content.includes("<") || content.includes("&lt;"))) {
+			appendTipHTML(tipNode, content);
+		} else {
+			tipNode.appendText(content);
+		}
 	};
 	const cleanSkillName = name => {
 		if (!name) return name;
@@ -107,7 +141,8 @@ decadeModule.import((lib, game, ui, get) => {
 		const targetName = resolveWuxieTarget(event, respondCard, parentMap);
 		const stateWord = getWuxieStateWord(event, parentMap);
 		const segment = text => decPrompt(sanitizePrompt(text));
-		return [{ text: segment(sourceName), style: "phase" }, { text: segment("对") }, { text: segment(targetName), style: "phase" }, { text: segment("使用的【") }, { text: segment(cardName), style: "phase" }, { text: segment("】即将") }, { text: segment(stateWord) }, { text: segment("，是否使用【") }, { text: segment("无懈可击"), style: "phase" }, { text: segment("】？") }];
+		const segmentName = name => decPrompt(name);
+		return [{ text: segmentName(sourceName), style: "phase" }, { text: segment("对") }, { text: segmentName(targetName), style: "phase" }, { text: segment("使用的【") }, { text: segment(cardName), style: "phase" }, { text: segment("】即将") }, { text: segment(stateWord) }, { text: segment("，是否使用【") }, { text: segment("无懈可击"), style: "phase" }, { text: segment("】？") }];
 	};
 	const parseRespondCardInfo = respondCard => {
 		if (!Array.isArray(respondCard) || !respondCard[1]) return { actionWord: "打出", cardName: "" };
@@ -241,7 +276,8 @@ decadeModule.import((lib, game, ui, get) => {
 		event.dialog = false;
 		event.prompt = false;
 		const dyingTip = ensureTip();
-		dyingTip.appendText(get.translation(event.dying), "phase");
+		const dyingName = resolveName(event.dying) ?? get.translation(event.dying);
+		appendTipHTML(dyingTip, dyingName, "phase");
 		const tipText = decPrompt(stripTags(`濒死，需要${1 - event.dying.hp}个桃，是否帮助？`));
 		dyingTip.appendText(tipText);
 		showTip(dyingTip);
@@ -256,6 +292,11 @@ decadeModule.import((lib, game, ui, get) => {
 		const tipText = decPrompt(stripTags("？"));
 		skillTip.appendText(tipText);
 		showTip(skillTip);
+		const skillInfo = lib.translate?.[event.skill + "_info"];
+		if (skillInfo) {
+			const skillName = get.translation(event.skill);
+			event.skillDialog = ui.create.dialog(skillName, '<div><div style="width:100%">' + skillInfo + "</div></div>");
+		}
 		return true;
 	};
 	const cleanCardInfoText = text => {
